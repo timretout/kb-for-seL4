@@ -159,7 +159,7 @@ code, and what does not:
   and [elfloader](../sel4/elfloader.md).
 - **sDDF** ([sDDF](../sel4/sddf.md), [sddf-net](../sel4/sddf-net.md)):
   upstream has
-  [`drivers/network/virtio`](https://github.com/seL4/sddf/tree/main/drivers/network/virtio),
+  [`drivers/network/virtio`](https://github.com/au-ts/sddf/tree/main/drivers/network/virtio),
   `drivers/blk/virtio` and `drivers/blk/nvme`, and no gVNIC driver. Its
   virtio PCI transport handles modern devices only, so it does not
   drive the legacy virtio-net of N1, N2D or E2. Its only x86 timer
@@ -205,7 +205,7 @@ code, and what does not:
   message. *Checked 2026-11-14.*
 - [Machine families resource and comparison guide](https://docs.cloud.google.com/compute/docs/machine-resource):
   NIC and disk interface per series. *Checked 2026-11-14.*
-- [sDDF `drivers/`](https://github.com/seL4/sddf/tree/main/drivers):
+- [sDDF `drivers/`](https://github.com/au-ts/sddf/tree/main/drivers):
   the network, block and timer drivers that exist upstream. *Checked 2026-11-14.*
 - [About VM metadata](https://docs.cloud.google.com/compute/docs/metadata/overview):
   the metadata server. *Unchecked.* Not opened.

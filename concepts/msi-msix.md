@@ -47,10 +47,10 @@ designed around MSI-X, one vector per queue.
 ## In seL4
 
 - **x86:** seL4 gives user level an [IRQ](irq.md) handler capability for an MSI
-  vector, and the user-level driver programs the device (unchecked: the
-  invocation name).
+  vector with `seL4_IRQControl_GetMSI` (see [PCI](pci.md)), and the
+  user-level driver programs the device.
 - **Arm:** upstream seL4 has no ITS support, so no MSI on Arm. A
-  prototype kernel API, `seL4_IRQControl_GetMSI`, maps one event of one
+  prototype Arm version of `seL4_IRQControl_GetMSI` maps one event of one
   device to an LPI.
 
 ## Gotchas

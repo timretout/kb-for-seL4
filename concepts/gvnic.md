@@ -183,7 +183,7 @@ a driver can poll in place of handling interrupts.
 
 The kernel has no network drivers, and upstream
 [sDDF](../sel4/sddf.md) has no gVNIC driver: its
-[`drivers/network/`](https://github.com/seL4/sddf/tree/main/drivers/network)
+[`drivers/network/`](https://github.com/au-ts/sddf/tree/main/drivers/network)
 holds `virtio` and five drivers for Arm system-on-chip Ethernet. So on
 C3, C4, N4 and every Arm series there is no network without writing
 one, as an sDDF driver behind the usual queues
@@ -255,7 +255,7 @@ Reference implementations: Linux
   Google's out-of-tree copy of the Linux driver. *Unchecked.* Not opened.
 - [DPDK GVE poll mode driver](https://doc.dpdk.org/guides/nics/gve.html):
   which formats Compute Engine has released. *Unchecked.* Not opened.
-- [sDDF `drivers/network`](https://github.com/seL4/sddf/tree/main/drivers/network):
+- [sDDF `drivers/network`](https://github.com/au-ts/sddf/tree/main/drivers/network):
   no gVNIC driver upstream. *Checked 2026-11-14.*
 
 ## My notes

@@ -48,7 +48,7 @@ two boxes are seL4's part of the chain, described under "In seL4" below.*
 
 Two points matter later:
 
-- **BL31 never goes away.** It owns EL3, and the kernel reaches it with
+- **BL31 never goes away.** It owns EL3, and an operating system reaches it with
   the `SMC` instruction to start and stop cores and reset the machine
   ([PSCI and SMCCC](psci-smccc.md)). A kernel cannot do these things
   itself on such a platform, because the registers involved belong to

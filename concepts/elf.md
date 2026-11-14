@@ -108,7 +108,7 @@ its own (`-T file`), because it must control exactly these things:
 
 ```ld
 ENTRY(_start)                     /* sets e_entry */
-KERNEL_OFFSET = 0xffffffff80000000 - 0x100000;
+KERNEL_OFFSET = 0xffffffff80100000 - 0x100000;   /* virtual base - physical base */
 SECTIONS
 {
     . = 0xffffffff80100000;       /* the location counter: a VIRTUAL address */

@@ -44,7 +44,8 @@ installed:
 cmake -G Ninja -B pp-base -C configs/RISCV64_verified.cmake \
       -DCMAKE_TOOLCHAIN_FILE=gcc.cmake -DCROSS_COMPILER_PREFIX=riscv64-linux-gnu-
 ninja -C pp-base kernel_all_pp_wrapper      # on the base commit
-# repeat into pp-head on the patched commit, then:
+# repeat into pp-head on the patched commit, then
+# (the kernel build calls the file kernel_all_pp.c; l4v's copy is kernel_all.c_pp):
 diff <(grep -v '^#' pp-base/kernel_all_pp.c) <(grep -v '^#' pp-head/kernel_all_pp.c)
 ```
 
@@ -85,7 +86,7 @@ others:
 | `KernelMaxNumNodes` | 1 | `#ifdef ENABLE_SMP_SUPPORT` code: IPIs, the big kernel lock, per-core state |
 | `KernelPrinting`, debug build | off | `printf`, `CONFIG_DEBUG_BUILD` code, the kernel's serial output, debug system calls |
 | `KernelBenchmarks` | none | all benchmarking and tracing |
-| `KernelIsMCS` | off, except the MCS configurations of ARM, RISCV64 (and AARCH64, in progress) | on x64 and ARM_HYP all `CONFIG_KERNEL_MCS` code is outside |
+| `KernelIsMCS` | off, except the MCS configurations: RISCV64 (verified), ARM (preprocess-checked only) and AARCH64 (proofs in progress) | on x64 and ARM_HYP all `CONFIG_KERNEL_MCS` code is outside |
 | x64: VT-x, VT-d | off | `vcpu`, EPT, the IOMMU driver |
 | AArch64: `KernelArmHypervisorSupport` | on | the non-hypervisor AArch64 paths are outside; hypervisor code is inside |
 | AArch64: `KernelArmSMMU` | off | SMMU drivers |

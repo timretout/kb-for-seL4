@@ -13,7 +13,7 @@ Read first: [I/O ports](io-ports.md), [IRQ](irq.md).
 | Reached through | 16550: [I/O ports](io-ports.md) on a PC, MMIO elsewhere; PL011: MMIO |
 | Found through | [Device tree](device-tree.md) `/chosen/stdout-path`; [ACPI](acpi-tables.md) SPCR; the BIOS data area at `0x400` |
 | Interrupt | [ISA](isa.md) IRQ 4 (COM1, COM3) and 3 (COM2, COM4) on a PC |
-| Key numbers | COM1 at `0x3F8`; 115200 baud at divisor 1 from a 1.8432 MHz clock; QEMU `virt` PL011 at `0x09000000` |
+| Key numbers | COM1 at `0x3F8`; 115200 baud at divisor 1 from a 1.8432 MHz clock (unchecked); QEMU `virt` PL011 at `0x09000000` |
 | seL4 config | `KernelPrinting`, `KernelDebugBuild`; x86 command line `console_port`, `debug_port` |
 | seL4 use | Polled output only, in debug builds: [`src/drivers/serial/`](https://github.com/seL4/seL4/tree/master/src/drivers/serial), [`io.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/io.c) on x86 |
 
@@ -78,7 +78,7 @@ added working FIFOs) has eight one-byte registers. On a PC they are
 
 While **DLAB** (divisor latch access bit) is set, offsets 0 and 1 are
 instead DLL and DLM, the low and high bytes of the divisor. The PC's
-input clock is 1.8432 MHz, so divisor 1 gives 1843200 / 16 = 115200
+input clock is 1.8432 MHz (unchecked), so divisor 1 gives 1843200 / 16 = 115200
 baud, the fastest standard rate and the usual console setting; divisor
 12 gives 9600.
 

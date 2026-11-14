@@ -28,6 +28,12 @@ the kernel says.
 
 ### Build options
 
+Defaults here are those of a project configured through `init-build.sh`
+without `-DVERIFICATION=ON` or `-DRELEASE=ON`. The kernel's own default
+for `KernelVerificationBuild` is `ON`, which forces the options below
+off in a stand-alone kernel build (see
+[Build system](build-system.md)).
+
 | Option (C macro) | Default | Effect |
 |---|---|---|
 | `KernelVerificationBuild` (`CONFIG_VERIFICATION_BUILD`) | off | Restricts the build to what the proofs cover; every option below depends on it being off |

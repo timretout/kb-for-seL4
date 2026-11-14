@@ -59,8 +59,9 @@ non-MCS kernel needs the rate only to set its periodic tick.
 
 ## Gotchas
 
-- **Whole MHz.** seL4 stores the rate in MHz, so a 3000.006 MHz TSC is
-  2999 MHz, an error of 0.03%.
+- **Whole MHz.** seL4 stores the rate in MHz, so a TSC measured at 2999.994 MHz is
+  stored as 2999 MHz (`tsc_khz / 1000u`, which truncates), an error of
+  0.03%.
 - **Measurements in VMs are noisy.** A vCPU descheduled during the 50 ms
   measurement makes the TSC look fast: a t3a.micro once measured 1% high.
   A wrong PIT wait can make it look slow by a factor of a thousand.

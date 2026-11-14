@@ -146,7 +146,7 @@ place as the carrier of the root task.
   [`src/arch/x86/64/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/head.S)
   is `.code32`. It saves `EAX` and `EBX`, loads `boot_stack_top`, clears
   `EFLAGS`, and calls `common_init`: clear `CR0.PG`, `setup_pml4` (boot
-  page tables, after `huge_page_check` insists on 1 GiB pages by
+  page tables, after `huge_page_check`, in a `KernelHugePage` build, insists on 1 GiB pages by
   [CPUID](cpuid-and-msrs.md)), `enable_x64_mode` (load `CR3`, set
   `CR4.PAE`, set `EFER.LME` by `wrmsr`, set `CR0.PG`), `lgdt`. A far jump
   `ljmp $8, $_start64` reloads `CS` with a 64-bit segment, and `_start64`

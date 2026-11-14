@@ -100,6 +100,9 @@ Notifying on every enqueue wastes time: the receiver is often already
 running, or will be woken for another reason. So each queue carries a
 flag, set by the consumer, saying "signal me when you add something".
 The producer checks it after enqueuing and notifies only if it is set.
+(How the flag is stored varies by class: the network queues' field is
+`consumer_signalled`, where 0 means "signal me"; see
+[sDDF networking](sddf-net.md).)
 
 ![A producer and a consumer share a ring of descriptors: the producer writes the tail index, the consumer writes the head index and sets a flag when it wants a signal, and the producer notifies only if the flag is set.](../images/sddf-queue.svg)
 

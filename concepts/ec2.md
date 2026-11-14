@@ -168,7 +168,7 @@ Upstream has no EC2 platform. What exists, and what each side lacks:
   The kernel drives the GICv3 but not the ITS, so there are no MSIs on
   Arm upstream.
 - **Drivers**: [sDDF](../sel4/sddf.md) upstream has no ENA driver
-  (`drivers/network/` holds virtio and four SoC Ethernet drivers). It
+  (`drivers/network/` holds virtio and five SoC Ethernet drivers). It
   does have an NVMe driver, `drivers/blk/nvme/`, developed against QEMU.
   Without a network driver an seL4 system on EC2 has a serial port and a
   disk.
