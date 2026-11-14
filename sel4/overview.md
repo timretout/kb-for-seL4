@@ -1,26 +1,189 @@
 # seL4 overview
 
-> Stub: what seL4 is (a capability-based, formally verified microkernel), what it does and deliberately does not do, and a map of the rest of this knowledge base.
+> seL4 is a small, fast, capability-based microkernel with a machine-checked proof that its C code implements its specification; it provides threads, address spaces, IPC and access control, and leaves drivers, file systems and all policy to user level.
 
 ## What it is
 
-To be written.
+seL4 is an operating system **microkernel**: the only code that runs in
+the processor's most privileged mode
+([privilege levels](../concepts/privilege-levels.md)), kept as small as
+it can be. It is the latest of the L4 family of microkernels
+([history](history-and-papers.md)), about 10,000 lines of C plus a
+little assembly per architecture (unchecked: the figure the project
+quotes for the verified 32-bit Arm kernel). It is not an operating
+system in the Linux sense: on its own it boots, starts one user program
+and can do nothing useful until that program builds a system on top.
+
+Four ideas define it.
+
+**Microkernel.** The kernel holds only what cannot be done outside it.
+A Linux kernel contains drivers, file systems, a network stack and a
+memory manager; on seL4 all of those are ordinary user-level programs in
+separate address spaces that talk by message passing. A bug in a driver
+can crash the driver, not the kernel.
+
+**Capabilities.** Every kernel service is reached through a
+[capability](capabilities.md): an unforgeable token, held in
+kernel-protected storage, that names one kernel object and carries
+access rights to it. There are no global names (no PIDs, no paths, no
+"root"): a program can touch only what it holds a capability to, and
+capabilities move only by explicit transfer. Access control is thus one
+mechanism, used for threads, memory, interrupts and communication alike.
+
+**Mechanism, not policy.** The kernel offers mechanisms and makes no
+decisions. It does not choose which physical memory backs a page, when a
+thread is created, or who may talk to whom: user level does, by invoking
+capabilities. Even kernel memory is user-managed: the kernel never
+allocates for itself after boot, and every kernel object is created by a
+user-level request out of [untyped memory](untyped-memory.md) the
+requester holds.
+
+**Formal verification.** seL4's C code is proved, in the Isabelle/HOL
+theorem prover, to implement an abstract specification of the kernel
+([the proofs](verification.md)). Further proofs show the specification
+enforces integrity and confidentiality, and on some architectures that
+the compiled binary matches the C. This is why the kernel is
+conservative: a change to verified code means a change to
+[the proofs](proof-impact.md), and the code is written in a
+[restricted subset of C](verified-c-subset.md).
+
+### What the kernel provides
+
+| Service | Kernel objects | Page |
+|---|---|---|
+| Threads and scheduling | TCB (thread control block); scheduling contexts under MCS | [Threads](threads.md), [Scheduling](scheduling.md), [MCS](mcs.md) |
+| Address spaces | Page tables, frames, ASID pools | [VSpace](vspace.md) |
+| Synchronous message passing | Endpoint (and Reply under MCS) | [IPC](ipc.md) |
+| Asynchronous signals | Notification | [Notifications](notifications.md) |
+| Interrupt delivery to user level | IRQ control and IRQ handler capabilities | [Interrupt delivery](irq-handling.md) |
+| Access control | CNode (a table of capabilities) | [Capabilities](capabilities.md), [CSpaces](cspace.md) |
+| Memory for all of the above | Untyped | [Untyped memory](untyped-memory.md) |
+| Fault forwarding | A fault becomes a message to a handler thread | [Faults](faults.md) |
+| Virtual machines (optional) | VCPU | [Virtualisation support](hypervisor.md) |
+
+The whole list of object types is in [kernel objects](kernel-objects.md).
+The interface is tiny: about a dozen
+[system calls](syscalls-and-invocations.md), all variations on "send a
+message to a capability" and "receive a message from a capability".
+Operations on objects (map this frame, resume that thread) are messages
+sent to the object's capability, which the kernel itself answers.
+
+### What it leaves to user level
+
+- **Device drivers**, apart from the interrupt controller, one timer for
+  the scheduler, and a debug serial port in debug builds. A user-level
+  driver gets its device's registers as mapped frames and its interrupt
+  as a notification.
+- **File systems, network stacks, process loading**, and any notion of
+  "process", "user" or "file".
+- **Memory management policy**: which memory becomes which object, who
+  handles page faults, when memory is reclaimed.
+- **Naming and resource accounting** beyond what capabilities and
+  scheduling contexts give.
+
+At boot the kernel creates one thread, the **root task**, and gives it
+capabilities to every resource in the machine
+([BootInfo](bootinfo-and-root-task.md)). Everything else is the root
+task's design. In practice nobody writes that from nothing: frameworks
+such as [Microkit](microkit.md) or [CAmkES](camkes-capdl.md) generate the
+root task from a static system description, and libraries
+([libsel4](libsel4.md), [seL4_libs](sel4-libs.md),
+[rust-sel4](rust-sel4.md)) wrap the raw API. [Ecosystem](ecosystem.md)
+lists the repositories.
 
 ## In seL4
 
-To be written.
+The kernel is one repository, [seL4/seL4](https://github.com/seL4/seL4),
+built as a single ELF image with no loadable modules
+([source layout](source-layout.md), [build system](build-system.md)).
+
+It supports three architecture families, in `src/arch/`: `arm` (32-bit
+AArch32 and 64-bit AArch64), `riscv` (RV32 and RV64) and `x86` (IA-32
+and x86-64). The build option `KernelSel4Arch` picks one of `aarch32`,
+`aarch64`, `arm_hyp` (AArch32 with hypervisor support), `riscv32`,
+`riscv64`, `ia32`, `x86_64`; `KernelPlatform` picks the board.
+
+Only particular configurations are verified. The proofs in
+[l4v](l4v.md) exist for five architectures, selected there by
+`L4V_ARCH`: `ARM`, `ARM_HYP`, `AARCH64`, `RISCV64` and `X64`; `ARM` has
+the most complete set, and the others cover a subset. The exact kernel
+settings each proof applies to are the `configs/*_verified.cmake` files
+(for instance `X64_verified.cmake`: platform `pc99`, one core, no kernel
+printing, fastpath on). Features outside those files are unverified
+code even on a verified architecture: multicore (SMP), x86
+virtualisation, and most combinations with MCS, whose proofs
+(`*_MCS_verified.cmake`) are still in progress (unchecked: see the
+verification page for the current state). The boot code and the
+assembly are assumed correct, not proved
+([boot code and the proof boundary](boot-code.md)).
+
+### Map of this knowledge base
+
+[INDEX.md](../INDEX.md) is the reading order. In brief:
+
+| Part | Read it for |
+|---|---|
+| 1. Orientation | This page, the [repositories](ecosystem.md), the [papers](history-and-papers.md) |
+| 2. Processor fundamentals | What the kernel must do on any CPU ([exceptions](../concepts/exceptions-and-traps.md), [virtual memory](../concepts/virtual-memory.md)), then x86-64, AArch64 and RISC-V in turn |
+| 3. Platform and devices | Firmware tables, [interrupt controllers](../concepts/irq.md), timers, buses, and how virtual and cloud machines differ |
+| 4. The seL4 kernel | The model and API, starting at [capabilities](capabilities.md); then the inside: [design](kernel-design.md), [boot](kernel-boot.md), [platform ports](platform-port.md) |
+| 5. Verification | [What is proved](verification.md) and [what a patch does to the proofs](proof-impact.md) |
+| 6. User level | [libsel4](libsel4.md), [sel4test](sel4test.md), [Microkit](microkit.md), [sDDF](sddf.md), [rust-sel4](rust-sel4.md) |
+| 7. Contributing | [Sending a patch](contributing.md), [CI](ci.md), [governance](governance.md) |
+
+A reader in a hurry to understand the API reads Part 4's "Model and API"
+group in order; each page there assumes the ones before it.
 
 ## Gotchas
 
-To be written.
+- **"Verified" names a configuration, not the project.** A kernel built
+  with SMP, with debug printing, or for a board without a
+  `_verified.cmake` file is the same source but not the proved
+  artefact. Patches that touch only unverified configurations are much
+  cheaper to land.
+- **seL4 is not an OS you can log in to.** There is no shell, no POSIX
+  layer and no driver model in the kernel repository. A "Hello world"
+  needs a root task, a loader and a build system around the kernel.
+- **The proof assumes things.** Correct hardware, correct boot code,
+  correct assembly and cache/TLB management, and a correct compiler
+  unless binary verification covers the architecture. A bug in those
+  areas is outside the theorem, and platform ports live almost entirely
+  there.
+- **Two kernels in one tree.** The MCS configuration changes the API
+  (extra objects and system calls, different reply handling), so
+  user-level code and documentation must say which they mean.
+- **Fast is part of the design.** IPC has a hand-optimised fastpath
+  (`src/fastpath/`), and worst-case interrupt latency is bounded by
+  making long operations preemptible. Patches are judged on both.
 
 ## See also
 
 - [Index](../INDEX.md): the reading order
+- [Ecosystem and repositories](ecosystem.md): what lives where around the kernel
+- [History and key papers](history-and-papers.md): L4, the 2009 proof and what followed
+- [Capabilities](capabilities.md): the next page for the API
+- [Kernel design and execution model](kernel-design.md): the next page for the internals
+- [The seL4 proofs](verification.md): exactly what is proved, and for which configurations
 
 ## References
 
-- None yet. *Unchecked.*
+- [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
+  chapters 1 "Introduction" and 2 "Kernel Services and Objects": the
+  kernel's own summary of its services. *Unchecked: PDF not opened
+  today; cited from memory of its structure.*
+- [seL4 `configs/`](https://github.com/seL4/seL4/tree/master/configs):
+  the `*_verified.cmake` files, one per verified configuration and
+  platform. *Checked 2026-11-14.*
+- [seL4 `src/arch/`](https://github.com/seL4/seL4/tree/master/src/arch):
+  the three architecture families. *Checked 2026-11-14.*
+- [l4v `README.md`](https://github.com/seL4/l4v/blob/master/README.md),
+  "Running the proofs": the five `L4V_ARCH` values and that `ARM` has
+  the most complete proofs. *Checked 2026-11-14.*
+- [The seL4 Microkernel: An Introduction](https://sel4.systems/About/seL4-whitepaper.pdf)
+  (Heiser, white paper): the best long-form overview for a newcomer.
+  *Unchecked: not opened today.*
+- [seL4 FAQ](https://sel4.systems/About/FAQ.html): what is and is not
+  verified, in plain terms. *Unchecked: not opened today.*
 
 ## My notes
 
