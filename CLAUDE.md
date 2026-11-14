@@ -42,10 +42,15 @@ after it in the text.
 
 ## Changes
 
+Tim also edits pages in GitHub's web editor, so `origin` (the private
+repository `timretout/sel4-kb`) can be ahead of this checkout.
+
+- Run `git pull --rebase` before editing.
 - Run `ci/check` before committing; it must pass.
 - Commit small, one topic per commit, with a plain message ("kb: HPET
   page", "kb: PIT: emulated counts can rise after a reload"). Never add
   `Signed-off-by`, and never bypass the pre-commit secret scan.
-- Pushing needs Tim's say-so.
+- Pushing needs Tim's say-so. End by saying how many commits are
+  unpushed, so the web view is not silently behind.
 
 Use the `/kb` skill to write or refresh a page.

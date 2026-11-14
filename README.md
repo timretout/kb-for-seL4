@@ -29,9 +29,17 @@ back to them, so this repository stands on its own and could be published.
 
 ## Reading it
 
-Any Markdown viewer works: GitHub, VS Code, or Obsidian opened on this
+On the web: <https://github.com/timretout/sel4-kb> (private). Pages
+render with working links. To edit, open a page and use the pencil
+button, or press `.` anywhere in the repository for the browser editor
+(github.dev), which can change several files in one commit.
+
+Locally, any Markdown viewer works: VS Code, or Obsidian opened on this
 directory (its graph view shows how the pages connect). Links are plain
-relative Markdown links, so they work in all of these.
+relative Markdown links, so they work everywhere.
+
+GitHub runs `ci/check` on every push, web edits included; a red cross on
+the commit means a broken link or a page off the template.
 
 ## Checking it
 
