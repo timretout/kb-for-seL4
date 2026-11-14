@@ -128,7 +128,7 @@ In the kernel repository the proofs are visible only as the
 `configs/*_verified.cmake` files, the `kernel_all_pp_wrapper` build
 target, the `KernelVerificationBuild` option, and comments of the form
 `/** MODIFIES: ... */` or `/** DONT_TRANSLATE */` that are annotations
-for the C parser (unchecked spelling of each).
+for the C parser.
 
 ## Gotchas
 
