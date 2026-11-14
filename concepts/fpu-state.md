@@ -122,7 +122,8 @@ threads that have the FPU disabled does not need a reload.
 marks a thread as not using the FPU. The kernel then never saves or
 loads FPU state for it and runs it with the FPU disabled, so an FPU
 instruction in it traps and is reported as a fault to its fault handler
-(see [faults](../sel4/faults.md)). This is the way to keep switches
+(see [faults](../sel4/faults.md); unchecked which fault type each
+architecture reports). This is the way to keep switches
 between, say, small driver threads cheap.
 
 **x86 options**
