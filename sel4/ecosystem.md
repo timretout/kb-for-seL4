@@ -190,7 +190,8 @@ the Mattermost chat at
 and a fortnightly open video hangout. Bugs and patches go to the
 repository concerned as GitHub issues and pull requests
 ([Contributing a patch](contributing.md)). The **seL4 Summit** is the
-annual conference, held since 2022; talks are published and are a good
+annual conference (unchecked: its first year; the Foundation's pages
+say 2021 in one place and list summits from 2022 in another); talks are published and are a good
 way to see who works on what.
 
 ## In seL4
