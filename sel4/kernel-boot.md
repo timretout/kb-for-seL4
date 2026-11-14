@@ -244,6 +244,10 @@ x86 does more itself, because nothing like the elfloader runs first.
 - [Untyped memory](untyped-memory.md): what `create_untypeds()` produces
 - [Generated code](generated-code.md): where `avail_p_regs[]` and `kernel_device_frames[]` come from
 - [Porting to a platform](platform-port.md): the boot steps a new platform has to get right
+- [ELF and linking](../concepts/elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [Debugging](debugging.md): the tools for finding out why an seL4 system misbehaves
+- [Microkit internals](microkit-internals.md): how the `microkit` tool turns a system description into a boot image
+- [Source layout](source-layout.md): A tour of the `seL4/seL4` repository
 
 ## References
 

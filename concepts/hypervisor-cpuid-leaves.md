@@ -45,6 +45,10 @@ describe the host.
 - [TSC](tsc.md) and [local APIC timer](lapic-timer.md): the rates it gives
 - [Timer calibration](timer-calibration.md): what it lets a guest skip
 - [PIT](pit.md): the reference it replaces
+- [Cloud virtual machines](cloud-vms.md): what hardware Amazon EC2, Google Compute Engine and Azure present to a guest kernel, and how that differs...
+- [CPUID and MSRs](cpuid-and-msrs.md): how x86 software discovers what the processor can do
+- [EC2 instance types](ec2-instance-types.md): how to read an EC2 instance type name
+- [x86 virtualisation (VT-x)](x86-virtualisation.md): intel's hardware support for running guest operating systems
 
 ## References
 

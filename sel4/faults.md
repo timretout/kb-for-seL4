@@ -223,6 +223,10 @@ The fault types and the user-side layouts are defined in
 - [Hypervisor support](hypervisor.md): VCPU and virtual interrupt faults
 - [Debugging](debugging.md): reading the double-fault message
 - [Microkit](microkit.md): the monitor as every protection domain's fault handler
+- [RISC-V paging and traps](../concepts/riscv-paging-and-traps.md): how an S-mode kernel on RISC-V translates addresses
+- [Virtual memory](../concepts/virtual-memory.md): how an MMU translates the addresses programs use into physical ones through multi-level page tables, with...
+- [Kernel design and execution model](kernel-design.md): the rules every line of seL4 follows
+- [System calls and invocations](syscalls-and-invocations.md): seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability
 
 ## References
 

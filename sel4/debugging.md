@@ -288,6 +288,8 @@ Heuristics, not proofs; each is the usual cause, not the only one.
 - [sel4test and sel4bench](sel4test.md): the test suite to run once it boots, and the benchmark user
 - [Platform ports](platform-port.md): the assumptions a new machine breaks
 - [System calls and invocations](syscalls-and-invocations.md): error codes the messages explain
+- [ELF and linking](../concepts/elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [libsel4 and the runtime](libsel4.md): libsel4 is the kernel's ABI written down as C
 
 ## References
 

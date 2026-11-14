@@ -295,6 +295,11 @@ absorb it, so [proof impact](proof-impact.md) still has to be stated.
 - [Faults](faults.md): the timeout fault message
 - [Notifications](notifications.md): scheduling contexts bound to notifications
 - [Microkit](microkit.md): budgets and periods per protection domain, passive protection domains
+- [History and key papers](history-and-papers.md): seL4 is the third generation of the L4 microkernel family, designed from 2004 to be formally verified
+- [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
+- [sel4test and sel4bench](sel4test.md): sel4test is the kernel's functional test suite, a root task that runs each test in a fresh process and...
+- [SMP](smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler...
+- [System calls and invocations](syscalls-and-invocations.md): seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability
 
 ## References
 

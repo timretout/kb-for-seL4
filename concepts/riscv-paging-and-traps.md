@@ -293,6 +293,8 @@ and deleting an ASID calls `hwASIDFlush`. The functions are in
 - [x86-64 paging](x86-paging.md) and [AArch64 paging](aarch64-paging.md): the same job on the other architectures
 - [Address spaces (VSpace)](../sel4/vspace.md): the object model across architectures
 - [Faults and fault handlers](../sel4/faults.md): the `VMFault` message
+- [x86-64 exceptions and system calls](x86-exceptions-syscalls.md): how an x86-64 CPU enters the kernel
+- [System calls and invocations](../sel4/syscalls-and-invocations.md): seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability
 
 ## References
 

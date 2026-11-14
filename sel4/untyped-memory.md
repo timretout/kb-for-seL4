@@ -208,6 +208,8 @@ The preemption check does not actually happen every 256 bytes:
 - [Kernel design and execution model](kernel-design.md): preemption points and restartable system calls
 - [Address spaces (VSpace)](vspace.md): what is done with frames and page tables once made
 - [Microkit internals](microkit-internals.md): untyped allocation done at build time
+- [CAmkES and capDL](camkes-capdl.md): capDL is a language that describes a complete system as kernel objects and the capabilities between them,...
+- [Kernel boot sequence](kernel-boot.md): the path from the kernel's entry point to the first user thread
 
 ## References
 

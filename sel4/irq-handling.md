@@ -232,6 +232,9 @@ protection domain's notification with a badge bit for its channel, and
 - [Notifications](notifications.md): the object the signal lands on, and badges
 - [SMP](smp.md): IPIs and per-core interrupts
 - [BootInfo and the root task](bootinfo-and-root-task.md): where `IRQControl` starts
+- [virtio](../concepts/virtio.md): virtio is the standard family of paravirtual devices
+- [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
+- [sDDF](sddf.md): trustworthy Systems' framework for user-level device drivers on Microkit
 
 ## References
 

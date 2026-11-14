@@ -248,6 +248,9 @@ built into the image, because UEFI there offers no DTB to fall back on.
 - [Cloud virtual machines](cloud-vms.md): what cloud Arm instances present
 - [x86 boot flow](x86-boot.md): the PC equivalent
 - [Multiprocessor bring-up](smp-bringup.md): starting the other cores
+- [ELF and linking](elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [QEMU](qemu.md): QEMU emulates whole machines
+- [Kernel boot sequence](../sel4/kernel-boot.md): the path from the kernel's entry point to the first user thread
 
 ## References
 

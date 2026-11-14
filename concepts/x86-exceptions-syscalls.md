@@ -205,6 +205,7 @@ bases are set (`inst`, `msr`).
 - [Faults](../sel4/faults.md): what user level sees after `c_handle_interrupt()`
 - [System calls and invocations](../sel4/syscalls-and-invocations.md): what `c_handle_syscall()` dispatches
 - [AArch64 exceptions](aarch64-exceptions.md) and [RISC-V paging and traps](riscv-paging-and-traps.md): the same step elsewhere
+- [Privilege levels](privilege-levels.md): the CPU modes that separate user code, kernel, hypervisor and firmware on x86
 
 ## References
 

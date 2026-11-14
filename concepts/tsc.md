@@ -61,6 +61,8 @@ non-MCS kernel needs the rate only to set its periodic tick.
 - [Local APIC timer](lapic-timer.md): TSC deadline mode programs the timer in TSC ticks
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): the rate without measuring
 - [PIT](pit.md): the reference clock
+- [CPUID and MSRs](cpuid-and-msrs.md): how x86 software discovers what the processor can do
+- [seL4_libs and util_libs](../sel4/sel4-libs.md): the classic C libraries for building dynamic systems on seL4
 
 ## References
 

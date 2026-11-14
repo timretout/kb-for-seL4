@@ -167,6 +167,8 @@ devices work the same way.
 - [Untyped memory](../sel4/untyped-memory.md): device untypeds, the MMIO route on every architecture
 - [Capabilities](../sel4/capabilities.md): the model IOPort capabilities fit into
 - [x86 virtualisation](x86-virtualisation.md): I/O bitmaps for guests
+- [virtio](virtio.md): virtio is the standard family of paravirtual devices
+- [Virtual memory](virtual-memory.md): how an MMU translates the addresses programs use into physical ones through multi-level page tables, with...
 
 ## References
 

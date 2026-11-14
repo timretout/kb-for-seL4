@@ -201,6 +201,7 @@ For images that boot on cloud machines, see
 - [Cloud boot images](cloud-boot-images.md): packaging GRUB, kernel and root task for EC2 and Compute Engine
 - [SMP bring-up](smp-bringup.md): how the other cores start after this one
 - [QEMU](qemu.md): the usual first test target
+- [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
 
 ## References
 

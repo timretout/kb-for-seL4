@@ -207,6 +207,7 @@ boot protocols.
 - [UEFI](uefi.md), [x86 boot](x86-boot.md): the firmware and Multiboot background
 - [QEMU](qemu.md): the local loop
 - [Elfloader](../sel4/elfloader.md): the Arm boot path
+- [ELF and linking](elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
 
 ## References
 

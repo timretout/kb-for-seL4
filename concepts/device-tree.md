@@ -203,7 +203,7 @@ Above the kernel:
   `config.json` listing the `compatible` strings it serves and the
   resources it needs by index (`"dt_index": 0` is the first `reg` entry
   or the first interrupt). A per-example `meta.py` script using the
-  `sdfgen` library is given the board's DTB (`--dtb`), finds a node,
+  Acacia library (Python package `acacia`, the successor of `sdfgen`) is given the board's DTB (`--dtb`), finds a node,
   and emits the SDF with the right memory regions and interrupts, plus
   configuration data for each component
   ([echo server's `meta.py`](https://github.com/au-ts/sddf/blob/main/examples/echo_server/meta.py)).
@@ -249,6 +249,9 @@ Above the kernel:
 - [Build system](../sel4/build-system.md): `KernelCustomDTS` and platform `config.cmake`
 - [Platform ports](../sel4/platform-port.md): writing a DTS and overlay
 - [Index](../INDEX.md): the reading order
+- [RISC-V basics](riscv-basics.md): the RISC-V architecture as a kernel sees it
+- [RISC-V interrupts and timers](riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
+- [virtio](virtio.md): virtio is the standard family of paravirtual devices
 
 ## References
 

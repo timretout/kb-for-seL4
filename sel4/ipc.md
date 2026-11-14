@@ -264,6 +264,7 @@ thread state must also ask whether the fastpath has to check it.
 - [MCS](mcs.md): Reply objects and scheduling-context donation over Call
 - [libsel4](libsel4.md): the user-side stubs and `seL4_IPCBuffer`
 - [Microkit](microkit.md): protected procedure calls are `seL4_Call` on an endpoint
+- [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
 
 ## References
 

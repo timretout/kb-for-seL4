@@ -271,6 +271,8 @@ so code there may do things the verified subset of C forbids.
 - [x86-64 basics](x86-64-basics.md) and [AArch64 basics](aarch64-basics.md): the same ground for the other architectures
 - [Device trees](device-tree.md): how a RISC-V kernel learns what hardware it has
 - [The seL4 proofs](../sel4/verification.md): what "verified on RISC-V" covers
+- [FPU and SIMD state](fpu-state.md): the floating-point and vector registers are extra per-thread state, hundreds to thousands of bytes, that a...
+- [PSCI and SMCCC](psci-smccc.md): arm's standard way for a kernel to call firmware or a hypervisor
 
 ## References
 

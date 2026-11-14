@@ -224,6 +224,7 @@ user-level driver also owns; nothing arbitrates between them.
 - [Debugging](../sel4/debugging.md): kernel printing and debug system calls
 - [Elfloader](../sel4/elfloader.md): its own UART drivers
 - [Index](../INDEX.md): the reading order
+- [seL4_libs and util_libs](../sel4/sel4-libs.md): the classic C libraries for building dynamic systems on seL4
 
 ## References
 

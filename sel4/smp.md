@@ -174,6 +174,7 @@ The remote calls, from the per-architecture `IpiRemoteCall_t`:
 - [Kernel design and execution model](kernel-design.md): the non-preemptible, single-stack kernel the lock protects
 - [The seL4 proofs](verification.md): which configurations are verified
 - [Governance and RFCs](governance.md): where the multikernel direction is decided
+- [RISC-V interrupts and timers](../concepts/riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
 
 ## References
 

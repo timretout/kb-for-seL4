@@ -226,6 +226,7 @@ Two properties make this simple and are part of what the
 - [Kernel design and execution model](../sel4/kernel-design.md): why seL4 runs with interrupts off and one stack per core
 - [Faults and fault handlers](../sel4/faults.md): what user level sees of an exception
 - [Virtual memory](virtual-memory.md): the source of the most common exception
+- [RISC-V basics](riscv-basics.md): the RISC-V architecture as a kernel sees it
 
 ## References
 

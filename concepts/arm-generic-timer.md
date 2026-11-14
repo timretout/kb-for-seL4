@@ -43,6 +43,9 @@ generally reads `CNTFRQ_EL0` itself.
 
 - [GICv3 and the ITS](gicv3-its.md): where the timer's PPIs go
 - [Timer calibration](timer-calibration.md): what x86 has to do instead
+- [AArch64 basics](aarch64-basics.md): the 64-bit Arm execution state
+- [Arm virtualisation (EL2)](arm-virtualisation.md): what exception level 2 adds to an Arm core so that a hypervisor can run guests
+- [GICv2](gicv2.md): arm's older standard interrupt controller, with at most eight cores and every register memory-mapped
 
 ## References
 

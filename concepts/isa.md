@@ -95,6 +95,9 @@ code states the mapping).
 - [PIT](pit.md): ISA IRQ 0, and the device seL4 still needs at boot
 - [PCI and PCI Express](pci.md): the bus that replaced ISA
 - [MSI and MSI-X](msi-msix.md): how PCI devices interrupt instead
+- [I/O ports and MMIO](io-ports.md): x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions
+- [8259 PIC](pic-8259.md): the PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports
+- [UARTs: 16550 and PL011](uart.md): A UART is the serial port
 
 ## References
 

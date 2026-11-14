@@ -285,6 +285,8 @@ breaks the correspondence the proofs rely on: see
 - [SMP](smp.md): how the big lock preserves the no-concurrency model
 - [Faults](faults.md): what `EXCEPTION_FAULT` turns into
 - [History and papers](history-and-papers.md): where the design is argued
+- [Exceptions, interrupts and traps](../concepts/exceptions-and-traps.md): the three ways a CPU leaves user code for the kernel
+- [Virtual memory](../concepts/virtual-memory.md): how an MMU translates the addresses programs use into physical ones through multi-level page tables, with...
 
 ## References
 

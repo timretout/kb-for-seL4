@@ -134,6 +134,7 @@ versions.
 - [sel4test](sel4test.md): the test suite the simulation and hardware jobs run
 - [l4v](l4v.md): the proofs and the verification manifest
 - [Build system](build-system.md): configurations and standalone kernel builds
+- [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
 
 ## References
 

@@ -177,6 +177,8 @@ so.
 - [Device tree](device-tree.md): the alternative hardware description
 - [Elfloader](../sel4/elfloader.md): the Arm and RISC-V loader
 - [Cloud boot images](cloud-boot-images.md): ESP layout for EC2 and Compute Engine
+- [ELF and linking](elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [QEMU](qemu.md): QEMU emulates whole machines
 
 ## References
 

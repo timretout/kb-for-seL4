@@ -257,6 +257,7 @@ trusted, or are driven by components the system trusts completely. See
 - [Address spaces (VSpace)](../sel4/vspace.md): the CPU-side mapping API that IOSpaces mirror
 - [sDDF](../sel4/sddf.md): how drivers handle DMA regions
 - [Index](../INDEX.md): the reading order
+- [Virtualisation support](../sel4/hypervisor.md): seL4 can host virtual machines
 
 ## References
 

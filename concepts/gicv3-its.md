@@ -67,6 +67,13 @@ needs kernel table memory too.
 - [MSI and MSI-X](msi-msix.md): what the device writes
 - [PCI and PCI Express](pci.md): the requester ID that becomes a DeviceID
 - [Arm generic timer](arm-generic-timer.md): the PPIs
+- [Arm virtualisation (EL2)](arm-virtualisation.md): what exception level 2 adds to an Arm core so that a hypervisor can run guests
+- [EC2 instance types](ec2-instance-types.md): how to read an EC2 instance type name
+- [GICv2](gicv2.md): arm's older standard interrupt controller, with at most eight cores and every register memory-mapped
+- [gVNIC](gvnic.md): compute Engine's own paravirtual network card, the only NIC on third-generation and later machine series...
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
+- [SMP](../sel4/smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler...
 
 ## References
 

@@ -132,6 +132,11 @@ notes that the kernel keeps the interrupt masked until then.
 - [ACPI tables](acpi-tables.md): the MADT maps ISA IRQs to I/O APIC pins
 - [PIT](pit.md): the classic edge-triggered ISA interrupt, IRQ 0
 - [Local APIC timer](lapic-timer.md): the interrupt seL4's own scheduler runs on
+- [Exceptions, interrupts and traps](exceptions-and-traps.md): the three ways a CPU leaves user code for the kernel
+- [GICv2](gicv2.md): arm's older standard interrupt controller, with at most eight cores and every register memory-mapped
+- [8259 PIC](pic-8259.md): the PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports
+- [RISC-V interrupts and timers](riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
+- [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
 
 ## References
 

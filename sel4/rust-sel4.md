@@ -185,9 +185,9 @@ only the Microkit ABI (channels, shared memory).
 
 ### Status
 
-Rust support was accepted through the seL4 RFC process (the "Rust
-support for seL4 userspace" RFC; unchecked: number and date not
-looked up today) and rust-sel4 is the Foundation's official answer.
+rust-sel4 lives in the `seL4` GitHub organisation as the Foundation's
+Rust support. No Rust RFC appears among the implemented or active RFCs
+in `seL4/rfcs` (looked 2026-11-14), so do not cite one.
 It is actively developed: the pinned nightly is two weeks old. Its
 weightiest user is Microkit itself, through the capDL initialiser,
 which makes rust-sel4 part of the boot path of every Microkit system,
@@ -288,8 +288,9 @@ branch `main`):
   *Checked 2026-11-14.*
 - [Rendered rustdoc](https://sel4.github.io/rust-sel4/): API
   documentation per configuration. *Unchecked: not opened today.*
-- [seL4 RFCs](https://sel4.dev/rfcs/): the Rust support RFC.
-  *Unchecked: not opened today.*
+- [seL4 RFCs](https://github.com/seL4/rfcs/tree/main/src): the
+  implemented and active RFC lists, which hold no Rust RFC.
+  *Checked 2026-11-14.*
 
 ## My notes
 

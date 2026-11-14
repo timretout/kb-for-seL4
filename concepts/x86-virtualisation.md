@@ -212,6 +212,7 @@ The code is
 - [Cloud VMs](cloud-vms.md): what the clouds' hypervisors present
 - [x86 paging](x86-paging.md): the tables EPT mirrors
 - [Privilege levels](privilege-levels.md): rings, and where VMX root sits
+- [QEMU](qemu.md): QEMU emulates whole machines
 
 ## References
 

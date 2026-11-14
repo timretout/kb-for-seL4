@@ -153,6 +153,7 @@ in the interface XML
 - [Threads and TCBs](threads.md), [IPC and endpoints](ipc.md), [Notifications](notifications.md), [Address spaces](vspace.md), [Interrupt delivery](irq-handling.md), [MCS](mcs.md): the main object types in detail
 - [libsel4 and the runtime](libsel4.md): where the constants and stubs come from
 - [Source layout](source-layout.md): finding the per-object files
+- [Generated code](generated-code.md): much of what the kernel compiles is not in the repository
 
 ## References
 

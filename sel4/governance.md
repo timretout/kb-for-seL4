@@ -185,6 +185,7 @@ which is based on the Contributor Covenant (unchecked).
 - [Verification](verification.md): what the verification statements attached to a release cover
 - [History and papers](history-and-papers.md): NICTA, Data61 and how the Foundation came about
 - [Ecosystem](ecosystem.md): the repositories and who owns them
+- [SMP](smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler...
 
 ## References
 

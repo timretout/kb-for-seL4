@@ -203,6 +203,11 @@ CAmkES-era drivers (unchecked: what uses it).
 - [ISA](isa.md): what PCI replaced, and the legacy devices behind PCI's ISA bridge
 - [GICv3 and the ITS](gicv3-its.md): the requester ID becomes the ITS's DeviceID
 - [Local APIC and I/O APIC](apic.md): where x86 INTx and MSI interrupts arrive
+- [I/O ports and MMIO](io-ports.md): x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [NVMe](nvme.md): the standard PCI storage controller interface, and the one EC2 uses for every disk and Compute Engine for...
+- [virtio](virtio.md): virtio is the standard family of paravirtual devices
+- [sDDF networking](../sel4/sddf-net.md): the network class of sDDF in detail
 
 ## References
 

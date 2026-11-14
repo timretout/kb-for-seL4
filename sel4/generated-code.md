@@ -258,6 +258,8 @@ definitions and proofs for the same `.bf` files ([l4v](l4v.md)).
 - [Device tree](../concepts/device-tree.md): the format `hardware_gen.py` reads
 - [Porting to a platform](platform-port.md): writing the DTS, overlay and `hardware.yml` entries
 - [Verified C subset](verified-c-subset.md): why hand-written shifts and C bitfields are avoided
+- [Kernel boot sequence](kernel-boot.md): the path from the kernel's entry point to the first user thread
+- [rust-sel4](rust-sel4.md): `seL4/rust-sel4` is the Rust support for seL4 user level
 
 ## References
 

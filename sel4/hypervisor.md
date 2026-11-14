@@ -242,6 +242,7 @@ guest side looks like.
 - [IOMMUs](../concepts/iommu.md): what makes pass-through safe
 - [Faults and fault handlers](faults.md): the delivery mechanism the Arm VMM uses
 - [Cloud virtual machines](../concepts/cloud-vms.md): seL4 as a guest
+- [Privilege levels](../concepts/privilege-levels.md): the CPU modes that separate user code, kernel, hypervisor and firmware on x86
 
 ## References
 

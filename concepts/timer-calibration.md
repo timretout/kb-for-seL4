@@ -74,6 +74,12 @@ util_libs measures the TSC again at user level for its ltimer, in
 - [TSC](tsc.md) and [local APIC timer](lapic-timer.md): what is measured
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): how to avoid measuring
 - [Boot code](../sel4/boot-code.md): why this code is outside the proofs
+- [CPUID and MSRs](cpuid-and-msrs.md): how x86 software discovers what the processor can do
+- [EC2 instance types](ec2-instance-types.md): how to read an EC2 instance type name
+- [QEMU](qemu.md): QEMU emulates whole machines
+- [MCS kernel](../sel4/mcs.md): A seL4 build option that replaces the periodic tick with scheduling contexts
+- [seL4_libs and util_libs](../sel4/sel4-libs.md): the classic C libraries for building dynamic systems on seL4
+- [sel4test and sel4bench](../sel4/sel4test.md): sel4test is the kernel's functional test suite, a root task that runs each test in a fresh process and...
 
 ## References
 

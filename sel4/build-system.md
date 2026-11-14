@@ -273,6 +273,10 @@ then `cmake --install`s each into the SDK as
 - [Microkit internals](microkit-internals.md): the SDK build
 - [CI](ci.md): which configurations upstream builds for every pull request
 - [Debugging](debugging.md): debug builds and the `simulate` script in use
+- [Device trees](../concepts/device-tree.md): A device tree is a data structure describing hardware that cannot be discovered by probing
+- [ELF and linking](../concepts/elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
+- [libsel4 and the runtime](libsel4.md): libsel4 is the kernel's ABI written down as C
 
 ## References
 

@@ -197,6 +197,8 @@ otherwise. AArch64 MCS has an optional signal fastpath
 - [Microkit](microkit.md) and [Microkit internals](microkit-internals.md): channels and the event loop
 - [sDDF](sddf.md): queues plus notifications as a driver framework
 - [MCS](mcs.md): scheduling contexts bound to notifications
+- [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
+- [System calls and invocations](syscalls-and-invocations.md): seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability
 
 ## References
 

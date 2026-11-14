@@ -241,6 +241,9 @@ Microkit.
 - [MCS](mcs.md): budgets, periods and passive servers in the kernel
 - [Notifications](notifications.md) and [IPC](ipc.md): what channels are made of
 - [Index](../INDEX.md): the reading order
+- [QEMU](../concepts/qemu.md): QEMU emulates whole machines
+- [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
+- [libsel4 and the runtime](libsel4.md): libsel4 is the kernel's ABI written down as C
 
 ## References
 

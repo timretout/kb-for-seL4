@@ -203,6 +203,8 @@ definition per architecture.
 - [System calls and invocations](syscalls-and-invocations.md): the path from trap to decode
 - [libsel4](libsel4.md): the user-level side of the same repository
 - [Porting to a platform](platform-port.md): which of these files a new platform touches
+- [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
+- [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
 
 ## References
 

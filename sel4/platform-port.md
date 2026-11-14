@@ -239,6 +239,8 @@ has no [proof impact](proof-impact.md).
 - [Debugging](debugging.md): first-boot failure signatures
 - [Contributing a patch](contributing.md) and [Governance and RFCs](governance.md): the process around a port
 - [The seL4 proofs](verification.md): what "verified configuration" means
+- [Microkit internals](microkit-internals.md): how the `microkit` tool turns a system description into a boot image
+- [Source layout](source-layout.md): A tour of the `seL4/seL4` repository
 
 ## References
 

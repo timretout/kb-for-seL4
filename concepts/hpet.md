@@ -53,6 +53,7 @@ util_libs are not exercised there.
 - [PIT](pit.md): what it was meant to replace, and the usual fallback
 - [ACPI tables](acpi-tables.md): how it is found
 - [TSC](tsc.md): what Linux prefers on modern machines
+- [seL4_libs and util_libs](../sel4/sel4-libs.md): the classic C libraries for building dynamic systems on seL4
 
 ## References
 

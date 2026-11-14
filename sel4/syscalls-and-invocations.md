@@ -251,6 +251,7 @@ and user level.
 - [Generated code](generated-code.md): from XML to labels and stubs
 - [Kernel design and execution model](kernel-design.md): kernel entry, the fastpath, preemption and restart
 - [x86-64](../concepts/x86-exceptions-syscalls.md), [AArch64](../concepts/aarch64-exceptions.md), [RISC-V](../concepts/riscv-paging-and-traps.md): how a system call instruction enters the kernel
+- [Source layout](source-layout.md): A tour of the `seL4/seL4` repository
 
 ## References
 

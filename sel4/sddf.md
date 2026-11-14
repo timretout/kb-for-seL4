@@ -240,6 +240,10 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
 - [Device tree](../concepts/device-tree.md): what the metaprogram reads
 - [IRQ handling](irq-handling.md): how an interrupt reaches a driver PD
 - [Index](../INDEX.md): the reading order
+- [NVMe](../concepts/nvme.md): the standard PCI storage controller interface, and the one EC2 uses for every disk and Compute Engine for...
+- [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
+- [rust-sel4](rust-sel4.md): `seL4/rust-sel4` is the Rust support for seL4 user level
+- [seL4_libs and util_libs](sel4-libs.md): the classic C libraries for building dynamic systems on seL4
 
 ## References
 

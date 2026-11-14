@@ -160,6 +160,13 @@ Microkit's `<irq>` element takes the same fields.
 - [ACPI tables](acpi-tables.md): the MADT lists local APICs, I/O APICs and overrides
 - [PIT](pit.md): an ISA interrupt whose I/O APIC pin varies by machine
 - [GICv3 and the ITS](gicv3-its.md): Arm's equivalent
+- [CPUID and MSRs](cpuid-and-msrs.md): how x86 software discovers what the processor can do
+- [GICv2](gicv2.md): arm's older standard interrupt controller, with at most eight cores and every register memory-mapped
+- [8259 PIC](pic-8259.md): the PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports
+- [Multiprocessor bring-up and IPIs](smp-bringup.md): how a multicore machine goes from one running core to all of them
+- [x86-64 exceptions and system calls](x86-exceptions-syscalls.md): how an x86-64 CPU enters the kernel
+- [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
+- [SMP](../sel4/smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler...
 
 ## References
 

@@ -245,6 +245,9 @@ refuses to map user frames at or above it.
 - [Faults and fault handlers](../sel4/faults.md): how it reaches user level
 - [I/O ports and MMIO](io-ports.md): device registers as mapped memory
 - [Kernel design and execution model](../sel4/kernel-design.md): why the kernel wants everything mapped up front
+- [ELF and linking](elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [CSpaces and capability addressing](../sel4/cspace.md): A thread's CSpace is the tree of CNodes
 
 ## References
 

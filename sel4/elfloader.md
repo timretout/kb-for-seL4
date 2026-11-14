@@ -254,6 +254,9 @@ behaviour may therefore be needed in two loaders.
 - [Cloud boot images](../concepts/cloud-boot-images.md): wrapping the result for EC2 and Compute Engine
 - [Microkit internals](microkit-internals.md): Microkit's own loader
 - [Build system](build-system.md): where the elfloader's options are set
+- [QEMU](../concepts/qemu.md): QEMU emulates whole machines
+- [BootInfo and the root task](bootinfo-and-root-task.md): at the end of boot the kernel creates one user thread, the root task, hands it a capability to everything...
+- [rust-sel4](rust-sel4.md): `seL4/rust-sel4` is the Rust support for seL4 user level
 
 ## References
 

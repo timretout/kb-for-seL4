@@ -249,6 +249,8 @@ VCPU is not running (`struct vTimer`, `last_pcount`).
 - [PSCI and SMCCC](psci-smccc.md): what guests call and VMMs emulate
 - [Arm boot flow](arm-boot.md): arriving at EL2, or leaving it
 - [Cloud virtual machines](cloud-vms.md): being the guest
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [QEMU](qemu.md): QEMU emulates whole machines
 
 ## References
 

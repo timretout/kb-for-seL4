@@ -52,6 +52,15 @@ designed around MSI-X, one vector per queue.
 - [GICv3 and the ITS](gicv3-its.md): how Arm turns the write into an interrupt
 - [PCI and PCI Express](pci.md): configuration space, capabilities and BARs
 - [ACPI tables](acpi-tables.md): MCFG says where PCI configuration space is
+- [ENA](ena.md): amazon's network card, the only NIC on EC2 Nitro instances
+- [gVNIC](gvnic.md): compute Engine's own paravirtual network card, the only NIC on third-generation and later machine series...
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [ISA](isa.md): the IBM PC's original expansion bus
+- [NVMe](nvme.md): the standard PCI storage controller interface, and the one EC2 uses for every disk and Compute Engine for...
+- [RISC-V interrupts and timers](riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
+- [virtio](virtio.md): virtio is the standard family of paravirtual devices
+- [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
+- [sDDF networking](../sel4/sddf-net.md): the network class of sDDF in detail
 
 ## References
 

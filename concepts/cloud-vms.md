@@ -174,6 +174,13 @@ is why it is the first thing to boot.
 - [Booting a custom kernel on a cloud](cloud-boot-images.md): images, import and console capture
 - [QEMU](qemu.md): the local stand-in
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): how a guest tells where it is
+- [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
+- [Arm virtualisation (EL2)](arm-virtualisation.md): what exception level 2 adds to an Arm core so that a hypervisor can run guests
+- [CPUID and MSRs](cpuid-and-msrs.md): how x86 software discovers what the processor can do
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [Privilege levels](privilege-levels.md): the CPU modes that separate user code, kernel, hypervisor and firmware on x86
+- [x86 virtualisation (VT-x)](x86-virtualisation.md): intel's hardware support for running guest operating systems
+- [Virtualisation support](../sel4/hypervisor.md): seL4 can host virtual machines
 
 ## References
 

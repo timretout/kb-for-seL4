@@ -194,6 +194,9 @@ the `IpiRemoteCall_t` enum in each architecture's
 - [Elfloader](../sel4/elfloader.md): where Arm and RISC-V secondaries start
 - [x86 boot](x86-boot.md): the mode climb the trampoline repeats
 - [RISC-V basics](riscv-basics.md): harts and SBI
+- [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
+- [RISC-V interrupts and timers](riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
+- [Kernel boot sequence](../sel4/kernel-boot.md): the path from the kernel's entry point to the first user thread
 
 ## References
 

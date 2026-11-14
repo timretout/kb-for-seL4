@@ -64,6 +64,7 @@ budget and period. The non-MCS kernel uses a periodic tick.
 - [Timer calibration](timer-calibration.md): how the APIC timer's rate is measured
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): EBX of `0x40000010` gives the APIC timer's rate
 - [MCS](../sel4/mcs.md): the kernel configuration that depends on it
+- [IRQ](irq.md): A device's signal that it needs the CPU, carried on a wire or as a message to an interrupt controller,...
 
 ## References
 

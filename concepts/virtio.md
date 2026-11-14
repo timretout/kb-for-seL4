@@ -266,6 +266,8 @@ designer must allocate and the driver must program into the device.
 - [sDDF](../sel4/sddf.md) and [sDDF networking](../sel4/sddf-net.md): the drivers' other side
 - [Interrupt delivery](../sel4/irq-handling.md): how the driver gets its interrupt
 - [Index](../INDEX.md): the reading order
+- [Compute Engine machine types](gce-machine-types.md): how to read a Compute Engine machine type name such as `c4a-standard-2`, and what the series behind it...
+- [UARTs: 16550 and PL011](uart.md): A UART is the serial port
 
 ## References
 

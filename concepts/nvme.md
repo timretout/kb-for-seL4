@@ -255,6 +255,7 @@ number, and MSI-X. On x86 the vector comes from
 - [virtio](virtio.md): the other storage interface on Compute Engine
 - [PCI](pci.md) and [MSI and MSI-X](msi-msix.md): what it is built on
 - [sDDF](../sel4/sddf.md): the block driver model
+- [Compute Engine machine types](gce-machine-types.md): how to read a Compute Engine machine type name such as `c4a-standard-2`, and what the series behind it...
 
 ## References
 

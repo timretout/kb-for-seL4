@@ -37,6 +37,13 @@ covered by assumptions about the state it leaves, not by proof.
 
 - [Timer calibration](../concepts/timer-calibration.md): an example of boot code
 - [PIT](../concepts/pit.md): its kernel driver is entirely boot code
+- [ELF and linking](../concepts/elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
+- [BootInfo and the root task](bootinfo-and-root-task.md): at the end of boot the kernel creates one user thread, the root task, hands it a capability to everything...
+- [Contributing a patch](contributing.md): the path of a change into upstream seL4
+- [Kernel boot sequence](kernel-boot.md): the path from the kernel's entry point to the first user thread
+- [Proof impact of a change](proof-impact.md): A procedure for deciding, before sending a kernel patch, whether it changes code the proofs cover
+- [The seL4 proofs](verification.md): seL4's proofs show, for a few exact kernel configurations, that the C code behaves as an abstract...
+- [The verified C subset](verified-c-subset.md): verified seL4 code must be written in the subset of C99 that the Isabelle C parser accepts
 
 ## References
 

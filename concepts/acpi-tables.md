@@ -56,6 +56,14 @@ it is not the identity mapping, and with which polarity and trigger mode.
 - [PIT](pit.md): its interrupt pin comes from the MADT
 - [PCI and PCI Express](pci.md): ECAM, the configuration space MCFG locates
 - [MSI and MSI-X](msi-msix.md): PCI devices found through MCFG
+- [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
+- [Device trees](device-tree.md): A device tree is a data structure describing hardware that cannot be discovered by probing
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [PSCI and SMCCC](psci-smccc.md): arm's standard way for a kernel to call firmware or a hypervisor
+- [Multiprocessor bring-up and IPIs](smp-bringup.md): how a multicore machine goes from one running core to all of them
+- [UARTs: 16550 and PL011](uart.md): A UART is the serial port
+- [UEFI](uefi.md): the firmware interface that replaced the PC BIOS and is standard on Arm servers and cloud instances
+- [x86 boot: BIOS, GRUB and Multiboot](x86-boot.md): how a PC gets from reset to a kernel
 
 ## References
 

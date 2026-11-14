@@ -238,6 +238,8 @@ for EL2, and `dc cvau`/`ic ivau` behind the `seL4_ARM_Page_*` and
 - [Arm virtualisation](arm-virtualisation.md): stage 2 and VMIDs in use
 - [Address spaces (VSpace)](../sel4/vspace.md): the seL4 API over these
   tables
+- [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
+- [RISC-V paging and traps](riscv-paging-and-traps.md): how an S-mode kernel on RISC-V translates addresses
 
 ## References
 

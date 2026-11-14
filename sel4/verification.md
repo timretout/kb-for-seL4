@@ -158,6 +158,9 @@ assumes:
 - [Boot code](boot-code.md): the largest assumed part of the kernel
 - [SMP](smp.md): the main unverified configuration
 - [History and papers](history-and-papers.md): the papers behind each proof
+- [RISC-V basics](../concepts/riscv-basics.md): the RISC-V architecture as a kernel sees it
+- [Governance and RFCs](governance.md): who decides what goes into seL4
+- [Platform ports](platform-port.md): A platform is the kernel's build-time description of one board or machine family
 
 ## References
 

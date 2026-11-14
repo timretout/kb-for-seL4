@@ -200,6 +200,7 @@ what it sends is ([proof impact](proof-impact.md)).
 - [Microkit](microkit.md): libmicrokit, the runtime of a protection domain
 - [rust-sel4](rust-sel4.md): the Rust equivalent of this layer
 - [Debugging](debugging.md): the debug system calls in use
+- [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
 
 ## References
 

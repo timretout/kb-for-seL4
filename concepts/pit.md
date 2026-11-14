@@ -83,6 +83,9 @@ and call).
 - [TSC](tsc.md) and [local APIC timer](lapic-timer.md): the clocks it calibrates
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): how a VM can skip the PIT
 - [ACPI tables](acpi-tables.md): the MADT says which pin IRQ 0 arrives on
+- [I/O ports and MMIO](io-ports.md): x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions
+- [8259 PIC](pic-8259.md): the PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports
+- [seL4_libs and util_libs](../sel4/sel4-libs.md): the classic C libraries for building dynamic systems on seL4
 
 ## References
 

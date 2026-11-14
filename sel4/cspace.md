@@ -207,6 +207,7 @@ Points worth knowing when reading it:
 - [Faults and fault handlers](faults.md): cap faults from failed lookups
 - [Threads and TCBs](threads.md): setting a thread's CSpace root
 - [Virtual memory](../concepts/virtual-memory.md): the page-table analogy
+- [Untyped memory and retyping](untyped-memory.md): untyped capabilities stand for blocks of physical memory that are not yet any kernel object
 
 ## References
 

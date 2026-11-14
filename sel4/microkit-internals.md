@@ -269,6 +269,8 @@ libmicrokit.
 - [Kernel boot](kernel-boot.md): what the tool emulates
 - [Platform ports](platform-port.md): the kernel side of a new board
 - [Index](../INDEX.md): the reading order
+- [Arm boot flow](../concepts/arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
+- [Build system and configuration](build-system.md): seL4 builds with CMake and Ninja
 
 ## References
 
