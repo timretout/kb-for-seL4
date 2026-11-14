@@ -74,7 +74,7 @@ C is formatted by `astyle` (version 3.1 is the stated one) with
 tabs, braces on every block, `*` attached to the name, lines of at most
 120 characters. `seL4_tools/misc/style.sh <files>` applies the right
 formatter by file type (C, Python, CMake), `style-changed.sh` does the
-files changed against a branch, and the C script also rewrites include
+modified and untracked files of the working tree, and the C script also rewrites include
 guards to `#pragma once`. A `.stylefilter` file in a repository lists
 paths the checker skips.
 
