@@ -3,6 +3,11 @@
 Every page, with its summary. Grouped by topic; within a group, read top
 to bottom for a sensible order.
 
+## Interrupts
+
+- [IRQ](concepts/irq.md): a device's signal that it needs the CPU, carried on a wire or as a message to an interrupt controller, which turns it into a numbered interrupt; seL4 hands each IRQ to user level as a capability that signals a notification.
+- [Local APIC and I/O APIC](concepts/apic.md): x86's interrupt controllers: a local APIC in each core takes interrupts, sends IPIs and holds a timer, while I/O APICs route device interrupt pins to vectors on chosen cores; seL4 drives both and lets user level pick the vector for each pin or MSI.
+
 ## x86 timers
 
 - [PIT](concepts/pit.md): the original PC's timer chip, a 16-bit down-counter at 1 193 182 Hz behind I/O ports 0x40 to 0x43; every x86 hypervisor still emulates it, and seL4 times its other clocks against it at boot.
@@ -36,7 +41,7 @@ Concepts that pages already lean on and that have no page yet. Take one
 from here when writing a new page.
 
 - I/O ports and port I/O against MMIO
-- Local APIC and I/O APIC (as interrupt controllers, beyond the timer)
+- 8259 PIC (the original PC interrupt controller)
 - 16550 UART
 - PCI configuration space, BARs and ECAM
 - Device trees
