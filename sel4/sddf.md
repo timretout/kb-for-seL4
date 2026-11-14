@@ -143,7 +143,7 @@ regions and channels by hand does not scale, so each example has a
 `acacia`, repository `au-ts/microkit_acacia`, plus the in-tree
 `acacia_sddf/` module with classes such as `sDDFEthernet`, `sDDFSerial`,
 `sDDFTimer`, `sDDFLWIP`). Acacia is the successor of the tool earlier
-documentation calls `sdfgen` (unchecked: the exact lineage). The
+documentation calls `sdfgen` (repository `au-ts/microkit_sdf_gen`). The
 metaprogram:
 
 1. reads the board's [device tree](../concepts/device-tree.md) from
@@ -183,14 +183,14 @@ server and clients make protected procedure calls,
 `sddf_timer_time_now(ch)` (nanoseconds since start) and
 `sddf_timer_set_timeout(ch, ns)`, after which the client is notified on
 the channel when the time has passed. The driver keeps one timeout per
-client and programs the hardware for the earliest (unchecked: one per
-client). This is what gives a Microkit system `sleep`.
+client and programs the hardware for the earliest. This is what gives a Microkit system `sleep`.
 
 The **serial** class has `virt_tx` and `virt_rx` between driver and
 clients, with byte queues (`include/sddf/serial/queue.h`). `virt_tx`
 merges clients' output, optionally tagging or colouring it per client;
 `virt_rx` routes input to one client at a time, switched by an escape
-sequence typed on the console (unchecked: the exact sequence).
+sequence typed on the console: a switch character (Ctrl-\, byte 28, as
+the metaprogram configures it), the client's number, then Enter.
 `sddf_printf` in `util/` can print through either the serial subsystem
 or the kernel debug console.
 
@@ -273,9 +273,11 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
 - [`include/sddf/resources/device.h`](https://github.com/au-ts/sddf/blob/main/include/sddf/resources/device.h): `device_resources_t`. *Checked 2026-11-14.*
 - [`include/sddf/timer/client.h`](https://github.com/au-ts/sddf/blob/main/include/sddf/timer/client.h): the timer client calls. *Checked 2026-11-14.*
 - [`drivers/network/virtio/common/ethernet.c`](https://github.com/au-ts/sddf/blob/main/drivers/network/virtio/common/ethernet.c): the hard-coded x86 values. *Checked 2026-11-14.*
-- [sDDF design document](https://trustworthy.systems/projects/drivers/sddf-design.pdf): the principles and measurements, by Heiser and others; source in `docs/design/`. *Unchecked.* PDF not opened today; principles above are from memory of it and from the code.
-- [Trustworthy Systems driver project page](https://trustworthy.systems/projects/drivers/): papers and theses. *Unchecked.* Not opened today.
-- [Acacia](https://github.com/au-ts/microkit_acacia): the system-generation tooling. *Unchecked.* Named by the README; repository not opened.
+- [sDDF design document](https://trustworthy.systems/projects/drivers/sddf-design.pdf): the principles and measurements, by Heiser and others; source in `docs/design/`. Chapter 1 gives the aims, chapter 4 the driver model, components and priorities. *Checked 2026-11-14.*
+- [Trustworthy Systems driver project page](https://trustworthy.systems/projects/drivers/): papers and theses. *Checked 2026-11-14.*
+- [Acacia](https://github.com/au-ts/microkit_acacia): the system-generation tooling; its README says it succeeds `sdf_gen`. *Checked 2026-11-14.*
+- [`drivers/timer/imx/timer.c`](https://github.com/au-ts/sddf/blob/main/drivers/timer/imx/timer.c): a timer driver, with its one timeout slot per client channel. *Checked 2026-11-14.*
+- [`serial/components/virt_rx.c`](https://github.com/au-ts/sddf/blob/main/serial/components/virt_rx.c) and [`acacia_sddf/serial.py`](https://github.com/au-ts/sddf/blob/main/acacia_sddf/serial.py): the input-switching state machine and its default characters. *Checked 2026-11-14.*
 
 ## My notes
 

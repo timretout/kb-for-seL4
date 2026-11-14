@@ -149,9 +149,9 @@ The copier confines each client to its private region and makes "client
 is slow" mean only "client's packets are dropped". Transmit needs no
 copier because each client's TX region is already private. A system
 with one client, or clients that trust each other, can connect the
-client directly to virt_rx and save the copy (unchecked: stated in the
-design document; `docs/network/network.md` discusses this under "Copy
-components and availability").
+client directly to virt_rx and save the copy (`docs/network/network.md`
+says a client can be connected without a copier, and discusses what
+is lost under "Copy components and availability").
 
 Other components in `network/components/`: `arp.c` (answers ARP on
 behalf of clients) and `vswitch.c` (a virtual switch so clients can
@@ -244,7 +244,7 @@ subsystem; it is the standard test for a new NIC driver
 MICROKIT_CONFIG=debug`). Under `MICROKIT_CONFIG=benchmark` the
 `benchmark/` PDs (`benchmark.c`, `idle.c`) measure per-PD CPU
 utilisation, reported through `utilization_socket.c` to an external
-load generator (ipbench in Trustworthy Systems' set-up, unchecked).
+load generator (ipbench, as the example's README describes).
 
 ## In seL4
 
@@ -272,7 +272,8 @@ and the driver's interrupt arrives as a
   `capacity` inside the shared struct and 32-bit indices; on `main` the
   indices are 16-bit and capacity is local. Capacity must stay below
   65536 and, for the `%` arithmetic across wrap-around to work, be a
-  power of two (unchecked: whether the tooling enforces this).
+  power of two (`acacia_sddf/net.py` rejects buffer counts that are
+  not).
 - **`io_or_offset` changes meaning at the virtualisers.** Driver-side
   code treats it as a device address and never as a pointer; printing
   it as a virtual address while debugging misleads.
@@ -309,10 +310,11 @@ and the driver's interrupt arrives as a
 - [`include/sddf/network/config.h`](https://github.com/au-ts/sddf/blob/main/include/sddf/network/config.h): the config structs and `SDDF_NET_MAX_CLIENTS`. *Checked 2026-11-14.*
 - [`network/components/copy.c`](https://github.com/au-ts/sddf/blob/main/network/components/copy.c): the copier's loop, offset checks and signalling. *Checked 2026-11-14.*
 - [`network/components/virt_rx.c`](https://github.com/au-ts/sddf/blob/main/network/components/virt_rx.c): address translation, cache invalidation, broadcast reference counts. *Checked 2026-11-14.*
-- [`network/components/virt_tx.c`](https://github.com/au-ts/sddf/blob/main/network/components/virt_tx.c): `tx_provide`, `tx_return`. *Unchecked.* Only its function list read today; the translation described mirrors virt_rx and the config struct.
+- [`network/components/virt_tx.c`](https://github.com/au-ts/sddf/blob/main/network/components/virt_tx.c): `tx_provide`, `tx_return`, the offset checks and translation. *Checked 2026-11-14.*
 - [`drivers/network/virtio/common/ethernet.c`](https://github.com/au-ts/sddf/blob/main/drivers/network/virtio/common/ethernet.c): `init`, `notified`, `handle_irq`, `rx_provide`. *Checked 2026-11-14.*
-- [`docs/network/network.md`](https://github.com/au-ts/sddf/blob/main/docs/network/network.md): architecture, safety properties, copiers and availability, lwIP, Acacia usage. *Unchecked.* Only its outline read today.
-- [`examples/echo_server/README.md`](https://github.com/au-ts/sddf/blob/main/examples/echo_server/README.md): supported boards (including `x86_64_generic` on QEMU) and build command. *Checked 2026-11-14.*
+- [`docs/network/network.md`](https://github.com/au-ts/sddf/blob/main/docs/network/network.md): architecture, safety properties, copiers and availability, lwIP, Acacia usage. *Checked 2026-11-14.*
+- [`acacia_sddf/net.py`](https://github.com/au-ts/sddf/blob/main/acacia_sddf/net.py): the power-of-two checks on buffer counts. *Checked 2026-11-14.*
+- [`examples/echo_server/README.md`](https://github.com/au-ts/sddf/blob/main/examples/echo_server/README.md): supported boards (including `x86_64_generic` on QEMU), build command, benchmarking with ipbench. *Checked 2026-11-14.*
 
 ## My notes
 

@@ -228,7 +228,8 @@ and installs kernel, libmicrokit, loader, monitor and initialiser under
 
 The seL4 revision an SDK is built from is chosen by whoever runs
 `build_sdk.py --sel4 <path>`; each release is tested against one
-revision (unchecked: where that is recorded).
+revision, the one pinned beside Microkit's own in the
+`seL4/microkit-manifest` repository's `default.xml` (`DEVELOPER.md`).
 
 ### Adding a board
 
@@ -300,7 +301,8 @@ libmicrokit.
 - [`loader/src/loader.c`](https://github.com/seL4/microkit/blob/main/loader/src/loader.c) and [`loader.h`](https://github.com/seL4/microkit/blob/main/loader/src/loader.h): `loader_data`, `copy_data`, `start_kernel`. *Checked 2026-11-14.*
 - [`monitor/src/main.c`](https://github.com/seL4/microkit/blob/main/monitor/src/main.c): fault messages, passive binding. *Checked 2026-11-14.*
 - [`build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py): kernel options per board and configuration. *Checked 2026-11-14.*
-- [`sel4-capdl-initializer`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4-capdl-initializer): the crate the initialiser wraps. *Unchecked.* Path not opened today; the dependency name is from `initialiser/Cargo.toml`.
+- [`sel4-capdl-initializer`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4-capdl-initializer): the crate the initialiser wraps (its README). *Checked 2026-11-14.*
+- [`DEVELOPER.md`](https://github.com/seL4/microkit/blob/main/DEVELOPER.md), "Getting the Code", and [microkit-manifest `default.xml`](https://github.com/seL4/microkit-manifest/blob/main/default.xml): the supported and CI-tested seL4 revision. *Checked 2026-11-14.*
 
 ## My notes
 

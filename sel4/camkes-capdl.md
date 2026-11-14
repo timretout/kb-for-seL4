@@ -64,8 +64,8 @@ caps {
 }
 ```
 
-(syntax sketched from memory, unchecked; the capDL documentation has
-the grammar.)
+(a sketch in the syntax of the example specifications shipped with
+`capDL-tool`; the capDL documentation has the grammar.)
 
 Because the description is complete, "can A ever affect B?" becomes a
 question about a graph, which is what the access-control and
@@ -166,11 +166,11 @@ Both frameworks are seL4 Foundation projects, and the seL4 website's
 tools page lists them side by side: CAmkES as a "development and
 runtime component framework for microkernel-based embedded static
 systems". Nothing on docs.sel4.systems read today calls CAmkES
-deprecated. In practice (unchecked: a reading of activity, not a
+deprecated. In practice (a reading of activity, not a
 statement by the Foundation) new work goes to
 [Microkit](microkit.md), [sDDF](sddf.md) and [LionsOS](lionsos.md);
-camkes-tool's last upstream commits before today were in June 2026
-and are maintenance. The differences that matter:
+camkes-tool's last upstream commits before today were the
+maintenance release 3.13.1 in October 2026. The differences that matter:
 
 | | CAmkES | Microkit |
 |---|---|---|
@@ -184,10 +184,11 @@ and are maintenance. The differences that matter:
 A kernel contributor still meets CAmkES in three places: the VM
 examples, which are the most complete users of the kernel's x86 and
 Arm [virtualisation](hypervisor.md) support; CAmkES test suites that
-run in the CAmkES repositories' own CI against kernel `master`, so a
-kernel API change can break them after merge (unchecked: those
-workflows were not read today; the kernel repository's own workflows
-do not mention CAmkES); and existing deployed
+run in the CAmkES repositories' own CI (camkes-tool's `test.yml` and
+`vm-test.yml`, on its pull requests) against kernel `master`, which
+the CAmkES manifest tracks, so a
+kernel API change can break them after merge (the kernel repository's
+own workflows do not mention CAmkES); and existing deployed
 systems and papers, which describe seL4 systems in CAmkES terms.
 
 ## In seL4
@@ -274,13 +275,20 @@ A CAmkES project is fetched with `repo` from `seL4/camkes-manifest`
 - [l4v `sys-init/README.md`](https://github.com/seL4/l4v/blob/master/sys-init/README.md):
   the verified initialiser and its paper. *Checked 2026-11-14.*
 - [Boyton et al., "Formally Verified System Initialisation", ICFEM 2013](https://trustworthy.systems/publications/nictaabstracts/Boyton_ABFGGKLS_13.abstract):
-  the initialiser proof. *Unchecked: cited from the l4v README, paper
-  not opened.*
+  the initialiser proof (abstract page, with a link to the full
+  text). *Checked 2026-11-14.*
 - [Kuz et al., "CAmkES: A component model for secure microkernel-based embedded systems", JSS 2007](https://trustworthy.systems/publications/papers/Kuz_LGH_07.pdf):
-  the original design. *Unchecked: from memory.*
+  the original design. *Checked 2026-11-14.*
 - [global-components](https://github.com/seL4/global-components) and
   [camkes-vm](https://github.com/seL4/camkes-vm): the component
-  collection and the VMM. *Unchecked: not opened today.*
+  collection and the VMM (their READMEs). *Checked 2026-11-14.*
+- [capDL language specification](https://github.com/seL4/capdl/blob/master/capDL-tool/doc/capDL.md)
+  and the example [`camkes-adder-arm.cdl`](https://github.com/seL4/capdl/blob/master/capDL-tool/camkes-adder-arm.cdl):
+  the grammar, and a generated specification showing the TCB
+  parameters. *Checked 2026-11-14.*
+- camkes-tool [`.github/workflows/`](https://github.com/seL4/camkes-tool/tree/master/.github/workflows)
+  and the [CAmkES manifest](https://github.com/seL4/camkes-manifest/blob/master/master.xml):
+  the test workflows, and the kernel revision they build. *Checked 2026-11-14.*
 
 ## My notes
 

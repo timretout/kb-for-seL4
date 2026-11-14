@@ -54,8 +54,9 @@ untyped.untyped_retype(&blueprint, &cnode.absolute_cptr_for_self(), slot, 1)?;
 endpoint.send(sel4::MessageInfoBuilder::default().length(1).build());
 ```
 
-(`untyped_retype` and `send` exist in `invocations.rs` and
-`syscalls.rs`; the argument forms shown are from memory, unchecked.)
+(`untyped_retype` is in `invocations.rs`, `send` in `syscalls.rs`,
+`absolute_cptr_for_self` in `cptr.rs` and `MessageInfoBuilder` in
+`message_info.rs`.)
 `IpcBuffer` wraps `seL4_IPCBuffer`; by default (feature `state`) the
 crate keeps the current thread's buffer pointer itself and
 `with_ipc_buffer` gives access, replacing C's `__sel4_ipc_buffer`.
@@ -207,14 +208,15 @@ in `seL4/rfcs` (looked 2026-11-14), so do not cite one.
 It is actively developed: the pinned nightly is two weeks old. Its
 weightiest user is Microkit itself, through the capDL initialiser,
 which makes rust-sel4 part of the boot path of every Microkit system,
-C or Rust. [sDDF](sddf.md) and [LionsOS](lionsos.md) are mostly C
-(unchecked).
+C or Rust. [sDDF](sddf.md) and [LionsOS](lionsos.md) are C, with no
+Rust in their repositories.
 
 ## In seL4
 
 Not in the kernel repository, with one exception: the kernel carries
 `libsel4/tools/syscall_stub_gen_rs.py`, an older Rust stub generator
-that rust-sel4 does not use (unchecked: who, if anyone, still does).
+that rust-sel4 does not use (its header says it is for a `sel4-sys`
+crate; rust-sel4's own `sel4-sys` never refers to it).
 
 In [`seL4/rust-sel4`](https://github.com/seL4/rust-sel4) (default
 branch `main`):
@@ -270,8 +272,9 @@ branch `main`):
   has them, so a release configuration fails to compile code that
   prints unconditionally.
 - **Upstream changes land fast and the API is not stable**; pin a
-  commit of rust-sel4 in `Cargo.toml`, as the demos do (unchecked: the
-  demos' exact pins).
+  commit of rust-sel4. rust-microkit-demo names the git repository
+  with no `rev` in its crates' `Cargo.toml` and relies on its
+  committed `Cargo.lock` for the commit.
 
 ## See also
 
@@ -300,10 +303,15 @@ branch `main`):
 - [rust-sel4 `rust-toolchain.toml`](https://github.com/seL4/rust-sel4/blob/main/rust-toolchain.toml):
   the pinned nightly and components. *Checked 2026-11-14.*
 - [rust-microkit-demo](https://github.com/seL4/rust-microkit-demo):
-  `Makefile`, `.cargo/config.toml`, `rust-toolchain.toml`.
+  `Makefile`, `.cargo/config.toml`, `rust-toolchain.toml`, the
+  crates' `Cargo.toml` and `Cargo.lock`. *Checked 2026-11-14.*
+- [rust-sel4 `crates/sel4/src/`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4/src):
+  `invocations.rs`, `syscalls.rs`, `cptr.rs`, `message_info.rs`.
   *Checked 2026-11-14.*
+- [seL4 `libsel4/tools/syscall_stub_gen_rs.py`](https://github.com/seL4/seL4/blob/master/libsel4/tools/syscall_stub_gen_rs.py):
+  the kernel's Rust stub generator. *Checked 2026-11-14.*
 - [Rendered rustdoc](https://sel4.github.io/rust-sel4/): API
-  documentation per configuration. *Unchecked: not opened today.*
+  documentation per configuration. *Checked 2026-11-14.*
 - [seL4 RFCs](https://github.com/seL4/rfcs/tree/main/src): the
   implemented and active RFC lists, which hold no Rust RFC.
   *Checked 2026-11-14.*

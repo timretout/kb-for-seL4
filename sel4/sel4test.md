@@ -177,8 +177,11 @@ last lines decide the run:
 Assertions are `test_eq(a, b)`, `test_neq`, `test_assert(cond)`,
 `test_check` (records an error, carries on) and `test_assert_fatal`
 (stops the whole run); a failure prints the expression, file and line.
-CI decides by the success line in the serial log (unchecked: the
-exact matching is in the CI scripts, not read today).
+CI does not look for these lines: it builds with `BAMBOO` set, which
+turns on `LibSel4TestPrintXML`, so the driver prints jUnit-style XML
+instead (`<testsuite>`, one `<testcase>` per test); the CI scripts
+wait for `</testsuite>` in the serial log, or a timeout, and then
+count the failures in the XML.
 
 ### Reading failures
 
@@ -227,10 +230,10 @@ delivery measured from user level), `scheduler` (scheduling decisions
 and `seL4_Yield`), `signal`, `smp` (IPC throughput against core
 count), and on AArch64 `vcpu`. Results per board are kept in
 `seL4/sel4bench-results` and published on the seL4 website's
-performance page. A kernel change on the IPC fastpath or in interrupt
-entry is usually asked for before-and-after sel4bench numbers
-(unchecked: custom, not a written rule found today); maintainers can
-have CI produce them with the `hw-bench` label.
+performance page. For a kernel change on the IPC fastpath or in interrupt
+entry, where before-and-after sel4bench numbers are the evidence,
+maintainers can have CI run sel4bench on the pull request with the
+`hw-bench` label.
 
 ## In seL4
 
@@ -285,8 +288,9 @@ workflows and the matrix.
   sequentially (sel4test's README); adding a background thread to the
   driver breaks scheduling tests.
 - **Stale builds.** Changing `PLATFORM` in an existing build directory
-  goes wrong in confusing ways (cached settings from the old platform
-  survive); make a new one (unchecked: from experience).
+  does not work across architectures: the cross-compiler is fixed
+  when the build directory is initialised (the build system
+  documentation); make a new one.
 - **Each test starts from clean untypeds.** After a BASIC test the
   driver destroys the process and revokes every untyped it lent
   ("reset all the untypeds for the next test" in `basic_tear_down`),
@@ -323,10 +327,20 @@ workflows and the matrix.
   the benchmark applications, JSON output, results repository.
   *Checked 2026-11-14.*
 - [seL4Test documentation](https://docs.sel4.systems/projects/sel4test/):
-  getting the manifest, building and running. *Unchecked: not opened
-  today.*
+  getting the manifest, building and running. *Checked 2026-11-14.*
 - [seL4 performance page](https://sel4.systems/performance.html):
-  published sel4bench results. *Unchecked: not opened today.*
+  published sel4bench results. *Checked 2026-11-14.*
+- seL4/ci-actions [`sel4test-sim/build.py`](https://github.com/seL4/ci-actions/blob/master/sel4test-sim/build.py),
+  [`sel4test-hw/builds.yml`](https://github.com/seL4/ci-actions/blob/master/sel4test-hw/builds.yml)
+  and [`seL4-platforms/builds.py`](https://github.com/seL4/ci-actions/blob/master/seL4-platforms/builds.py):
+  how CI decides a run passed (`BAMBOO`, the `</testsuite>` marker,
+  the jUnit summary). *Checked 2026-11-14.*
+- seL4 [`.github/workflows/hw-tests.yml`](https://github.com/seL4/seL4/blob/master/.github/workflows/hw-tests.yml)
+  and ci-actions [`sel4bench-hw.yml`](https://github.com/seL4/ci-actions/blob/master/.github/workflows/sel4bench-hw.yml):
+  the `hw-bench` label. *Checked 2026-11-14.*
+- [Using the seL4 build system](https://docs.sel4.systems/projects/buildsystem/using.html):
+  the cross-compiler cannot be changed after the build directory is
+  initialised. *Checked 2026-11-14.*
 
 ## My notes
 

@@ -269,7 +269,7 @@ Microkit.
 - [`tool/microkit/src/sdf/consts.rs`](https://github.com/seL4/microkit/blob/main/tool/microkit/src/sdf/consts.rs): `PD_MAX_ID`, default budget and stack size, priorities. *Checked 2026-11-14.*
 - [`build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py): boards, configurations, kernel options. *Checked 2026-11-14.*
 - [`CHANGES.md`](https://github.com/seL4/microkit/blob/main/CHANGES.md): x86-64 in 2.1.0, IOMMU and polarity changes in 2.3.0. *Checked 2026-11-14.*
-- [Microkit tutorial](https://trustworthy.systems/projects/microkit/tutorial/): a guided first system. *Unchecked.* Not opened today.
+- [Microkit tutorial](https://trustworthy.systems/projects/microkit/tutorial/welcome.html): a guided first system. *Checked 2026-11-14.*
 
 ## My notes
 

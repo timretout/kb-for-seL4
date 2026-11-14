@@ -260,9 +260,9 @@ library is a CMake target (`sel4vka`, `platsupport`, ...) with
 - [sel4test `apps/sel4test-driver/src/main.c`](https://github.com/seL4/sel4test/blob/master/apps/sel4test-driver/src/main.c):
   the bootstrap sequence and `init_timer` in use.
   *Checked 2026-11-14.*
-- [seL4 tutorials, "Dynamic libraries"](https://docs.sel4.systems/Tutorials/libraries-1.html):
-  a walk through simple, vka, allocman and vspace.
-  *Unchecked: not opened today.*
+- [seL4 tutorials, "seL4 Libraries: Initialisation & Threading"](https://docs.sel4.systems/Tutorials/libraries-1.html):
+  a walk through simple, allocman and vka, then starting a thread.
+  *Checked 2026-11-14.*
 
 ## My notes
 

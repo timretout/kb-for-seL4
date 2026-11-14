@@ -35,7 +35,7 @@ The repository (`au-ts/lionsos`, default branch `main`) holds:
 
 | Path | Contents |
 |---|---|
-| `components/fs` | file system servers behind one shared-memory file system protocol (FAT on an sDDF block device, an NFS client over the network, and a file system served by a Linux guest; unchecked: the exact set today) |
+| `components/fs` | file system servers behind one shared-memory file system protocol (`fat`: FAT on an sDDF block device; `nfs`: an NFS client over the network) |
 | `components/micropython` | MicroPython as a PD with file and network access, used to script applications |
 | `components/wamr` | the WebAssembly Micro Runtime as a PD |
 | `lib` | support libraries, including a libc layer and POSIX-like shims for ported code |
@@ -91,8 +91,7 @@ an Intel CPU, since seL4 has no AMD-V support
 given the real device (its registers mapped into the guest and its
 interrupt forwarded, "pass-through") and made to serve it to the rest
 of the system over sDDF queues, using small user-space programs in the
-guest (the UIO drivers in libvmm's `tools/`; unchecked: current
-location). This trades a large trusted guest for immediate hardware
+guest (the UIO drivers in libvmm's `tools/linux/uio_drivers/`). This trades a large trusted guest for immediate hardware
 support, and can be replaced by a native driver later without changing
 clients.
 
@@ -152,10 +151,11 @@ Not kernel code. Where a kernel or platform contributor meets these:
 
 - [LionsOS `README.md`](https://github.com/au-ts/lionsos/blob/main/README.md) and repository listing (`components/`, `examples/`): aims, status, layout. *Checked 2026-11-14.*
 - [libvmm `README.md`](https://github.com/au-ts/libvmm/blob/main/README.md), "Features": Arm and x86 support, guest facilities, dependencies. *Checked 2026-11-14.*
-- [libvmm manual](https://github.com/au-ts/libvmm/blob/main/docs/MANUAL.md): how to write a VMM with it. *Unchecked.* Not opened today.
-- [LionsOS documentation](https://lionsos.org/docs/): examples, components, status and roadmap. *Unchecked.* Not opened today.
+- [libvmm manual](https://github.com/au-ts/libvmm/blob/main/docs/MANUAL.md): how to write a VMM with it, passthrough, virtIO devices. *Checked 2026-11-14.*
+- [libvmm `tools/linux/`](https://github.com/au-ts/libvmm/tree/main/tools/linux): the guest-side UIO library and drivers (repository listing). *Checked 2026-11-14.*
+- [LionsOS documentation](https://lionsos.org/docs/): examples, components, status and roadmap. *Checked 2026-11-14.*
 - [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md), "Virtual Machines" and "x86-64 generic (with VT-x)": one VM per PD, one vCPU per x86 VM, Intel only. *Checked 2026-11-14.*
-- Heiser and others, ["Fast, Secure, Adaptable: LionsOS Design, Implementation and Performance"](https://arxiv.org/abs/2501.06234): the design paper. *Unchecked.* Cited from memory.
+- Heiser and others, ["Fast, Secure, Adaptable: LionsOS Design, Implementation and Performance"](https://arxiv.org/abs/2501.06234): the design paper (arXiv abstract page). *Checked 2026-11-14.*
 
 ## My notes
 
