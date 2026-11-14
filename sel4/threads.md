@@ -40,7 +40,7 @@ by piece:
 | Scheduling context (MCS only) | The thread's budget of CPU time ([MCS](mcs.md)); without one it cannot run | `SetSchedParams`, `seL4_SchedContext_Bind` |
 | Timeout endpoint (MCS only) | Where a timeout fault goes when the budget runs out | `SetTimeoutEndpoint` |
 | Affinity (SMP only) | The core the thread runs on; the kernel never migrates threads itself ([SMP](smp.md)) | `SetAffinity` |
-| TLS base | The thread-local-storage pointer register (`FS` base on x86-64, `TPIDR_EL0` on AArch64, `tp` on RISC-V) (unchecked: register names from memory) | `SetTLSBase` |
+| TLS base | The thread-local-storage pointer register (`FS` base on x86-64, `TPIDR_EL0` on AArch64, `tp` on RISC-V) | `SetTLSBase` |
 
 All of these are invocations on the TCB capability, named
 `seL4_TCB_<Name>` in [libsel4](libsel4.md). The ones a contributor
@@ -185,7 +185,7 @@ it ([syscalls and invocations](syscalls-and-invocations.md)).
 
 - **A thread with priority above its creator's MCP cannot be made.**
   The check is against the *authority* TCB's MCP, not its priority, and
-  the root task starts with MCP 255 (unchecked here; see
+  the root task starts with MCP 255 (`seL4_MaxPrio`; see
   [BootInfo and the root task](bootinfo-and-root-task.md)). A new TCB
   has priority 0 and MCP 0, so a child that must create threads needs
   its MCP set too.
@@ -236,8 +236,18 @@ it ([syscalls and invocations](syscalls-and-invocations.md)).
   the TCB invocations and their MCS variants. *Checked 2026-11-14
   (method list; argument documentation not read in full).*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 6 "Threads and Execution": the user's view of all of this.
-  *Unchecked (not opened today).*
+  chapter 6 "Threads and Execution": the user's view of all of this;
+  section 6.1.6 for the initial thread's priority and MCP.
+  *Checked 2026-11-14 (version 17.0.0; sections 6.1.1 to 6.1.6 read).*
+- The `registerset.h` files for
+  [x86-64](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/64/mode/machine/registerset.h),
+  [AArch64](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/64/mode/machine/registerset.h)
+  and [RISC-V](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/machine/registerset.h):
+  what `TLS_BASE` names (on AArch64, `TPIDR_EL0` with the default
+  `KernelArmTLSReg`). *Checked 2026-11-14.*
+- [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c),
+  `create_initial_thread`: priority and MCP set to `seL4_MaxPrio`.
+  *Checked 2026-11-14.*
 
 ## My notes
 

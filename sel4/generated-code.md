@@ -67,7 +67,7 @@ the most significant bit of the first word.*
 
 | Keyword | Meaning |
 |---|---|
-| `base 64(48,1)` | Word size, and for 64-bit the number of significant ("canonical") address bits and whether pointers are sign-extended. The kernel's own `.bf` files do not write it: it arrives through the preprocessed includes for the configuration (unchecked where exactly) |
+| `base 64(48,1)` | Word size, and for 64-bit the number of significant ("canonical") address bits and whether pointers are sign-extended. The generic `structures_64.bf` does not write it: each architecture's `mode/object/structures.bf` sets it (`64(48,1)` on x86-64, `64(48,1)` or `64(48,0)` with hypervisor support on AArch64, `64(39,1)` on RISC-V) and then includes the generic file |
 | `block name(args) { ... }` | A structure of whole words, fields listed from the most significant bit of the first word. The optional argument list fixes the parameters and their order for the constructor |
 | `field name n` | An `n`-bit field |
 | `padding n` | `n` unused bits, always zero |
@@ -286,6 +286,11 @@ definitions and proofs for the same `.bf` files ([l4v](l4v.md)).
   *Checked 2026-11-14.*
 - [seL4 `include/object/structures_64.bf`](https://github.com/seL4/seL4/blob/master/include/object/structures_64.bf):
   the `endpoint_cap` block quoted above. *Checked 2026-11-14.*
+- [seL4 `include/arch/x86/arch/64/mode/object/structures.bf`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/64/mode/object/structures.bf),
+  with the [AArch64](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/64/mode/object/structures.bf)
+  and [RISC-V](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/64/mode/object/structures.bf)
+  files: the `base` lines and the include of `structures_64.bf`.
+  *Checked 2026-11-14.*
 - [seL4 `libsel4/include/api/syscall.xml`](https://github.com/seL4/seL4/blob/master/libsel4/include/api/syscall.xml)
   and [`tools/syscall_header_gen.py`](https://github.com/seL4/seL4/blob/master/tools/syscall_header_gen.py):
   the groups, and numbering from -1. *Checked 2026-11-14.*

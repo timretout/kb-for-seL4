@@ -27,7 +27,9 @@ means core. The design choices are deliberately conservative:
   that touches shared state. seL4's system calls are short and the
   kernel is not preemptible, so the lock is held briefly; the argument
   is that for a microkernel this costs little up to a moderate number
-  of cores (unchecked: the measurements are in Peters et al., below).
+  of cores: Peters et al. (below) measured the big lock as competitive
+  with finer locking for clusters of at least 8 cores that share a
+  cache.
 - **Per-core scheduling.** Each core has its own ready queues, current
   thread and idle thread. There is no load balancing and no migration
   by the kernel: a thread runs on the core it has been assigned to, and
@@ -58,9 +60,11 @@ where both threads are on the calling core.
 
 Each device interrupt is delivered to one core. On Arm,
 `seL4_IRQControl_GetTriggerCore` chooses the core for a shared
-interrupt and names per-core private interrupts; on x86 the I/O APIC
-and MSI invocations address the boot core's local APIC (unchecked for
-current master). The notification signalled may wake a thread on any
+interrupt and names per-core private interrupts; on x86 the kernel
+programs every I/O APIC pin to deliver to the boot core's local APIC
+(`ioapic_target_cpu`, the first CPU in the list), and for an MSI the
+kernel programs nothing: the destination is whatever the driver
+writes into the device's MSI registers. The notification signalled may wake a thread on any
 core, at the cost of an IPI. See [Interrupt delivery](irq-handling.md).
 
 ### Not verified
@@ -81,11 +85,13 @@ own verified image, cooperating only through user level: shared memory
 and interrupts sent from one instance to another. The
 `seL4_IRQControl_IssueSGISignal` invocation on Arm, which produces a cap
 that raises a software-generated interrupt on a chosen core, is in
-upstream master as a building block for this. Tooling to boot and
-describe such a system (in the elfloader and Microkit) was still
-proposal and prototype work when this page was written (unchecked: the
-RFC and pull request state was not looked up; search
-[the RFC repository](https://github.com/seL4/rfcs) for "multikernel").
+upstream master as a building block for this; it comes from RFC-17,
+"seL4 multikernel IPI API", approved in June 2024 and since marked
+implemented. Tooling to boot and describe such a system was still
+work in progress when this page was written: Trustworthy Systems
+listed "Multikernel support (mostly abstracted by Microkit)" as work
+in progress in September 2025, and on 2026-11-14 neither Microkit's
+`main` branch nor the elfloader's `master` mentioned multikernels.
 
 ## In seL4
 
@@ -178,8 +184,9 @@ The remote calls, from the per-architecture `IpiRemoteCall_t`:
   cores the kernel is using, at most `CONFIG_MAX_NUM_NODES`.
 - Cloud virtual CPUs can be descheduled by the host while holding or
   queueing for a strict-order lock, which makes a CLH lock behave badly
-  under overcommit (unchecked: a general property of queue locks, not
-  measured on seL4).
+  under overcommit. This is the problem Linux met with its ticket
+  spinlocks, another strict-order lock, in virtual machines; it has
+  not been measured on seL4.
 
 ## See also
 
@@ -213,11 +220,23 @@ The remote calls, from the per-architecture `IpiRemoteCall_t`:
   *Checked 2026-11-14.*
 - [seL4 `src/arch/arm/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/c_traps.c):
   where the lock is taken. *Checked 2026-11-14.*
-- Peters, Danis, Elphinstone and Heiser, "For a Microkernel, a Big Lock
-  Is Fine", APSys 2015: the design argument and measurements.
-  *Unchecked (cited from memory).*
-- [seL4 RFCs](https://github.com/seL4/rfcs): the place to look for the
-  multikernel proposals. *Unchecked (not opened today).*
+- [seL4 `src/plat/pc99/machine/ioapic.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/ioapic.c)
+  and [`src/arch/x86/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/interrupt.c):
+  `ioapic_target_cpu`; the MSI invocation only records the interrupt.
+  *Checked 2026-11-14.*
+- [Peters, Danis, Elphinstone and Heiser, "For a Microkernel, a Big Lock
+  Is Fine", APSys 2015](https://trustworthy.systems/publications/nicta_full_text/8768.pdf):
+  the design argument and measurements; the CLH lock.
+  *Checked 2026-11-14.*
+- [RFC-17, "seL4 multikernel IPI API"](https://sel4.github.io/rfcs/implemented/0170-multikernel-ipi-api.html)
+  and [its pull request](https://github.com/seL4/rfcs/pull/23):
+  single-core kernel instances that share no kernel state and signal
+  each other by interrupt. *Checked 2026-11-14.*
+- [Heiser, "Trustworthy Systems R&D update", seL4 Summit 2025](https://sel4.systems/Summit/2025/slides/trustworthy-systems.pdf):
+  multikernel support listed as work in progress. *Checked 2026-11-14.*
+- [LWN, "Paravirtualized ticket spinlocks"](https://lwn.net/Articles/556141/):
+  why a strict-order spinlock collapses when virtual CPUs are
+  descheduled. *Checked 2026-11-14.*
 
 ## My notes
 

@@ -266,7 +266,8 @@ than seL4's 16 bits.
   sizes. *Checked 2026-11-14.*
 - [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
   chapter 7 "Address Spaces and Virtual Memory": the model in prose.
-  *Unchecked (not opened today).*
+  *Checked 2026-11-14 (version 17.0.0; chapter introduction and
+  sections 7.3 and 7.4 read).*
 
 ## My notes
 

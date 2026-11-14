@@ -123,10 +123,10 @@ configuration shown.
 | Call | Needs | Does |
 |---|---|---|
 | `seL4_DebugPutChar(c)` | printing | Writes one character to the kernel console; `seL4_DebugPutString` is a libsel4 loop over it |
-| `seL4_DebugDumpScheduler()` | printing | Prints every thread with its name, state and priority (unchecked: exact columns) |
+| `seL4_DebugDumpScheduler()` | printing | Prints a table of every thread: name, state, restart PC and priority, plus core, domain and release-queue columns under SMP, several domains or MCS. The call exists with printing alone but prints only in a debug build |
 | `seL4_DebugHalt()` | debug | Halts the kernel |
 | `seL4_DebugCapIdentify(cap)` | debug | Returns the capability's type tag, 0 for an empty slot |
-| `seL4_DebugSnapshot()` | debug | Dumps a capDL-style description of the system state (unchecked: output format not read) |
+| `seL4_DebugSnapshot()` | debug | Prints a capDL description of the system: an `objects { ... }` block and a `caps { ... }` block |
 | `seL4_DebugNameThread(tcb, name)` | debug | Sets the name shown in messages and dumps |
 | `seL4_DebugSendIPI`, `seL4_DebugGetThreadAffinity` | debug + SMP | Poke another core; ask where a thread runs |
 | `seL4_DebugRun(fn, arg)` | code injection | Calls `fn` in kernel mode |
@@ -164,15 +164,19 @@ surprise:
   code runs at physical addresses, so symbolic breakpoints do not
   match; break on the physical address (`break *0x...`) or wait until
   paging is on. Prefer `hbreak` (hardware breakpoints) this early:
-  software breakpoints are written into memory that may not be mapped
-  or loaded yet (unchecked).
+  a software breakpoint is a breakpoint instruction written into
+  guest memory, which this early may not be mapped or loaded yet.
 - On x86-64, QEMU starts the CPU in 16- or 32-bit mode and the kernel
   switches to 64-bit long mode in its first few dozen instructions
-  ([x86 boot](../concepts/x86-boot.md)). GDB attached before the
-  switch can fail with a "g packet" size error when the register set
-  changes; attach, or set the architecture, after the switch
-  (unchecked: from experience, not a cited source).
-- With KVM acceleration, use hardware breakpoints (unchecked).
+  ([x86 boot](../concepts/x86-boot.md)). GDB cannot follow a change of
+  register set in mid-session, so `qemu-system-x86_64` always reports
+  the 64-bit registers, even before the switch. A GDB whose
+  architecture is a 16- or 32-bit one then fails with "Remote 'g'
+  packet reply is too long"; `set architecture i386:x86-64` before
+  `target remote` (or `disconnect`, set it, and reconnect).
+- How many hardware breakpoints there are depends on QEMU's
+  accelerator: unlimited under TCG (software emulation), and under
+  KVM or another accelerator only what that accelerator supports.
 - User-level `printf` and the kernel's are different functions; a
   breakpoint on one does not catch the other.
 
@@ -291,9 +295,10 @@ below placed where the output stops.*
   kernel's assumptions or the reverse.
 - **A thread with no name prints as an address.** `seL4_DebugNameThread`
   costs one call per thread and makes every later message readable.
-- **The fault dump's "address" is the restart PC.** For a system-call
-  related fault that is the instruction after the trap, not the trap
-  itself (unchecked).
+- **The fault dump's "address" is the restart PC** (`getRestartPC()`,
+  the saved `FaultIP`). For a fault raised by a system call (a cap
+  fault, an unknown system call) that is the trap instruction itself,
+  not the one after it.
 - **`KernelBenchmarks` on Arm exports the performance counters (PMU)
   to user level** (`KernelArmExportPMUUser`), per its help text; a
   benchmark kernel is not an isolation kernel.
@@ -333,9 +338,28 @@ below placed where the output stops.*
   the breakpoint and single-step TCB invocations. *Checked 2026-11-14.*
 - [seL4_tools `elfloader-tool/src/arch-arm/sys_boot.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/sys_boot.c):
   the elfloader's messages. *Checked 2026-11-14.*
-- [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf):
-  debug system call and hardware debug API descriptions. *Unchecked:
-  PDF not opened today.*
+- [seL4 `include/api/debug.h`](https://github.com/seL4/seL4/blob/master/include/api/debug.h),
+  [`src/api/syscall.c`](https://github.com/seL4/seL4/blob/master/src/api/syscall.c)
+  and [`src/arch/arm/64/machine/capdl.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/machine/capdl.c):
+  what `seL4_DebugDumpScheduler` and `seL4_DebugSnapshot` print, and
+  under which options. *Checked 2026-11-14.*
+- [seL4 `src/arch/arm/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/traps.S),
+  [`src/arch/x86/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/c_traps.c)
+  and [`src/arch/riscv/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/traps.S):
+  `FaultIP` on a system call is the address of the trap instruction.
+  *Checked 2026-11-14.*
+- [QEMU, "GDB usage"](https://www.qemu.org/docs/master/system/gdb.html):
+  `-s` and `-S`, breakpoints inserted into guest memory, hardware
+  breakpoints per accelerator. *Checked 2026-11-14.*
+- [QEMU `target/i386/gdbstub.c`](https://github.com/qemu/qemu/blob/master/target/i386/gdbstub.c):
+  a 64-bit x86 CPU reports 64-bit registers in every mode.
+  *Checked 2026-11-14.*
+- [QEMU issue 141](https://gitlab.com/qemu-project/qemu/-/issues/141):
+  the "Remote 'g' packet reply is too long" error and the
+  `set architecture` workaround. *Checked 2026-11-14.*
+- [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
+  version 17.0.0: sections 10.2.3 "Debugging System Calls" and 6.2.4
+  to 6.2.5 (the hardware debug API's faults). *Checked 2026-11-14.*
 
 ## My notes
 

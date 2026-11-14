@@ -88,7 +88,7 @@ in the root CNode, `end` exclusive.
 | `numIOPTLevels` | x86 IOMMU page-table depth, 0 without one |
 | `ipcBuffer` | virtual address of the root task's IPC buffer |
 | `empty` | the free slots: everything the kernel did not fill |
-| `sharedFrames` | set to the empty region by the Arm and RISC-V boot code; a leftover of an older multikernel design (the history is unchecked) |
+| `sharedFrames` | set to the empty region by the Arm and RISC-V boot code; a leftover of the multikernel design of the first public release (2014), where ia32 filled it and the Arm code noted "ARM has no multikernel support"; the manual now calls it reserved |
 | `userImageFrames` | caps to the frames holding the root task's own image, in virtual address order |
 | `userImagePaging` | caps to the page tables the kernel made for the root task |
 | `ioSpaceCaps` | Arm SMMU I/O space caps |
@@ -284,7 +284,11 @@ the kernel as a physical region and entry point.
   the test suite's root task. *Checked 2026-11-14 (that it exists; its
   allocator bootstrap is from memory).*
 - [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 9 "System Bootstrapping". *Unchecked (not opened today).*
+  chapter 9 "System Bootstrapping". *Checked 2026-11-14 (version
+  17.0.0).*
+- [seL4 at its first public release, `src/arch/arm/kernel/boot.c`](https://github.com/seL4/seL4/blob/91b7da8625d28ad533d5bd801be5f89ad1b50d80/src/arch/arm/kernel/boot.c)
+  and [`src/arch/ia32/kernel/boot.c`](https://github.com/seL4/seL4/blob/91b7da8625d28ad533d5bd801be5f89ad1b50d80/src/arch/ia32/kernel/boot.c):
+  the shared-frame caps of the multikernel. *Checked 2026-11-14.*
 
 ## My notes
 

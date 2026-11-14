@@ -75,12 +75,11 @@ project/
 ├── projects/                sel4test, seL4_libs, util_libs, musllibc, ...
 ├── init-build.sh  ──▶ tools/seL4/cmake-tool/init-build.sh
 ├── griddle        ──▶ tools/seL4/cmake-tool/griddle
-├── CMakeLists.txt ──▶ tools/seL4/cmake-tool/default-CMakeLists.txt
-└── settings.cmake / easy-settings.cmake ──▶ the project's own
+└── easy-settings.cmake ──▶ projects/sel4test/easy-settings.cmake
 ```
 
-(the exact set of symlinks is from memory of the manifests: unchecked).
-Then:
+(these three links are the `linkfile` entries of `sel4test-manifest`'s
+`common.xml`). Then:
 
 ```
 mkdir build && cd build
@@ -89,16 +88,19 @@ ninja
 ./simulate
 ```
 
-`init-build.sh` is a thin wrapper: it runs `cmake
--DCMAKE_TOOLCHAIN_FILE=kernel/gcc.cmake -G Ninja "$@" -C settings.cmake
-<project>`. The project's `settings.cmake` is where friendly variables
+`init-build.sh` is a thin wrapper. With no `CMakeLists.txt` at the top
+level, as here, it follows the `easy-settings.cmake` link to the
+project's directory and runs `cmake -G Ninja "$@" -C
+<project>/settings.cmake <project>`; where a top-level `CMakeLists.txt`
+exists it runs `cmake -DCMAKE_TOOLCHAIN_FILE=kernel/gcc.cmake -G Ninja
+"$@" -C settings.cmake` on the top level instead. The project's `settings.cmake` is where friendly variables
 are turned into kernel options, using helpers from
 `cmake-tool/helpers/application_settings.cmake`:
 
 | Project variable | Effect (sel4test's `settings.cmake`) |
 |---|---|
 | `PLATFORM` | A platform or board name, or `x86_64`/`ia32`; `correct_platform_strings()` maps it to `KernelPlatform`, `KernelSel4Arch` and board sub-options |
-| `AARCH32`, `AARCH64`, `RISCV64`, `ARM_HYP` | Pick the mode where a platform supports several (unchecked beyond the sel4test documentation) |
+| `AARCH32`, `AARCH64`, `RISCV64`, `ARM_HYP` | Pick the mode where a platform supports several: `correct_platform_strings()` sets `KernelSel4Arch` to `aarch32` (or `arm_hyp` when `ARM_HYP` is also set), `aarch64` or `riscv64`; in sel4test `ARM_HYP` also turns on `KernelArmHypervisorSupport` |
 | `RELEASE` | `ON`: `CMAKE_BUILD_TYPE=Release`, `KernelPrinting` off, `KernelDebugBuild` off |
 | `VERIFICATION` | `ON`: `KernelVerificationBuild` on, `KernelDebugBuild` off |
 | neither | `KernelDebugBuild` and `KernelPrinting` on |
@@ -324,7 +326,10 @@ then `cmake --install`s each into the SDK as
   the wrapped `cmake` call; `ApplyCommonReleaseVerificationSettings`,
   `correct_platform_strings`. *Checked 2026-11-14.*
 - [sel4test `settings.cmake`](https://github.com/seL4/sel4test/blob/master/settings.cmake):
-  `PLATFORM`, `SIMULATION`, `SMP`, `MCS`. *Checked 2026-11-14.*
+  `PLATFORM`, `SIMULATION`, `SMP`, `MCS`, `ARM_HYP`. *Checked 2026-11-14.*
+- [sel4test-manifest `common.xml`](https://github.com/seL4/sel4test-manifest/blob/master/common.xml):
+  the checkout paths and the three `linkfile` entries.
+  *Checked 2026-11-14.*
 - [Microkit `build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py):
   the per-board option dictionaries and the `cmake`, `cmake --build`,
   `cmake --install` sequence. *Checked 2026-11-14.*

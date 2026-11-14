@@ -171,7 +171,7 @@ Points worth knowing when reading it:
   the slot numbers are the enum in
   [`libsel4/include/sel4/bootinfo_types.h`](https://github.com/seL4/seL4/blob/master/libsel4/include/sel4/bootinfo_types.h).
 - The IPC fastpath (`src/fastpath/`) has its own inlined copy of the
-  lookup for speed (unchecked).
+  lookup for speed (`lookup_fp` in `include/fastpath/fastpath.h`).
 
 ## Gotchas
 
@@ -232,8 +232,10 @@ Points worth knowing when reading it:
   `seL4_CNode_CapData` (guard 58 bits, guard size 6). *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
   sections 3.3 "CSpace Addressing" and 3.4 "Lookup Failure Description":
-  worked examples of multi-level lookups. *Unchecked: PDF not opened
-  today; section numbers from memory.*
+  worked examples of multi-level lookups. *Checked 2026-11-14
+  (version 17.0.0; section numbers and titles).*
+- [seL4 `include/fastpath/fastpath.h`](https://github.com/seL4/seL4/blob/master/include/fastpath/fastpath.h):
+  `lookup_fp`. *Checked 2026-11-14.*
 
 ## My notes
 

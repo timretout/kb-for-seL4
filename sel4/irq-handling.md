@@ -278,10 +278,11 @@ protection domain's notification with a badge bit for its channel, and
   and the `arm` and `riscv` equivalents: argument lists of the
   `seL4_IRQControl_*` invocations. *Checked 2026-11-14.*
 - [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 6 "Interrupts". *Unchecked (not opened today).*
+  chapter 8 "Hardware I/O", sections 8.1 "Interrupt Delivery" and
+  8.2.1 (x86 vectors). *Checked 2026-11-14 (version 17.0.0).*
 - [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md):
-  the `irq` element and `microkit_irq_ack`. *Unchecked (not reopened
-  for this page).*
+  the "Interrupts" section, the `irq` element and `microkit_irq_ack`.
+  *Checked 2026-11-14.*
 
 ## My notes
 

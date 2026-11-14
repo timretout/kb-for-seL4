@@ -93,7 +93,7 @@ with the kernel (set with `seL4_TCB_SetIPCBuffer`, at most
 2^`seL4_IPCBufferSizeBits` = 1024 bytes). It also holds the CPtrs of
 capabilities being sent (`caps_or_badges`) and the slot where a
 received capability should go (`receiveCNode`, `receiveIndex`,
-`receiveDepth`). The register use, from memory (unchecked):
+`receiveDepth`). The register use:
 
 | | Capability | Message info | MR0 to MR3 | System call number |
 |---|---|---|---|---|
@@ -125,7 +125,7 @@ as `seL4_Error`:
 | 9 | `seL4_RevokeFirst` | The object has derived children |
 | 10 | `seL4_NotEnoughMemory` | An untyped is too small; MR0 gives bytes left |
 
-(Which MR carries which detail is from the manual, unchecked.) A bad
+(Which MR carries which detail is from the manual, section 10.1.) A bad
 CPtr for the *invoked* capability is not an error return: it raises a
 cap fault to the thread's [fault handler](faults.md).
 
@@ -236,7 +236,8 @@ and user level.
   them; tools that emit raw invocations
   ([Microkit](microkit-internals.md)) regenerate them per kernel.
 - **System call numbers are negative** and differ between MCS and
-  non-MCS (unchecked: `SysCall` is -1 in both).
+  non-MCS: they count down from -1 in the order of `syscall.xml`, so
+  `SysCall` is -1 and `SysReplyRecv` -2 in both, and the rest differ.
 - **Without an IPC buffer, messages are truncated** to the register
   MRs, silently in release builds; invocations with more arguments
   then fail with `seL4_TruncatedMessage`.
@@ -291,10 +292,17 @@ and user level.
   the generic object methods (file list and the Untyped interface
   read). *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  sections 2.2 "System Calls", 4.1 "Message Registers" and 10.1 "Error
-  Codes": the user's view, including which MR carries which error
-  detail. *Unchecked: PDF not opened today; section numbers from
-  memory.*
+  version 17.0.0, sections 2.2 "System Calls", 4.1 "Message Registers"
+  and 10.1 "Error Codes": the user's view, including which MR carries
+  which error detail. *Checked 2026-11-14.*
+- [seL4 `src/arch/x86/64/machine/registerset.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/machine/registerset.c)
+  with [`include/arch/x86/arch/64/mode/machine/registerset.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/64/mode/machine/registerset.h)
+  and [`src/arch/x86/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/traps.S)
+  (and the `arm/64` and `riscv` equivalents, with libsel4's
+  `syscalls.h` for the system call number register): `capRegister`,
+  `msgInfoRegister`, `msgRegisters[]`. *Checked 2026-11-14.*
+- [seL4 `tools/syscall_header_gen.py`](https://github.com/seL4/seL4/blob/master/tools/syscall_header_gen.py):
+  system call numbers count down from -1. *Checked 2026-11-14.*
 
 ## My notes
 

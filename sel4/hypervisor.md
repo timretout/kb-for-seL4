@@ -59,8 +59,10 @@ bug-prone part of any hypervisor. Here a compromised guest that takes
 over its VMM gains what the VMM's capabilities allow: its own VM. Other
 VMs and native components depend on the kernel alone. That is what
 makes "a Linux VM for the legacy stack beside small trusted native
-components" a reasonable architecture, and it is the design the
-DARPA HACMS vehicles used (unchecked) ([History and key papers](history-and-papers.md)).
+components" a reasonable architecture, and it is where the mission
+computer of Boeing's Unmanned Little Bird helicopter ended up in
+DARPA's HACMS programme: native components, and one Linux VM for the
+untrusted camera software ([History and key papers](history-and-papers.md)).
 
 The hardware mechanisms are described in
 [Arm virtualisation (EL2)](../concepts/arm-virtualisation.md) and
@@ -96,8 +98,10 @@ handler and sees four kinds of message:
 | `seL4_Fault_VGICMaintenance` | A list register emptied; the VMM can inject the next pending virtual interrupt |
 | `seL4_Fault_VPPIEvent` | A physical per-CPU interrupt owned by the guest fired (the virtual timer); inject it and later `AckVPPI` |
 
-`seL4_Fault_UnknownSyscall` covers the guest's `SVC`-class traps that
-reach EL2 (unchecked). Replying to the fault message resumes the guest,
+A guest's hypercall (`HVC`) enters the kernel on the same path as a
+system call (`lel_syscall` in the AArch64 `traps.S` takes both `SVC`
+and `HVC` from a lower level), so one whose number is not an seL4
+system call arrives as `seL4_Fault_UnknownSyscall`. Replying to the fault message resumes the guest,
 optionally with modified registers, as for any fault. With
 `KernelAllowSMCCalls` the VMM can also be given a capability to forward
 a guest's `SMC` firmware calls ([PSCI and SMCCC](../concepts/psci-smccc.md));
@@ -137,8 +141,10 @@ threads; on x86 they are one.*
 **RISC-V.** Upstream `master` has no support for the RISC-V hypervisor
 (H) extension: there is no VCPU object, no option, and nothing under
 `src/arch/riscv` for it. A pull request with hypervisor changes
-(seL4/seL4#971) was closed unmerged. Out-of-tree work exists
-(unchecked).
+(seL4/seL4#971) was closed unmerged. Out-of-tree work exists: that
+pull request came from a branch of a contributor's fork
+(`ivanv/riscv_hypervisor_extension`) and was opened against upstream
+by mistake.
 
 ### Verification
 
@@ -185,11 +191,13 @@ components over virtio or shared memory.
 
 To host VMs, seL4 must itself run in hypervisor mode, which a cloud
 guest can do only if the cloud exposes **nested virtualisation**. Most
-instance types do not: EC2's virtualised instances historically offer
-no VT-x or EL2 to the guest and only bare-metal types do, and Compute
-Engine enables nested VT-x per VM on some Intel families only
-(unchecked: both change; see [EC2 instance types](../concepts/ec2-instance-types.md)
-and [Compute Engine machine types](../concepts/gce-machine-types.md)).
+instance types do not: on EC2 only the 7th and 8th generation Intel
+families (M7i, C8i, R8i and their relatives) can pass VT-x to a
+virtual instance, as a CPU option, and otherwise only bare-metal types
+have it; Compute Engine enables nested VT-x per VM, but not on E2,
+memory-optimised, Arm or (N4D apart) AMD machine types. Both lists
+change; see [EC2 instance types](../concepts/ec2-instance-types.md)
+and [Compute Engine machine types](../concepts/gce-machine-types.md).
 Where it is absent seL4 runs perfectly well as a guest, but with
 `KernelVTX` or `KernelArmHypervisorSupport` off; on Arm that means a
 kernel entered at EL1 and, today, an unverified configuration.
@@ -285,8 +293,18 @@ guest side looks like.
   the older VMM stack; the READMEs were opened but libsel4vm's
   internals were not read. *Checked 2026-11-14.*
 - [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  the virtualisation sections of the architecture chapters.
-  *Unchecked: PDF not opened today.*
+  version 17.0.0, section 6.4 "Virtualisation" (6.4.1 Arm, 6.4.2 x86)
+  and 6.2.8 "Arm Virtualisation Faults". *Checked 2026-11-14.*
+- [seL4 `src/arch/arm/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/traps.S)
+  and [`src/arch/arm/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/c_traps.c):
+  `HVC` and `SVC` share `lel_syscall`; an out-of-range number goes to
+  `handleUnknownSyscall()`. *Checked 2026-11-14.*
+- [Heiser, "The seL4 Microkernel: An Introduction"](https://sel4.systems/About/seL4-whitepaper.pdf),
+  revision 1.4.1, chapter 7: the HACMS retrofit of the Unmanned Little
+  Bird's mission computer. *Checked 2026-11-14.*
+- [Amazon EC2, "Use nested virtualization"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html)
+  and [Compute Engine, "About nested virtualization"](https://docs.cloud.google.com/compute/docs/instances/nested-virtualization/overview):
+  which instance and machine types offer it. *Checked 2026-11-14.*
 
 ## My notes
 

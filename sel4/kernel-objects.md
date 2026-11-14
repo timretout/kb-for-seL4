@@ -78,7 +78,7 @@ kernel's short name for a VSpace; a pool is a table of them.
 | `IOPortControl`, `IOPort` (x86) | Issue capabilities to ranges of [I/O ports](../concepts/io-ports.md); use a range | Root task; `seL4_X86_IOPortControl_Issue` |
 | `IOSpace` (x86 with IOMMU) | Assign a PCI device to an IOMMU address space | Root task, `seL4_CapIOSpace` |
 | `SMC` (Arm, optional) | Make secure monitor calls ([PSCI and SMCCC](../concepts/psci-smccc.md)) | Root task, `seL4_CapSMC` |
-| `SGISignal` (Arm) | Raise one software-generated interrupt | From `IRQControl` (unchecked) |
+| `SGISignal` (Arm) | Raise one software-generated interrupt | From `IRQControl`, with `seL4_IRQControl_IssueSGISignal` |
 | `SIDControl`, `SID`, `CBControl`, `CB` (Arm SMMU) | Configure SMMU stream IDs and context banks | Root task |
 | `Null` | Nothing: an empty slot | - |
 | `Zombie` | Internal: an object part-way through deletion | Never visible to the API |
@@ -184,8 +184,12 @@ in the interface XML
 - [libsel4 `bootinfo_types.h`](https://github.com/seL4/seL4/blob/master/libsel4/include/sel4/bootinfo_types.h):
   which control capabilities the root task receives. *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  section 2.1 "Kernel Objects" and chapter 10 "API Reference": the
-  methods of each type. *Unchecked: PDF not opened today.*
+  section 2.3 "Kernel Objects" and chapter 10 "seL4 API Reference": the
+  methods of each type. *Checked 2026-11-14 (version 17.0.0; section
+  2.3 read, chapter 10 only for the methods looked up).*
+- [libsel4 Arm `object-api-arch.xml`](https://github.com/seL4/seL4/blob/master/libsel4/arch_include/arm/interfaces/object-api-arch.xml)
+  and [seL4 `src/arch/arm/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/object/interrupt.c):
+  `IssueSGISignal` on `IRQControl`. *Checked 2026-11-14.*
 
 ## My notes
 

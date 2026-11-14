@@ -110,8 +110,10 @@ after deciding to sleep.
   loop receives on its endpoint, and if the badge's top bit
   (`BADGE_ENDPOINT_BIT`) is clear it walks the set bits and calls
   `notified(ch)` once per bit. So a protection domain has at most 62
-  or so channel and interrupt sources (unchecked: the exact limit is
-  in the Microkit manual).
+  channel and interrupt sources, numbered 0 to 61
+  (`MICROKIT_MAX_CHANNELS`; badge bits 62 and 63 mark faults and
+  protected calls). The Microkit manual says 63; the library and the
+  tool (`PD_MAX_ID` 61) enforce 62.
 - **[sDDF](sddf.md)**: drivers, virtualisers and clients share queues
   and signal each other through Microkit channels, with a flag in the
   shared queue header to suppress signals the consumer does not need.
@@ -227,9 +229,15 @@ otherwise. AArch64 MCS has an optional signal fastpath
   the event loop's badge decoding and `microkit_notify()`.
   *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 5 "Notifications". *Unchecked (not opened today).*
-- [seL4 tutorial, "Notifications"](https://docs.sel4.systems/Tutorials/notifications.html).
-  *Unchecked (not opened today).*
+  chapter 5 "Notifications". *Checked 2026-11-14 (version 17.0.0).*
+- [seL4 tutorial, "Notifications and shared memory"](https://docs.sel4.systems/Tutorials/notifications.html):
+  signalling, waiting, polling and badges, as exercises.
+  *Checked 2026-11-14.*
+- [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md),
+  "Channels" ("a maximum of 63 channels and interrupts per protection
+  domain"), and
+  [`tool/microkit/src/sdf/consts.rs`](https://github.com/seL4/microkit/blob/main/tool/microkit/src/sdf/consts.rs)
+  (`PD_MAX_ID` 61). *Checked 2026-11-14.*
 
 ## My notes
 

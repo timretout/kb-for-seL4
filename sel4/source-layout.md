@@ -20,8 +20,9 @@ Read first: [seL4 overview](overview.md).
 The kernel repository, [`seL4/seL4`](https://github.com/seL4/seL4), holds
 three things: the kernel's C and assembly (`src/`, `include/`), the
 user-level interface library `libsel4`, and the build and code-generation
-tools both need. The kernel proper is small, around ten thousand lines of
-C for any one configuration (unchecked), but the tree holds the code for
+tools both need. The kernel proper is small, between ten and sixteen thousand lines of
+source for each verified configuration (about 10,000 for 64-bit RISC-V,
+16,000 for x64), but the tree holds the code for
 three architecture families and about forty boards, so most of what you
 see in a listing is not compiled into the kernel you are building.
 
@@ -236,6 +237,10 @@ definition per architecture.
 - [seL4 `include/arch/arm/arch/object/objecttype.h`](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/object/objecttype.h)
   and [`include/arch/x86/arch/object/objecttype.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/object/objecttype.h):
   the `Arch_` and `Mode_` hooks. *Checked 2026-11-14.*
+- [seL4 FAQ](https://sel4.systems/About/FAQ.html), on the size of the
+  kernel: source lines of the verified configurations (10,000 for
+  64-bit RISC-V, 12,100 for AArch32, 12,600 for AArch64 with hypervisor
+  support, 16,000 for x64). *Checked 2026-11-14.*
 
 ## My notes
 

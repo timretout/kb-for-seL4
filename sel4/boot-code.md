@@ -17,8 +17,11 @@ seL4 splits the kernel image into code that runs only while the kernel
 sets itself up (finding memory, starting cores, measuring timers,
 building the root task) and code that runs for the life of the system.
 Functions in the first group are marked `BOOT_CODE`, which places them in
-a section that is reclaimed once boot finishes (unchecked: the exact
-mechanism).
+a section that is reclaimed once boot finishes: the macro puts the
+function in `.boot.text`, the linker script collects the boot sections
+at the start of the image, up to the symbol `ki_boot_end`, and
+`create_untypeds()` hands that region to the root task as untyped
+memory ([BootInfo and the root task](bootinfo-and-root-task.md)).
 
 seL4's proof of functional correctness covers the C code of the kernel,
 but in the words of the kernel's `CAVEATS.md`, "not machine code,
@@ -59,6 +62,14 @@ covered by assumptions about the state it leaves, not by proof.
 - [seL4 `CAVEATS.md`](https://github.com/seL4/seL4/blob/master/CAVEATS.md),
   the section on proofs: what the proof does not cover.
   *Checked 2026-11-14.*
+- [seL4 `include/linker.h`](https://github.com/seL4/seL4/blob/master/include/linker.h):
+  `BOOT_CODE` as `SECTION(".boot.text")`;
+  [`src/arch/arm/common_arm.lds`](https://github.com/seL4/seL4/blob/master/src/arch/arm/common_arm.lds)
+  (and the RISC-V and pc99 scripts): the boot sections and
+  `ki_boot_end`;
+  [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c),
+  `get_p_reg_kernel_img_boot` and `create_untypeds`: the recycled boot
+  memory. *Checked 2026-11-14.*
 
 ## My notes
 

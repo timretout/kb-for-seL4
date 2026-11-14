@@ -237,8 +237,11 @@ behaviour may therefore be needed in two loaders.
   console came up, not that the elfloader hung.
 - The kernel is entered at the level the elfloader ends up at. Booting a
   hypervisor-mode kernel on a machine or cloud instance whose firmware
-  hands over at EL1 cannot work; the elfloader prints the mismatch only
-  in some paths (unchecked which).
+  hands over at EL1 cannot work, and the Arm elfloader does not report
+  the mismatch: `main()` in `sys_boot.c` only tests `is_hyp_mode()`,
+  and outside hypervisor mode it sets up the EL1 page tables "just in
+  case the kernel does not support hyp mode", prints the ordinary
+  "Enabling MMU and jumping to entry point..." and enters the kernel.
 - Two device trees are in play: the one compiled into the archive
   (matching the kernel's build-time memory map) and the one the boot
   loader passes. With `ElfloaderIncludeDtb` on, the archive's wins and
@@ -300,11 +303,26 @@ behaviour may therefore be needed in two loaders.
   `enable_virtual_memory()`, `sbi_hart_start()`. *Checked 2026-11-14.*
 - [seL4 `src/plat/qemu-arm-virt/overlay-qemu-arm-virt.dts`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/overlay-qemu-arm-virt.dts):
   `seL4,elfloader-devices`. *Checked 2026-11-14.*
-- [seL4_tools `elfloader-tool/README.md`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/README.md)
-  and [`src/arch-arm/README.md`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/README.md):
-  the maintainers' own description, including the image types' boot
-  protocols. *Unchecked: not opened today; the image-type table's
-  "loaded by" column and the Microkit loader summary are from memory.*
+- [seL4_tools `elfloader-tool/README.md`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/README.md):
+  the maintainers' own description: the boot steps, the four image
+  types (binary, U-Boot uImage, ELF by `bootelf`, EFI) and the driver
+  framework. *Checked 2026-11-14.*
+- For the "Loaded by" column: U-Boot's
+  [`bootm`](https://docs.u-boot.org/en/latest/usage/cmd/bootm.html)
+  (legacy images) and
+  [`bootelf`](https://docs.u-boot.org/en/latest/usage/cmd/bootelf.html);
+  QEMU's [generic loader](https://www.qemu.org/docs/master/system/generic-loader.html)
+  (raw images at an address); GRUB's
+  [`chainloader`](https://www.gnu.org/software/grub/manual/grub/html_node/chainloader.html)
+  on EFI; the seL4 docs'
+  [Raspberry Pi 4 page](https://docs.sel4.systems/Hardware/Rpi4.html)
+  (`go 0x10000000` for a binary image); and
+  [seL4_tools `simulate.py`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/simulate_scripts/simulate.py)
+  (QEMU `-kernel`). *Checked 2026-11-14.*
+- [Microkit `loader/src/loader.c`](https://github.com/seL4/microkit/blob/main/loader/src/loader.c)
+  and [`loader/src/aarch64/`](https://github.com/seL4/microkit/tree/main/loader/src/aarch64)
+  (`init.c`, `el.c`, `mmu.c`): region copy, secondary cores, exception
+  level, MMU and the jump to the kernel. *Checked 2026-11-14.*
 
 ## My notes
 

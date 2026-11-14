@@ -81,10 +81,13 @@ Two special cases:
   priority's queue when the budget is used, like a timeslice.
 - **`seL4_SchedContext_Sporadic`** (the only flag): without it an SC is
   treated as **constant bandwidth**, for threads that should just get
-  budget/period of a CPU; with it the SC follows the strict sporadic
-  rules about when unused budget may be used after the thread unblocks
-  (unchecked: the precise difference; see `refill_unblock_check()` and
-  the `scSporadic` comment in `structures.h`).
+  budget/period of a CPU; with it the SC is constrained only by the
+  sporadic server rules. The difference in the code is when
+  `refill_unblock_check()` runs, which moves the head refill's time up
+  to now and merges the refills that then overlap: for a sporadic SC
+  only when its thread becomes runnable (`sc_sporadic()`), for a
+  constant-bandwidth SC every time the kernel switches to it
+  (`sc_constant_bandwidth()` in `switchSchedContext()`).
 
 The kernel refuses budgets below `MIN_BUDGET`, twice its worst-case
 execution time (below), so that a thread always has enough budget to
@@ -195,9 +198,11 @@ then calls `setDeadline(that - getTimerPrecision())`.
 `getCurrentTime()` and `setDeadline()` are the whole interface to the
 timer driver: a 64-bit free-running count and a one-shot compare. On
 Arm they are in `include/drivers/timer/*.h` (the generic timer's
-counter and compare registers); on x86 they read the TSC and program
-TSC-deadline mode or the local APIC timer (unchecked: x86 file names
-not opened for this page; see the linked pages).
+counter and compare registers); on x86 they are in
+`include/arch/x86/arch/machine/timer.h`, where `getCurrentTime()`
+reads the TSC and `setDeadline()` writes the TSC-deadline MSR or,
+when the CPU lacks TSC-deadline mode (`x86KSapicRatio` non-zero), the
+local APIC timer's count.
 
 ### Worst-case execution time constants
 
@@ -216,9 +221,10 @@ example `KERNEL_WCET 10u` in
 deadline, is separate: on Arm it is the platform's `TIMER_PRECISION`
 plus `TIMER_OVERHEAD_TICKS` (`include/arch/arm/arch/machine/timer.h`).
 
-These numbers are estimates on most platforms, not measured bounds
-(unchecked: only the Arm platforms analysed in the WCET papers have
-measured values).
+These numbers are estimates, not measured bounds: `config.cmake`
+calls the value "the kernel WCET estimate", and nearly every platform
+declares the same 10 microseconds (x86 hard-codes 10 in
+`getKernelWcetUs()`; the Jetson TK1 says 100).
 
 ### Refill code
 
@@ -271,9 +277,10 @@ summing to the budget, head at least `MIN_BUDGET`) are checked by
 The proofs for the MCS kernel are not part of the main proof tree:
 [l4v](l4v.md)'s README lists MCS separately, with its own status badge
 for the `rt` branch. No MCS configuration is yet among the fully
-verified ones (unchecked today against
-[the verified configurations page](https://docs.sel4.systems/projects/sel4/verified-configurations.html);
-check it before saying so upstream). In practice: a patch to
+verified ones:
+[the verified configurations page](https://docs.sel4.systems/projects/sel4/verified-configurations.html)
+lists `AARCH64_MCS`, `ARM_MCS` and `RISCV64_MCS` as configurations
+"for the ongoing MCS verification", their proofs in progress. In practice: a patch to
 MCS-only code (`#ifdef CONFIG_KERNEL_MCS`) does not break the proofs
 on `master`, but the proof engineers working on `rt` will have to
 absorb it, so [proof impact](proof-impact.md) still has to be stated.
@@ -330,8 +337,19 @@ absorb it, so [proof impact](proof-impact.md) still has to be stated.
   scheduling contexts, budgets and periods, passive servers.
   *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  the chapter on threads and scheduling contexts. *Unchecked (PDF
-  resolves; chapter not opened).*
+  version 17.0.0, sections 6.1.7 to 6.1.11: scheduling contexts,
+  round-robin and sporadic refills, the `seL4_SchedContext_Sporadic`
+  flag, passive threads, donation. *Checked 2026-11-14.*
+- [`include/arch/x86/arch/machine/timer.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/machine/timer.h):
+  the x86 `getCurrentTime()`, `setDeadline()`, `getKernelWcetUs()`.
+  *Checked 2026-11-14.*
+- [seL4 `config.cmake`](https://github.com/seL4/seL4/blob/master/config.cmake)
+  (`KernelWcetScale`) and the platforms' `KERNEL_WCET` values, for
+  example [`src/plat/tk1/config.cmake`](https://github.com/seL4/seL4/blob/master/src/plat/tk1/config.cmake).
+  *Checked 2026-11-14.*
+- [Verified configurations](https://docs.sel4.systems/projects/sel4/verified-configurations.html):
+  the MCS configurations are listed as verification in progress.
+  *Checked 2026-11-14.*
 - [`src/kernel/thread.c`](https://github.com/seL4/seL4/blob/master/src/kernel/thread.c)
   and
   [`include/kernel/thread.h`](https://github.com/seL4/seL4/blob/master/include/kernel/thread.h):
@@ -342,8 +360,10 @@ absorb it, so [proof impact](proof-impact.md) still has to be stated.
   and
   [`include/kernel/sporadic.h`](https://github.com/seL4/seL4/blob/master/include/kernel/sporadic.h):
   the refill functions, `MIN_BUDGET`, `MAX_PERIOD_US`.
-  *Checked 2026-11-14 (`refill_budget_check()` read; the others by
-  name and signature only).*
+  *Checked 2026-11-14 (`refill_budget_check()`,
+  `refill_unblock_check()`, `sc_sporadic()` and
+  `sc_constant_bandwidth()` read; the others by name and signature
+  only).*
 - [`include/object/structures.h`](https://github.com/seL4/seL4/blob/master/include/object/structures.h):
   `struct sched_context`, `struct reply`, `MIN_REFILLS`.
   *Checked 2026-11-14.*
@@ -352,10 +372,10 @@ absorb it, so [proof impact](proof-impact.md) still has to be stated.
   `schedContext_donate()`. *Checked 2026-11-14.*
 - [l4v README](https://github.com/seL4/l4v/blob/master/README.md): MCS
   proofs tracked on the `rt` branch. *Checked 2026-11-14.*
-- Lyons, McLeod, Almatary, Heiser, "Scheduling-context capabilities: a
+- [Lyons, McLeod, Almatary, Heiser, "Scheduling-context capabilities: a
   principled, light-weight operating-system mechanism for managing
-  time", EuroSys 2018: the design and its rationale. *Unchecked (from
-  memory).*
+  time", EuroSys 2018](https://trustworthy.systems/publications/full_text/Lyons_MAH_18.pdf):
+  the design and its rationale. *Checked 2026-11-14.*
 
 ## My notes
 

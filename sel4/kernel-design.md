@@ -45,8 +45,10 @@ on a stack between entries.
 
 This makes the kernel a function from (state, event) to state, which is
 what the proofs model, and keeps memory per thread small. Both the SOSP
-2009 paper and the TOCS 2014 paper give this rationale (unchecked: not
-re-read for this page).
+2009 paper and the TOCS 2014 paper give this rationale: an event-based
+kernel with a single stack sidesteps the verification complexity of
+yielding inside the kernel, and earlier L4 kernels chose it to reduce
+the kernel's memory footprint.
 
 ### Interrupts off, with preemption points
 
@@ -192,8 +194,9 @@ Per-core variables are declared with `UP_STATE_DEFINE` and read through
 `NODE_STATE(ksCurThread)`. Without SMP that is just the variable; with
 SMP it expands to a field of this core's entry in `ksSMP[]`. Always use
 the macro in new code. Architecture state (kernel page tables, ASID tables, interrupt state) lives
-in `src/arch/<arch>/model/statedata.c`, with names prefixed `x86KS`,
-`armKS` or `riscvKS` (unchecked: prefixes from memory).
+in `src/arch/<arch>/model/statedata.c` and its `32/` and `64/`
+siblings, with names prefixed `x86KS`, `armKS` or `riscvKS` (also
+`x64KS`, `ia32KS`, and `armHS` for Arm hypervisor state).
 
 ## In seL4
 
@@ -242,9 +245,9 @@ which services the pending interrupt before `schedule()`.
 ### The Haskell heritage
 
 seL4 was designed by writing an executable prototype in Haskell, which
-doubled as the design-level specification; the C was then written by
-hand to match it function for function, so the proof could relate the
-two (SOSP 2009; unchecked: not re-read today). It shows:
+doubled as the design-level specification; the C was then
+re-implemented from it by hand, and the proof relates the two (SOSP
+2009, section 2.2). It shows:
 
 - camelCase function names that match the Haskell and the Isabelle
   specifications (`decodeInvocation`, `cteDeleteOne`, `setThreadState`),
@@ -329,14 +332,18 @@ breaks the correspondence the proofs rely on: see
   `KernelRetypeFanOutLimit`. *Checked 2026-11-14.*
 - Klein et al., ["seL4: Formal Verification of an OS Kernel"](https://trustworthy.systems/publications/nicta_full_text/1852.pdf),
   SOSP 2009: the event-based design, preemption points, the Haskell
-  prototype. *Unchecked: cited from memory, not opened today.*
+  prototype. *Checked 2026-11-14.*
 - Klein et al., ["Comprehensive Formal Verification of an OS Microkernel"](https://trustworthy.systems/publications/nicta_full_text/7371.pdf),
-  ACM TOCS 32(1), 2014: the fuller account of the same design and of
-  memory management through untypeds. *Unchecked: cited from memory, not
-  opened today; the URL is not verified.*
-- Murray et al., "seL4: from General Purpose to a Proof of Information
-  Flow Enforcement", IEEE S&P 2013: why the domain scheduler state exists.
-  *Unchecked: cited from memory.*
+  ACM TOCS 32(1), 2014: the fuller account of the same design (section
+  3.4) and of memory management through untypeds (section 3.3).
+  *Checked 2026-11-14.*
+- Murray et al., ["seL4: from General Purpose to a Proof of Information
+  Flow Enforcement"](https://trustworthy.systems/publications/nicta_full_text/6464.pdf),
+  IEEE S&P 2013: why the domain scheduler state exists (the static
+  partition scheduler added for the proof). *Checked 2026-11-14.*
+- [seL4 `src/arch/x86/model/statedata.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/model/statedata.c)
+  (and the `arm/32`, `arm/64`, `riscv`, `x86/32`, `x86/64` siblings):
+  the architecture state and its name prefixes. *Checked 2026-11-14.*
 
 ## My notes
 

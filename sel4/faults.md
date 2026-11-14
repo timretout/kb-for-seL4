@@ -79,7 +79,7 @@ also generates `seL4_Fault_t` accessors (`seL4_getFault()`,
 | `seL4_VMFault_IP` | Program counter of the faulting instruction |
 | `seL4_VMFault_Addr` | The address accessed |
 | `seL4_VMFault_PrefetchFault` | 1 if it was an instruction fetch |
-| `seL4_VMFault_FSR` | The architecture's fault status: the page-fault error code on x86, the syndrome register (ESR) on AArch64 (unchecked: per-architecture meaning from memory) |
+| `seL4_VMFault_FSR` | The architecture's fault status: the page-fault error code on x86, the exception syndrome register (`ESR_EL1`, or `ESR_EL2` in a hypervisor build) on AArch64; RISC-V gets a constant naming the kind of access (load, store or instruction) |
 
 **Unknown syscall**: the thread's general registers in an
 architecture-defined order (on x86-64 `RAX`, `RBX`, ... then the fault
@@ -104,7 +104,7 @@ The reply's content matters:
   thread is restarted: it re-executes the faulting instruction or
   system call. So a pager simply maps the page and replies with an
   empty message (`Arch_handleFaultReply()` returns true for
-  `VMFault` on x86; other architectures unchecked).
+  `VMFault` on x86, Arm and RISC-V).
 - To skip an instruction, or emulate it, the handler changes the
   program counter: in the reply for the register-carrying faults, or
   with `seL4_TCB_WriteRegisters` before replying for the others.
@@ -209,10 +209,13 @@ The fault types and the user-side layouts are defined in
   thread stopped.
 - **A restarted cap fault repeats.** Replying without fixing the
   CSpace loops fault, reply, fault.
-- **`UnknownSyscall` restarts *after* the system call instruction but
-  `VMFault` restarts *at* the faulting instruction**; the IP in each
-  message reflects that (unchecked: derived from how `getRestartPC()`
-  is used, not tested).
+- **Every fault restarts *at* the instruction that raised it,
+  `UnknownSyscall` included.** The entry code saves the address of the
+  trap instruction itself as `FaultIP`, a restarted thread resumes at
+  `getRestartPC()`, which is `FaultIP`, and that is the IP in the
+  message. A handler that emulates an unknown system call must put a
+  `FaultIP` advanced past the instruction in its reply, or the thread
+  traps again.
 - **The "Caught cap fault ... while trying to handle" message blames
   the wrong fault.** The interesting one is the second line; the cap
   fault only says no handler was found.
@@ -261,10 +264,23 @@ The fault types and the user-side layouts are defined in
   `seL4_VMFault_*`, `seL4_UserException_*`, `seL4_Timeout_*` indices.
   *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  section 6.2 "Faults" (unchecked section number). *Unchecked (not
-  opened today).*
-- [seL4 tutorial, "Fault handlers"](https://docs.sel4.systems/Tutorials/fault-handlers.html).
-  *Unchecked (not opened today).*
+  version 17.0.0, section 6.2 "Faults": the fault types, message
+  tables and what a reply does. *Checked 2026-11-14.*
+- [seL4 tutorial, "Fault handling"](https://docs.sel4.systems/Tutorials/fault-handlers.html):
+  resuming with a reply whose label is 0, or with `seL4_TCB_Resume`.
+  *Checked 2026-11-14.*
+- [`src/arch/x86/api/faults.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/api/faults.c)
+  (and the `arm`, `riscv` siblings): `Arch_handleFaultReply()`,
+  `Arch_setMRs_fault()`. *Checked 2026-11-14.*
+- [`src/arch/x86/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/vspace.c),
+  [`src/arch/arm/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/kernel/vspace.c)
+  and [`src/arch/riscv/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/kernel/vspace.c):
+  `handleVMFault()`, what goes in the FSR word. *Checked 2026-11-14.*
+- [`src/arch/arm/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/traps.S),
+  [`src/arch/x86/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/c_traps.c)
+  and [`src/arch/riscv/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/traps.S):
+  `FaultIP` on a system call is the address of the trap instruction.
+  *Checked 2026-11-14.*
 
 ## My notes
 

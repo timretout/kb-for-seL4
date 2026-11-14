@@ -15,7 +15,7 @@ Read first: [Capabilities](capabilities.md), [Threads and TCBs](threads.md), [Sy
 | Object size | Endpoint: 16 bytes on 64-bit |
 | Built on | [Capabilities](capabilities.md) (rights and badges), [threads](threads.md) |
 | Used by | [Faults](faults.md), [kernel invocations](syscalls-and-invocations.md), [Microkit](microkit.md) protected procedure calls |
-| Verified | Fastpath proved to refine the same specification as the slowpath (unchecked: which architectures) |
+| Verified | Fastpath proved to refine the same specification as the slowpath on AArch32 (also in hypervisor mode) and AArch64; not on RISC-V or x64 |
 
 ## What it is
 
@@ -222,9 +222,11 @@ For `fastpath_call()` the conditions are, in outline:
   passive server and will run on the caller's) and supplied a Reply
   object.
 
-`fastpath_reply_recv()` is the mirror image. Typical figures are a few
-hundred cycles for a fastpath round trip against several times that for
-the slowpath (unchecked; see the sel4bench results linked below).
+`fastpath_reply_recv()` is the mirror image. The published sel4bench
+figures are a few hundred cycles for each direction of a fastpath
+round trip: an IPC call takes 372 cycles on an i.MX6 (Cortex-A9), 419
+on a Jetson TX1 (Cortex-A57) and 790 on a Haswell Core i7, and the
+reply about the same. That page gives no slowpath figures.
 
 Why changes to it are sensitive: the fastpath is a second
 implementation of semantics that the slowpath and the abstract
@@ -233,7 +235,8 @@ counted. A fastpath that takes a case it should not, or leaves state
 slightly different from the slowpath, is a kernel bug that functional
 tests of IPC mostly will not see. On verified configurations the
 fastpath is proved to refine the same specification as the slowpath
-(unchecked: which architectures' proofs cover it), so changing it means
+(the AArch32, AArch32 hypervisor and AArch64 proofs include the
+fastpath; the RISC-V and x64 proofs do not), so changing it means
 changing a proof. A change elsewhere that adds a TCB field or a new
 thread state must also ask whether the fastpath has to check it.
 
@@ -303,12 +306,16 @@ thread state must also ask whether the fastpath has to check it.
   the system call lists for the non-MCS and MCS kernels.
   *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 4 "Message Passing (IPC)". *Unchecked (not opened today).*
+  version 17.0.0, chapter 4 "Message Passing (IPC)".
+  *Checked 2026-11-14.*
 - [seL4 tutorial, "IPC"](https://docs.sel4.systems/Tutorials/ipc.html):
   a worked client and server with badges and cap transfer.
-  *Unchecked (not opened today).*
-- [sel4bench results](https://sel4.systems/About/Performance/): IPC
-  round-trip figures per platform. *Unchecked (not opened today).*
+  *Checked 2026-11-14.*
+- [sel4bench results](https://sel4.systems/performance.html): IPC
+  call and reply figures per platform. *Checked 2026-11-14.*
+- [Verified configurations](https://docs.sel4.systems/projects/sel4/verified-configurations.html):
+  which architectures' proofs include the fastpath.
+  *Checked 2026-11-14.*
 
 ## My notes
 

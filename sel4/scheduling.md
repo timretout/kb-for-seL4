@@ -244,8 +244,8 @@ Configuration options (in `config.cmake`): `KernelNumPriorities`,
   The manual text says the running entry is not updated otherwise.
 - **Older documentation describes a compile-time `ksDomSchedule`**
   (a C file named by `KernelDomainSchedule`). That option is gone from
-  upstream's `config.cmake`; releases before the change still use it
-  (unchecked: which release first has the run-time schedule).
+  upstream's `config.cmake`; releases before 15.0.0
+  (2026-03-31), the first with the run-time schedule, still use it.
 
 ## See also
 
@@ -277,11 +277,17 @@ Configuration options (in `config.cmake`): `KernelNumPriorities`,
   `KernelNumDomains`, `KernelNumDomainSchedules`,
   `KernelNumPriorities`. *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  sections on scheduling and domains in the threads chapter.
-  *Unchecked (not opened today).*
-- Murray et al., "seL4: from General Purpose to a Proof of Information
-  Flow Enforcement", IEEE S&P 2013: why the domain scheduler exists.
-  *Unchecked (from memory).*
+  sections 6.1.6 "Scheduling", 6.1.12 "Scheduling algorithm" and 6.3
+  "Domains", and 10.3.2 for the `seL4_DomainSet` methods.
+  *Checked 2026-11-14 (version 17.0.0).*
+- [seL4 `CHANGES.md`](https://github.com/seL4/seL4/blob/master/CHANGES.md),
+  release 15.0.0: "Add runtime domain schedule configuration" and the
+  upgrade note on `domain_schedule.c`. *Checked 2026-11-14.*
+- [Murray et al., "seL4: from General Purpose to a Proof of Information
+  Flow Enforcement"](https://sel4.systems/Research/pdfs/sel4-from-general-purpose-to-proof-information-flow-enforcement.pdf),
+  IEEE S&P 2013: why the domain scheduler exists (a static schedule
+  between partitions, so that scheduling leaks nothing between them).
+  *Checked 2026-11-14.*
 
 ## My notes
 

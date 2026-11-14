@@ -38,8 +38,11 @@ The consequences:
 BootInfo lists the untypeds as `seL4_UntypedDesc` entries: physical
 address (`paddr`), `sizeBits` and `isDevice`. There are at most
 `CONFIG_MAX_NUM_BOOTINFO_UNTYPED_CAPS` (default 230), so a fragmented
-memory map can lose memory off the end of the list (unchecked: how the
-kernel chooses what to drop).
+memory map can lose memory off the end of the list. `create_untypeds`
+makes the device untypeds first, then the recycled boot memory, then
+free RAM; once the list is full `provide_untyped_cap` prints "Too many
+untyped regions for boot info" and makes no capability for the rest,
+so it is RAM that is lost.
 
 ### Retype
 
@@ -191,8 +194,7 @@ The preemption check does not actually happen every 256 bytes:
   the objects fit unaligned they fit aligned. That holds because the
   block and the objects are powers of two.
 - **A device untyped retyped to a frame gives a device frame**: the
-  kernel will not use it for an IPC buffer and never zeroes it (the
-  IPC buffer restriction is unchecked here).
+  kernel will not use it for an IPC buffer and never zeroes it.
 - **Revoking a big untyped is slow twice**: once to delete the
   children, and again, at the next Retype, to clear the memory. Both
   are preemptible, so a caller sees the same system call restarted.
@@ -243,7 +245,11 @@ The preemption check does not actually happen every 256 bytes:
   `seL4_UntypedDesc`. *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
   section 2.4 "Kernel Memory Allocation": the model in prose, with
-  the reuse rules. *Unchecked: PDF not opened today.*
+  the reuse rules (2.4.1) and the restrictions on device untypeds and
+  their frames. *Checked 2026-11-14 (version 17.0.0).*
+- [seL4 `src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c):
+  `create_untypeds`, `provide_untyped_cap`: the order of creation and
+  the full-list case. *Checked 2026-11-14.*
 
 ## My notes
 

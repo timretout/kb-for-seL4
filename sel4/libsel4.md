@@ -180,10 +180,13 @@ what it sends is ([proof impact](proof-impact.md)).
 ## Gotchas
 
 - **A stale libsel4 fails quietly.** User code built against another
-  kernel version or configuration traps with the wrong numbers; the
-  usual symptom is `seL4_IllegalOperation` or `seL4_InvalidCapability`
-  from an invocation that looks right (unchecked: from experience,
-  not a source).
+  kernel version or configuration traps with the wrong numbers: `object-api.xml` includes or leaves out
+  methods by configuration (MCS, for one), so the invocation labels
+  shift. The kernel then decodes a different method, or rejects a
+  label it does not know for that capability with
+  `seL4_IllegalOperation` (the `default:` case of
+  `decodeTCBInvocation`, for example), from an invocation that looks
+  right.
 - **MCS changes signatures**, not just adds calls: `seL4_Recv` and
   `seL4_ReplyRecv` take a reply capability, `seL4_Reply` does not
   exist, and `seL4_NBSendRecv` and its relatives appear
@@ -245,8 +248,14 @@ what it sends is ([proof impact](proof-impact.md)).
   `LibSel4UseThreadLocals` off, the fixed `__sel4_ipc_buffer`.
   *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 10 "API Reference": the generated documentation of every
-  call. *Unchecked: PDF not opened today.*
+  chapter 10 "seL4 API Reference": the generated documentation of every
+  call. *Checked 2026-11-14 (version 17.0.0; contents and the
+  `seL4_DomainSet` and `seL4_TCB_SetTLSBase` entries read, not every
+  call).*
+- [seL4 `libsel4/include/interfaces/object-api.xml`](https://github.com/seL4/seL4/blob/master/libsel4/include/interfaces/object-api.xml)
+  (the `<condition>` elements on methods) and
+  [`src/object/tcb.c`](https://github.com/seL4/seL4/blob/master/src/object/tcb.c)
+  (`decodeTCBInvocation`'s default case). *Checked 2026-11-14.*
 
 ## My notes
 

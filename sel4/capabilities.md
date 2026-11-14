@@ -46,8 +46,9 @@ Four rights exist, as bits of a `seL4_CapRights_t`:
 | GrantReply | 3 | may send a reply cap with a Call, but no other caps | - | - |
 
 Other object types ignore rights: holding a TCB or CNode capability
-gives full control of it (the frame column is unchecked against the
-manual). Rights only shrink: a copy can have fewer rights than its
+gives full control of it (the manual's table adds one more row: on an
+reply capability, Grant allows capabilities in the reply message).
+Rights only shrink: a copy can have fewer rights than its
 source, never more.
 
 ### Badges
@@ -203,7 +204,7 @@ turned into a `zombie_cap` that records how much is left, and
   capability it requires `ensureNoChildren`, failing with
   `seL4_RevokeFirst` otherwise. Architecture capabilities go through
   `Arch_deriveCap`; a copy of a mapped frame capability comes out
-  unmapped (unchecked here; see [VSpace](vspace.md)).
+  unmapped (see [VSpace](vspace.md)).
 
 The slot lookups these use are in
 [`src/kernel/cspace.c`](https://github.com/seL4/seL4/blob/master/src/kernel/cspace.c),
@@ -259,8 +260,13 @@ described in [CSpaces](cspace.md).
 - [libsel4 `mode_include/64/sel4/shared_types.bf`](https://github.com/seL4/seL4/blob/master/libsel4/mode_include/64/sel4/shared_types.bf):
   `seL4_CapRights` bit order. *Checked 2026-11-14.*
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  chapter 3 "Capability Spaces": rights per object type, CNode methods,
-  the CDT. *Unchecked: PDF not opened today.*
+  chapter 3 "Capability Spaces": rights per object type (3.1.4,
+  table 3.1), CNode methods (3.1.2), the CDT (3.1.5).
+  *Checked 2026-11-14 (version 17.0.0).*
+- [seL4 `src/arch/arm/64/object/objecttype.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/object/objecttype.c)
+  and [`src/arch/riscv/object/objecttype.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/object/objecttype.c),
+  `Arch_deriveCap`: a derived frame capability has its mapping
+  cleared. *Checked 2026-11-14.*
 
 ## My notes
 

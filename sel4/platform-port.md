@@ -141,8 +141,8 @@ which assumption it breaks:
 |---|---|---|
 | The serial console is a 16550 at I/O port `0x3f8` (COM1), or the port in the BIOS data area, or one given on the command line | `src/arch/x86/kernel/cmdline.c` | The machine has no legacy UART, or an MMIO one ([UARTs](../concepts/uart.md)) |
 | A [PIT](../concepts/pit.md) exists to calibrate the [TSC](../concepts/tsc.md) and local APIC timer against | `src/plat/pc99/machine/pit.c`, [Timer calibration](../concepts/timer-calibration.md) | A virtual machine has no PIT or an inaccurate one |
-| An [8259 PIC](../concepts/pic-8259.md) is present to be remapped and masked | `pic_remap_irqs()` in `boot_sys.c` | Rarely fatal; hardware-reduced ACPI machines have none (unchecked) |
-| The interrupt controller mode chosen at build time (`KernelIRQController` = `IOAPIC` or `PIC`, `KernelX2APIC`) matches the machine | `src/arch/x86/config.cmake`, [Local APIC and I/O APIC](../concepts/apic.md) | Firmware starts the CPU in x2APIC mode, or the instance has more than 255 CPUs (unchecked) |
+| An [8259 PIC](../concepts/pic-8259.md) is present to be remapped and masked | `pic_remap_irqs()` in `boot_sys.c` | Rarely fatal; a hardware-reduced ACPI machine need not have one (Linux bypasses the legacy PIC on such machines) |
+| The interrupt controller mode chosen at build time (`KernelIRQController` = `IOAPIC` or `PIC`, `KernelX2APIC`) matches the machine | `src/arch/x86/config.cmake`, [Local APIC and I/O APIC](../concepts/apic.md) | Firmware starts the CPU in x2APIC mode (an xAPIC kernel then stops with "x2APIC enabled in BIOS but kernel does not support that"), or CPUs have APIC IDs of 255 and above, which the MADT lists as x2APIC entries |
 | Multiboot 1 or 2 hands over a memory map and an ACPI RSDP can be found | `try_boot_sys()` in `src/arch/x86/kernel/boot_sys.c` | UEFI-only boot without a Multiboot2 loader ([UEFI](../concepts/uefi.md)) |
 
 A cloud virtual machine is exactly this kind of port: the CPU is
@@ -216,11 +216,16 @@ has no [proof impact](proof-impact.md).
   ([BootInfo](bootinfo-and-root-task.md)). A board sold with 2, 4 or
   8 GB therefore needs one overlay and one kernel build per size (see
   `src/plat/bcm2711/overlay-rpi4-*gb.dts`), and firmware that moves its
-  reserved regions between versions silently breaks a port. Upstream
-  has discussed describing hardware at boot time instead (unchecked: no
-  RFC or issue found by search on 2026-11-14).
-- **The verified configurations depend on this.** A build-time constant
-  memory layout is part of what the proofs assume (unchecked), so a change that
+  reserved regions between versions silently breaks a port. The
+  advice given on the developers' list is to describe only a minimum
+  amount of RAM in the memory node: the rest still reaches user level,
+  as device untyped memory that can be used for frames but not for
+  kernel objects.
+- **The verified configurations depend on this.** The proofs take the
+  build-time physical base as a constant (l4v's `gen-config-thy.py`
+  copies `PHYS_BASE_RAW` from the generated `devices_gen.h` into the
+  theory `Kernel_Config`), and `CAVEATS.md` says the proofs "are
+  generally sensitive to changes in configuration parameters", so a change that
   makes the Arm layout dynamic is a proof change, not a platform patch.
 - **`TIMER_FREQUENCY` is trusted, not measured.** If firmware or a
   hypervisor runs the counter at another rate, time on the board is
@@ -278,6 +283,23 @@ has no [proof impact](proof-impact.md).
   and [`cmdline.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/cmdline.c):
   Multiboot parsing, `acpi_init`, `pic_remap_irqs`, the `0x3f8`
   default. *Checked 2026-11-14.*
+- [seL4 `src/arch/x86/kernel/xapic.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/xapic.c),
+  `apic_enable()`: the refusal when firmware has enabled x2APIC; and
+  [`src/plat/pc99/machine/acpi.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/acpi.c):
+  the MADT parser's comment that APIC IDs of `0xFF` and above belong in
+  the x2APIC entries. *Checked 2026-11-14.*
+- [Linux `arch/x86/kernel/acpi/boot.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/acpi/boot.c),
+  `acpi_generic_reduced_hw_init()`: hardware-reduced ACPI is for
+  platforms that do not implement the PC architecture, and Linux
+  bypasses the legacy PIC there. *Checked 2026-11-14.*
+- [seL4 devel list, "RPi4: DTS memory device and vm_minimal", 18 March 2020](https://lists.sel4.systems/hyperkitty/list/devel@sel4.systems/message/KYXQDYR5PT46MM3MCFYFNYRMB2BUFEGG/):
+  the kernel needs the platform layout at build time; the
+  minimum-memory-node advice. *Checked 2026-11-14.*
+- [l4v `spec/cspec/c/gen-config-thy.py`](https://github.com/seL4/l4v/blob/master/spec/cspec/c/gen-config-thy.py),
+  `parse_physBase`, and
+  [seL4 `CAVEATS.md`](https://github.com/seL4/seL4/blob/master/CAVEATS.md),
+  "Verified Configurations": the proofs' dependence on configuration
+  constants. *Checked 2026-11-14.*
 - [Microkit `build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py):
   the `BoardInfo` list. *Checked 2026-11-14.*
 - [util_libs `libplatsupport`](https://github.com/seL4/util_libs/tree/master/libplatsupport):
