@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img">
+  <title>VMX root and non-root operation</title>
+  <desc>VMX adds a second dimension of privilege: root operation, where the hypervisor runs, and non-root operation, where the guest runs, each with rings 0 to 3. A VM entry by VMLAUNCH or VMRESUME goes to the guest; a VM exit returns to the hypervisor.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="320" fill="#ffffff"/>
+  <text x="162" y="30" text-anchor="middle" class="head">VMX root operation</text>
+  <path class="line dash" d="M24,40 H300 V270 H24 Z"/>
+  <text x="598" y="30" text-anchor="middle" class="head">VMX non-root operation</text>
+  <path class="line dash" d="M460,40 H736 V270 H460 Z"/>
+  <rect x="40" y="60" width="244" height="70" rx="6" class="user"/>
+  <text x="52" y="84" class="head">ring 3</text>
+  <text x="52" y="104" class="small">in seL4: all native threads,</text>
+  <text x="52" y="120" class="small">the VMM among them</text>
+  <rect x="40" y="170" width="244" height="80" rx="6" class="kernel"/>
+  <text x="52" y="194" class="head">ring 0</text>
+  <text x="52" y="214" class="small">the hypervisor</text>
+  <text x="52" y="230" class="small">(in seL4: the kernel)</text>
+  <rect x="476" y="60" width="244" height="70" rx="6" class="data"/>
+  <text x="488" y="84" class="head">ring 3</text>
+  <text x="488" y="104" class="small">the rest of the guest</text>
+  <rect x="476" y="170" width="244" height="80" rx="6" class="data"/>
+  <text x="488" y="194" class="head">ring 0</text>
+  <text x="488" y="214" class="small">guest kernel: believes it</text>
+  <text x="488" y="230" class="small">owns the machine</text>
+  <path class="line" d="M300,192 H460" marker-end="url(#arrow)"/>
+  <text x="380" y="166" text-anchor="middle" class="head">VM entry</text>
+  <text x="380" y="184" text-anchor="middle" class="small">VMLAUNCH, VMRESUME</text>
+  <path class="line accent" d="M460,226 H300" marker-end="url(#arrow-accent)"/>
+  <text x="380" y="246" text-anchor="middle" class="head">VM exit</text>
+  <text x="380" y="262" text-anchor="middle" class="small">chosen instructions</text>
+  <text x="380" y="278" text-anchor="middle" class="small">and events</text>
+  <text x="24" y="302" class="small dim"><tspan class="mono">VMXON</tspan> puts a core into VMX operation. Rings behave as normal in root operation.</text>
+</svg>

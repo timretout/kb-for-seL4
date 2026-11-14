@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img">
+  <title>A cloud virtual machine as its guest kernel sees it</title>
+  <desc>A guest kernel on a cloud runs on a real, recent CPU above the provider's hypervisor, boots through UEFI firmware with ACPI tables, and sees emulated or paravirtual devices: the provider's own NIC and disk, some legacy PC devices, and a first serial port whose output goes to the provider's log.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="400" fill="#ffffff"/>
+  <rect x="24" y="40" width="540" height="204" rx="6" class="data" style="fill:#ffffff"/>
+  <text x="40" y="62" text-anchor="start" class="head">The virtual machine</text>
+  <rect x="40" y="78" width="200" height="62" rx="6" class="kernel"/>
+  <text x="140.0" y="106" text-anchor="middle">guest kernel</text>
+  <text x="140.0" y="122" text-anchor="middle" class="small">Arm: entered at EL1</text>
+  <rect x="40" y="160" width="200" height="62" rx="6" class="fw"/>
+  <text x="140.0" y="188" text-anchor="middle">UEFI firmware</text>
+  <text x="140.0" y="204" text-anchor="middle" class="small">ACPI on every architecture</text>
+  <rect x="262" y="74" width="286" height="48" rx="6" class="hw dash"/>
+  <text x="405.0" y="94" text-anchor="middle">provider's own NIC and disk</text>
+  <text x="405.0" y="112" text-anchor="middle" class="small">PCI functions on EC2 and Compute Engine</text>
+  <rect x="262" y="130" width="286" height="48" rx="6" class="hw dash"/>
+  <text x="405.0" y="150" text-anchor="middle">legacy PC devices</text>
+  <text x="405.0" y="168" text-anchor="middle" class="small">each present or not, as the provider chose</text>
+  <rect x="262" y="186" width="286" height="48" rx="6" class="hw dash"/>
+  <text x="405.0" y="206" text-anchor="middle">first serial port</text>
+  <text x="405.0" y="224" text-anchor="middle" class="small">the only debug channel</text>
+  <rect x="606" y="186" width="130" height="48" rx="6" class="data"/>
+  <text x="671.0" y="215" text-anchor="middle">provider's log</text>
+  <path class="line" d="M548,210 H606" marker-end="url(#arrow)"/>
+  <rect x="24" y="258" width="540" height="44" rx="6" class="fw"/>
+  <text x="294.0" y="285" text-anchor="middle">provider's hypervisor (on Arm, EL2 is the hypervisor's)</text>
+  <rect x="24" y="314" width="540" height="44" rx="6" class="hw"/>
+  <text x="294.0" y="341" text-anchor="middle">real, recent CPU</text>
+  <text x="24" y="384" text-anchor="start" class="small dim">Dashed boxes are emulated or paravirtual.</text>
+</svg>

@@ -2,6 +2,19 @@
 
 > The original PC's timer chip, a 16-bit down-counter at 1 193 182 Hz behind I/O ports 0x40 to 0x43; every x86 hypervisor still emulates it, and seL4 times its other clocks against it at boot.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [GICv3 and the ITS](gicv3-its.md) · [TSC](tsc.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Timer device (Intel 8253/8254 chip, now always emulated or in the chipset) |
+| Architecture | x86 |
+| Reached through | [I/O ports](io-ports.md) `0x40` to `0x43` |
+| Interrupt | [ISA](isa.md) IRQ 0 |
+| Key numbers | 1 193 182 Hz clock; three 16-bit counters; longest period about 54.9 ms |
+| seL4 code | [`src/plat/pc99/machine/pit.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/pit.c) |
+| seL4 use | [Timer calibration](timer-calibration.md) at boot only; `BOOT_CODE`, outside the proofs |
+| On the clouds | Emulated on EC2 Nitro and Compute Engine x86 types, with IRQ 0 on I/O APIC pin 0 |
+
 ## What it is
 
 The Intel 8253, and its superset the 8254, has three independent 16-bit
@@ -25,6 +38,11 @@ high), a mode (0 to 5) and binary or BCD counting.
 counter decrements once per clock from N to 1, then reloads N and carries
 on. The period is N clocks, repeating for ever. A count of 1 is illegal
 in this mode. With N up to 65 536 the longest period is about 54.9 ms.
+
+![The count in mode 2 is a sawtooth: it falls from N to 1, reloads N and repeats; a latched read that is higher than the one before shows that a reload has happened.](../images/pit-mode2.svg)
+
+*The count in mode 2 with seL4's N of 59 659, and how
+`pit_wait_wraparound()` (see below) finds the reload.*
 
 **Reading the count.** The count is 16 bits but the port is 8, so two
 reads could straddle a decrement. Writing a **counter latch command**

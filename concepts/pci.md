@@ -2,6 +2,19 @@
 
 > The bus by which almost every device in a PC, server or cloud virtual machine is found and reached: each function at a bus:device.function address has a configuration space that names it and holds its BARs, the windows through which its registers appear; PCI Express keeps that software model on point-to-point serial links and reaches the larger configuration space through ECAM.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [ISA](isa.md) · [MSI and MSI-X](msi-msix.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Device bus, with self-describing devices |
+| Introduced | PCI in the 1990s (unchecked); PCI Express in 2003 |
+| Reached through | Configuration space: [I/O ports](io-ports.md) `0xcf8` and `0xcfc` (x86 only) or ECAM in memory; device registers through BARs |
+| Found through | ECAM window in the [ACPI](acpi-tables.md) MCFG table |
+| Interrupt | INTA to INTD wires, or [MSI and MSI-X](msi-msix.md) |
+| Key numbers | 256 buses, 32 devices, 8 functions; configuration space 256 bytes (PCI) or 4096 (PCIe); up to six BARs |
+| seL4 code | [`interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/interrupt.c), [`iospace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/iospace.c) |
+| seL4 use | Kernel never touches configuration space; it takes bus, device and function numbers for MSI and the IOMMU on x86 |
+
 ## What it is
 
 PCI replaced [ISA](isa.md) in the 1990s (unchecked: the year) and fixed
@@ -84,6 +97,11 @@ access mechanism.
   MCFG table (see [ACPI tables](acpi-tables.md)), on device-tree machines
   in the host bridge's node (unchecked). Arm has no I/O ports, so on Arm
   ECAM is the only way.
+
+![The bus, device and function numbers, of 8, 5 and 3 bits, packed three ways: as the 16-bit requester ID, in the address written to port 0xcf8, and in the ECAM offset.](../images/pci-address-layouts.svg)
+
+*The same three numbers in each address, with the shift applied to
+each below it; only the room left for the offset differs.*
 
 ### BARs (base address registers)
 

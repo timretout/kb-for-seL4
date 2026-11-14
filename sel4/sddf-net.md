@@ -2,7 +2,18 @@
 
 > The network class of sDDF in detail: free and active queues of buffer descriptors between driver, RX and TX virtualisers, per-client copiers and clients, who owns a buffer at each step, and what a NIC driver has to implement.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [sDDF](sddf.md) · [LionsOS and libvmm](lionsos.md) →
+
 Read first: [sDDF](sddf.md), [Microkit](microkit.md).
+
+| At a glance | |
+|---|---|
+| Kind | Framework subsystem: the network class of sDDF |
+| Repository | The [sDDF](sddf.md) repository |
+| Key source | `include/sddf/network/queue.h`, `network/components/`, `drivers/network/<nic>/` |
+| API | `net_enqueue_free`, `net_enqueue_active`, `net_dequeue_free`, `net_dequeue_active`, `net_request_signal_*`, `net_require_signal_*` |
+| Built on | [sDDF](sddf.md) queues and signalling, [Microkit](microkit.md) PDs |
+| Used by | lwIP clients, the `echo_server` example, [LionsOS and libvmm](lionsos.md) |
 
 ## What it is
 
@@ -108,6 +119,10 @@ owns the buffer until it enqueues it again.
    back on its *free* queue.
 6. virt_rx turns returned offsets back into device addresses and
    refills the driver's free queue.
+
+![On the receive path full buffers travel on active queues from driver to virt_rx to copier to client and empty ones return on free queues; the copier copies each packet from the RX DMA region into the client's own region.](../images/sddf-net-rx-path.svg)
+
+*The receive path's queues and data regions. Descriptors hold device addresses between driver and virt_rx and offsets everywhere else, and only the copier touches both regions.*
 
 ### Transmit path
 

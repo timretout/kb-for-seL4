@@ -2,7 +2,18 @@
 
 > seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler state, threads pinned to cores and IPIs for anything one core must do to another; this configuration is not verified, which is why a one-kernel-per-core "multikernel" design is being pursued instead.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [BootInfo and the root task](bootinfo-and-root-task.md) · [Virtualisation support](hypervisor.md) →
+
 Read first: [Multiprocessor bring-up and IPIs](../concepts/smp-bringup.md), [Scheduling](scheduling.md), [Threads and TCBs](threads.md).
+
+| At a glance | |
+|---|---|
+| Kind | Build option |
+| Key source | [`include/smp/lock.h`](https://github.com/seL4/seL4/blob/master/include/smp/lock.h), [`src/smp/ipi.c`](https://github.com/seL4/seL4/blob/master/src/smp/ipi.c), `include/model/smp.h` |
+| Config options | `KernelMaxNumNodes` above 1 (`CONFIG_MAX_NUM_NODES`; defines `ENABLE_SMP_SUPPORT`) |
+| API | `seL4_TCB_SetAffinity` (non-MCS); `seL4_SchedControl_ConfigureFlags` on a core's `SchedControl` cap (MCS) |
+| Built on | One big kernel lock (a CLH lock), per-core scheduler state, [IPIs](../concepts/smp-bringup.md) |
+| Verified | No: the verified configurations all have one core |
 
 ## What it is
 
@@ -120,6 +131,11 @@ is padded to a cache line. `NODE_STATE_ON_CORE(x, core)` reaches
 another core's copy, legal because the lock is held. Still global:
 `intStateIRQTable`, `intStateIRQNode`, the domain schedule
 (`ksCurDomain`, `ksDomainTime`), the ASID tables and all objects.
+
+![Each core has its own ready queues, current thread and idle thread, while one big kernel lock, taken on every kernel entry, guards the state that stays global; cores signal each other with IPIs.](../images/smp-big-lock.svg)
+
+*Per-core state, global state and the lock between them. Only some of
+the per-core variables are shown.*
 
 ### IPIs
 

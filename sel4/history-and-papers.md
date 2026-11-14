@@ -2,7 +2,19 @@
 
 > seL4 is the third generation of the L4 microkernel family, designed from 2004 to be formally verified; this page gives the lineage, the timeline, and an annotated reading list in the order a new contributor should read it.
 
+[Index](../INDEX.md) › [Part 1: Orientation](../INDEX.md#part-1-orientation) · ← [Ecosystem and repositories](ecosystem.md) · [Privilege levels](../concepts/privilege-levels.md) →
+
 Read first: [seL4 overview](overview.md).
+
+| At a glance | |
+|---|---|
+| Kind | History and annotated reading list |
+| Lineage | Third generation of the L4 family, with capabilities from KeyKOS and EROS |
+| Project start | 2004, L4.verified at NICTA |
+| Proof complete | 29 July 2009, 32-bit Arm |
+| Open source | 29 July 2014 |
+| Foundation | 7 April 2020 ([Governance and RFCs](governance.md)) |
+| Read first | [The whitepaper](https://sel4.systems/About/seL4-whitepaper.pdf) |
 
 ## What it is
 
@@ -55,6 +67,10 @@ including kernel memory, from that line; its
 [capability derivation tree](capabilities.md) and the idea of
 user-level memory management through [untyped memory](untyped-memory.md)
 are the seL4 team's additions (unchecked).
+
+![Liedtke's L3 and L4 lead to the second-generation kernels Hazelnut, Pistachio and Fiasco and to OKL4, then to seL4 as the third generation, which also takes capabilities from the separate line of KeyKOS and EROS.](../images/history-and-papers-lineage.svg)
+
+*Two lines meet in seL4: the L4 family for the kernel design, and the capability systems for access control. The diagram carries the same unchecked marks as the paragraphs above.*
 
 ### seL4's timeline
 

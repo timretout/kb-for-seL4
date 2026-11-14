@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 230" width="760" height="230" role="img">
+  <title>How libmicrokit reads the badge</title>
+  <desc>The 64-bit badge returned by a receive: bit 62 marks a child fault, bit 63 a protected procedure call, and otherwise bits 0 to 61 are a set of channels that were notified.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="230" fill="#ffffff"/>
+  <rect x="40" y="40" width="70" height="44" rx="6" class="kernel"/>
+  <text x="75" y="67" class="mono" text-anchor="middle">63</text>
+  <rect x="110" y="40" width="70" height="44" rx="6" class="kernel"/>
+  <text x="145" y="67" class="mono" text-anchor="middle">62</text>
+  <rect x="180" y="40" width="540" height="44" rx="6" class="data"/>
+  <text x="450" y="67" text-anchor="middle">bits 61 to 0: one bit per channel</text>
+  <text x="40" y="30" class="small dim">badge, 64 bits</text>
+  <path class="line" d="M145,84 V112 H196" marker-end="url(#arrow)"/>
+  <text x="204" y="117" class="mono">set: fault(badge &amp; 0xff, ...)</text>
+  <text x="470" y="117" class="small">a child faulted</text>
+  <path class="line" d="M75,84 V147 H196" marker-end="url(#arrow)"/>
+  <text x="204" y="152" class="mono">else set: protected(badge &amp; 0x3f, ...)</text>
+  <text x="520" y="152" class="small">a protected procedure call</text>
+  <path class="line dash" d="M700,84 V182 H640" marker-end="url(#arrow)"/>
+  <text x="204" y="187" class="mono">else: notified(i) for each set bit i</text>
+  <text x="496" y="187" class="small">notifies and interrupts</text>
+  <text x="40" y="216" class="small dim">Bits 62 and 63 are reserved, which leaves 62 usable channel identifiers.</text>
+</svg>

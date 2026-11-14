@@ -2,7 +2,20 @@
 
 > The standard PCI storage controller interface, and the one EC2 uses for every disk and Compute Engine for its newer machine types: registers in BAR 0, an admin queue, and pairs of submission and completion queues in host memory.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [gVNIC](gvnic.md) · [Capabilities](../sel4/capabilities.md) →
+
 Read first: [PCI](pci.md), [MSI and MSI-X](msi-msix.md).
+
+| At a glance | |
+|---|---|
+| Kind | Storage controller interface (a public specification) |
+| Reached through | [PCI](pci.md) BAR 0 (64-bit memory); doorbells from offset `0x1000` |
+| Found through | PCI class code `01/08/02` |
+| Interrupt | [MSI-X](msi-msix.md), MSI or a legacy pin; admin CQ on vector 0 |
+| Key numbers | 64-byte commands, 16-byte completions; up to 65535 queues of up to 65536 commands |
+| seL4 code | [sDDF](../sel4/sddf.md) [`drivers/blk/nvme/`](https://github.com/au-ts/sddf/tree/main/drivers/blk/nvme); none in the kernel |
+| seL4 use | sDDF block driver, tested against QEMU only; one I/O queue pair, one namespace |
+| On the clouds | Every disk on EC2 Nitro; Compute Engine's T2A and third-generation series |
 
 ## What it is
 
@@ -93,6 +106,11 @@ Submitting is: copy the command into the SQ slot at the tail, advance
 the tail modulo the queue size, write it to the SQ tail doorbell. A
 queue is full when advancing the tail would reach the head last seen in
 `SQHD`.
+
+![The driver copies commands into the submission queue and writes the tail to the SQ tail doorbell; the controller writes completions carrying a phase tag into the completion queue; the driver reads them and writes its head to the CQ head doorbell.](../images/nvme-queues.svg)
+
+*One queue pair: the rings are in host memory, and the only
+registers touched per command are the two doorbells.*
 
 | Admin opcode | Command | Key fields |
 |---|---|---|

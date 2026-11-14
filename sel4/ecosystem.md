@@ -2,7 +2,20 @@
 
 > seL4 is some thirty repositories in two GitHub organisations: the kernel and its proofs, an older user-level world of CMake libraries and CAmkES, and a newer one of Microkit, sDDF and LionsOS; this page maps them and how they depend on each other.
 
+[Index](../INDEX.md) › [Part 1: Orientation](../INDEX.md#part-1-orientation) · ← [seL4 overview](overview.md) · [History and key papers](history-and-papers.md) →
+
 Read first: [seL4 overview](overview.md).
+
+| At a glance | |
+|---|---|
+| Kind | Survey of some thirty repositories |
+| Organisations | [github.com/seL4](https://github.com/seL4) (the Foundation), [github.com/au-ts](https://github.com/au-ts) (Trustworthy Systems) |
+| Kernel and proofs | [seL4/seL4](https://github.com/seL4/seL4), [seL4/l4v](https://github.com/seL4/l4v) |
+| Generation 1 | `repo` manifest, CMake, seL4_libs, sel4test, CAmkES |
+| Generation 2 | Microkit SDK, sDDF, LionsOS, rust-sel4 |
+| Use for new systems | Generation 2; generation 1 stays necessary for kernel work |
+| Newest kernel release | 17.0.0, October 2026 |
+| Where to ask | [Discourse](https://sel4.discourse.group/), `devel` list, Mattermost |
 
 ## What it is
 

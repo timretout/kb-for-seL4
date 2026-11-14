@@ -2,7 +2,18 @@
 
 > The path from the kernel's entry point to the first user thread: architecture assembly sets up a stack and the kernel's address space, C code discovers or is told the machine's memory, then generic helpers build the root task's CNode, address space, thread and untypeds before the first `schedule()`.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Generated code](generated-code.md) · [Boot code and the proof boundary](boot-code.md) →
+
 Read first: [Kernel design](kernel-design.md), [Boot code and the proof boundary](boot-code.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism (the boot sequence) |
+| Key source | [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c), [`src/arch/arm/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/kernel/boot.c), [`src/arch/x86/kernel/boot_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot_sys.c) |
+| Config options | `CONFIG_ROOT_CNODE_SIZE_BITS`, `CONFIG_MAX_NUM_BOOTINFO_UNTYPED_CAPS` (default 230) |
+| API | Entered at `init_kernel()` (Arm, RISC-V) or `boot_sys()` (x86) |
+| Built on | The [elfloader](elfloader.md) or Microkit's loader (Arm, RISC-V); a Multiboot 1 or 2 boot loader (x86) |
+| Verified | No: `BOOT_CODE`, outside the functional correctness proof ([boot code](boot-code.md)) |
 
 ## What it is
 
@@ -13,6 +24,11 @@ handful of objects (root CNode, the root task's TCB and page tables, the
 idle thread) and all remaining memory has been handed to the root task
 as [untyped](untyped-memory.md) capabilities
 ([BootInfo and the root task](bootinfo-and-root-task.md)).
+
+![At the end of boot there is an initial thread TCB whose CSpace root is the root CNode and whose VSpace root is an address space mapping the user image, the IPC buffer and the BootInfo frame, plus an idle thread per core.](../images/kernel-boot-result.svg)
+
+*What boot leaves behind. The root CNode holds a capability to everything,
+including all remaining memory as untypeds.*
 
 All of this code is marked `BOOT_CODE`, placed in a `.boot` section and
 never run again; it is outside the functional correctness proof

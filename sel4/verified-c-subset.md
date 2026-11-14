@@ -2,7 +2,19 @@
 
 > Verified seL4 code must be written in the subset of C99 that the Isabelle C parser accepts (no unions, no `goto`, no fall-through, no address of a local, no side effects inside expressions), which explains much of the kernel's unusual C style.
 
+[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [l4v and Isabelle](l4v.md) · [Proof impact of a change](proof-impact.md) →
+
 Read first: [Verification](verification.md), [l4v](l4v.md).
+
+| At a glance | |
+|---|---|
+| Kind | Language restriction: the subset of C99 (StrictC) that the Isabelle C parser accepts |
+| Repository | [l4v](l4v.md), `tools/c-parser` |
+| Key source | `include/object/structures.bf`, `tools/bitfield_gen.py`, [`include/util.h`](https://github.com/seL4/seL4/blob/master/include/util.h) |
+| Rejected | `goto`, unions, `switch` fall-through, the address of a local, side effects inside expressions |
+| Annotations | `/** DONT_TRANSLATE */`, `/** MODIFIES: ... */` |
+| Used by | Every verified configuration, [boot code](boot-code.md) included |
+| Checked by | The C Parser and Preprocess checks ([CI](ci.md)) |
 
 ## What it is
 
@@ -112,6 +124,12 @@ What the parser never sees, in a verified configuration:
 `kernel_all.c_pp` and must parse, but no refinement proof covers them
 ([Boot code](boot-code.md)). They may not use constructs the parser
 rejects, and a change to one changes the preprocessed file.
+
+![On the left, what never reaches the parser: assembly files, code under a false #ifdef, files not compiled, and libsel4, the elfloader and user level. On the right, kernel_all.c_pp, holding verified code, BOOT_CODE functions and bodies marked DONT_TRANSLATE.](../images/verified-c-subset-parser-view.svg)
+
+*Being in `kernel_all.c_pp` is not the same as being proved: boot code
+must parse without a refinement proof, and a `DONT_TRANSLATE` body is in
+the file but skipped.*
 
 ### How CI notices
 

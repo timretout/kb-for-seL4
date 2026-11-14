@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 602" width="760" height="602" role="img">
+  <title>The path of an invocation through the kernel</title>
+  <desc>A libsel4 stub such as seL4_TCB_Resume does seL4_Call on a capability. The kernel passes it through c_handle_syscall, handleSyscall, handleInvocation and decodeInvocation to a per-object decoder, which first decodes, failing with an error before any state has changed, and then invokes, which cannot fail.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="602" fill="#ffffff"/>
+  <rect x="40" y="20" width="440" height="54" rx="6" class="user"/>
+  <text x="52" y="42"><tspan class="mono">seL4_TCB_Resume(tcb)</tspan>, a libsel4 stub</text>
+  <text x="52" y="62" class="small">label TCBResume, seL4_Call on the TCB capability</text>
+  <path class="line" d="M140,74 V102" marker-end="url(#arrow)"/>
+  <rect x="40" y="104" width="200" height="40" rx="6" class="kernel"/>
+  <text x="52" y="129" class="mono">c_handle_syscall</text>
+  <text x="256" y="129" class="small dim">tries the IPC fastpath for Call and ReplyRecv</text>
+  <path class="line" d="M140,144 V168" marker-end="url(#arrow)"/>
+  <rect x="40" y="170" width="200" height="40" rx="6" class="kernel"/>
+  <text x="52" y="195" class="mono">handleSyscall</text>
+  <text x="256" y="195" class="small dim">a switch on the system call, here SysCall</text>
+  <path class="line" d="M140,210 V234" marker-end="url(#arrow)"/>
+  <rect x="40" y="236" width="200" height="40" rx="6" class="kernel"/>
+  <text x="52" y="261" class="mono">handleInvocation</text>
+  <text x="256" y="261" class="small dim">looks up the capability, the IPC buffer and the extra capabilities</text>
+  <path class="line" d="M140,276 V300" marker-end="url(#arrow)"/>
+  <rect x="40" y="302" width="200" height="40" rx="6" class="kernel"/>
+  <text x="52" y="327" class="mono">decodeInvocation</text>
+  <text x="256" y="327" class="small dim">switches on the capability type</text>
+  <path class="line" d="M140,342 V366" marker-end="url(#arrow)"/>
+  <rect x="40" y="368" width="200" height="40" rx="6" class="kernel"/>
+  <text x="52" y="393" class="mono">decodeTCBInvocation</text>
+  <text x="256" y="393" class="small dim">the per-object decoder, in two phases</text>
+  <path class="line" d="M140,408 V432" marker-end="url(#arrow)"/>
+  <rect x="40" y="434" width="320" height="56" rx="6" class="kernel"/>
+  <text x="52" y="457" class="head">decode</text>
+  <text x="52" y="477" class="small">checks label, length, arguments, types</text>
+  <rect x="400" y="434" width="320" height="56" rx="6" class="kernel"/>
+  <text x="412" y="457" class="head">invoke</text>
+  <text x="412" y="477" class="small">changes state; may only be preempted</text>
+  <path class="line" d="M360,462 H398" marker-end="url(#arrow)"/>
+  <path class="line accent" d="M200,490 V524" marker-end="url(#arrow)"/>
+  <text x="210" y="512" class="small">a check fails</text>
+  <path class="line" d="M560,490 V524" marker-end="url(#arrow)"/>
+  <rect x="40" y="526" width="320" height="56" rx="6" class="data"/>
+  <text x="52" y="549" class="mono">EXCEPTION_SYSCALL_ERROR</text>
+  <text x="52" y="569" class="small">no kernel state changed; error in the reply label</text>
+  <rect x="400" y="526" width="320" height="56" rx="6" class="data"/>
+  <text x="412" y="549" class="mono">replyFromKernel_success_empty</text>
+  <text x="412" y="569" class="small">the thread is set running again</text>
+
+</svg>

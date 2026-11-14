@@ -2,7 +2,19 @@
 
 > AArch64 address translation: two page table roots (`TTBR0` for the low half of the address space, `TTBR1` for the high half), up to four levels of 4 KiB tables, ASIDs to tag TLB entries, and an optional second stage for hypervisors; seL4's VSpace objects are these tables.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [AArch64 exceptions](aarch64-exceptions.md) · [Arm boot flow](arm-boot.md) →
+
 Read first: [Virtual memory](virtual-memory.md), [AArch64 basics](aarch64-basics.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor mechanism (address translation) |
+| Architecture | Arm ([AArch64](aarch64-basics.md)) |
+| Reached through | System registers `TTBR0_EL1`, `TTBR1_EL1`, `TCR_EL1`, `MAIR_EL1`; `TLBI` instructions |
+| Key numbers | 4 KiB granule, 48 bits: four levels of 512 eight-byte descriptors; 1 GiB and 2 MiB blocks; ASID of 8 or 16 bits |
+| seL4 code | [`src/arch/arm/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/kernel/vspace.c) |
+| seL4 config | `KernelArmPASizeBits40` or `KernelArmPASizeBits44` |
+| seL4 use | VSpace objects are these tables; 4 KiB granule only; stage 2 format in hypervisor builds |
 
 ## What it is
 
@@ -64,6 +76,11 @@ A smaller address space starts at a later level: 39 bits (`TxSZ` = 25)
 needs only levels 1 to 3. The 16 KiB and 64 KiB granules use bigger
 tables and different block sizes (with 64 KiB: 512 MiB blocks at level
 2); seL4 uses only 4 KiB.
+
+![A 48-bit virtual address is split into four 9-bit indexes; the top bits choose `TTBR0` or `TTBR1`, each index picks a descriptor in the level 0 to 3 tables, and levels 1, 2 and 3 can map a 1 GiB block, a 2 MiB block or a 4 KiB page.](../images/aarch64-paging-walk.svg)
+
+*The walk can stop early: a block descriptor at level 1 or 2 maps memory
+directly, and level 0 never does.*
 
 ### Descriptors
 

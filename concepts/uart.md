@@ -2,7 +2,20 @@
 
 > A UART is the serial port: the 16550 on x86 and many RISC-V and Arm boards and the PL011 on Arm are the two seL4 work meets most, and a serial port is the only console a debug kernel or a cloud instance has.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [MSI and MSI-X](msi-msix.md) · [virtio](virtio.md) →
+
 Read first: [I/O ports](io-ports.md), [IRQ](irq.md).
+
+| At a glance | |
+|---|---|
+| Kind | Serial port device (16550 and PL011 families) |
+| Architecture | 16550: x86 and many RISC-V and Arm boards; PL011: Arm |
+| Reached through | 16550: [I/O ports](io-ports.md) on a PC, MMIO elsewhere; PL011: MMIO |
+| Found through | [Device tree](device-tree.md) `/chosen/stdout-path`; [ACPI](acpi-tables.md) SPCR; the BIOS data area at `0x400` |
+| Interrupt | [ISA](isa.md) IRQ 4 (COM1, COM3) and 3 (COM2, COM4) on a PC |
+| Key numbers | COM1 at `0x3F8`; 115200 baud at divisor 1 from a 1.8432 MHz clock; QEMU `virt` PL011 at `0x09000000` |
+| seL4 config | `KernelPrinting`, `KernelDebugBuild`; x86 command line `console_port`, `debug_port` |
+| seL4 use | Polled output only, in debug builds: [`src/drivers/serial/`](https://github.com/seL4/seL4/tree/master/src/drivers/serial), [`io.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/io.c) on x86 |
 
 ## What it is
 
@@ -26,6 +39,12 @@ The bit clock is an input clock divided by a programmable **divisor**;
 UARTs sample each bit 16 times, so
 
     baud = input clock / (16 × divisor)
+
+![The driver writes bytes to a holding register, a FIFO in later UARTs; a shift register clocks them out as bits on one wire, timed by the input clock divided by 16 times the divisor.](../images/uart-transmit-path.svg)
+
+*The transmit half of a UART: the driver only ever sees the holding
+register (or FIFO), and the divisor sets how fast the shift register
+empties it.*
 
 On a virtual machine there is no wire and no timing: the hypervisor takes
 each byte written and appends it to a log or a socket. The divisor is

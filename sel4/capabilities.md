@@ -2,7 +2,18 @@
 
 > A capability is an unforgeable, kernel-held token naming one kernel object plus the rights its holder has; every seL4 operation is authorised by one, and the kernel tracks how capabilities were derived so that access can be revoked.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [NVMe](../concepts/nvme.md) · [CSpaces and capability addressing](cspace.md) →
+
 Read first: [seL4 overview](overview.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism: kernel-held references to objects, with rights |
+| Key source | [`src/object/cnode.c`](https://github.com/seL4/seL4/blob/master/src/object/cnode.c), [`src/object/objecttype.c`](https://github.com/seL4/seL4/blob/master/src/object/objecttype.c), [`include/object/structures_64.bf`](https://github.com/seL4/seL4/blob/master/include/object/structures_64.bf) |
+| API | `seL4_CNode_*`: Copy, Mint, Move, Mutate, Rotate, Delete, Revoke |
+| Object size | `cap_t` is two words; a slot (`cte_t`) is 32 bytes on 64-bit |
+| Built on | CNode slots ([CSpaces](cspace.md)) |
+| Used by | Every seL4 operation; [IPC](ipc.md) capability transfer; [untyped retype](untyped-memory.md) |
 
 ## What it is
 
@@ -88,6 +99,11 @@ Not every copy is a child. A plain copy of a capability is a *sibling*
 of it (revoking the original does not delete it) unless the original is
 an untyped capability or an unbadged endpoint or notification capability
 whose copy gains a badge. The precise rule is `isMDBParentOf`, below.
+
+![A derivation tree: an untyped capability, the unbadged endpoint capability retyped from it, badged capabilities minted from that as its children, and a plain copy of the original beside it as a sibling.](../images/capabilities-cdt.svg)
+
+*Minting a badge makes a child that Revoke on the original removes; a
+plain copy of the original is a sibling and survives.*
 
 ## In seL4
 

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" role="img">
+  <title>Delivering the virtual timer interrupt to a guest on seL4</title>
+  <desc>The virtual timer raises physical PPI 27 to the kernel at EL2, which masks it and sends a VPPIEvent fault to the VMM. The VMM injects a virtual interrupt into a list register, the guest takes it at its EL1 vector, and the VMM later calls AckVPPI to unmask the PPI.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="440" fill="#ffffff"/>
+  <rect x="16" y="20" width="150" height="44" rx="6" class="hw"/>
+  <text x="91.0" y="47.0" text-anchor="middle" class="head">Virtual timer</text>
+  <rect x="215" y="20" width="150" height="44" rx="6" class="kernel"/>
+  <text x="290.0" y="38.5" text-anchor="middle" class="head">seL4 kernel</text>
+  <text x="290.0" y="55.5" text-anchor="middle" class="small">EL2</text>
+  <rect x="425" y="20" width="150" height="44" rx="6" class="user"/>
+  <text x="500.0" y="38.5" text-anchor="middle" class="head">VMM</text>
+  <text x="500.0" y="55.5" text-anchor="middle" class="small">user level</text>
+  <rect x="604" y="20" width="140" height="44" rx="6" class="user"/>
+  <text x="674.0" y="38.5" text-anchor="middle" class="head">Guest</text>
+  <text x="674.0" y="55.5" text-anchor="middle" class="small">EL1</text>
+  <path class="line dash" d="M91,64 V420"/>
+  <path class="line dash" d="M290,64 V420"/>
+  <path class="line dash" d="M500,64 V420"/>
+  <path class="line dash" d="M674,64 V420"/>
+  <text x="190" y="90" text-anchor="middle" class="small">physical PPI,</text>
+  <text x="190" y="105" text-anchor="middle" class="small">INTID 27</text>
+  <path class="line" d="M91,114 H290" marker-end="url(#arrow)"/>
+  <circle cx="290" cy="146" r="4" fill="#1f2328"/>
+  <text x="302" y="142" class="small">masks the PPI, records it</text>
+  <text x="302" y="158" class="small">in vppi_masked</text>
+  <text x="395" y="192" text-anchor="middle" class="mono">seL4_Fault_VPPIEvent</text>
+  <path class="line" d="M290,200 H500" marker-end="url(#arrow)"/>
+  <text x="395" y="217" text-anchor="middle" class="small">message: the INTID</text>
+  <text x="395" y="252" text-anchor="middle" class="mono">seL4_ARM_VCPU_InjectIRQ</text>
+  <path class="line" d="M500,260 H290" marker-end="url(#arrow)"/>
+  <text x="395" y="277" text-anchor="middle" class="small">into a list register</text>
+  <text x="302" y="312" class="small">virtual IRQ at its EL1 vector</text>
+  <path class="line" d="M290,320 H674" marker-end="url(#arrow)"/>
+  <circle cx="674" cy="346" r="4" fill="#1f2328"/>
+  <text x="662" y="342" text-anchor="end" class="small">acknowledges and</text>
+  <text x="662" y="357" text-anchor="end" class="small">completes it</text>
+  <text x="662" y="372" text-anchor="end" class="small">without trapping</text>
+  <text x="395" y="384" text-anchor="middle" class="mono">seL4_ARM_VCPU_AckVPPI</text>
+  <path class="line" d="M500,392 H290" marker-end="url(#arrow)"/>
+  <text x="395" y="409" text-anchor="middle" class="small">unmasks the PPI</text>
+</svg>

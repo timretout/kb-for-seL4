@@ -2,7 +2,19 @@
 
 > Trustworthy Systems' framework for user-level device drivers on Microkit: small single-purpose protection domains (driver, virtualiser, client) joined by shared-memory queues and notifications, with a common pattern per device class.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Microkit internals](microkit-internals.md) · [sDDF networking](sddf-net.md) →
+
 Read first: [Microkit](microkit.md), [Notifications](notifications.md).
+
+| At a glance | |
+|---|---|
+| Kind | Framework for user-level device drivers |
+| Repository | [au-ts/sddf](https://github.com/au-ts/sddf) |
+| Key source | `include/sddf/<class>/queue.h`, `drivers/<class>/<device>/` |
+| API | Per-class queue functions; `sddf_notify`, `sddf_deferred_notify`, `sddf_irq_ack`, `sddf_deferred_irq_ack` |
+| Built on | [Microkit](microkit.md) (`main` tracks 2.4.0) |
+| Used by | [LionsOS and libvmm](lionsos.md) |
+| Verified | No; the signalling protocol was model-checked with Spin |
 
 ## What it is
 
@@ -88,6 +100,10 @@ Notifying on every enqueue wastes time: the receiver is often already
 running, or will be woken for another reason. So each queue carries a
 flag, set by the consumer, saying "signal me when you add something".
 The producer checks it after enqueuing and notifies only if it is set.
+
+![A producer and a consumer share a ring of descriptors: the producer writes the tail index, the consumer writes the head index and sets a flag when it wants a signal, and the producer notifies only if the flag is set.](../images/sddf-queue.svg)
+
+*One queue and its signalling flag. Each index has a single writer, and the data the descriptors point into lives in a separate region.*
 
 The danger is the lost wake-up: the consumer finds the queue empty and
 decides to sleep, the producer enqueues and sees the flag still clear,

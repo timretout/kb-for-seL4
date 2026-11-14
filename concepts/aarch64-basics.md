@@ -2,7 +2,20 @@
 
 > The 64-bit Arm execution state: 31 general registers, a stack pointer per exception level, PSTATE, and hundreds of system registers read with `MRS` and written with `MSR`; every line of seL4's Arm code assumes them.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [x86 virtualisation (VT-x)](x86-virtualisation.md) · [AArch64 exceptions](aarch64-exceptions.md) →
+
 Read first: [Privilege levels](privilege-levels.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor architecture (the 64-bit execution state of Armv8-A) |
+| Architecture | Arm |
+| Introduced | Armv8-A |
+| Reached through | System registers, read with `MRS` and written with `MSR` |
+| Key numbers | 31 general registers (`X0` to `X30`); exception levels EL0 to EL3; every instruction 4 bytes |
+| seL4 code | [`src/arch/arm/64/`](https://github.com/seL4/seL4/tree/master/src/arch/arm/64) |
+| seL4 config | `KernelSel4Arch` = `aarch64` |
+| seL4 use | Kernel at EL1, or at EL2 with `KernelArmHypervisorSupport` |
 
 ## What it is
 
@@ -72,6 +85,11 @@ When an exception is taken, PSTATE is copied into a real register,
 `SPSR_ELx` (saved program status register), where the fields have fixed
 bit positions: NZCV in bits 31 to 28, D, A, I, F in bits 9, 8, 7, 6, and
 a mode field `M` in bits 4 to 0 (0 = EL0t, 4 = EL1t, 5 = EL1h, 9 = EL2h).
+
+![The layout of `SPSR_ELx`: condition flags N, Z, C, V in bits 31 to 28, the masks D, A, I, F in bits 9 to 6 and the mode field M in bits 4 to 0.](../images/aarch64-basics-spsr.svg)
+
+*PSTATE has no register of its own; these fixed positions exist only in
+the saved copy, which is what seL4 fills in for a new thread.*
 
 ### System registers
 

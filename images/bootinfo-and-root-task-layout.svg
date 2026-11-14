@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 326" width="760" height="326" role="img">
+  <title>What the kernel builds for the root task</title>
+  <desc>The root task's address space holds its ELF image, then one page for the IPC buffer, one for BootInfo and any extra BootInfo pages. The root CNode has 16 fixed slots, and BootInfo names the slot regions after them: the image frames, the paging structures, the untyped caps and the empty slots.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="326" fill="#ffffff"/>
+  <text x="30" y="40" text-anchor="start" class="head">Root task's VSpace, in address order</text>
+  <rect x="30" y="56" width="270" height="40" rx="6" class="user"/>
+  <text x="165" y="81" text-anchor="middle">ELF image, at its link addresses</text>
+  <rect x="30" y="106" width="270" height="40" rx="6" class="data"/>
+  <text x="165" y="131" text-anchor="middle">IPC buffer, one page</text>
+  <rect x="30" y="156" width="270" height="40" rx="6" class="data" style="stroke:#cf222e"/>
+  <text x="165" y="181" text-anchor="middle">BootInfo, one page</text>
+  <rect x="30" y="206" width="270" height="40" rx="6" class="data"/>
+  <text x="165" y="231" text-anchor="middle">extra BootInfo pages, if any</text>
+  <text x="30" y="276" text-anchor="start" class="small">The thread starts with a pointer to BootInfo</text>
+  <text x="30" y="292" text-anchor="start" class="small">in its first argument register.</text>
+  <text x="400" y="40" text-anchor="start" class="head">Root CNode</text>
+  <rect x="400" y="56" width="330" height="48" rx="6" class="kernel"/>
+  <text x="565" y="77" text-anchor="middle">slots 0 to 15: fixed meanings</text>
+  <text x="565" y="95" text-anchor="middle" class="mono">enum seL4_RootCNodeCapSlots</text>
+  <rect x="400" y="124" width="330" height="140" rx="6" fill="none" class="line dash"/>
+  <text x="565" y="146" text-anchor="middle" class="small dim">slot regions that BootInfo names</text>
+  <rect x="414" y="158" width="144" height="38" rx="6" class="kernel"/>
+  <text x="486" y="182" text-anchor="middle" class="mono">userImageFrames</text>
+  <rect x="572" y="158" width="144" height="38" rx="6" class="kernel"/>
+  <text x="644" y="182" text-anchor="middle" class="mono">userImagePaging</text>
+  <rect x="414" y="208" width="144" height="38" rx="6" class="kernel"/>
+  <text x="486" y="232" text-anchor="middle" class="mono">untyped</text>
+  <rect x="572" y="208" width="144" height="38" rx="6" class="kernel"/>
+  <text x="644" y="232" text-anchor="middle" class="mono">empty</text>
+  <path class="line" d="M300,176 H396" marker-end="url(#arrow)"/>
+  <text x="348" y="168" text-anchor="middle" class="small">describes</text>
+  <text x="400" y="288" class="small"><tspan class="mono">untypedList[i]</tspan> describes the cap in slot</text>
+  <text x="400" y="306" text-anchor="start" class="mono">untyped.start + i</text>
+</svg>

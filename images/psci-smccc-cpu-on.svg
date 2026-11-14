@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 385" width="760" height="385" role="img">
+  <title>Starting a secondary core with PSCI CPU_ON</title>
+  <desc>The elfloader on the boot core stores an entry point and stack in secondary_data, then calls psci_cpu_on, which executes smc #0 with function identifier 0xc4000003. The EL3 firmware starts the target core at secondary_startup, which loads the stack and jumps to the C entry.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="385" fill="#ffffff"/>
+  <rect x="20" y="20" width="180" height="44" rx="6" class="fw"/>
+  <text x="110.0" y="47.0" text-anchor="middle" class="head">Boot core: elfloader</text>
+  <rect x="380" y="20" width="180" height="44" rx="6" class="fw"/>
+  <text x="470.0" y="47.0" text-anchor="middle" class="head">EL3 firmware (BL31)</text>
+  <rect x="590" y="20" width="154" height="44" rx="6" class="hw"/>
+  <text x="667.0" y="47.0" text-anchor="middle" class="head">Secondary core</text>
+  <path class="line dash" d="M110,64 V335"/>
+  <path class="line dash" d="M470,64 V335"/>
+  <path class="line dash" d="M667,64 V335"/>
+  <circle cx="110" cy="98" r="4" fill="#1f2328"/>
+  <text x="124" y="94" class="small">smp_psci_cpu_on stores the C entry point</text>
+  <text x="124" y="110" class="small">and a stack in secondary_data</text>
+  <text x="124" y="150" class="mono">psci_cpu_on(cpu_id, &amp;secondary_startup, 0)</text>
+  <path class="line" d="M110,160 H470" marker-end="url(#arrow)"/>
+  <text x="124" y="178" class="small">w0 = 0xc4000003 (CPU_ON, SMC64), then smc #0</text>
+  <text x="568" y="202" text-anchor="middle" class="small">starts the core at</text>
+  <text x="568" y="218" text-anchor="middle" class="mono">secondary_startup</text>
+  <path class="line" d="M470,226 H667" marker-end="url(#arrow)"/>
+  <text x="290" y="258" text-anchor="middle" class="small">return code in x0: 0 is SUCCESS</text>
+  <path class="line dash" d="M470,266 H110" marker-end="url(#arrow)"/>
+  <circle cx="667" cy="300" r="4" fill="#1f2328"/>
+  <text x="655" y="296" text-anchor="end" class="small">loads that stack,</text>
+  <text x="655" y="312" text-anchor="end" class="small">jumps to the C entry</text>
+  <text x="20" y="365" class="small">secondary_data is a single global, so cores are started one at a time.</text>
+</svg>

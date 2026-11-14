@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="760" height="420" role="img">
+  <title>The parts of a GICv3</title>
+  <desc>The distributor routes shared peripheral interrupts to cores. Each core has a redistributor and a CPU interface. A device writes an EventID to the ITS, which turns it into an LPI for the redistributor of the target core.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="420" fill="#ffffff"/>
+  <rect x="20" y="45" width="130" height="50" rx="6" class="hw"/>
+  <text x="85" y="75" text-anchor="middle">wired device</text>
+  <rect x="250" y="40" width="160" height="60" rx="6" class="hw"/>
+  <text x="330" y="66" text-anchor="middle">distributor</text>
+  <text x="330" y="84" text-anchor="middle" class="mono">GICD_*</text>
+  <path class="line" d="M150,70 H250" marker-end="url(#arrow)"/>
+  <text x="200" y="62" text-anchor="middle">SPI</text>
+  <rect x="20" y="285" width="130" height="50" rx="6" class="hw"/>
+  <text x="85" y="315" text-anchor="middle">PCI device</text>
+  <rect x="250" y="280" width="160" height="60" rx="6" class="hw"/>
+  <text x="330" y="306" text-anchor="middle">ITS</text>
+  <text x="330" y="324" text-anchor="middle" class="mono">GITS_*</text>
+  <path class="line" d="M150,310 H250" marker-end="url(#arrow)"/>
+  <text x="200" y="302" text-anchor="middle">EventID</text>
+  <rect x="480" y="30" width="264" height="150" rx="6" fill="#ffffff" stroke="#3b6bb5" stroke-width="1.5"/>
+  <text x="494" y="56" class="head">core 0</text>
+  <rect x="488" y="100" width="120" height="66" rx="6" class="hw"/>
+  <text x="548" y="129" text-anchor="middle">redistributor</text>
+  <text x="548" y="147" text-anchor="middle" class="mono">GICR_*</text>
+  <rect x="616" y="100" width="120" height="66" rx="6" class="hw"/>
+  <text x="676" y="129" text-anchor="middle">CPU interface</text>
+  <text x="676" y="147" text-anchor="middle" class="mono">ICC_*_EL1</text>
+  <rect x="480" y="200" width="264" height="150" rx="6" fill="#ffffff" stroke="#3b6bb5" stroke-width="1.5"/>
+  <text x="494" y="226" class="head">core 1</text>
+  <rect x="488" y="270" width="120" height="66" rx="6" class="hw"/>
+  <text x="548" y="299" text-anchor="middle">redistributor</text>
+  <text x="548" y="317" text-anchor="middle" class="mono">GICR_*</text>
+  <rect x="616" y="270" width="120" height="66" rx="6" class="hw"/>
+  <text x="676" y="299" text-anchor="middle">CPU interface</text>
+  <text x="676" y="317" text-anchor="middle" class="mono">ICC_*_EL1</text>
+  <path class="line" d="M410,62 H480" marker-end="url(#arrow)"/>
+  <text x="445" y="54" text-anchor="middle">SPIs</text>
+  <path class="line" d="M410,80 L480,222" marker-end="url(#arrow)"/>
+  <path class="line accent" d="M410,310 H488" marker-end="url(#arrow)"/>
+  <text x="446" y="302" text-anchor="middle">LPI</text>
+  <text x="20" y="378" class="small">The device writes its EventID to GITS_TRANSLATER, and the ITS knows the device by its DeviceID.</text>
+  <text x="20" y="398" class="small">The ITS's tables give the LPI's INTID and a collection; the collection names the target redistributor.</text>
+</svg>

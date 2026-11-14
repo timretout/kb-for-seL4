@@ -2,7 +2,18 @@
 
 > What hardware Amazon EC2, Google Compute Engine and Azure present to a guest kernel, and how that differs from a PC or a development board: custom network and disk devices, missing legacy devices, UEFI with ACPI on every architecture, and a serial log as the only debug channel.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Virtual and cloud machines](../INDEX.md#virtual-and-cloud-machines) · ← [QEMU](qemu.md) · [Amazon EC2 and the Nitro system](ec2.md) →
+
 Read first: [PCI](pci.md), [ACPI tables](acpi-tables.md), [IRQs](irq.md).
+
+| At a glance | |
+|---|---|
+| Kind | Survey: the hardware EC2, Compute Engine and Azure present to a guest kernel |
+| Firmware | [UEFI](uefi.md) (EDK II) with [ACPI tables](acpi-tables.md); ACPI only on Arm |
+| Devices | The provider's own NIC and disk: [ENA](ena.md) and [NVMe](nvme.md) on EC2; virtio, [gVNIC](gvnic.md) and NVMe on Compute Engine |
+| Console | The first serial port, logged by the provider; the only debug channel |
+| Clock | The [TSC](tsc.md), frequency measured or read from a [hypervisor CPUID leaf](hypervisor-cpuid-leaves.md) |
+| seL4 use | No cloud platform upstream; `pc99` covers EC2 and Compute Engine VMs, Arm needs a platform per machine layout |
 
 ## What it is
 
@@ -15,6 +26,11 @@ Windows are the only guests the providers test.
 
 seL4 development normally targets [QEMU](qemu.md) or a board on the
 desk. A cloud VM differs from both in the same handful of ways.
+
+![A guest kernel on a cloud runs on a real, recent CPU above the provider's hypervisor, boots through UEFI firmware with ACPI tables, and sees emulated or paravirtual devices: the provider's own NIC and disk, some legacy PC devices, and a first serial port whose output goes to the provider's log.](../images/cloud-vms-guest-view.svg)
+
+*Only the CPU is real. Everything in a dashed box is the provider's
+choice, and the serial port is the one way out.*
 
 ### Devices are the provider's own
 

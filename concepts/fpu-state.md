@@ -2,7 +2,20 @@
 
 > The floating-point and vector registers are extra per-thread state, hundreds to thousands of bytes, that a kernel must save and restore; how and when it does so (lazily by trap, or eagerly) is a performance and security choice, and on x86 the save format and size are build options seL4 checks at boot.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [Common ideas](../INDEX.md#common-ideas) · ← [Virtual memory](virtual-memory.md) · [Multiprocessor bring-up and IPIs](smp-bringup.md) →
+
 Read first: [x86-64 basics](x86-64-basics.md), [CPUID and MSRs](cpuid-and-msrs.md).
+
+| At a glance | |
+|---|---|
+| Kind | Per-thread register state: floating-point and vector registers |
+| Architecture | x86, AArch64, RISC-V |
+| Reached through | x86: `FXSAVE` or the `XSAVE` family, with `XCR0` set by `XSETBV` |
+| Found through | [CPUID](cpuid-and-msrs.md) leaf `0x0D`; leaf 1 `ECX` bit 26 |
+| Key numbers | x86: 512 bytes for x87 and SSE, 832 with AVX |
+| seL4 code | [`include/machine/fpu.h`](https://github.com/seL4/seL4/blob/master/include/machine/fpu.h), [`src/machine/fpu.c`](https://github.com/seL4/seL4/blob/master/src/machine/fpu.c), [`src/arch/x86/machine/fpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/machine/fpu.c) |
+| seL4 config | `KernelFPU`, `KernelXSave`, `KernelXSaveFeatureSet`, `KernelXSaveSize` |
+| seL4 use | Eager switch at kernel exit; `seL4_TCBFlag_fpuDisabled` opts a thread out |
 
 ## What it is
 
@@ -68,6 +81,10 @@ gives the supported XCR0 bits in `EDX:EAX` and the area size for the
 currently enabled set in `EBX`; sub-leaf 1 `EAX` has bits for `XSAVEOPT`
 (0), `XSAVEC` (1) and `XSAVES` (3). Leaf 1 `ECX` bit 26 says XSAVE
 exists.
+
+![The XSAVE area is a 512-byte legacy area for x87, MMX and SSE, then a 64-byte header holding the XSTATE_BV bitmap, then extended components, which with AVX are 256 bytes for a total of 832; XCR0 bits 0, 1 and 2 enable x87, SSE and AVX.](../images/fpu-state-xsave-area.svg)
+
+*The standard (not compacted) layout for x87, SSE and AVX. Each XCR0 bit enables one component, and the total is the size `KernelXSaveSize` must cover.*
 
 ### LazyFP
 

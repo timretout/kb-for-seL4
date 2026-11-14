@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 290" width="760" height="290" role="img">
+  <title>Generic, Arch_ and Mode_ layers</title>
+  <desc>Deleting a capability on x86_64 can pass through three functions: the generic finaliseCap() in src/object, the architecture hook Arch_finaliseCap() in src/arch/x86, and the word-size variant Mode_finaliseCap() in src/arch/x86/64.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="290" fill="#ffffff"/>
+  <text x="16" y="30" class="head">One generic operation, three layers (x86_64)</text>
+  <rect class="kernel" x="16" y="46" width="728" height="60" rx="6"/>
+  <text x="30" y="72" class="head">Generic: no prefix</text>
+  <text x="210" y="72" class="mono">finaliseCap()</text>
+  <text x="400" y="72" class="mono">src/object/objecttype.c</text>
+  <text x="400" y="92" class="small dim">the same for every configuration</text>
+  <path class="line" d="M280,106 V130" marker-end="url(#arrow)"/>
+  <rect class="kernel" x="16" y="130" width="728" height="60" rx="6"/>
+  <text x="30" y="156" class="head">Architecture: Arch_</text>
+  <text x="210" y="156" class="mono">Arch_finaliseCap()</text>
+  <text x="400" y="156" class="mono">src/arch/x86/object/objecttype.c</text>
+  <text x="400" y="176" class="small dim">directory picked by KernelArch</text>
+  <path class="line" d="M280,190 V214" marker-end="url(#arrow)"/>
+  <rect class="kernel" x="16" y="214" width="728" height="60" rx="6"/>
+  <text x="30" y="240" class="head">Word size: Mode_</text>
+  <text x="210" y="240" class="mono">Mode_finaliseCap()</text>
+  <text x="400" y="240" class="mono">src/arch/x86/64/object/objecttype.c</text>
+  <text x="400" y="260" class="small dim">directory picked through KernelWordSize</text>
+</svg>

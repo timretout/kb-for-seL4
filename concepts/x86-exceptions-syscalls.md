@@ -2,7 +2,19 @@
 
 > How an x86-64 CPU enters the kernel (through the IDT for exceptions and interrupts, through `syscall` or `sysenter` for system calls), what it saves and where, and how seL4's `traps.S` turns each entry into a saved register context in the current TCB.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [x86-64 paging](x86-paging.md) · [I/O ports and MMIO](io-ports.md) →
+
 Read first: [Exceptions and traps](exceptions-and-traps.md), [x86-64 basics](x86-64-basics.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel entry mechanisms: the IDT, and `syscall` or `sysenter` |
+| Architecture | x86-64 |
+| Reached through | `lidt` for the IDT; MSRs `LSTAR`, `STAR` and `FMASK` for `syscall` |
+| Key numbers | Up to 256 vectors, 0 to 31 for CPU exceptions (unchecked); seL4 gives user level vectors 48 to 155 |
+| seL4 code | [`src/arch/x86/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/traps.S), [`src/arch/x86/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/c_traps.c) |
+| seL4 config | `KernelSyscall` (default `syscall` on x86_64), `KernelFSGSBase` |
+| seL4 use | Each entry saves the user registers into the current TCB; one kernel stack per core |
 
 ## What it is
 
@@ -148,6 +160,12 @@ window, the IBRS setting, then pops the TCB and leaves by `sysretq`
 `init_syscall_msrs()` writes `LSTAR`, `STAR` and `FMASK`
 (`FLAGS_SYSCALL_MASK`, which includes IF, so the kernel always runs
 with interrupts off).
+
+![The two entry paths side by side: syscall goes through LSTAR to handle_fastsyscall and c_handle_syscall, an exception or interrupt goes through an IDT gate to the int_NN stubs and c_handle_interrupt; both save registers in the TCB and leave through restore_user_context.](../images/x86-exceptions-syscalls-entry-paths.svg)
+
+*Both paths meet twice: in the TCB, where the user registers are saved, and
+in `restore_user_context()`, which picks `sysretq` or `iretq` from the
+`Error` register.*
 
 **Vectors**
 ([`include/plat/pc99/plat/machine.h`](https://github.com/seL4/seL4/blob/master/include/plat/pc99/plat/machine.h)):

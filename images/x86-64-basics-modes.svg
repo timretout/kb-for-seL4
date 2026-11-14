@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" role="img">
+  <title>x86 operating modes as a ladder</title>
+  <desc>An x86 core resets into real mode, enters protected mode by setting CR0.PE, and reaches 64-bit long mode by a sequence of steps. A Multiboot loader starts the kernel in 32-bit protected mode with paging off, so the kernel does the last climb itself.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="340" fill="#ffffff"/>
+  <rect x="24" y="236" width="216" height="64" rx="6" class="hw"/>
+  <text x="132" y="262" text-anchor="middle" class="head">Real mode</text>
+  <text x="132" y="282" text-anchor="middle" class="small">16-bit, no protection</text>
+  <rect x="272" y="150" width="216" height="64" rx="6" class="hw"/>
+  <text x="380" y="176" text-anchor="middle" class="head">Protected mode</text>
+  <text x="380" y="196" text-anchor="middle" class="small">32-bit, optional paging</text>
+  <rect x="520" y="64" width="216" height="64" rx="6" class="hw"/>
+  <text x="628" y="90" text-anchor="middle" class="head">Long mode, 64-bit submode</text>
+  <text x="628" y="110" text-anchor="middle" class="small">64-bit, paging mandatory</text>
+  <path class="line" d="M60,196 V236" marker-end="url(#arrow)"/>
+  <text x="68" y="210" class="small">reset</text>
+  <path class="line" d="M132,236 V182 H272" marker-end="url(#arrow)"/>
+  <text x="142" y="174">set <tspan class="mono">CR0.PE</tspan></text>
+  <path class="line" d="M430,150 V96 H520" marker-end="url(#arrow)"/>
+  <path class="line accent" d="M320,74 V150" marker-end="url(#arrow-accent)"/>
+  <text x="150" y="40">A Multiboot loader starts the kernel here,</text>
+  <text x="150" y="60">with paging off.</text>
+  <text x="508" y="164" class="small head">Protected to long, in order:</text>
+  <text x="508" y="184" class="small">1. build page tables</text>
+  <text x="508" y="202" class="small">2. set <tspan class="mono">CR4.PAE</tspan></text>
+  <text x="508" y="220" class="small">3. set <tspan class="mono">EFER.LME</tspan></text>
+  <text x="508" y="238" class="small">4. set <tspan class="mono">CR0.PG</tspan></text>
+  <text x="508" y="256" class="small">5. load a GDT with a 64-bit</text>
+  <text x="522" y="274" class="small">code segment</text>
+  <text x="508" y="292" class="small">6. far-jump into that segment</text>
+  <text x="24" y="324" class="small dim">Secondary cores also start in real mode and climb the whole ladder.</text>
+</svg>

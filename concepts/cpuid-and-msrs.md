@@ -2,7 +2,20 @@
 
 > How x86 software discovers what the processor can do (the `cpuid` instruction) and reaches the hundreds of control registers that have no instruction of their own (`rdmsr`/`wrmsr`); seL4 checks features at boot and programs a dozen MSRs.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [x86-64 basics](x86-64-basics.md) · [x86-64 paging](x86-paging.md) →
+
 Read first: [x86-64 basics](x86-64-basics.md).
+
+| At a glance | |
+|---|---|
+| Kind | Feature discovery instruction (`cpuid`) and control registers with no instruction of their own (MSRs) |
+| Architecture | x86 |
+| Reached through | Instructions: `cpuid` in any ring; `rdmsr` and `wrmsr` in ring 0 only (unchecked) |
+| Key numbers | Leaf ranges from `0x0`, `0x40000000` and `0x80000000`; an MSR is 64 bits, named by a 32-bit index (unchecked) |
+| seL4 code | [`include/arch/x86/arch/machine.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/machine.h), [`src/arch/x86/machine/cpu_identification.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/machine/cpu_identification.c) |
+| seL4 config | `KernelX86MicroArch`, `KernelSyscall`, `KernelFSGSBase`, `KernelSupportPCID` and others |
+| seL4 use | Checks features at boot and stops if one is missing; programs a dozen MSRs |
+| On the clouds | A hypervisor can hide feature bits and refuse MSRs; x2APIC, PCID, TSC deadline and VMX are often hidden (unchecked) |
 
 ## What it is
 

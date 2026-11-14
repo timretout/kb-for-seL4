@@ -2,7 +2,20 @@
 
 > How a multicore machine goes from one running core to all of them: INIT and STARTUP IPIs on x86, PSCI `CPU_ON` on Arm, SBI HSM on RISC-V; on x86 the seL4 kernel does it itself, on Arm and RISC-V the elfloader does it first.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [Common ideas](../INDEX.md#common-ideas) · ← [FPU and SIMD state](fpu-state.md) · [ELF and linking](elf.md) →
+
 Read first: [Local APIC and I/O APIC](apic.md), [x86 boot](x86-boot.md).
+
+| At a glance | |
+|---|---|
+| Kind | Boot mechanism: starting the cores other than the boot processor |
+| Architecture | x86, Arm, RISC-V |
+| Reached through | x86: INIT and STARTUP IPIs from the [local APIC](apic.md) ICR; Arm: [PSCI](psci-smccc.md) `CPU_ON` or a spin table; RISC-V: SBI `sbi_hart_start` |
+| Found through | [ACPI](acpi-tables.md) MADT; [device tree](device-tree.md) `/cpus` node |
+| Key numbers | x86 trampoline at `0x1000`, entry below 1 MiB |
+| seL4 code | [`src/arch/x86/kernel/smp_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/smp_sys.c), elfloader [`smp_boot.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/smp_boot.c), [`src/smp/ipi.c`](https://github.com/seL4/seL4/blob/master/src/smp/ipi.c) |
+| seL4 config | `KernelMaxNumNodes` (`CONFIG_MAX_NUM_NODES`) |
+| seL4 use | x86: the kernel starts its APs; Arm and RISC-V: the [elfloader](../sel4/elfloader.md) does |
 
 ## What it is
 
@@ -119,6 +132,10 @@ user level sees; this section covers only getting the cores running.
   increments `smp_aps_index`, takes the big kernel lock, initialises its
   per-core state and enters the scheduler.
 
+![On x86 the boot processor copies the trampoline to 0x1000, sends INIT and STARTUP to one application processor and spins; the AP runs the trampoline and boot_node, increments smp_aps_index, and the BSP then starts the next AP.](../images/smp-bringup-x86-sequence.svg)
+
+*One AP at a time, because they share the boot stack; the BSP waits on `smp_aps_index` with no timeout (see Gotchas).*
+
 ### Arm and RISC-V: the elfloader starts them
 
 The kernel on these architectures never calls PSCI or SBI to start a
@@ -149,6 +166,10 @@ image themselves and wait.
   `node_boot_lock`. The primary finishes `try_init_kernel`, then
   `release_secondary_cpus` sets the lock and waits until `ksNumCPUs`
   equals `CONFIG_MAX_NUM_NODES`.
+
+![On Arm and RISC-V the elfloader on the primary core starts each secondary before jumping to the kernel; the secondary enters the kernel and spins on node_boot_lock until the primary finishes try_init_kernel and release_secondary_cpus sets the lock.](../images/smp-bringup-elfloader-sequence.svg)
+
+*Purple is the elfloader, orange the kernel. The kernel never asks firmware for a core; it only waits for the number it was built for.*
 
 ### IPIs
 

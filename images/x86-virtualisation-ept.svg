@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 276" width="760" height="276" role="img">
+  <title>Two-stage address translation with EPT</title>
+  <desc>The guest's own page tables translate a guest-virtual address to a guest-physical address, and the hypervisor's four-level EPT translates that to a host-physical address. A missing EPT translation causes an EPT violation exit.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="276" fill="#ffffff"/>
+  <rect x="24" y="40" width="150" height="56" rx="6" class="data"/>
+  <text x="99" y="64" text-anchor="middle" class="head">guest-virtual</text>
+  <text x="99" y="82" text-anchor="middle" class="small">address</text>
+  <rect x="305" y="40" width="150" height="56" rx="6" class="data"/>
+  <text x="380" y="64" text-anchor="middle" class="head">guest-physical</text>
+  <text x="380" y="82" text-anchor="middle" class="small">address</text>
+  <rect x="586" y="40" width="150" height="56" rx="6" class="data"/>
+  <text x="661" y="64" text-anchor="middle" class="head">host-physical</text>
+  <text x="661" y="82" text-anchor="middle" class="small">address</text>
+  <path class="line" d="M174,68 H305" marker-end="url(#arrow)"/>
+  <path class="line" d="M455,68 H586" marker-end="url(#arrow)"/>
+  <path class="line dash" d="M240,136 V72"/>
+  <path class="line dash" d="M520,136 V72"/>
+  <rect x="130" y="136" width="220" height="60" rx="6" class="data"/>
+  <text x="240" y="160" text-anchor="middle">the guest's own page tables</text>
+  <text x="240" y="180" text-anchor="middle" class="small">guest-virtual to guest-physical</text>
+  <rect x="400" y="136" width="240" height="76" rx="6" class="fw"/>
+  <text x="520" y="160" text-anchor="middle">EPT: PML4, PDPT, PD, PT</text>
+  <text x="520" y="180" text-anchor="middle" class="small">owned by the hypervisor;</text>
+  <text x="520" y="196" text-anchor="middle" class="small">read, write and execute bits</text>
+  <path class="line accent" d="M520,212 V240" marker-end="url(#arrow-accent)"/>
+  <text x="520" y="258" text-anchor="middle">no translation: EPT violation exit (reason 48)</text>
+</svg>

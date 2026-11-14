@@ -2,7 +2,19 @@
 
 > seL4 turns each device interrupt into a signal on a notification: the root task's `IRQControl` cap mints one `IRQHandler` cap per interrupt, a driver binds a notification to it, and the kernel holds the line quiet until the driver acknowledges.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Address spaces (VSpace)](vspace.md) · [BootInfo and the root task](bootinfo-and-root-task.md) →
+
 Read first: [IRQ](../concepts/irq.md), [Notifications](notifications.md), [Capabilities](capabilities.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism, with the `IRQControl` and `IRQHandler` capabilities |
+| Key source | [`src/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/object/interrupt.c), [`src/api/syscall.c`](https://github.com/seL4/seL4/blob/master/src/api/syscall.c) |
+| Config options | `CONFIG_IRQ_REPORTING` (debug message for an undelivered IRQ) |
+| API | `seL4_IRQControl_Get` and its architecture forms; `seL4_IRQHandler_SetNotification`, `Ack`, `Clear` |
+| Built on | [Notifications](notifications.md), [capabilities](capabilities.md) |
+| Used by | User-level drivers; [Microkit](microkit.md) `<irq>` elements |
+| Verified | The generic code in `src/object/interrupt.c` |
 
 ## What it is
 
@@ -77,6 +89,12 @@ A driver's loop is: `seL4_Wait` on the notification, service the device
 until it stops asserting, `seL4_IRQHandler_Ack`, repeat. Deleting the
 last handler cap clears the binding and makes the interrupt inactive
 again, after which `IRQControl` may issue a fresh handler.
+
+![The root task's IRQControl cap mints an IRQHandler cap, the driver binds a notification cap that the kernel keeps in a slot for that interrupt, and each interrupt becomes a signal the driver must acknowledge.](../images/irq-handling-caps.svg)
+
+*Who holds what, and the order of the calls. Steps 3 to 6 repeat for
+every interrupt; the slot `intStateIRQNode[irq]` is described under "In
+seL4".*
 
 ### What happens when the interrupt fires
 

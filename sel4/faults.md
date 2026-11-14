@@ -2,7 +2,18 @@
 
 > When a thread does something the kernel cannot complete (a bad capability, a page fault, an illegal instruction, on MCS an exhausted budget), the kernel turns it into an IPC message to the thread's fault endpoint, so paging, debugging and crash handling are all user-level servers.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Notifications](notifications.md) · [Address spaces (VSpace)](vspace.md) →
+
 Read first: [IPC and endpoints](ipc.md), [Threads and TCBs](threads.md), [Exceptions and traps](../concepts/exceptions-and-traps.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism |
+| Key source | [`src/kernel/faulthandler.c`](https://github.com/seL4/seL4/blob/master/src/kernel/faulthandler.c), [`src/api/faults.c`](https://github.com/seL4/seL4/blob/master/src/api/faults.c) |
+| Config options | `CONFIG_HARDWARE_DEBUG_API` (for `DebugException`) |
+| API | Fault endpoint set with `seL4_TCB_Configure` or `seL4_TCB_SetSpace`; on MCS also `seL4_TCB_SetTimeoutEndpoint`; the handler answers with an IPC reply |
+| Built on | [IPC and endpoints](ipc.md) |
+| Used by | Pagers, [virtual machine monitors](hypervisor.md), the [Microkit](microkit.md) monitor |
 
 ## What it is
 
@@ -23,6 +34,11 @@ cause (map a page, emulate an instruction, adjust registers) and
 leaves the thread blocked for good; or suspend, inspect or delete it
 through its TCB capability. A badge on the fault endpoint capability
 tells a handler serving many threads which one faulted.
+
+![A faulting thread traps to the kernel, which records the fault and sends a message to the fault endpoint; the fault handler fixes the cause and replies, and the thread is resumed.](../images/faults-delivery.svg)
+
+*The three steps above as a sequence. The thread is blocked from the
+fault until the handler's reply.*
 
 ### Fault types
 

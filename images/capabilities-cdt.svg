@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 468" width="760" height="468" role="img">
+  <title>A capability derivation tree</title>
+  <desc>An untyped capability has an unbadged endpoint capability retyped from it. Capabilities minted from that endpoint capability with a badge are its children, and a copy of a badged one with the same badge is a child of that. A plain copy of the unbadged original is a sibling, so revoking the original deletes the badged capabilities and not the plain copy.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="468" fill="#ffffff"/>
+  <rect x="24" y="24" width="230" height="40" rx="6" class="kernel"/>
+  <text x="36" y="49">untyped capability</text>
+  <rect x="84" y="94" width="330" height="40" rx="6" class="kernel"/>
+  <text x="96" y="119">endpoint capability, unbadged (original)</text>
+  <rect x="144" y="164" width="250" height="40" rx="6" class="kernel"/>
+  <text x="156" y="189">minted from it with badge 1</text>
+  <rect x="204" y="234" width="220" height="40" rx="6" class="kernel"/>
+  <text x="216" y="259">plain copy of that, badge 1</text>
+  <rect x="144" y="304" width="250" height="40" rx="6" class="kernel"/>
+  <text x="156" y="329">minted from it with badge 2</text>
+  <rect x="84" y="374" width="330" height="40" rx="6" class="data"/>
+  <text x="96" y="399">plain copy of the original, unbadged</text>
+  <path class="line" d="M44,64 V114 H82" marker-end="url(#arrow)"/>
+  <text x="52" y="86" class="small dim">retyped</text>
+  <path class="line" d="M104,134 V184 H142" marker-end="url(#arrow)"/>
+  <path class="line" d="M104,184 V324 H142" marker-end="url(#arrow)"/>
+  <path class="line" d="M164,204 V254 H202" marker-end="url(#arrow)"/>
+  <path class="line accent" d="M452,164 H464 V344 H452"/>
+  <text x="476" y="238" class="small">children of the original:</text>
+  <text x="476" y="256" class="small">Revoke on the original deletes</text>
+  <text x="476" y="274" class="small">them, and leaves it in place</text>
+  <text x="430" y="391" class="small">a sibling of the original, not a child:</text>
+  <text x="430" y="409" class="small">Revoke on the original leaves it</text>
+  <text x="24" y="448" class="small dim">Revoke on the untyped capability deletes every capability to every object made from it.</text>
+
+</svg>

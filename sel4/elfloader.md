@@ -2,7 +2,19 @@
 
 > The small boot program from `seL4_tools` that Arm and RISC-V images start with: it carries the kernel and root task ELF files in a CPIO archive, loads them, builds first page tables, enables the MMU, starts the other cores and jumps to the kernel's `init_kernel` with the user image's location.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Boot code and the proof boundary](boot-code.md) · [Platform ports](platform-port.md) →
+
 Read first: [Arm boot](../concepts/arm-boot.md), [ELF](../concepts/elf.md), [Kernel boot](kernel-boot.md).
+
+| At a glance | |
+|---|---|
+| Kind | Tool (boot program for Arm and RISC-V images) |
+| Repository | [`seL4_tools`](https://github.com/seL4/seL4_tools), directory `elfloader-tool/` |
+| Key source | `src/common.c`, `src/arch-arm/sys_boot.c`, `src/arch-riscv/boot.c` |
+| Config options | `ElfloaderImage`, `ElfloaderIncludeDtb`, `ElfloaderRootserversLast`, `ElfloaderHashInstructions` |
+| API | Calls the kernel's `init_kernel()` with six arguments |
+| Built on | A boot loader (U-Boot, UEFI firmware, OpenSBI); a CPIO archive of `kernel.elf` and the root task |
+| Used by | Project builds such as sel4test, on Arm and RISC-V; not x86, not [Microkit](microkit.md) |
 
 ## What it is
 
@@ -121,6 +133,11 @@ These are exactly `init_kernel()`'s parameters: `ui_p_reg_start`,
 tables with its own almost at once, so nothing of the elfloader survives
 except the loaded images and the DTB copy, which the kernel passes on to
 the root task in BootInfo.
+
+![The boot loader runs the elfloader, which loads the kernel, DTB and root task, adjusts the exception level, builds boot page tables, starts the other cores, enables the MMU and calls init_kernel() with six arguments; the loaded images lie in memory as kernel, then DTB copy, then root task.](../images/elfloader-handoff.svg)
+
+*The steps above in one picture, and where `load_images()` puts the three
+things the kernel is told about.*
 
 ### RISC-V
 

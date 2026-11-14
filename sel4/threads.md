@@ -2,7 +2,19 @@
 
 > A seL4 thread is a thread control block (TCB) object: saved registers plus the capabilities and scheduling parameters that say where it runs, what it can name and who hears about its faults; every user-level system starts by configuring some.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [System calls and invocations](syscalls-and-invocations.md) · [Scheduling](scheduling.md) →
+
 Read first: [Capabilities](capabilities.md), [Kernel objects](kernel-objects.md), [CSpace](cspace.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel object (thread control block, TCB) |
+| Key source | [`include/object/structures.h`](https://github.com/seL4/seL4/blob/master/include/object/structures.h), [`src/object/tcb.c`](https://github.com/seL4/seL4/blob/master/src/object/tcb.c), [`src/kernel/thread.c`](https://github.com/seL4/seL4/blob/master/src/kernel/thread.c) |
+| API | `seL4_TCB_Configure`, `seL4_TCB_SetSpace`, `seL4_TCB_SetSchedParams`, `seL4_TCB_WriteRegisters`, `seL4_TCB_Resume`, `seL4_TCB_Suspend` |
+| Object size | 2^`seL4_TCBBits` bytes: 2048 on x86-64 and AArch64 by default, 4096 with large FPU state or some options |
+| Built on | [Untyped memory](untyped-memory.md), [CSpace](cspace.md), [VSpace](vspace.md) |
+| Used by | [Scheduling](scheduling.md), [IPC](ipc.md), [faults](faults.md) |
+| Verified | The proofs model every field of `struct tcb` |
 
 ## What it is
 
@@ -114,6 +126,11 @@ capability's pointer points to the *middle* of it (`TCB_OFFSET`), where
 `TCB_PTR_CTE_PTR(tcb, index)`. Keeping the roots as real capabilities
 in real slots means revoking or deleting, say, the VSpace root finds and
 clears the thread's copy like any other.
+
+![A TCB object of 2^seL4_TCBBits bytes: the TCB capability points to its middle, where struct tcb begins, and the half below holds capability slots 0 to 4.](../images/threads-tcb-layout.svg)
+
+*The capability points into the middle of the object: `struct tcb`
+above, the thread's own capability slots below.*
 
 | `tcb_cnode_index` | non-MCS | MCS |
 |---|---|---|

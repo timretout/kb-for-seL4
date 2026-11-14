@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360" role="img">
+  <title>Kernel workflows by trigger</title>
+  <desc>The workflows of seL4/seL4 grouped by the GitHub trigger that starts them: pull_request runs the checks that need no secrets, pull_request_target runs hardware tests and proofs once a maintainer adds a label, and a push to master runs Proof Sync, Deploy and Trigger.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="360" fill="#ffffff"/>
+
+  <text x="134" y="34" text-anchor="middle" class="head">Pull request opened</text>
+  <rect class="data" x="20" y="48" width="228" height="58" rx="6"/>
+  <text x="134" y="72" text-anchor="middle" class="mono">pull_request</text>
+  <text x="134" y="92" text-anchor="middle" class="small">the fork's code, no secrets</text>
+  <rect class="data" x="20" y="136" width="228" height="204" rx="6"/>
+  <text x="36" y="162">PR / Checks</text>
+  <text x="36" y="186">PR / Preprocess</text>
+  <text x="36" y="210">CI</text>
+  <text x="36" y="234">Compile</text>
+  <text x="36" y="258">C Parser</text>
+  <text x="36" y="282">seL4Test / Sim</text>
+  <text x="36" y="306">RefMan</text>
+  <text x="36" y="330">XML</text>
+  <text x="380" y="34" text-anchor="middle" class="head">Maintainer adds a label</text>
+  <rect class="data" x="266" y="48" width="228" height="76" rx="6"/>
+  <text x="380" y="72" text-anchor="middle" class="mono">pull_request_target</text>
+  <text x="380" y="92" text-anchor="middle" class="small">base repository's workflow</text>
+  <text x="380" y="110" text-anchor="middle" class="small">and secrets</text>
+  <rect class="data" x="266" y="136" width="228" height="204" rx="6"/>
+  <text x="282" y="162">HW</text>
+  <text x="294" y="182" class="small dim"><tspan class="mono">hw-build</tspan> or <tspan class="mono">hw-test</tspan>;</text>
+  <text x="294" y="200" class="small dim"><tspan class="mono">hw-bench</tspan> for benchmarks</text>
+  <text x="282" y="222"></text>
+  <text x="282" y="246">Proofs</text>
+  <text x="294" y="266" class="small dim"><tspan class="mono">proof-test</tspan></text>
+  <text x="626" y="34" text-anchor="middle" class="head">Merged</text>
+  <rect class="data" x="512" y="48" width="228" height="58" rx="6"/>
+  <text x="626" y="72" text-anchor="middle" class="mono">push to master</text>
+  <text x="626" y="92" text-anchor="middle" class="small">secrets</text>
+  <rect class="data" x="512" y="136" width="228" height="204" rx="6"/>
+  <text x="528" y="162">Proof Sync</text>
+  <text x="528" y="186">Deploy</text>
+  <text x="528" y="210">Trigger</text>
+  <text x="528" y="234"></text>
+  <text x="540" y="254" class="small dim">and again on push:</text>
+  <text x="540" y="272" class="small dim">CI, Compile, C Parser, RefMan</text>
+  <path class="line" d="M214,29 H290" marker-end="url(#arrow)"/>
+  <path class="line" d="M472,29 H596" marker-end="url(#arrow)"/>
+</svg>

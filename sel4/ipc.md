@@ -2,7 +2,20 @@
 
 > seL4's synchronous message passing: threads rendezvous at endpoint objects to copy a few words and capabilities, with Call/ReplyRecv forming the remote procedure call that every seL4 system is built from and that the kernel's fastpath exists to make quick.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [MCS kernel](mcs.md) · [Notifications](notifications.md) →
+
 Read first: [Capabilities](capabilities.md), [Threads and TCBs](threads.md), [Syscalls and invocations](syscalls-and-invocations.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism, with its kernel object the endpoint |
+| Key source | [`src/object/endpoint.c`](https://github.com/seL4/seL4/blob/master/src/object/endpoint.c), [`src/kernel/thread.c`](https://github.com/seL4/seL4/blob/master/src/kernel/thread.c), [`src/fastpath/fastpath.c`](https://github.com/seL4/seL4/blob/master/src/fastpath/fastpath.c) |
+| Config options | `KernelFastpath` (on by default) |
+| API | `seL4_Send`, `seL4_Recv`, `seL4_Call`, `seL4_ReplyRecv`, and the non-blocking `seL4_NBSend`, `seL4_NBRecv` |
+| Object size | Endpoint: 16 bytes on 64-bit |
+| Built on | [Capabilities](capabilities.md) (rights and badges), [threads](threads.md) |
+| Used by | [Faults](faults.md), [kernel invocations](syscalls-and-invocations.md), [Microkit](microkit.md) protected procedure calls |
+| Verified | Fastpath proved to refine the same specification as the slowpath (unchecked: which architectures) |
 
 ## What it is
 
@@ -48,6 +61,11 @@ does `seL4_Call(ep, msg)`; the server loops on
 `seL4_ReplyRecv(ep, reply, &badge)`, which answers the previous client
 and waits for the next in one system call. Call plus ReplyRecv is two
 kernel entries per round trip, and it is the path the kernel optimises.
+
+![A server waits on an endpoint with seL4_ReplyRecv; a client's seL4_Call delivers the message and badge to it and blocks the client; the server's next seL4_ReplyRecv sends the reply and waits for the next client.](../images/ipc-call-replyrecv.svg)
+
+*One client/server round trip. The message goes straight from sender to
+receiver, and the reply does not pass through the endpoint.*
 
 The same system calls applied to a capability that is *not* an endpoint
 are how every other kernel service is invoked: `seL4_Call` on a TCB

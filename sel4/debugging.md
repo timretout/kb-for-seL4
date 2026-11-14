@@ -2,7 +2,19 @@
 
 > The tools for finding out why an seL4 system misbehaves: debug-build kernel output and error reasons, the debug system calls, the fault dump, GDB under QEMU, the hardware debug API, tracing, and how to read a first boot that fails.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Platform ports](platform-port.md) · [The seL4 proofs](verification.md) →
+
 Read first: [Build system and configuration](build-system.md), [Faults and fault handlers](faults.md), [Kernel boot sequence](kernel-boot.md).
+
+| At a glance | |
+|---|---|
+| Kind | Process (debugging tools and techniques) |
+| Key source | [`src/kernel/faulthandler.c`](https://github.com/seL4/seL4/blob/master/src/kernel/faulthandler.c), [`src/assert.c`](https://github.com/seL4/seL4/blob/master/src/assert.c), [`include/api/types.h`](https://github.com/seL4/seL4/blob/master/include/api/types.h) (`userError`) |
+| Config options | `KernelDebugBuild`, `KernelPrinting`, `HardwareDebugAPI`, `KernelBenchmarks` |
+| API | `seL4_DebugPutChar`, `seL4_DebugNameThread`, `seL4_DebugDumpScheduler`, `seL4_TCB_SetBreakpoint` |
+| Built on | A serial port ([UARTs](../concepts/uart.md)); GDB through [QEMU](../concepts/qemu.md) |
+| Used by | [sel4bench](sel4test.md) (the benchmark modes) |
+| Verified | None of it: a verified kernel has no console driver, `printf` or debug system calls |
 
 ## What it is
 
@@ -215,6 +227,11 @@ user of these.
 ### Reading a first boot that fails
 
 Heuristics, not proofs; each is the usual cause, not the only one.
+
+![On Arm the elfloader prints first, a printing-build kernel then prints boot messages ending with its "Booting all finished" line, and everything after that comes from user level or a fault dump; the point where output stops suggests the usual cause.](../images/debugging-boot-output.svg)
+
+*Who is printing at each stage of an Arm boot, and three rows of the table
+below placed where the output stops.*
 
 | Symptom | Usually means |
 |---|---|

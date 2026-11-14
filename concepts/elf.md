@@ -2,7 +2,18 @@
 
 > ELF is the file format of every kernel, loader and user program in an seL4 system; reading its program headers and the linker script behind them explains where each image is loaded, at which virtual address it runs, and what boot code can assume.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [Common ideas](../INDEX.md#common-ideas) · ← [Multiprocessor bring-up and IPIs](smp-bringup.md) · [x86-64 basics](x86-64-basics.md) →
+
 Read first: [Virtual memory](virtual-memory.md).
+
+| At a glance | |
+|---|---|
+| Kind | File format for objects, executables and shared objects |
+| Architecture | All; `e_machine` names it |
+| Key numbers | Magic `0x7f 'E' 'L' 'F'`; `PF_R` 4, `PF_W` 2, `PF_X` 1 |
+| seL4 code | Linker scripts [`src/plat/pc99/linker.lds`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/linker.lds), [`common_arm.lds`](https://github.com/seL4/seL4/blob/master/src/arch/arm/common_arm.lds), [`common_riscv.lds`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/common_riscv.lds); [`include/linker.h`](https://github.com/seL4/seL4/blob/master/include/linker.h) |
+| seL4 use | Kernel and typical root tasks are static, non-PIE executables |
+| Loaded by | x86: a Multiboot loader, then the kernel for the root task; Arm and RISC-V: the [elfloader](../sel4/elfloader.md); the [Microkit](../sel4/microkit.md) tool at build time |
 
 ## What it is
 
@@ -173,6 +184,10 @@ generated per platform), sections placed at virtual addresses with
 `AT(ADDR(.x) - KERNEL_OFFSET)`, and symbols for C: `ki_boot_end`,
 `ki_end` and others that the boot code uses to know what memory the
 image occupies.
+
+![One PT_LOAD segment seen three ways: p_filesz bytes at p_offset in the file, the same bytes copied to p_paddr with zero fill up to p_memsz, and the code running at p_vaddr.](../images/elf-load-and-run-addresses.svg)
+
+*The loader works from `p_paddr`, the code is linked for `p_vaddr`, and for the kernel the two differ by `KERNEL_OFFSET`.*
 
 The section attributes are in
 [`include/linker.h`](https://github.com/seL4/seL4/blob/master/include/linker.h):

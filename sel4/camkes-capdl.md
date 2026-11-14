@@ -2,7 +2,18 @@
 
 > capDL is a language that describes a complete system as kernel objects and the capabilities between them, with a root task (the capDL loader or initialiser) that builds that system at boot; CAmkES is the older component framework that generates glue code and a capDL specification from an architecture description, now alongside Microkit, which uses capDL too.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [LionsOS and libvmm](lionsos.md) · [rust-sel4](rust-sel4.md) →
+
 Read first: [Capabilities](capabilities.md), [BootInfo and the root task](bootinfo-and-root-task.md), [seL4_libs and util_libs](sel4-libs.md).
+
+| At a glance | |
+|---|---|
+| Kind | Language with an initialiser root task (capDL); component framework (CAmkES) |
+| Repository | [`seL4/capdl`](https://github.com/seL4/capdl), [`seL4/camkes-tool`](https://github.com/seL4/camkes-tool) |
+| Key source | `capDL-tool/`, `python-capdl-tool/`, `capdl-loader-app/`; `camkes/templates`, `libsel4camkes/` |
+| Built on | CAmkES: [seL4_libs](sel4-libs.md), util_libs, musllibc |
+| Used by | capDL: CAmkES and [Microkit](microkit.md) |
+| Verified | `sys-init` proves a formal initialiser algorithm, on Arm; the C and Rust initialisers are not verified |
 
 ## What it is
 

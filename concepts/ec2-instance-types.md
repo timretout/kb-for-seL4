@@ -2,7 +2,20 @@
 
 > How to read an EC2 instance type name (`m7g.large`, `c5n.metal`) and what it implies for a kernel: CPU vendor and generation, hypervisor, boot modes, and whether it is bare metal.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [Amazon EC2 and the Nitro system](ec2.md) · [Google Compute Engine](gce.md) →
+
 Read first: [Amazon EC2 and the Nitro system](ec2.md).
+
+| At a glance | |
+|---|---|
+| Kind | Naming scheme for EC2 machine configurations |
+| Name parts | Series, generation, options, size: `c7gn.xlarge` |
+| Architecture | x86 (Intel, AMD) and Arm (Graviton, option `g`) |
+| Hypervisor | Nitro; Xen on `t2`, `m4`, `c4`, `r4`; none on `metal` |
+| Boot modes | Both on virtual x86 Nitro types; `uefi` on Graviton; `legacy-bios` only on Xen and the x86 metal types tried |
+| Look up with | `aws ec2 describe-instance-types` |
+| seL4 config | `KernelLAPICMode=X2APIC` and a larger `KernelMaxNumIOAPIC` on metal ([`config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/x86/config.cmake)) |
+| seL4 use | `pc99` for all x86 types; no upstream platform for Graviton |
 
 ## What it is
 

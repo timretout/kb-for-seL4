@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 285" width="760" height="285" role="img">
+  <title>Layout of the endpoint_cap block</title>
+  <desc>The endpoint_cap bitfield block on a 64-bit kernel is two words. The first holds the 64-bit capEPBadge. The second holds, from the most significant bit, the 5-bit capType, four 1-bit rights flags (capCanGrantReply, capCanGrant, capCanReceive, capCanSend) and the capEPPtr pointer field.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="285" fill="#ffffff"/>
+  <text x="40" y="34" class="head">First word</text>
+  <text x="720" y="34" class="small dim" text-anchor="end">fields listed from the most significant bit</text>
+  <rect class="kernel" x="40" y="44" width="680" height="48" rx="6"/>
+  <text x="380" y="66" class="mono" text-anchor="middle">capEPBadge</text>
+  <text x="380" y="84" class="small dim" text-anchor="middle">64 bits</text>
+  <text x="40" y="128" class="head">Second word</text>
+  <rect class="kernel" x="40" y="138" width="90" height="48" rx="6"/>
+  <text x="85" y="160" class="mono" text-anchor="middle">capType</text>
+  <text x="85" y="178" class="small dim" text-anchor="middle">5 bits</text>
+  <rect class="kernel" x="130" y="138" width="36" height="48" rx="6"/>
+  <text x="148" y="167" class="small dim" text-anchor="middle">1</text>
+  <path class="line" d="M148,186 V258 H292"/>
+  <text x="298" y="262" class="mono">capCanGrantReply</text>
+  <rect class="kernel" x="166" y="138" width="36" height="48" rx="6"/>
+  <text x="184" y="167" class="small dim" text-anchor="middle">1</text>
+  <path class="line" d="M184,186 V236 H292"/>
+  <text x="298" y="240" class="mono">capCanGrant</text>
+  <rect class="kernel" x="202" y="138" width="36" height="48" rx="6"/>
+  <text x="220" y="167" class="small dim" text-anchor="middle">1</text>
+  <path class="line" d="M220,186 V214 H292"/>
+  <text x="298" y="218" class="mono">capCanReceive</text>
+  <rect class="kernel" x="238" y="138" width="36" height="48" rx="6"/>
+  <text x="256" y="167" class="small dim" text-anchor="middle">1</text>
+  <path class="line" d="M256,186 V192 H292"/>
+  <text x="298" y="196" class="mono">capCanSend</text>
+  <rect class="kernel" x="274" y="138" width="446" height="48" rx="6"/>
+  <text x="497" y="160" class="mono" text-anchor="middle">capEPPtr</text>
+  <text x="497" y="178" class="small dim" text-anchor="middle">field_ptr, word_size - 5 - 4 = 55 bits</text>
+  <text x="450" y="262" class="small dim">each flag is 1 bit</text>
+</svg>

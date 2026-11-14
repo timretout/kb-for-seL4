@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 396" width="760" height="396" role="img">
+  <title>Ready queues by priority</title>
+  <desc>One FIFO queue of runnable threads per priority. chooseThread takes the head of the highest non-empty queue; tcbSchedEnqueue puts a woken or preempted thread at the head and tcbSchedAppend puts a thread whose slice expired at the tail. The current thread is in no ready queue.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="396" fill="#ffffff"/>
+  <text x="24" y="34" class="head">Ready queues of one domain on one core (an example)</text>
+  <text x="24" y="90">priority 255</text>
+  <text x="170" y="90" class="small dim">empty</text>
+  <text x="24" y="180">priority 254</text>
+  <rect x="170" y="160" width="70" height="30" rx="6" class="kernel"/>
+  <text x="205" y="180" text-anchor="middle">TCB</text>
+  <rect x="260" y="160" width="70" height="30" rx="6" class="kernel"/>
+  <text x="295" y="180" text-anchor="middle">TCB</text>
+  <rect x="350" y="160" width="70" height="30" rx="6" class="kernel"/>
+  <text x="385" y="180" text-anchor="middle">TCB</text>
+  <path class="line" d="M240,175 H258" marker-end="url(#arrow)"/>
+  <path class="line" d="M330,175 H348" marker-end="url(#arrow)"/>
+  <text x="205" y="154" class="small dim" text-anchor="middle">head</text>
+  <text x="385" y="154" class="small dim" text-anchor="middle">tail</text>
+  <text x="24" y="290">priority 253</text>
+  <rect x="170" y="270" width="70" height="30" rx="6" class="kernel"/>
+  <text x="205" y="290" text-anchor="middle">TCB</text>
+  <text x="24" y="330" class="dim">...</text>
+  <text x="24" y="370">priority 0</text>
+  <text x="170" y="370" class="small dim">empty</text>
+  <path class="line accent" d="M185,158 V128" marker-end="url(#arrow)"/>
+  <text x="196" y="124" class="small"><tspan class="mono">chooseThread()</tspan> takes the head of the highest non-empty queue</text>
+  <path class="line" d="M205,216 V192" marker-end="url(#arrow)"/>
+  <text x="170" y="232" class="mono">tcbSchedEnqueue()</text>
+  <text x="170" y="250" class="small">woken or preempted</text>
+  <path class="line" d="M470,175 H422" marker-end="url(#arrow)"/>
+  <text x="478" y="170" class="mono">tcbSchedAppend()</text>
+  <text x="478" y="188" class="small">slice expired, or yielded</text>
+  <rect x="500" y="280" width="236" height="60" rx="6" class="kernel"/>
+  <text x="512" y="304" class="mono">ksCurThread</text>
+  <text x="512" y="324" class="small">the current thread: in no ready queue</text>
+
+</svg>

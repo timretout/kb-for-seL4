@@ -2,7 +2,20 @@
 
 > Arm's older standard interrupt controller, with at most eight cores and every register memory-mapped: a shared distributor (GICD) that enables, prioritises and routes interrupts, and a per-core CPU interface (GICC) where the kernel acknowledges and completes them; seL4's driver for many Arm boards.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [PSCI and SMCCC](psci-smccc.md) · [Arm virtualisation (EL2)](arm-virtualisation.md) →
+
 Read first: [IRQ](irq.md), [AArch64 exceptions](aarch64-exceptions.md).
+
+| At a glance | |
+|---|---|
+| Kind | Interrupt controller |
+| Architecture | Arm |
+| Reached through | MMIO: a shared distributor (GICD) and a banked CPU interface per core (GICC) |
+| Found through | [Device tree](device-tree.md) node with `compatible = "arm,gic-400"` or `"arm,cortex-a15-gic"` |
+| Key numbers | At most 8 cores; INTIDs 0 to 15 SGI, 16 to 31 PPI, 32 to 1019 SPI; 1023 is spurious |
+| seL4 code | [`src/arch/arm/machine/gic_v2.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/machine/gic_v2.c), [`gic_v2.h`](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/machine/gic_v2.h) |
+| seL4 use | Masks the INTID, writes `EOIR` at once, unmasks on `seL4_IRQHandler_Ack`; IPIs are SGIs |
+| On the clouds | Servers and cloud instances use [GICv3](gicv3-its.md) instead |
 
 ## What it is
 
@@ -104,6 +117,11 @@ active and pending.
 4. The handler writes the same value to `GICC_EOIR`. This drops the
    running priority and makes the interrupt inactive, so it can be
    delivered again.
+
+![The states of one interrupt: inactive becomes pending when the device asserts its line, pending becomes active when the handler reads `GICC_IAR`, active returns to inactive when the handler writes `GICC_EOIR`, and a second edge while active gives active and pending.](../images/gicv2-states.svg)
+
+*Reading `GICC_IAR` and writing `GICC_EOIR` are the two transitions
+software makes; the others are the device's.*
 
 **Level-sensitive** interrupts stay pending for as long as the device
 holds the line; if the device has not been quietened by step 4 the

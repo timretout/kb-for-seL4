@@ -2,6 +2,17 @@
 
 > A device's signal that it needs the CPU, carried on a wire or as a message to an interrupt controller, which turns it into a numbered interrupt; seL4 hands each IRQ to user level as a capability that signals a notification.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [Device trees](device-tree.md) · [Local APIC and I/O APIC](apic.md) →
+
+| At a glance | |
+|---|---|
+| Kind | A device's signal to the CPU, through an interrupt controller |
+| Architecture | x86 ([local APIC and I/O APIC](apic.md)) and Arm ([GIC](gicv3-its.md)) |
+| Key numbers | seL4 IRQ number: the GIC INTID on Arm; the CPU vector minus `0x20` on x86 |
+| seL4 code | [`src/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/object/interrupt.c) |
+| seL4 use | IRQControl makes IRQHandler capabilities; an IRQ signals a notification and stays masked until `seL4_IRQHandler_Ack` |
+| On the clouds | The UART on EC2's Graviton2 (t4g) is IRQ 37; the [PIT](pit.md) is on I/O APIC pin 0 on EC2's Nitro and Compute Engine's x86 types |
+
 ## What it is
 
 A device that has finished something (a packet arrived, a timer expired,
@@ -89,6 +100,11 @@ IRQ stays masked until the driver calls `seL4_IRQHandler_Ack`, which
 unmasks it (or, on GICv3, deactivates it). This is the mask, acknowledge,
 service, unmask cycle above, with the driver's `Ack` as the unmask. The
 kernel's own timer and IPIs use the states `IRQTimer` and `IRQIPI`.
+
+![A sequence between device, controller, kernel and driver thread: the kernel signals the notification, masks the IRQ and acknowledges the controller; the driver services the device and calls seL4_IRQHandler_Ack, which unmasks the IRQ.](../images/irq-sel4-cycle.svg)
+
+*One interrupt handled by a user-level driver. The red bar is the time the
+IRQ is masked: it ends only when the driver calls `seL4_IRQHandler_Ack`.*
 
 What an IRQ number means differs by architecture:
 

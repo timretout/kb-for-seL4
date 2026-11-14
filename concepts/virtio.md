@@ -2,7 +2,20 @@
 
 > virtio is the standard family of paravirtual devices (network, block, console and more) that hypervisors offer in place of emulated hardware: one queue mechanism, three transports, and the easiest real I/O for an seL4 system on QEMU or Compute Engine.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [UARTs: 16550 and PL011](uart.md) · [IOMMUs: VT-d and SMMU](iommu.md) →
+
 Read first: [PCI and PCI Express](pci.md), [MSI and MSI-X](msi-msix.md).
+
+| At a glance | |
+|---|---|
+| Kind | Standard family of paravirtual devices (OASIS) |
+| Reached through | Three transports: [PCI](pci.md) (capabilities and BARs, or legacy [I/O ports](io-ports.md)), MMIO, channel I/O (s390) |
+| Found through | PCI vendor ID `0x1AF4`; a [device tree](device-tree.md) node with `compatible = "virtio,mmio"` |
+| Interrupt | PCI: [MSI-X](msi-msix.md) per queue, or one shared INTx line; MMIO: one interrupt |
+| Key numbers | Queue size a power of two, at most 32768; modern PCI device ID `0x1040` + type, transitional `0x1000` to `0x103F` |
+| seL4 code | None in the kernel; [sDDF](../sel4/sddf.md) drivers for net, blk and console over [`include/sddf/virtio/`](https://github.com/au-ts/sddf/tree/main/include/sddf/virtio) |
+| seL4 use | User level only; sDDF's drivers are modern only, with split rings |
+| On the clouds | [Compute Engine](gce.md): PCI with transitional IDs on older machine families; [EC2](ec2.md): none |
 
 ## What it is
 
@@ -81,6 +94,12 @@ struct virtq_desc {         le16 flags;             le16 flags;
   to `used.ring[used.idx % N]`, increments `used.idx` and **interrupts**
   the driver. The driver remembers the last `used.idx` it saw and
   processes the entries between.
+
+![The driver fills a descriptor chain, puts its head index in the available ring and increments its idx, then notifies the device; the device writes id and len to the used ring, increments its idx and interrupts the driver.](../images/virtio-split-queue.svg)
+
+*One request through a split virtqueue, in order. Each array has one
+writer, and the two expensive steps are the trap (3) and the
+interrupt (5).*
 
 The driver owns descriptor allocation: it keeps its own free list. Both
 directions of signalling are expensive, so each side can ask the other

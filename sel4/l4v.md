@@ -2,7 +2,19 @@
 
 > `seL4/l4v` holds the Isabelle/HOL specifications and proofs of seL4; it reads the kernel's C as one preprocessed file per verified configuration, and a manifest repository records which kernel commit the proofs currently match.
 
+[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [The seL4 proofs](verification.md) · [The verified C subset](verified-c-subset.md) →
+
 Read first: [Verification](verification.md).
+
+| At a glance | |
+|---|---|
+| Kind | Proof repository (Isabelle/HOL specifications and proofs; no kernel code) |
+| Repository | [`seL4/l4v`](https://github.com/seL4/l4v); manifests in [`seL4/verification-manifest`](https://github.com/seL4/verification-manifest) |
+| Key source | `spec/abstract`, `spec/haskell`, `spec/design`, `proof/refine`, `proof/crefine`, `tools/c-parser`, `run_tests` |
+| Config options | Environment variables `L4V_ARCH`, `L4V_FEATURES`, `L4V_PLAT` |
+| Built on | Isabelle (exact version pinned as `l4v/isabelle`); the kernel's `kernel_all_pp_wrapper` target |
+| Used by | The "Proof Sync" and "Proofs" workflows ([CI](ci.md)) |
+| Verified | Reads `kernel_all.c_pp`, one preprocessed file per [verified](verification.md) configuration |
 
 ## What it is
 
@@ -71,6 +83,12 @@ get their specifications and proofs generated alongside
 ([Generated code](generated-code.md)). CRefine then proves, function by
 function, that the Simpl program corresponds to the design
 specification's function of the same name.
+
+![The kernel checkout is preprocessed into kernel_all.c_pp, which the C parser turns into a Simpl program; the design specification is generated from the Haskell prototype; CRefine joins the Simpl program to the design specification and Refine joins that to the abstract specification.](../images/l4v-pipeline.svg)
+
+*Two inputs meet in the proofs: the C comes in along the bottom, the
+design specification is generated from the Haskell, and CRefine and
+Refine join them to the abstract specification.*
 
 The design specification follows the Haskell: a kernel change is made
 three times (C, Haskell, abstract specification if behaviour visible at

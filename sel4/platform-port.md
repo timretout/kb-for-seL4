@@ -2,7 +2,18 @@
 
 > A platform is the kernel's build-time description of one board or machine family; porting on Arm and RISC-V means writing that description (device tree, overlay, `config.cmake`, drivers) across several repositories, while on x86 there is one platform, `pc99`, and a "port" means fixing its assumptions about the machine.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Elfloader](elfloader.md) · [Debugging](debugging.md) →
+
 Read first: [Build system and configuration](build-system.md), [Generated code](generated-code.md), [Device trees](../concepts/device-tree.md).
+
+| At a glance | |
+|---|---|
+| Kind | Process (porting the kernel to a board or machine) |
+| Repository | `seL4`, `seL4_tools`, `util_libs`, `seL4_libs`, `sel4test`, `sel4bench`, `microkit`, `sddf` |
+| Key source | `src/plat/<plat>/config.cmake`, `tools/dts/<board>.dts`, [`tools/hardware.yml`](https://github.com/seL4/seL4/blob/master/tools/hardware.yml) |
+| Config options | `KernelPlatform`; `KernelCustomDTS`, `KernelCustomDTSOverlay` |
+| Built on | [Device trees](../concepts/device-tree.md) and [generated code](generated-code.md) (Arm, RISC-V); Multiboot and [ACPI tables](../concepts/acpi-tables.md) (x86, `pc99`) |
+| Verified | A new board is unverified until it has a `configs/*_verified.cmake` file and checked proofs |
 
 ## What it is
 
@@ -101,6 +112,11 @@ add_sources(DEP "KernelPlatformZynqmp"
   `KERNEL_WCET` is the kernel's assumed worst-case execution time in
   microseconds, also for MCS.
 - `add_sources()` links the driver C files.
+
+![On Arm and RISC-V the board device tree, the overlay and hardware.yml become devices_gen.h, and the platform config.cmake fills the generated platform header; both are compiled into a kernel binary that runs on that machine and no other.](../images/platform-port-description.svg)
+
+*Steps 1 to 4 of the recipe: four hand-written inputs, two generated
+headers, one kernel that knows a single machine.*
 
 RISC-V platforms follow the same shape with a PLIC as interrupt
 controller and the SBI timer

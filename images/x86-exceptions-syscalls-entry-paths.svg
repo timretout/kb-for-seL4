@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 566" width="760" height="566" role="img">
+  <title>The two kernel entry paths in seL4 on x86-64</title>
+  <desc>A user thread enters the kernel either by syscall, through the LSTAR entry point handle_fastsyscall, or by an exception or interrupt, through an IDT gate and the int_NN stubs. Both save the registers into the current thread's TCB, run a C handler, and leave through restore_user_context by sysretq or iretq.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="566" fill="#ffffff"/>
+  <rect x="255" y="16" width="250" height="36" rx="6" class="user"/>
+  <text x="380" y="39" text-anchor="middle">user thread, ring 3</text>
+  <path class="line" d="M300,52 V70 H200 V92" marker-end="url(#arrow)"/>
+  <text x="190" y="84" text-anchor="end" class="mono">syscall</text>
+  <path class="line" d="M460,52 V70 H560 V92" marker-end="url(#arrow)"/>
+  <text x="570" y="84">exception or interrupt</text>
+  <rect x="40" y="92" width="320" height="68" rx="6" class="hw"/>
+  <text x="54" y="114" class="head">CPU</text>
+  <text x="54" y="132" class="small">jumps to the <tspan class="mono">LSTAR</tspan> address; return address</text>
+  <text x="54" y="148" class="small">in <tspan class="mono">rcx</tspan>, flags in <tspan class="mono">r11</tspan>; stack not switched</text>
+  <rect x="400" y="92" width="320" height="68" rx="6" class="hw"/>
+  <text x="414" y="114" class="head">CPU</text>
+  <text x="414" y="132" class="small">takes the IDT gate for the vector; pushes SS,</text>
+  <text x="414" y="148" class="small">RSP, RFLAGS, CS, RIP and maybe an error code</text>
+  <path class="line" d="M200,160 V184" marker-end="url(#arrow)"/>
+  <path class="line" d="M560,160 V184" marker-end="url(#arrow)"/>
+  <rect x="40" y="184" width="320" height="68" rx="6" class="kernel"/>
+  <text x="54" y="206" class="mono">handle_fastsyscall</text>
+  <text x="54" y="224" class="small">pushes -1 as <tspan class="mono">Error</tspan>, <tspan class="mono">rcx</tspan> as <tspan class="mono">NextIP</tspan>,</text>
+  <text x="54" y="240" class="small"><tspan class="mono">r11</tspan> as <tspan class="mono">FLAGS</tspan>, then the rest</text>
+  <rect x="400" y="184" width="320" height="68" rx="6" class="kernel"/>
+  <text x="414" y="206" class="mono">int_00 to int_ff</text>
+  <text x="414" y="224" class="small">push 0 if the CPU pushed no error code,</text>
+  <text x="414" y="240" class="small">test the saved CS, jump to <tspan class="mono">handle_interrupt</tspan></text>
+  <path class="line" d="M200,252 V280" marker-end="url(#arrow)"/>
+  <path class="line" d="M560,252 V280" marker-end="url(#arrow)"/>
+  <rect x="140" y="280" width="480" height="50" rx="6" class="kernel accent"/>
+  <text x="380" y="301" text-anchor="middle">user registers saved in the current thread's TCB</text>
+  <text x="380" y="320" text-anchor="middle" class="mono">tcbArch.tcbContext.registers[]</text>
+  <path class="line" d="M200,330 V358" marker-end="url(#arrow)"/>
+  <path class="line" d="M560,330 V358" marker-end="url(#arrow)"/>
+  <rect x="40" y="358" width="320" height="50" rx="6" class="kernel"/>
+  <text x="54" y="379" class="mono">c_handle_syscall()</text>
+  <text x="54" y="397" class="small">IPC fastpath, else <tspan class="mono">slowpath()</tspan></text>
+  <rect x="400" y="358" width="320" height="50" rx="6" class="kernel"/>
+  <text x="414" y="379" class="mono">c_handle_interrupt()</text>
+  <text x="414" y="397" class="small">dispatches by vector</text>
+  <path class="line" d="M200,408 V436" marker-end="url(#arrow)"/>
+  <path class="line" d="M560,408 V436" marker-end="url(#arrow)"/>
+  <rect x="140" y="436" width="480" height="50" rx="6" class="kernel"/>
+  <text x="380" y="457" text-anchor="middle" class="mono">restore_user_context()</text>
+  <text x="380" y="475" text-anchor="middle" class="small">pops the TCB of the possibly different current thread</text>
+  <path class="line" d="M300,486 V518" marker-end="url(#arrow)"/>
+  <path class="line" d="M460,486 V518" marker-end="url(#arrow)"/>
+  <text x="290" y="500" text-anchor="end" class="small"><tspan class="mono">sysretq</tspan> if <tspan class="mono">Error</tspan> is -1</text>
+  <text x="470" y="500" class="small"><tspan class="mono">iretq</tspan> otherwise</text>
+  <rect x="255" y="518" width="250" height="36" rx="6" class="user"/>
+  <text x="380" y="541" text-anchor="middle">user thread resumes</text>
+</svg>

@@ -2,7 +2,20 @@
 
 > Intel's hardware support for running guest operating systems (VMX root and non-root operation, the VMCS, EPT) and AMD's equivalent: it is what seL4's x86 hypervisor mode drives, and what every cloud instance seL4 boots on is running under.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [8259 PIC](pic-8259.md) · [AArch64 basics](aarch64-basics.md) →
+
 Read first: [Privilege levels](privilege-levels.md), [x86 paging](x86-paging.md), [CPUID and MSRs](cpuid-and-msrs.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor extension for running guests: Intel VT-x (VMX), AMD SVM |
+| Architecture | x86 |
+| Found through | [CPUID](cpuid-and-msrs.md) leaf 1 `ECX` bit 5; `IA32_FEATURE_CONTROL` MSR (unchecked) |
+| Key numbers | A 4 KiB VMCS for each virtual CPU; four-level EPT; 16-bit VPID (unchecked) |
+| seL4 code | [`src/arch/x86/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/vcpu.c) |
+| seL4 config | `KernelVTX` (default off) |
+| seL4 use | Hypervisor on Intel only, with a user-level VMM handling exits; not in any verified configuration |
+| On the clouds | An ordinary EC2 or Compute Engine instance does not advertise VMX (unchecked) |
 
 ## What it is
 
@@ -27,6 +40,11 @@ After `VMXON` a core is in **VMX operation**, in one of two modes:
 
 A guest kernel runs in ring 0 of non-root mode and believes it owns the
 machine. The hypervisor decides which of its actions exit.
+
+![VMX root operation and VMX non-root operation side by side, each with its own rings: the hypervisor in root, the guest kernel in ring 0 of non-root, joined by a VM entry arrow one way and a VM exit arrow the other.](../images/x86-virtualisation-root-nonroot.svg)
+
+*Root or non-root is a second axis beside the rings, not a ring below
+ring 0.*
 
 Enabling it: [CPUID](cpuid-and-msrs.md) leaf 1 `ECX` bit 5 says VMX
 exists; the `IA32_FEATURE_CONTROL` MSR (`0x3A`) must have "VMX outside
@@ -81,6 +99,10 @@ owned by the hypervisor translates guest-physical to host-physical. A
 missing translation is an EPT violation exit, the guest's equivalent of
 a page fault to user level. The cost is a longer TLB miss: up to 24
 memory references for one translation.
+
+![Translation in two stages: the guest's own page tables take a guest-virtual address to a guest-physical one, and the hypervisor's EPT takes that to a host-physical address, with an EPT violation exit when the EPT has no translation.](../images/x86-virtualisation-ept.svg)
+
+*The guest controls only the first stage; the hypervisor owns the second.*
 
 **VPID** (virtual processor identifier) is a 16-bit tag on TLB entries,
 like a PCID, so that VM entries and exits need not flush the TLB.

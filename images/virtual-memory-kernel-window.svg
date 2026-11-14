@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 354" width="760" height="354" role="img">
+  <title>seL4's kernel window</title>
+  <desc>The high half of every address space holds the kernel window, which maps physical memory from PADDR_BASE to PADDR_TOP at a fixed offset between PPTR_BASE and PPTR_TOP, with the kernel image and the kernel devices mapped separately; RAM above PADDR_TOP cannot hold kernel objects.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="354" fill="#ffffff"/>
+  <text x="24" y="40" class="head">Virtual addresses</text>
+  <rect x="24" y="110" width="216" height="48" rx="6" class="user"/>
+  <text x="132" y="130" text-anchor="middle">user mappings</text>
+  <text x="132" y="148" class="small" text-anchor="middle">below <tspan class="mono">USER_TOP</tspan></text>
+  <rect x="240" y="110" width="120" height="48" rx="6" class="data" stroke-dasharray="5 4"/>
+  <text x="300" y="130" text-anchor="middle">non-canonical</text>
+  <text x="300" y="148" class="small" text-anchor="middle">(invalid)</text>
+  <rect x="370" y="20" width="366" height="148" rx="6" class="kernel" style="fill:none" stroke-dasharray="5 4"/>
+  <text x="382" y="40" class="small head">kernel half: built once at boot, never changes</text>
+  <rect x="380" y="52" width="168" height="48" rx="6" class="kernel"/>
+  <text x="464" y="72" text-anchor="middle">kernel image</text>
+  <text x="464" y="90" class="mono" text-anchor="middle">KERNEL_ELF_BASE</text>
+  <rect x="558" y="52" width="168" height="48" rx="6" class="kernel"/>
+  <text x="642" y="72" text-anchor="middle">kernel's own devices</text>
+  <text x="642" y="90" class="mono" text-anchor="middle">KDEV_BASE</text>
+  <rect x="380" y="110" width="346" height="48" rx="6" class="kernel"/>
+  <text x="553" y="130" class="head" text-anchor="middle">kernel window</text>
+  <text x="553" y="148" class="mono" text-anchor="middle">PPTR_BASE to PPTR_TOP</text>
+  <path class="line dash" d="M380,158 L24,250"/>
+  <path class="line dash" d="M726,158 L540,250"/>
+  <text x="385" y="212" class="mono" text-anchor="middle">paddr_to_pptr(p) = p + PPTR_BASE_OFFSET</text>
+  <text x="24" y="318" class="head">Physical addresses</text>
+  <rect x="24" y="250" width="516" height="48" rx="6" class="data"/>
+  <text x="282" y="270" class="mono" text-anchor="middle">PADDR_BASE to PADDR_TOP</text>
+  <text x="282" y="288" class="small" text-anchor="middle">kernel objects must lie here</text>
+  <rect x="540" y="250" width="196" height="48" rx="6" class="data" style="stroke:#cf222e"/>
+  <text x="638" y="270" text-anchor="middle">RAM above <tspan class="mono">PADDR_TOP</tspan></text>
+  <text x="638" y="288" class="small" text-anchor="middle">device untypeds only</text>
+  <text x="24" y="338" class="small dim">The window maps physical memory with large pages; a pptr is a pointer into it.</text>
+</svg>

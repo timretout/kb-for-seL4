@@ -2,7 +2,20 @@
 
 > How x86-64 translates 48-bit virtual addresses through four levels of 512-entry tables rooted at `CR3`, with the entry flags, large pages, PCIDs and TLB rules a kernel must respect; seL4 exposes each level as an object type and keeps its own window in the top 512 GiB.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [CPUID and MSRs](cpuid-and-msrs.md) · [x86-64 exceptions and system calls](x86-exceptions-syscalls.md) →
+
 Read first: [Virtual memory](virtual-memory.md), [x86-64 basics](x86-64-basics.md).
+
+| At a glance | |
+|---|---|
+| Kind | Address translation mechanism: four levels of page tables |
+| Architecture | x86-64 |
+| Reached through | `CR3` holds the top table; `invlpg` and `invpcid` invalidate (unchecked) |
+| Key numbers | 48-bit virtual addresses; 512 eight-byte entries a table; pages of 4 KiB, 2 MiB and 1 GiB (unchecked) |
+| seL4 code | [`src/arch/x86/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/kernel/vspace.c), [`hardware.h`](https://github.com/seL4/seL4/blob/master/include/plat/pc99/plat/64/plat_mode/machine/hardware.h) |
+| seL4 config | `KernelHugePage`, `KernelSupportPCID`, `KernelSkimWindow` |
+| seL4 use | One object type per level ([VSpace](../sel4/vspace.md)); 510 GiB kernel window under the last PML4 entry |
+| On the clouds | `PCID` and `INVPCID` are often hidden in VMs |
 
 ## What it is
 
@@ -126,6 +139,11 @@ The kernel reaches any physical address `p` below `PADDR_TOP` as
 `p + PPTR_BASE_OFFSET`; a "pptr" in the source is such an address. Just
 below `PPTR_BASE` an SMP build keeps per-VSpace TLB bitmaps
 (`TLBBITMAP_PPTR`) recording which cores may hold entries.
+
+![seL4's x86-64 virtual address layout from user addresses at the bottom, ending at USER_TOP, to the kernel window between PPTR_BASE and PPTR_TOP, the kernel image and the kernel devices at the top.](../images/x86-paging-kernel-layout.svg)
+
+*The symbols of the table above as a map, high addresses at the top and not
+to scale. The 510 GiB kernel window is where physical memory appears.*
 
 **Boot tables.**
 [`src/arch/x86/64/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/head.S)

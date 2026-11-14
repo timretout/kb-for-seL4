@@ -2,7 +2,19 @@
 
 > seL4 builds with CMake and Ninja: options declared in `config.cmake` files become `CONFIG_*` macros in a generated `gen_config.h`, a platform name selects architecture and sources, and the kernel builds either alone from a `configs/*.cmake` file or inside a project through `init-build.sh`.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Source layout](source-layout.md) · [Generated code](generated-code.md) →
+
 Read first: [Source layout](source-layout.md).
+
+| At a glance | |
+|---|---|
+| Kind | Tool (the CMake and Ninja build) |
+| Repository | `seL4` (kernel build), `seL4_tools` (`cmake-tool/` for project builds) |
+| Key source | [`config.cmake`](https://github.com/seL4/seL4/blob/master/config.cmake), [`configs/seL4Config.cmake`](https://github.com/seL4/seL4/blob/master/configs/seL4Config.cmake), [`tools/helpers.cmake`](https://github.com/seL4/seL4/blob/master/tools/helpers.cmake) |
+| Config options | `KernelPlatform`, `KernelSel4Arch`, `KernelVerificationBuild`, `KernelDebugBuild`, `KernelIsMCS` |
+| Built on | CMake 3.16 or later, Ninja, a GNU cross toolchain or `clang` |
+| Used by | Project builds such as [sel4test](sel4test.md) (`init-build.sh`); [Microkit](microkit.md)'s `build_sdk.py` |
+| Verified | `configs/*_verified.cmake`: one file per configuration that has a proof |
 
 ## What it is
 
@@ -173,6 +185,11 @@ style, and user-level libraries add theirs. The JSON and YAML are for
 tools: Microkit and rust-sel4 read them to learn how the kernel was
 configured. In a project build the kernel's files are under
 `<build>/kernel/` (see [generated code](generated-code.md)).
+
+![Initial-cache files, a project's settings.cmake and command-line overrides set the CMake options that config.cmake files declare; the build writes them to gen_config.h for the kernel sources and to JSON and YAML for Microkit and rust-sel4.](../images/build-system-config-flow.svg)
+
+*An option has a CMake name going in and a C name coming out; the JSON and
+YAML copies are how other build systems learn the configuration.*
 
 ### Where options live
 

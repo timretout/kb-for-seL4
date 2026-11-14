@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 528" width="760" height="528" role="img">
+  <title>The seL4 proof stack</title>
+  <desc>Security properties are proved about the abstract specification; the design specification refines the abstract one, the C code refines the design specification, and for some architectures translation validation links the binary to the C code. The two refinement proofs together are functional correctness.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="528" fill="#ffffff"/>
+
+  <rect class="data" x="60" y="20" width="240" height="56" rx="6"/>
+  <text x="180" y="53" text-anchor="middle" class="head">security properties</text>
+  <text x="330" y="43">integrity, authority confinement,</text>
+  <text x="330" y="63">confidentiality / non-interference</text>
+  <path class="line" d="M180,76 V126" marker-end="url(#arrow)"/>
+  <text x="192" y="106" class="small">proved about</text>
+
+  <rect class="data" x="60" y="128" width="240" height="56" rx="6"/>
+  <text x="180" y="161" text-anchor="middle" class="head">abstract specification</text>
+  <text x="330" y="141" class="small">what the kernel does, as functions on an abstract state;</text>
+  <text x="330" y="159" class="small">nondeterministic where the detail does not matter</text>
+  <path class="line" d="M180,234 V186" marker-end="url(#arrow)"/>
+  <text x="192" y="214" class="small">refinement proof 1</text>
+
+  <rect class="data" x="60" y="236" width="240" height="56" rx="6"/>
+  <text x="180" y="269" text-anchor="middle" class="head">design (executable) spec</text>
+  <text x="330" y="258" class="small">how: data structures and algorithms,</text>
+  <text x="330" y="276" class="small">generated from a Haskell prototype</text>
+  <path class="line" d="M180,342 V294" marker-end="url(#arrow)"/>
+  <text x="192" y="322" class="small">refinement proof 2</text>
+
+  <rect class="kernel" x="60" y="344" width="240" height="56" rx="6"/>
+  <text x="180" y="377" text-anchor="middle" class="head">C code</text>
+  <text x="330" y="366" class="small">the kernel source, translated into Isabelle</text>
+  <text x="330" y="384" class="small">by a C parser</text>
+  <path class="line" d="M180,450 V402" marker-end="url(#arrow)"/>
+  <text x="192" y="430" class="small">translation validation (some architectures)</text>
+
+  <rect class="kernel" x="60" y="452" width="240" height="56" rx="6"/>
+  <text x="180" y="485" text-anchor="middle" class="head">binary</text>
+  <text x="330" y="485" class="small">the compiled <tspan class="mono">kernel.elf</tspan></text>
+
+  <path class="line accent" d="M48,128 H38 V400 H48"/>
+  <text transform="translate(28,264) rotate(-90)" text-anchor="middle" class="small">functional correctness</text>
+</svg>

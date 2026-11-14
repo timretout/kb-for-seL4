@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" width="760" height="500" role="img">
+  <title>How seL4 uses a device tree</title>
+  <desc>The seL4 build concatenates the board's DTS and the platform overlay into kernel.dts, compiles it with dtc into kernel.dtb, and hardware_gen.py turns that, with hardware.yml, into C headers compiled into the kernel. At boot the elfloader passes a DTB to the kernel, which copies it into the root task's extra BootInfo.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="500" fill="#ffffff"/>
+  <text x="20" y="28" class="head">Build time</text>
+  <rect x="20" y="42" width="296" height="36" rx="6" class="data"/>
+  <text x="168" y="65" text-anchor="middle" class="mono">tools/dts/&lt;plat&gt;.dts</text>
+  <rect x="20" y="92" width="296" height="36" rx="6" class="data"/>
+  <text x="168" y="115" text-anchor="middle" class="mono">src/plat/&lt;plat&gt;/overlay-&lt;plat&gt;.dts</text>
+  <rect x="376" y="67" width="120" height="36" rx="6" class="data"/>
+  <text x="436" y="90" text-anchor="middle" class="mono">kernel.dts</text>
+  <path class="line" d="M316,60 L376,78" marker-end="url(#arrow)"/>
+  <path class="line" d="M316,110 L376,92" marker-end="url(#arrow)"/>
+  <text x="436" y="40" text-anchor="middle" class="small dim">concatenated,</text>
+  <text x="436" y="56" text-anchor="middle" class="small dim">overlay last</text>
+  <rect x="570" y="67" width="140" height="36" rx="6" class="data"/>
+  <text x="640" y="90" text-anchor="middle" class="mono">kernel.dtb</text>
+  <path class="line" d="M496,85 H570" marker-end="url(#arrow)"/>
+  <text x="533" y="77" text-anchor="middle" class="mono">dtc</text>
+  <path class="line" d="M610,103 V140 H320 V186" marker-end="url(#arrow)"/>
+  <rect x="40" y="186" width="140" height="36" rx="6" class="data"/>
+  <text x="110" y="209" text-anchor="middle" class="mono">hardware.yml</text>
+  <rect x="240" y="186" width="160" height="36" rx="6" class="data"/>
+  <text x="320" y="209" text-anchor="middle" class="mono">hardware_gen.py</text>
+  <path class="line" d="M180,204 H240" marker-end="url(#arrow)"/>
+  <rect x="240" y="266" width="160" height="36" rx="6" class="data"/>
+  <text x="320" y="289" text-anchor="middle">C headers</text>
+  <path class="line" d="M320,222 V266" marker-end="url(#arrow)"/>
+  <path class="line" d="M320,302 V350" marker-end="url(#arrow)"/>
+  <text x="330" y="331" class="small dim">compiled in</text>
+  <text x="590" y="176" class="head">Boot</text>
+  <rect x="590" y="186" width="154" height="36" rx="6" class="fw"/>
+  <text x="667" y="209" text-anchor="middle">elfloader</text>
+  <path class="line" d="M670,103 V186" marker-end="url(#arrow)"/>
+  <text x="680" y="150" class="small dim">in its</text>
+  <text x="680" y="166" class="small dim">archive</text>
+  <path class="line" d="M670,222 V350" marker-end="url(#arrow)"/>
+  <text x="660" y="281" text-anchor="end" class="small dim">address and size</text>
+  <text x="660" y="297" text-anchor="end" class="small dim">of a DTB</text>
+  <rect x="240" y="350" width="504" height="48" rx="6" class="kernel"/>
+  <text x="260" y="379">seL4 kernel</text>
+  <text x="724" y="379" text-anchor="end" class="mono">init_kernel() only copies the DTB</text>
+  <path class="line" d="M610,398 V436" marker-end="url(#arrow)"/>
+  <rect x="424" y="436" width="320" height="48" rx="6" class="user"/>
+  <text x="584" y="456" text-anchor="middle">root task: extra BootInfo chunk</text>
+  <text x="584" y="474" text-anchor="middle" class="mono">SEL4_BOOTINFO_HEADER_FDT</text>
+</svg>

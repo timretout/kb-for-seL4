@@ -2,7 +2,18 @@
 
 > The registers, operating modes, leftover segmentation (GDT, TSS, FS and GS bases), control registers and calling convention of 64-bit x86, as much as is needed to read seL4's `src/arch/x86/64/`.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [ELF and linking](elf.md) · [CPUID and MSRs](cpuid-and-msrs.md) →
+
 Read first: [Privilege levels](privilege-levels.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor architecture: AMD's 64-bit extension of 32-bit x86 |
+| Architecture | x86-64 (also AMD64, Intel 64, "long mode") |
+| Key numbers | Sixteen 64-bit general-purpose registers; 48-bit virtual addresses with 4-level paging; 128-byte red zone (unchecked) |
+| seL4 code | `src/arch/x86/64/`, starting at [`src/arch/x86/64/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/head.S) |
+| seL4 config | `KernelArch` `x86` with sel4arch `x86_64` or `ia32` |
+| seL4 use | Climbs to long mode itself in `head.S`; GDT and TSS set up per core; per-CPU data through `gs` on SMP |
 
 ## What it is
 
@@ -72,6 +83,11 @@ tables, set `CR4.PAE`, set `EFER.LME`, set `CR0.PG`, load a GDT with a
 64-bit code segment and far-jump into it. Secondary cores start in
 real mode and climb the whole ladder ([SMP bring-up](smp-bringup.md)).
 See [x86 boot](x86-boot.md).
+
+![The three modes drawn as a ladder: reset enters real mode, setting CR0.PE enters protected mode, and six steps from page tables to a far jump enter 64-bit long mode; a Multiboot loader starts the kernel on the middle rung.](../images/x86-64-basics-modes.svg)
+
+*The climb from reset to long mode. A Multiboot kernel starts on the middle
+rung and does the last step itself.*
 
 ### What is left of segmentation
 

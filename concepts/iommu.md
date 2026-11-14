@@ -2,7 +2,20 @@
 
 > An IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a user-level driver from reading or writing all of memory through its device; seL4 has unverified support for Intel VT-d and Arm SMMUv2.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [virtio](virtio.md) · [QEMU](qemu.md) →
+
 Read first: [Virtual memory](virtual-memory.md), [PCI and PCI Express](pci.md).
+
+| At a glance | |
+|---|---|
+| Kind | Hardware that translates and restricts device DMA addresses |
+| Architecture | x86 (Intel VT-d), Arm (SMMU) |
+| Found through | [ACPI](acpi-tables.md) DMAR (VT-d), IVRS (AMD-Vi), IORT (SMMU); the device tree's `iommus` property (unchecked) |
+| Interrupt | A fault interrupt for blocked accesses |
+| seL4 code | [`intel-vtd.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/intel-vtd.c), [`iospace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/iospace.c), [`smmuv2.c`](https://github.com/seL4/seL4/blob/master/src/drivers/smmu/smmuv2.c) |
+| seL4 config | `KernelIOMMU` (default on for `pc99`); `KernelArmSMMU` (Tegra X2 only) |
+| seL4 use | VT-d and SMMUv2 only, in no verified configuration; no AMD-Vi or SMMUv3 driver |
+| On the clouds | None on ordinary EC2 and Compute Engine instances; EC2 bare-metal instances are the exception |
 
 ## What it is
 
@@ -52,6 +65,11 @@ memory and does for devices what the MMU does for the CPU:
 It is also what lets a hypervisor give a real device to a guest
 (passthrough): the IOMMU translates the guest's idea of physical
 addresses.
+
+![A device's DMA carries its ID and an I/O virtual address; the IOMMU looks the address up in the page tables assigned to that device, lets it reach the buffers the OS mapped, and blocks and reports anything else.](../images/iommu-dma-path.svg)
+
+*With an IOMMU in the path, what the device can reach is decided by
+page tables the OS controls, whatever address the driver programs.*
 
 The descriptions of the hardware below are from memory of the
 specifications, none of which could be opened today (unchecked).
@@ -191,6 +209,12 @@ A context bank is pointed at an ordinary VSpace: the device shares the
 page tables of an address space, so "what the device can reach" is
 "what is mapped in that VSpace". This differs from x86, where I/O page
 tables are separate objects.
+
+![On x86 the master IOSpace cap is minted into a cap for one device, into which I/O page table objects and then frames are mapped; on Arm a SID cap is bound to a CB cap, which is assigned an ordinary VSpace.](../images/iommu-sel4-caps.svg)
+
+*The two capability models side by side. Arrows on the x86 row point
+from the thing mapped to what it is mapped into; on the Arm row each
+arrow is the invocation named above it.*
 
 ### Above the kernel
 

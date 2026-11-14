@@ -2,7 +2,19 @@
 
 > A seL4 address space is a tree of page-table objects that user level retypes from untyped memory and links together with `Map` invocations, with frames at the leaves and an ASID naming the root; the kernel only checks and installs what it is asked to.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Faults and fault handlers](faults.md) · [Interrupt delivery](irq-handling.md) →
+
 Read first: [Capabilities](capabilities.md), [Untyped memory and retyping](untyped-memory.md), [x86-64 paging](../concepts/x86-paging.md) or [AArch64 paging](../concepts/aarch64-paging.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel objects: page tables, frames and ASID pools |
+| Key source | `src/arch/x86/kernel/vspace.c`, `src/arch/arm/64/kernel/vspace.c`, `src/arch/riscv/kernel/vspace.c` |
+| Config options | `CONFIG_HUGE_PAGE` (x86 1 GiB frames) |
+| API | `Map` and `Unmap` on tables and frames, `ASIDControl_MakePool`, `ASIDPool_Assign`, `Page_GetAddress` |
+| Object size | Frames of 4 KiB, 2 MiB and 1 GiB; an AArch64 root is 4 KiB, or 8 KiB as a hypervisor with 40-bit physical addresses |
+| Built on | [Untyped memory](untyped-memory.md), [capabilities](capabilities.md), the hardware's paging ([x86-64](../concepts/x86-paging.md), [AArch64](../concepts/aarch64-paging.md)) |
+| Used by | [Threads](threads.md), through `seL4_TCB_SetSpace` or `seL4_TCB_Configure` |
 
 ## What it is
 
@@ -18,6 +30,11 @@ capability, and a thread holding the right caps builds an address space
 4. retype **frames** (pages of memory) and map them at virtual addresses;
 5. name the root in a thread with `seL4_TCB_SetSpace` or
    `seL4_TCB_Configure` ([Threads](threads.md)).
+
+![On x86-64 a VSpace is a chain from the PML4 root through a PDPT, a page directory and a page table to a frame, each linked by its own Map call, with an ASID pool giving the root its ASID.](../images/vspace-tree.svg)
+
+*The objects of an x86-64 VSpace with 4 KiB frames, and the invocation
+that installs each. The other architectures are in the table below.*
 
 A page fault is not handled by the kernel: it becomes a
 [fault message](faults.md) to the thread's fault handler, which may map

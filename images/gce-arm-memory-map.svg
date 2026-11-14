@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 384" width="760" height="384" role="img">
+  <title>Physical addresses of a Compute Engine Arm guest</title>
+  <desc>The fixed addresses of a Compute Engine Arm guest in rising order: the GICv3 distributor, ITS and redistributors, four PL011 UARTs, the PCI ECAM region and RAM.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+    .plain { fill: #ffffff; stroke: #6e7781; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="384" fill="#ffffff"/>
+  <text x="184" y="30" class="small dim" text-anchor="end">address</text>
+  <text x="216" y="30" class="small dim">what is there</text>
+  <rect x="200" y="42" width="536" height="46" rx="6" class="hw"/>
+  <text x="184" y="70" class="mono" text-anchor="end">0x08000000</text>
+  <text x="216" y="62" class="head">GICv3 distributor</text>
+  <text x="216" y="80" class="small">96 SPIs</text>
+  <rect x="200" y="98" width="536" height="46" rx="6" class="hw"/>
+  <text x="184" y="126" class="mono" text-anchor="end">0x08080000</text>
+  <text x="216" y="126" class="head">GICv3 ITS</text>
+  <rect x="200" y="154" width="536" height="46" rx="6" class="hw"/>
+  <text x="184" y="182" class="mono" text-anchor="end">0x080a0000</text>
+  <text x="216" y="174" class="head">GICv3 redistributors</text>
+  <text x="216" y="192" class="small">from this address</text>
+  <rect x="200" y="210" width="536" height="46" rx="6" class="hw"/>
+  <text x="184" y="238" class="mono" text-anchor="end">0x09000000</text>
+  <text x="216" y="230" class="head">Four PL011 UARTs, 0x1000 apart</text>
+  <text x="216" y="248" class="small">the first is the serial console, on SPI 66 (interrupt 98)</text>
+  <rect x="200" y="266" width="536" height="46" rx="6" class="hw"/>
+  <text x="184" y="294" class="mono" text-anchor="end">0x3f000000</text>
+  <text x="216" y="286" class="head">PCI ECAM</text>
+  <text x="216" y="304" class="small">gVNIC 1ae0:0042, virtio-rng and an NVMe controller 1ae0:001f</text>
+  <rect x="200" y="322" width="536" height="46" rx="6" class="data"/>
+  <text x="184" y="350" class="mono" text-anchor="end">0x40000000</text>
+  <text x="216" y="342" class="head">RAM</text>
+  <text x="216" y="360" class="small">from this address</text>
+</svg>

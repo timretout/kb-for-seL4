@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img">
+  <title>The L4 lineage and the capability systems behind seL4</title>
+  <desc>Liedtke's L3 and L4 were re-implemented in C++ as L4Ka::Hazelnut, L4Ka::Pistachio and Fiasco; OKL4 derives from Pistachio; seL4 is the third generation of the L4 family and takes capabilities from the separate line of KeyKOS and EROS.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="350" fill="#ffffff"/>
+  <text x="24" y="48" class="small head">Liedtke</text>
+  <rect x="24" y="60" width="70" height="40" rx="6" class="data"/>
+  <text x="59" y="85" text-anchor="middle">L3</text>
+  <rect x="124" y="60" width="110" height="40" rx="6" class="data"/>
+  <text x="179" y="85" text-anchor="middle">L4 (1993)</text>
+  <path class="line" d="M94,80 H124" marker-end="url(#arrow)"/>
+  <rect x="274" y="24" width="322" height="238" rx="6" class="data" style="fill:none" stroke-dasharray="5 4"/>
+  <text x="290" y="46" class="small head">Second generation: the L4 interface in C++</text>
+  <rect x="290" y="60" width="126" height="40" rx="6" class="data"/>
+  <text x="353" y="85" text-anchor="middle">L4Ka::Hazelnut</text>
+  <rect x="446" y="60" width="134" height="40" rx="6" class="data"/>
+  <text x="513" y="85" text-anchor="middle">L4Ka::Pistachio</text>
+  <rect x="446" y="130" width="134" height="40" rx="6" class="data"/>
+  <text x="513" y="155" text-anchor="middle">OKL4 (2006)</text>
+  <rect x="290" y="200" width="126" height="40" rx="6" class="data"/>
+  <text x="353" y="225" text-anchor="middle">Fiasco</text>
+  <rect x="446" y="200" width="134" height="40" rx="6" class="data"/>
+  <text x="513" y="225" text-anchor="middle">Fiasco.OC / L4Re</text>
+  <path class="line" d="M234,80 H290" marker-end="url(#arrow)"/>
+  <path class="line" d="M416,80 H446" marker-end="url(#arrow)"/>
+  <path class="line" d="M513,100 V130" marker-end="url(#arrow)"/>
+  <path class="line" d="M416,220 H446" marker-end="url(#arrow)"/>
+  <path class="line" d="M179,100 V220 H290" marker-end="url(#arrow)"/>
+  <rect x="626" y="110" width="110" height="80" rx="6" class="kernel"/>
+  <text x="681" y="138" class="head" text-anchor="middle">seL4</text>
+  <text x="681" y="158" class="small" text-anchor="middle">third generation,</text>
+  <text x="681" y="174" class="small" text-anchor="middle">from 2004</text>
+  <path class="line" d="M596,150 H626" marker-end="url(#arrow)"/>
+  <text x="24" y="280" class="small head">Capability systems</text>
+  <rect x="24" y="292" width="140" height="40" rx="6" class="data"/>
+  <text x="94" y="317" text-anchor="middle">KeyKOS (1980s)</text>
+  <rect x="194" y="292" width="120" height="40" rx="6" class="data"/>
+  <text x="254" y="317" text-anchor="middle">EROS (1999)</text>
+  <path class="line" d="M164,312 H194" marker-end="url(#arrow)"/>
+  <path class="line dash" d="M314,312 H681 V190" marker-end="url(#arrow)"/>
+  <text x="330" y="304" class="small">capabilities for everything, including kernel memory</text>
+</svg>

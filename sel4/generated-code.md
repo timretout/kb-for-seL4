@@ -2,7 +2,18 @@
 
 > Much of what the kernel compiles is not in the repository: capability and object accessors come from bitfield specifications (`.bf`), system call numbers, invocation labels and libsel4 stubs from XML, device addresses and memory regions from device trees, and `CONFIG_*` macros from CMake, all written into the build directory.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Build system and configuration](build-system.md) · [Kernel boot sequence](kernel-boot.md) →
+
 Read first: [Source layout](source-layout.md), [Build system](build-system.md).
+
+| At a glance | |
+|---|---|
+| Kind | Tool (four build-time code generators) |
+| Key source | `tools/bitfield_gen.py`, `tools/syscall_header_gen.py`, `tools/invocation_header_gen.py`, `tools/hardware_gen.py` |
+| Config options | `KernelCustomDTS`, `KernelCustomDTSOverlay` |
+| Built on | `.bf` specifications, interface XML, [device trees](../concepts/device-tree.md), `config.cmake` files |
+| Used by | The kernel and libsel4; Microkit reads `platform_gen.yaml`/`.json` |
+| Verified | The bitfield generator also emits Isabelle/HOL definitions and proofs for its accessors |
 
 ## What it is
 
@@ -48,6 +59,11 @@ block endpoint_cap(capEPBadge, capCanGrantReply, capCanGrant, capCanSend,
     field_ptr capEPPtr     word_size - 5 - 4
 }
 ```
+
+![The endpoint_cap block is two 64-bit words: capEPBadge fills the first, and the second holds capType in its top 5 bits, four 1-bit rights flags, and the capEPPtr pointer field in the remaining 55 bits.](../images/generated-code-endpoint-cap.svg)
+
+*The block above as it lies in memory (not to scale): fields are listed from
+the most significant bit of the first word.*
 
 | Keyword | Meaning |
 |---|---|

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 404" width="760" height="404" role="img">
+  <title>Issuing a gVNIC admin queue command</title>
+  <desc>The driver writes a 64-byte command into the next slot of the admin queue page, writes its command count to adminq_doorbell, and polls adminq_event_counter until the device, which fills in the status word, has caught up.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+    .plain { fill: #ffffff; stroke: #6e7781; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="404" fill="#ffffff"/>
+  <rect x="24" y="20" width="140" height="250" rx="6" class="user"/>
+  <text x="40" y="44" class="head">Driver</text>
+  <rect x="540" y="20" width="196" height="250" rx="6" class="hw"/>
+  <text x="556" y="44" class="head">gVNIC, BAR 0</text>
+  <rect x="552" y="56" width="172" height="30" rx="6" class="plain"/>
+  <text x="638" y="76" class="mono" text-anchor="middle">adminq_doorbell</text>
+  <rect x="552" y="96" width="172" height="30" rx="6" class="plain"/>
+  <text x="638" y="116" class="mono" text-anchor="middle">adminq_event_counter</text>
+  <rect x="552" y="200" width="172" height="30" rx="6" class="plain"/>
+  <text x="638" y="220" class="mono" text-anchor="middle">adminq_pfn</text>
+  <rect x="250" y="150" width="220" height="120" rx="6" class="data"/>
+  <text x="262" y="172" class="head">Admin queue: one page</text>
+  <rect x="262" y="182" width="196" height="24" rx="6" class="plain"/>
+  <text x="360" y="199" class="small" text-anchor="middle">64-byte command</text>
+  <rect x="262" y="210" width="196" height="24" rx="6" class="plain"/>
+  <text x="360" y="227" class="small" text-anchor="middle">64-byte command</text>
+  <rect x="262" y="238" width="196" height="24" rx="6" fill="#ffffff" stroke-width="1.5" class="accent"/>
+  <text x="360" y="255" class="small" text-anchor="middle">next slot</text>
+  <path class="line" d="M164,71 H550" marker-end="url(#arrow)"/>
+  <text x="180" y="64" class="head">2</text>
+  <path class="line" d="M552,111 H166" marker-end="url(#arrow)"/>
+  <text x="180" y="104" class="head">4</text>
+  <path class="line" d="M164,250 H260" marker-end="url(#arrow)"/>
+  <text x="200" y="243" class="head">1</text>
+  <path class="line" d="M540,250 H460" marker-end="url(#arrow)"/>
+  <text x="496" y="243" class="head">3</text>
+  <path class="line dash" d="M552,215 H472" marker-end="url(#arrow)"/>
+  <text x="24" y="298">1  Driver writes a command into the next slot.</text>
+  <text x="24" y="320">2  Driver increments its own counter and writes it to adminq_doorbell.</text>
+  <text x="24" y="342">3  Device fills in the command's status word (1 is passed).</text>
+  <text x="24" y="364">4  Driver polls adminq_event_counter until it matches its counter.</text>
+  <text x="24" y="386" class="small">Dashed: adminq_pfn holds the page's frame number; writing 0 resets the device.</text>
+</svg>

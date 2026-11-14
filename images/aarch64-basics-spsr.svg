@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 200" width="760" height="200" role="img">
+  <title>SPSR_ELx bit layout</title>
+  <desc>The fixed bit positions PSTATE takes when an exception copies it into SPSR_ELx: condition flags N, Z, C, V in bits 31 to 28, masks D, A, I, F in bits 9 to 6, and the mode field M in bits 4 to 0.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="200" fill="#ffffff"/>
+  <text x="39" y="30" class="head">SPSR_ELx: PSTATE as copied when an exception is taken</text>
+  <rect x="39" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="61.0" y="97.0" text-anchor="middle" class="mono">N</text>
+  <text x="61" y="62" text-anchor="middle" class="small dim">31</text>
+  <rect x="83" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="105.0" y="97.0" text-anchor="middle" class="mono">Z</text>
+  <text x="105" y="62" text-anchor="middle" class="small dim">30</text>
+  <rect x="127" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="149.0" y="97.0" text-anchor="middle" class="mono">C</text>
+  <text x="149" y="62" text-anchor="middle" class="small dim">29</text>
+  <rect x="171" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="193.0" y="97.0" text-anchor="middle" class="mono">V</text>
+  <text x="193" y="62" text-anchor="middle" class="small dim">28</text>
+  <rect x="215" y="70" width="150" height="44" rx="0" class="data"/>
+  <rect x="365" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="387.0" y="97.0" text-anchor="middle" class="mono">D</text>
+  <text x="387" y="62" text-anchor="middle" class="small dim">9</text>
+  <rect x="409" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="431.0" y="97.0" text-anchor="middle" class="mono">A</text>
+  <text x="431" y="62" text-anchor="middle" class="small dim">8</text>
+  <rect x="453" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="475.0" y="97.0" text-anchor="middle" class="mono">I</text>
+  <text x="475" y="62" text-anchor="middle" class="small dim">7</text>
+  <rect x="497" y="70" width="44" height="44" rx="0" class="hw"/>
+  <text x="519.0" y="97.0" text-anchor="middle" class="mono">F</text>
+  <text x="519" y="62" text-anchor="middle" class="small dim">6</text>
+  <rect x="541" y="70" width="30" height="44" rx="0" class="data"/>
+  <rect x="571" y="70" width="150" height="44" rx="0" class="hw"/>
+  <text x="646.0" y="97.0" text-anchor="middle" class="mono">M</text>
+  <text x="646" y="62" text-anchor="middle" class="small dim">4 to 0</text>
+  <path class="line" d="M41,124 H213"/>
+  <path class="line" d="M367,124 H539"/>
+  <path class="line" d="M573,124 H719"/>
+  <text x="127" y="146" text-anchor="middle">condition flags</text>
+  <text x="127" y="164" text-anchor="middle" class="small">negative, zero, carry, overflow</text>
+  <text x="453" y="146" text-anchor="middle">masks, 1 = masked</text>
+  <text x="453" y="164" text-anchor="middle" class="small">debug, SError, IRQ, FIQ</text>
+  <text x="646" y="146" text-anchor="middle">mode</text>
+  <text x="646" y="164" text-anchor="middle" class="small">0 = EL0t, 4 = EL1t,</text>
+  <text x="646" y="180" text-anchor="middle" class="small">5 = EL1h, 9 = EL2h</text>
+</svg>

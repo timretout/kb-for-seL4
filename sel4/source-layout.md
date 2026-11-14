@@ -2,7 +2,18 @@
 
 > A tour of the `seL4/seL4` repository: generic code in `src/{api,kernel,object,model,machine}`, one directory per architecture and per platform beside it, a mirrored `include/` tree chosen by include paths, and `libsel4` for user level; with a table of where to look for what.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Kernel design and execution model](kernel-design.md) · [Build system and configuration](build-system.md) →
+
 Read first: [seL4 overview](overview.md).
+
+| At a glance | |
+|---|---|
+| Kind | Survey of the kernel repository |
+| Repository | [`seL4/seL4`](https://github.com/seL4/seL4) |
+| Key source | `src/`, `include/`, `libsel4/`, `tools/`, `configs/` |
+| Config options | `KernelArch`, `KernelSel4Arch`, `KernelPlatform` pick the directories |
+| Built on | One translation unit: `kernel_all.c`, made by `tools/cpp_gen.sh` |
+| Verified | `kernel_all_pp.c` is what the C parser of the [proofs](verification.md) reads |
 
 ## What it is
 
@@ -69,6 +80,11 @@ the layer:
 capability" can pass through `finaliseCap()` (`src/object/objecttype.c`),
 `Arch_finaliseCap()` (`src/arch/x86/object/objecttype.c`) and
 `Mode_finaliseCap()` (`src/arch/x86/64/object/objecttype.c`).
+
+![Deleting a capability on x86_64 can pass through the generic finaliseCap(), the architecture hook Arch_finaliseCap() and the word-size variant Mode_finaliseCap(), each in its own directory.](../images/source-layout-layers.svg)
+
+*The prefix names the layer, and the directory of each layer is picked by a
+build variable (table below).*
 
 Three build variables pick the directories ([build system](build-system.md)):
 

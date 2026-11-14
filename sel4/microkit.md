@@ -2,7 +2,20 @@
 
 > The seL4 Foundation's small SDK for static systems: you write single-threaded protection domains against `libmicrokit`, describe them, their channels, memory regions and interrupts in an XML system description file, and the `microkit` tool turns that into a bootable image.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [sel4test and sel4bench](sel4test.md) · [Microkit internals](microkit-internals.md) →
+
 Read first: [Notifications](notifications.md), [IPC](ipc.md), [MCS](mcs.md).
+
+| At a glance | |
+|---|---|
+| Kind | Framework: an SDK for static systems |
+| Repository | [seL4/microkit](https://github.com/seL4/microkit) |
+| Key source | `libmicrokit/include/microkit.h`, `tool/microkit/`, `docs/manual.md` |
+| Config options | SDK configurations `debug`, `release`, `benchmark`, each also as `smp-...` |
+| API | Entry points `init`, `notified`, `protected`, `fault`; `microkit_notify`, `microkit_ppcall`, `microkit_irq_ack` |
+| Built on | The [MCS](mcs.md) kernel, always |
+| Used by | [sDDF](sddf.md), [LionsOS](lionsos.md) |
+| Verified | No; it uses MCS, whose proofs are not complete |
 
 ## What it is
 
@@ -151,6 +164,10 @@ is user code, normally [libvmm](lionsos.md).
 The driver sees its interrupt as `notified(0)` and the client as
 `notified(1)`; the client may `microkit_ppcall(0, ...)` the driver
 because 200 > 100.
+
+![The example system has a driver and a client protection domain joined by one channel and sharing one memory region; the driver also maps the uart region and receives interrupt 33.](../images/microkit-example-system.svg)
+
+*The description above as a picture. Each end of the channel has its own identifier, and the variables shown are the ones the tool patches with `setvar_vaddr`.*
 
 ### Workflow, boards and configurations
 

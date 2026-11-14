@@ -2,6 +2,19 @@
 
 > The architectural timer of every Armv8 core: a system counter whose rate is in `CNTFRQ_EL0`, and per-core comparators that raise PPIs; its rate varies by machine, which seL4 platforms have fixed at build time.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [HPET](hpet.md) · [ISA](isa.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Architectural timer: one system counter and per-core timers |
+| Architecture | Armv8 |
+| Reached through | `CNTPCT_EL0` or `CNTVCT_EL0` for the count, `CNTFRQ_EL0` for the rate |
+| Interrupt | PPIs at the [GIC](gicv3-its.md), usually 30 (non-secure physical), 27 (virtual), 26 (hypervisor) and 29 (secure physical) |
+| Key numbers | 64-bit count at a constant rate shared by all cores |
+| seL4 config | `TIMER_FREQUENCY`, set in each platform's `config.cmake` |
+| seL4 use | The kernel's Arm timer driver; the rate is fixed at build time |
+| On the clouds | Compute Engine's C4A and N4A run at 1000 MHz, T2A at 25 MHz |
+
 ## What it is
 
 Armv8 defines one **system counter**, a 64-bit count rising at a constant
@@ -14,6 +27,11 @@ Each core has several timers (physical, virtual, hypervisor, secure),
 each a private peripheral interrupt (PPI) at the [GIC](gicv3-its.md). The
 usual PPIs are 30 (non-secure physical), 27 (virtual), 26 (hypervisor) and
 29 (secure physical).
+
+![One system counter feeds each core's four timers, non-secure physical, virtual, hypervisor and secure physical, and each timer raises its own PPI at the GIC: 30, 27, 26 and 29.](../images/arm-generic-timer-counter.svg)
+
+*One counter for the whole machine, a set of timers per core, and one PPI
+per timer.*
 
 Unlike x86, no calibration is needed: `CNTFRQ_EL0` gives the rate. From
 Armv8.6 the rate is fixed at 1 GHz (unchecked); older cores use whatever

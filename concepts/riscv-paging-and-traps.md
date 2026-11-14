@@ -2,7 +2,19 @@
 
 > How an S-mode kernel on RISC-V translates addresses (Sv39 or Sv48 tables rooted at `satp`, one entry format at every level) and takes traps (one handler at `stvec`, cause in `scause`, return with `sret`); seL4's whole entry path is one assembly function, `trap_entry`, and one page table object type.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [RISC-V](../INDEX.md#risc-v) · ← [RISC-V basics](riscv-basics.md) · [RISC-V interrupts and timers](riscv-interrupts.md) →
+
 Read first: [RISC-V basics](riscv-basics.md), [Virtual memory](virtual-memory.md), [Exceptions, interrupts and traps](exceptions-and-traps.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor mechanism (address translation and trap entry) |
+| Architecture | RISC-V |
+| Reached through | CSRs `satp`, `stvec`, `sepc`, `scause`, `stval`, `sscratch`; the `sret` and `sfence.vma` instructions |
+| Key numbers | Sv39: 3 levels, 39 bits; Sv48: 4 levels, 48 bits; tables of 512 eight-byte entries; `ecall` from U-mode is cause 8 |
+| seL4 code | [`src/arch/riscv/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/traps.S), [`src/arch/riscv/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/kernel/vspace.c) |
+| seL4 config | `KernelPTLevels` (2, 3 by default, 4) |
+| seL4 use | One entry function, `trap_entry`; one table type, `seL4_RISCV_PageTableObject` |
 
 ## What it is
 
@@ -238,6 +250,11 @@ view of it:
   image at `KERNEL_ELF_BASE` and the top 1 GiB at `KDEV_BASE` for
   kernel devices. User addresses end at `seL4_UserTop`,
   `0x0000003ffffff000`.
+
+![The seL4 address space under Sv39: user addresses from 0 to `seL4_UserTop` in the low half, and in the high half the kernel window from `PPTR_BASE` to `PPTR_TOP` (254 GiB), 1 GiB for the kernel image and the top 1 GiB for kernel devices.](../images/riscv-paging-and-traps-sv39-layout.svg)
+
+*The high half is the same in every address space, because
+`copyGlobalMappings` copies those root entries into each new root table.*
 
 **ASIDs.** seL4 ASIDs on `riscv64` are 16 bits: 7 bits choose one of
 128 ASID pools (`seL4_NumASIDPoolsBits`) and 9 bits a slot in the pool

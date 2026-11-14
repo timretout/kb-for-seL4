@@ -2,7 +2,20 @@
 
 > The classic C libraries for building dynamic systems on seL4: seL4_libs (allocators, virtual memory, process creation, the BootInfo abstraction) and util_libs (platform drivers behind `ps_io_ops`, the `ltimer` timer interface, ELF, CPIO and FDT parsers); sel4test, sel4bench and CAmkES are built on them, Microkit and sDDF are not.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [libsel4 and the runtime](libsel4.md) · [sel4test and sel4bench](sel4test.md) →
+
 Read first: [libsel4 and the runtime](libsel4.md), [Untyped memory and retyping](untyped-memory.md), [CSpaces](cspace.md).
+
+| At a glance | |
+|---|---|
+| Kind | Libraries: two repositories of BSD-licensed C libraries |
+| Repository | [`seL4/seL4_libs`](https://github.com/seL4/seL4_libs), `seL4/util_libs` |
+| Key source | One directory per library; [`libplatsupport`](https://github.com/seL4/util_libs/tree/master/libplatsupport) for drivers |
+| Config options | Prefixed `LibSel4...` or `LibPlatSupport...` |
+| API | `simple_t`, `vka_t`, `vspace_t`, `ps_io_ops_t`, `ltimer_t` |
+| Built on | [libsel4](libsel4.md), `sel4runtime`, musllibc |
+| Used by | [sel4test](sel4test.md), sel4bench, the tutorials, [CAmkES](camkes-capdl.md); not Microkit, sDDF or LionsOS |
+| Verified | No |
 
 ## What it is
 

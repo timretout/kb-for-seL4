@@ -2,7 +2,20 @@
 
 > What exception level 2 adds to an Arm core so that a hypervisor can run guests: trap controls in `HCR_EL2`, a second stage of address translation, virtual interrupts through the GIC's list registers and a virtual timer; an seL4 kernel built as a hypervisor runs entirely at EL2.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [GICv2](gicv2.md) · [RISC-V basics](riscv-basics.md) →
+
 Read first: [AArch64 basics](aarch64-basics.md), [AArch64 exceptions](aarch64-exceptions.md), [AArch64 paging](aarch64-paging.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor extension (hypervisor support at EL2) |
+| Architecture | Arm ([AArch64](aarch64-basics.md)) |
+| Reached through | EL2 system registers (`HCR_EL2`, `VTTBR_EL2`, `VTCR_EL2`, `CNTVOFF_EL2`) and the GIC list registers |
+| Key numbers | VMID of 8 or 16 bits; typically 4 list registers; the virtual timer is PPI INTID 27 |
+| seL4 code | [`src/arch/arm/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/object/vcpu.c), [`vcpu.h`](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/object/vcpu.h) |
+| seL4 config | `KernelArmHypervisorSupport` (`CONFIG_ARM_HYPERVISOR_SUPPORT`) |
+| seL4 use | Whole kernel runs at EL2; a guest is a thread with a VCPU object and a user-level VMM as fault handler |
+| On the clouds | A cloud guest starts at EL1, so a non-hypervisor build is the safe choice |
 
 ## What it is
 
@@ -193,6 +206,11 @@ handler:
 | `seL4_Fault_VCPUFault` | `handleVCPUFault(hsr)`: any exception from the guest that is not an abort or a system call, such as a trapped `SMC`, `WFI` or system register access | The raw syndrome (`seL4_VCPUFault_HSR`) |
 | `seL4_Fault_VGICMaintenance` | `VGICMaintenance()`: the maintenance interrupt, normally because the guest completed a virtual interrupt | Index of the list register that became free, if one did |
 | `seL4_Fault_VPPIEvent` | `VPPIEvent(irq)`: a physical PPI belonging to the guest fired; today only the virtual timer (`VPPIEventIRQ_VTimer`) | The INTID. The kernel masks the PPI and records it in `vppi_masked`; the VMM injects it and later calls `AckVPPI` |
+
+![The virtual timer raises physical PPI 27 to the kernel at EL2, which masks it and sends a `seL4_Fault_VPPIEvent` to the VMM; the VMM injects a virtual interrupt with `seL4_ARM_VCPU_InjectIRQ`, the guest takes it at its EL1 vector, and the VMM later calls `seL4_ARM_VCPU_AckVPPI` to unmask the PPI.](../images/arm-virtualisation-vppi.svg)
+
+*A guest's timer interrupt on seL4. The kernel only forwards and masks;
+the decision to inject is the VMM's.*
 
 Stage 2 faults (the guest touching unmapped guest-physical memory) are
 ordinary `seL4_Fault_VMFault`s. The kernel reports the address by

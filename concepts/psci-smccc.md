@@ -2,7 +2,20 @@
 
 > Arm's standard way for a kernel to call firmware or a hypervisor (SMCCC: a function identifier in `x0`, then `SMC` or `HVC`), and the standard service built on it for starting, stopping and resetting cores (PSCI); seL4's loaders use it to start secondary cores and the kernel can pass calls through for user level.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [Arm boot flow](arm-boot.md) · [GICv2](gicv2.md) →
+
 Read first: [AArch64 exceptions](aarch64-exceptions.md), [Arm boot flow](arm-boot.md).
+
+| At a glance | |
+|---|---|
+| Kind | Firmware interface (a calling convention and a power management service) |
+| Architecture | Arm |
+| Reached through | `SMC` (to EL3) or `HVC` (to EL2), with a function identifier in `w0` |
+| Found through | [Device tree](device-tree.md) `psci` node and its `method`; with ACPI, FADT flags (unchecked) |
+| Key numbers | `CPU_ON` is `0x84000003` (SMC32) or `0xC4000003` (SMC64); PSCI is owner 4; results in `x0` to `x3` |
+| seL4 code | [`src/arch-arm/psci.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/psci.c) (elfloader), [`src/arch/arm/object/smc.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/object/smc.c) |
+| seL4 config | `KernelAllowSMCCalls` (AArch64 only, default off) |
+| seL4 use | Loaders start secondary cores with `CPU_ON`; the kernel never calls PSCI but can pass `SMC` calls through for user level |
 
 ## What it is
 
@@ -172,6 +185,11 @@ The [elfloader](../sel4/elfloader.md) starts secondary cores when
 - If the `psci` node says `method = "hvc"` the driver prints "HVC is
   not supported for PSCI!" and fails. Its siblings `smp-spin-table.c`,
   `smp-imx6.c` and `smp-zynq7000.c` cover boards without PSCI.
+
+![The elfloader on the boot core stores an entry point and a stack in `secondary_data` and calls `psci_cpu_on`, which executes `smc #0`; the EL3 firmware starts the secondary core at `secondary_startup`, which loads the stack and jumps to the C entry.](../images/psci-smccc-cpu-on.svg)
+
+*One `CPU_ON` call as the elfloader makes it. The new core has no stack
+until `secondary_startup` loads the one left for it.*
 
 Microkit's loader has its own copy of the same logic in
 [`loader/src/aarch64/cpus.c`](https://github.com/seL4/microkit/blob/main/loader/src/aarch64/cpus.c),

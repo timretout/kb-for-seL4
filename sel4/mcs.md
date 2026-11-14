@@ -2,6 +2,19 @@
 
 > A seL4 build option that replaces the periodic tick with scheduling contexts (a budget of CPU time per period) and one-shot timer deadlines; Microkit uses it, so its timer must be accurate.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Scheduling](scheduling.md) · [IPC and endpoints](ipc.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Build option |
+| Key source | [`src/kernel/sporadic.c`](https://github.com/seL4/seL4/blob/master/src/kernel/sporadic.c), [`src/object/schedcontext.c`](https://github.com/seL4/seL4/blob/master/src/object/schedcontext.c), [`src/object/schedcontrol.c`](https://github.com/seL4/seL4/blob/master/src/object/schedcontrol.c), [`src/object/reply.c`](https://github.com/seL4/seL4/blob/master/src/object/reply.c) |
+| Config options | `KernelIsMCS`, `KernelWcetScale` |
+| API | `seL4_SchedControl_ConfigureFlags`, `seL4_SchedContext_Bind`, `seL4_TCB_SetTimeoutEndpoint` |
+| Object size | Scheduling context: at least 2^`seL4_MinSchedContextBits` (128) bytes |
+| Built on | [Scheduling](scheduling.md)'s priorities and queues |
+| Used by | Microkit and sDDF |
+| Verified | Proofs are separate from the main tree, on [l4v](l4v.md)'s `rt` branch |
+
 ## What it is
 
 The classic seL4 kernel schedules threads by priority with a periodic
@@ -48,6 +61,11 @@ starting at time *t*, that amount comes back as a new refill at
 therefore gets at most its budget, however it chops its execution up,
 which a naive "reset the budget every period" scheme does not
 guarantee.
+
+![A thread uses an amount u of its budget starting at time t, and that amount comes back as a new refill usable from t plus one period.](../images/mcs-refill.svg)
+
+*Used budget returns exactly one period after the moment its use
+began, never sooner.*
 
 A thread that blocks and resumes often splits its budget into many
 small refills. The list is a fixed-size circular buffer inside the SC
@@ -98,6 +116,11 @@ nest: Reply objects form a stack (the *call chain*) recording where
 the SC must return. `seL4_Send` and `seL4_NBSend` do not donate; only
 `Call`, and the MCS "send then receive" calls where the caller itself
 is about to block.
+
+![A passive server waits with no scheduling context; the client's seL4_Call donates the client's scheduling context to it with the message, the server runs on that budget, and the reply returns the scheduling context to the client.](../images/mcs-donation.svg)
+
+*The scheduling context (SC) travels with the call and comes back with
+the reply, so the server's time is charged to the client.*
 
 A passive server can also be woken by a notification that has an SC
 bound to it ([Notifications](notifications.md)): it borrows that SC to

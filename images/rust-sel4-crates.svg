@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 375" width="760" height="375" role="img">
+  <title>The rust-sel4 binding crates and runtimes</title>
+  <desc>sel4-sys and sel4-config are generated from one kernel build's C headers, bitfield files, invocation XML and configuration JSON; the sel4 crate is the typed API on top of them, and the sel4-root-task and sel4-microkit runtimes sit on that.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="375" fill="#ffffff"/>
+  <text x="20" y="22" class="small dim">From one kernel build, found through SEL4_INCLUDE_DIRS or SEL4_PREFIX:</text>
+  <rect x="20" y="32" width="160" height="50" rx="6" class="data"/>
+  <text x="100" y="53" text-anchor="middle">C headers</text>
+  <text x="100" y="71" class="small" text-anchor="middle">through bindgen</text>
+  <path class="line" d="M100,82 V118" marker-end="url(#arrow)"/>
+  <rect x="205" y="32" width="160" height="50" rx="6" class="data"/>
+  <text x="285" y="62" text-anchor="middle">bitfield files</text>
+  <path class="line" d="M285,82 V118" marker-end="url(#arrow)"/>
+  <rect x="390" y="32" width="160" height="50" rx="6" class="data"/>
+  <text x="470" y="62" text-anchor="middle">invocation XML</text>
+  <path class="line" d="M470,82 V118" marker-end="url(#arrow)"/>
+  <rect x="575" y="32" width="160" height="50" rx="6" class="data"/>
+  <text x="655" y="53" class="mono" text-anchor="middle">gen_config.json</text>
+  <text x="655" y="71" class="small" text-anchor="middle">two files</text>
+  <path class="line" d="M655,82 V118" marker-end="url(#arrow)"/>
+  <rect x="20" y="120" width="530" height="54" rx="6" class="user"/>
+  <text x="285" y="142" class="mono" text-anchor="middle">sel4-sys</text>
+  <text x="285" y="162" class="small" text-anchor="middle">raw bindings generated at build time; stubs reimplemented in Rust</text>
+  <rect x="575" y="120" width="160" height="54" rx="6" class="user"/>
+  <text x="655" y="142" class="mono" text-anchor="middle">sel4-config</text>
+  <text x="655" y="162" class="small" text-anchor="middle">sel4_cfg! macros</text>
+  <path class="line" d="M285,174 V208" marker-end="url(#arrow)"/>
+  <path class="line" d="M655,174 V208" marker-end="url(#arrow)"/>
+  <rect x="20" y="210" width="715" height="54" rx="6" class="user"/>
+  <text x="377" y="232" class="mono" text-anchor="middle">sel4</text>
+  <text x="377" y="252" class="small" text-anchor="middle">safe, typed API: Cap&lt;T&gt;, invocations as methods</text>
+  <path class="line" d="M192,264 V298" marker-end="url(#arrow)"/>
+  <path class="line" d="M562,264 V298" marker-end="url(#arrow)"/>
+  <rect x="20" y="300" width="345" height="54" rx="6" class="user"/>
+  <text x="192" y="322" class="mono" text-anchor="middle">sel4-root-task</text>
+  <text x="192" y="342" class="small" text-anchor="middle">runtime for a root task: #[root_task]</text>
+  <rect x="390" y="300" width="345" height="54" rx="6" class="user"/>
+  <text x="562" y="322" class="mono" text-anchor="middle">sel4-microkit</text>
+  <text x="562" y="342" class="small" text-anchor="middle">runtime for a protection domain: #[protection_domain]</text>
+</svg>

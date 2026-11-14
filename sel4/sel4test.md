@@ -2,7 +2,19 @@
 
 > sel4test is the kernel's functional test suite, a root task that runs each test in a fresh process and prints "All is well in the universe" when all pass; it is what upstream CI runs on every kernel pull request and the first thing to get running on a new machine, and sel4bench is its sibling for performance numbers.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [seL4_libs and util_libs](sel4-libs.md) · [Microkit](microkit.md) →
+
 Read first: [Build system](build-system.md), [seL4_libs and util_libs](sel4-libs.md).
+
+| At a glance | |
+|---|---|
+| Kind | Test suite: a root task that runs each test in a fresh process |
+| Repository | `seL4/sel4test`, fetched with `repo` from [`sel4test-manifest`](https://github.com/seL4/sel4test-manifest) |
+| Key source | [`apps/sel4test-driver/src/main.c`](https://github.com/seL4/sel4test/blob/master/apps/sel4test-driver/src/main.c), [`apps/sel4test-tests/src/tests/`](https://github.com/seL4/sel4test/tree/master/apps/sel4test-tests/src/tests) |
+| Config options | `PLATFORM`, `SIMULATION`, `MCS`, `SMP`, `RELEASE`, `LibSel4TestPrinterRegex` |
+| API | `DEFINE_TEST`, `DEFINE_TEST_BOOTSTRAP`, `test_eq`, `test_assert` |
+| Built on | [seL4_libs and util_libs](sel4-libs.md) |
+| Used by | [Upstream CI](ci.md) on every kernel pull request; platform ports |
 
 ## What it is
 

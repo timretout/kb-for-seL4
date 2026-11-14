@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img">
+  <title>The parts of an HPET</title>
+  <desc>The ACPI HPET table gives the address of one block of memory-mapped registers: a capabilities register, a main counter of 32 or 64 bits, and at least three comparators, each raising an interrupt when the main counter reaches its value.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="320" fill="#ffffff"/>
+  <rect x="20" y="130" width="150" height="50" rx="6" class="fw"/>
+  <text x="95" y="160" text-anchor="middle">ACPI HPET table</text>
+  <path class="line" d="M170,155 H240" marker-end="url(#arrow)"/>
+  <rect x="240" y="30" width="330" height="270" rx="6" fill="#ffffff" stroke="#3b6bb5" stroke-width="1.5"/>
+  <text x="256" y="54">HPET registers, usually at</text>
+  <text x="438" y="54" class="mono">0xfed00000</text>
+  <rect x="256" y="70" width="298" height="56" rx="6" class="hw"/>
+  <text x="405" y="94" text-anchor="middle">capabilities register</text>
+  <text x="405" y="112" text-anchor="middle" class="small dim">period in fs, width, comparators (unchecked)</text>
+  <rect x="256" y="150" width="130" height="134" rx="6" class="hw"/>
+  <text x="321" y="195" text-anchor="middle">main counter</text>
+  <text x="321" y="213" text-anchor="middle" class="small dim">counts up at a</text>
+  <text x="321" y="231" text-anchor="middle" class="small dim">fixed rate;</text>
+  <text x="321" y="249" text-anchor="middle" class="small dim">32 or 64 bits</text>
+  <rect x="434" y="150" width="120" height="34" rx="6" class="hw"/>
+  <text x="494" y="172" text-anchor="middle">comparator 0</text>
+  <path class="line" d="M386,167 H434" marker-end="url(#arrow)"/>
+  <path class="line" d="M554,167 H640" marker-end="url(#arrow)"/>
+  <text x="648" y="172">interrupt</text>
+  <rect x="434" y="200" width="120" height="34" rx="6" class="hw"/>
+  <text x="494" y="222" text-anchor="middle">comparator 1</text>
+  <path class="line" d="M386,217 H434" marker-end="url(#arrow)"/>
+  <path class="line" d="M554,217 H640" marker-end="url(#arrow)"/>
+  <text x="648" y="222">interrupt</text>
+  <rect x="434" y="250" width="120" height="34" rx="6" class="hw"/>
+  <text x="494" y="272" text-anchor="middle">comparator 2</text>
+  <path class="line" d="M386,267 H434" marker-end="url(#arrow)"/>
+  <path class="line" d="M554,267 H640" marker-end="url(#arrow)"/>
+  <text x="648" y="272">interrupt</text>
+  <text x="586" y="100" class="small dim">at least three</text>
+  <text x="586" y="116" class="small dim">comparators, one-shot</text>
+  <text x="586" y="132" class="small dim">or periodic</text>
+</svg>

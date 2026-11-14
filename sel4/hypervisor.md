@@ -2,7 +2,20 @@
 
 > seL4 can host virtual machines: the kernel supplies only VCPU objects and second-stage address spaces, and a user-level virtual machine monitor per guest does everything else, so a guest and its monitor are no more trusted than any other component.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [SMP](smp.md) · [Kernel design and execution model](kernel-design.md) →
+
 Read first: [Threads and TCBs](threads.md), [Faults and fault handlers](faults.md), [Address spaces (VSpace)](vspace.md).
+
+| At a glance | |
+|---|---|
+| Kind | Build option, adding the VCPU kernel object |
+| Key source | [`src/arch/arm/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/object/vcpu.c), [`src/arch/x86/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/vcpu.c) |
+| Config options | `KernelArmHypervisorSupport` (Arm), `KernelVTX` (x86); none on RISC-V |
+| API | `seL4_ARM_VCPU_*` invocations with fault IPC (Arm); `seL4_X86_VCPU_*` invocations with `seL4_VMEnter` (x86) |
+| Object size | `seL4_ARM_VCPUObject`: 4 KiB on AArch64 |
+| Built on | [Threads](threads.md), [faults](faults.md), [address spaces](vspace.md) |
+| Used by | [libvmm](lionsos.md), libsel4vm, the [CAmkES](camkes-capdl.md) VM |
+| Verified | Arm hypervisor mode: yes, kernel only. `KernelVTX`: in no verified configuration |
 
 ## What it is
 
@@ -115,6 +128,11 @@ It returns `SEL4_VMENTER_RESULT_NOTIF` instead when the thread's bound
 [notification](notifications.md) has a signal, which is how device
 interrupts and other events reach a VMM that is "inside" its guest.
 `KernelX86_64VTX64BitGuests` (default off) is needed for 64-bit guests.
+
+![On Arm a guest exit reaches the VMM as fault IPC from a separate guest thread and the VMM's reply resumes it; on x86 the VMM thread calls seL4_VMEnter, runs as the guest, and the call returns on an exit or a signal.](../images/hypervisor-exits.svg)
+
+*The two control flows. On Arm the guest and its VMM are different
+threads; on x86 they are one.*
 
 **RISC-V.** Upstream `master` has no support for the RISC-V hypervisor
 (H) extension: there is no VCPU object, no option, and nothing under

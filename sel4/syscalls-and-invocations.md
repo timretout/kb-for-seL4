@@ -2,7 +2,19 @@
 
 > seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability; every operation on a kernel object is an invocation, a message sent to the object's capability whose label selects the method, which the kernel decodes and answers itself.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Untyped memory and retyping](untyped-memory.md) · [Threads and TCBs](threads.md) →
+
 Read first: [Capabilities](capabilities.md), [CSpaces](cspace.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism: the system call interface |
+| Key source | [`src/api/syscall.c`](https://github.com/seL4/seL4/blob/master/src/api/syscall.c), [`src/object/objecttype.c`](https://github.com/seL4/seL4/blob/master/src/object/objecttype.c), [`libsel4/include/api/syscall.xml`](https://github.com/seL4/seL4/blob/master/libsel4/include/api/syscall.xml) |
+| Config options | `CONFIG_PRINTING`, `CONFIG_DEBUG_BUILD`, `CONFIG_ENABLE_BENCHMARKS`, `CONFIG_VTX`, `CONFIG_SET_TLS_BASE_SELF` add system calls |
+| API | `seL4_Send`, `seL4_NBSend`, `seL4_Call`, `seL4_Recv`, `seL4_NBRecv`, `seL4_ReplyRecv`, `seL4_Yield`; more on [MCS](mcs.md) |
+| Built on | [Capabilities](capabilities.md), [CSpaces](cspace.md) |
+| Used by | The libsel4 stubs ([libsel4](libsel4.md)), which all use Call |
+| Verified | The proofs rely on the decode/invoke split; the debug and benchmark calls are in no verified configuration |
 
 ## What it is
 
@@ -185,6 +197,11 @@ on and reviewers enforce:
 - **invoke**: `setThreadState(ksCurThread, ThreadState_Restart)`, then
   call the `invoke*`/`perform*` function, which is not allowed to fail
   (it may only be preempted).
+
+![An invocation made by the libsel4 stub seL4_TCB_Resume passes through c_handle_syscall, handleSyscall, handleInvocation and decodeInvocation to decodeTCBInvocation, whose decode phase either fails with an error or hands on to the invoke phase.](../images/syscalls-and-invocations-path.svg)
+
+*The only way out with an error is from decode, before any kernel state
+has changed; invoke cannot fail.*
 
 **Where the interface is defined.** System calls are listed in
 [`libsel4/include/api/syscall.xml`](https://github.com/seL4/seL4/blob/master/libsel4/include/api/syscall.xml)

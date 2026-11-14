@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 362" width="760" height="362" role="img">
+  <title>The four I/O rings of a minimal ENA driver</title>
+  <desc>A minimal ENA driver has four rings in guest memory: it writes transmit descriptors to the TX SQ and empty receive buffers to the RX SQ, the device answers in the TX CQ and RX CQ, and the driver writes doorbell and unmask registers in BAR 0.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+    .plain { fill: #ffffff; stroke: #6e7781; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="362" fill="#ffffff"/>
+  <rect x="24" y="40" width="130" height="252" rx="6" class="user"/>
+  <text x="89" y="66" class="head" text-anchor="middle">Driver</text>
+  <rect x="606" y="40" width="130" height="252" rx="6" class="hw"/>
+  <text x="671" y="66" class="head" text-anchor="middle">ENA</text>
+  <rect x="230" y="84" width="300" height="46" rx="6" class="data"/>
+  <text x="246" y="104" class="head">TX SQ</text>
+  <text x="246" y="121" class="small">16-byte descriptors, one per buffer</text>
+  <path class="line" d="M154,107 H228" marker-end="url(#arrow)"/>
+  <path class="line" d="M530,107 H604" marker-end="url(#arrow)"/>
+  <rect x="230" y="134" width="300" height="46" rx="6" class="data"/>
+  <text x="246" y="154" class="head">TX CQ</text>
+  <text x="246" y="171" class="small">8-byte completions: request ID, SQ head</text>
+  <path class="line" d="M606,157 H532" marker-end="url(#arrow)"/>
+  <path class="line" d="M230,157 H156" marker-end="url(#arrow)"/>
+  <rect x="230" y="184" width="300" height="46" rx="6" class="data"/>
+  <text x="246" y="204" class="head">RX SQ</text>
+  <text x="246" y="221" class="small">16-byte descriptors, each an empty buffer</text>
+  <path class="line" d="M154,207 H228" marker-end="url(#arrow)"/>
+  <path class="line" d="M530,207 H604" marker-end="url(#arrow)"/>
+  <rect x="230" y="234" width="300" height="46" rx="6" class="data"/>
+  <text x="246" y="254" class="head">RX CQ</text>
+  <text x="246" y="271" class="small">one completion per buffer used</text>
+  <path class="line" d="M606,257 H532" marker-end="url(#arrow)"/>
+  <path class="line" d="M230,257 H156" marker-end="url(#arrow)"/>
+  <path class="line dash" d="M89,292 V326 H671 V294" marker-end="url(#arrow)"/>
+  <text x="380" y="318" class="small" text-anchor="middle">after writing descriptors: the new tail to that SQ's doorbell in BAR 0</text>
+  <text x="380" y="344" class="small" text-anchor="middle">after draining the CQs: the interrupt unmask register</text>
+  <text x="380" y="28" class="small dim" text-anchor="middle">rings in guest memory</text>
+</svg>

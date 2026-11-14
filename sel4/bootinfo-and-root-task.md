@@ -2,7 +2,19 @@
 
 > At the end of boot the kernel creates one user thread, the root task, hands it a capability to everything in the machine, and describes what it handed over in a `seL4_BootInfo` page; every seL4 system starts by reading that page.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Interrupt delivery](irq-handling.md) · [SMP](smp.md) →
+
 Read first: [Capabilities](capabilities.md), [CSpaces and capability addressing](cspace.md), [Untyped memory and retyping](untyped-memory.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism: the first user thread and the page describing what it was given |
+| Key source | [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c), [`libsel4/include/sel4/bootinfo_types.h`](https://github.com/seL4/seL4/blob/master/libsel4/include/sel4/bootinfo_types.h) |
+| Config options | `KernelRootCNodeSizeBits` (default 12), `CONFIG_MAX_NUM_BOOTINFO_UNTYPED_CAPS` (default 230), `CONFIG_PADDR_USER_DEVICE_TOP` |
+| API | `seL4_BootInfo`, passed by pointer in the first argument register; 16 fixed capability slots |
+| Object size | `seL4_BootInfo` fits in one 4 KiB page; extra BootInfo follows it |
+| Used by | sel4test-driver, the capDL loader ([CAmkES](camkes-capdl.md)), the [Microkit](microkit.md) initialiser, hand-written root tasks |
+| Verified | No: all [`BOOT_CODE`](boot-code.md), outside the proofs' scope |
 
 ## What it is
 
@@ -57,6 +69,12 @@ The first 16 slots of the root CNode have fixed meanings
 
 `seL4_NumInitialCaps` is 16. Everything after that is laid out
 dynamically and described by BootInfo.
+
+![The root task's address space holds its image, IPC buffer, BootInfo page and extra BootInfo pages in that order, and the BootInfo page names the slot regions of the root CNode that follow the 16 fixed slots.](../images/bootinfo-and-root-task-layout.svg)
+
+*What the kernel builds for the root task. The four slot regions shown
+are fields of `seL4_BootInfo`, explained next; the diagram does not show
+their order in the CNode.*
 
 ### `seL4_BootInfo`, field by field
 

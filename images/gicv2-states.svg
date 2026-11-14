@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" role="img">
+  <title>GICv2 interrupt states</title>
+  <desc>An interrupt goes from inactive to pending when the device asserts its line, to active when the handler reads GICC_IAR, and back to inactive when the handler writes GICC_EOIR. A second edge while active makes it active and pending.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="320" fill="#ffffff"/>
+  <rect x="20" y="70" width="160" height="70" rx="6" class="hw"/>
+  <text x="100.0" y="110.0" text-anchor="middle" class="head">inactive</text>
+  <rect x="300" y="70" width="160" height="70" rx="6" class="hw"/>
+  <text x="380.0" y="93.0" text-anchor="middle" class="head">pending</text>
+  <text x="380.0" y="110.0" text-anchor="middle" class="small">asserted,</text>
+  <text x="380.0" y="127.0" text-anchor="middle" class="small">not yet taken</text>
+  <rect x="580" y="70" width="160" height="70" rx="6" class="hw"/>
+  <text x="660.0" y="93.0" text-anchor="middle" class="head">active</text>
+  <text x="660.0" y="110.0" text-anchor="middle" class="small">taken, handler</text>
+  <text x="660.0" y="127.0" text-anchor="middle" class="small">not finished</text>
+  <rect x="570" y="250" width="170" height="50" rx="6" class="hw"/>
+  <text x="655.0" y="280.0" text-anchor="middle" class="head">active and pending</text>
+  <path class="line" d="M180,105 H300" marker-end="url(#arrow)"/>
+  <text x="240" y="80" text-anchor="middle" class="small">device asserts</text>
+  <text x="240" y="95" text-anchor="middle" class="small">its line</text>
+  <path class="line" d="M460,105 H580" marker-end="url(#arrow)"/>
+  <text x="520" y="80" text-anchor="middle" class="small">handler reads</text>
+  <text x="520" y="96" text-anchor="middle" class="mono">GICC_IAR</text>
+  <path class="line" d="M640,140 V195 H100 V140" marker-end="url(#arrow)"/>
+  <text x="370" y="187" text-anchor="middle" class="small">handler writes the same value to GICC_EOIR</text>
+  <path class="line" d="M700,140 V250" marker-end="url(#arrow)"/>
+  <text x="690" y="228" text-anchor="end" class="small">second edge while active</text>
+</svg>

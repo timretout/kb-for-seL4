@@ -2,7 +2,20 @@
 
 > A device tree is a data structure describing hardware that cannot be discovered by probing; on Arm and RISC-V seL4's build compiles one into the kernel, and Microkit and sDDF generate system descriptions from it.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Firmware and platform description](../INDEX.md#firmware-and-platform-description) · ← [ACPI tables](acpi-tables.md) · [IRQ](irq.md) →
+
 Read first: [IRQ](irq.md), [Arm boot](arm-boot.md).
+
+| At a glance | |
+|---|---|
+| Kind | Data structure describing hardware (DTS source, DTB blob) |
+| Architecture | Arm and RISC-V; x86 PCs and Arm servers use [ACPI tables](acpi-tables.md) |
+| Found through | Blob's address in a register from the stage before the kernel: `x0` on AArch64, `a1` on RISC-V |
+| Key numbers | Magic `0xd00dfeed`; version 17; all fields big-endian |
+| seL4 code | [`config.cmake`](https://github.com/seL4/seL4/blob/master/config.cmake), `tools/hardware_gen.py`, [`tools/hardware.yml`](https://github.com/seL4/seL4/blob/master/tools/hardware.yml) |
+| seL4 config | `KernelDTSList`, `KernelCustomDTS`, `KernelCustomDTSOverlay` |
+| seL4 use | Read by the build, not parsed by the kernel at run time; the DTB is copied to the root task's [BootInfo](../sel4/bootinfo-and-root-task.md) |
+| On the clouds | EC2's Graviton and Compute Engine's Arm machines use ACPI, so a tree has to be written by hand |
 
 ## What it is
 
@@ -159,6 +172,12 @@ be a great deal of code to verify. Instead the build does the reading:
    device (which driver, which register region to map at which kernel
    address, which interrupt), and writes C headers. [Generated
    code](../sel4/generated-code.md) walks through the outputs.
+
+![The build joins the board's DTS and the overlay into kernel.dts, dtc makes kernel.dtb, and hardware_gen.py with hardware.yml turns it into C headers compiled into the kernel; at boot the elfloader passes a DTB to the kernel, which copies it to the root task's BootInfo.](../images/device-tree-sel4-build.svg)
+
+*The two routes a tree takes. The kernel's knowledge of the machine comes
+down the left, fixed at build time; the blob on the right is only copied
+to user level (see "The DTB still reaches user level" below).*
 
 The overlay's main job is the `/chosen` node, where seL4 defines its own
 properties: `seL4,kernel-devices` lists the nodes the kernel itself

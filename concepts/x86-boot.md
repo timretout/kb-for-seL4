@@ -2,7 +2,19 @@
 
 > How a PC gets from reset to a kernel: BIOS or UEFI firmware, a boot loader (usually GRUB), and the Multiboot 1 and 2 protocols that hand seL4 its memory map, root task image and ACPI pointer in 32-bit protected mode.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [I/O ports and MMIO](io-ports.md) · [UEFI](uefi.md) →
+
 Read first: [x86-64 basics](x86-64-basics.md), [x86 paging](x86-paging.md).
+
+| At a glance | |
+|---|---|
+| Kind | Boot chain: firmware, boot loader (GRUB) and boot protocol (Multiboot 1 and 2) |
+| Architecture | x86 |
+| Key numbers | `EAX` at entry is `0x2BADB002` (Multiboot 1) or `0x36d76289` (Multiboot 2); kernel linked at physical 1 MiB |
+| seL4 code | [`src/arch/x86/multiboot.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/multiboot.S), [`src/arch/x86/64/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/head.S), [`src/arch/x86/kernel/boot_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot_sys.c) |
+| seL4 config | `KernelMultiboot1Header`, `KernelMultiboot2Header`, `KernelMultibootGFXMode` |
+| seL4 use | A Multiboot kernel and nothing else, entered in 32-bit protected mode; the first module is the root task |
+| On the clouds | Most instance types are UEFI, which needs `multiboot2` for the ACPI RSDP |
 
 ## What it is
 
@@ -109,6 +121,11 @@ seL4 on x86 is a Multiboot kernel and nothing else: it has no UEFI entry
 point, no Linux boot protocol, and no [elfloader](../sel4/elfloader.md)
 (that is for Arm and RISC-V). The loader's module takes the elfloader's
 place as the carrier of the root task.
+
+![The boot chain from CPU reset through BIOS or UEFI firmware and GRUB to the Multiboot entry state, then seL4's head.S and boot_sys, with QEMU's -kernel option as a side entry and the root task loaded from the first module.](../images/x86-boot-chain.svg)
+
+*Whatever ran before, the kernel always starts in the same Multiboot state
+(red outline). The list below follows the orange box.*
 
 - **Headers.**
   [`src/arch/x86/multiboot.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/multiboot.S)

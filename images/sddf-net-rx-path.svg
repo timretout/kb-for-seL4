@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" width="760" height="260" role="img">
+  <title>sDDF network receive path</title>
+  <desc>Driver, virt_rx, copier and client in a row, each pair joined by an active queue carrying full buffers towards the client and a free queue carrying empty buffers back; the copier copies each packet from the shared RX DMA region into the client's private RX region.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="260" fill="#ffffff"/>
+  <rect x="30" y="50" width="110" height="80" rx="6" class="user"/>
+  <text x="85" y="95" class="head" text-anchor="middle">driver</text>
+  <rect x="230" y="50" width="110" height="80" rx="6" class="user"/>
+  <text x="285" y="95" class="head" text-anchor="middle">virt_rx</text>
+  <rect x="430" y="50" width="110" height="80" rx="6" class="user"/>
+  <text x="485" y="88" class="head" text-anchor="middle">copier</text>
+  <rect x="630" y="50" width="110" height="80" rx="6" class="user"/>
+  <text x="685" y="95" class="head" text-anchor="middle">client</text>
+  <text x="485" y="110" class="mono" text-anchor="middle">memcpy</text>
+  <path class="line" d="M140,75 H228" marker-end="url(#arrow)"/>
+  <text x="185" y="67" class="small" text-anchor="middle">active</text>
+  <path class="line" d="M230,105 H142" marker-end="url(#arrow)"/>
+  <text x="185" y="122" class="small" text-anchor="middle">free</text>
+  <path class="line" d="M340,75 H428" marker-end="url(#arrow)"/>
+  <text x="385" y="67" class="small" text-anchor="middle">active</text>
+  <path class="line" d="M430,105 H342" marker-end="url(#arrow)"/>
+  <text x="385" y="122" class="small" text-anchor="middle">free</text>
+  <path class="line" d="M540,75 H628" marker-end="url(#arrow)"/>
+  <text x="585" y="67" class="small" text-anchor="middle">active</text>
+  <path class="line" d="M630,105 H542" marker-end="url(#arrow)"/>
+  <text x="585" y="122" class="small" text-anchor="middle">free</text>
+  <text x="185" y="152" class="small dim" text-anchor="middle">device address</text>
+  <text x="385" y="152" class="small dim" text-anchor="middle">offset</text>
+  <text x="585" y="152" class="small dim" text-anchor="middle">offset</text>
+  <text x="380" y="28" class="small dim" text-anchor="middle">Each arrow is a queue and points at its consumer: full buffers go right, empty ones come back.</text>
+  <rect x="30" y="185" width="110" height="54" rx="6" class="hw"/>
+  <text x="85" y="207" class="head" text-anchor="middle">NIC</text>
+  <text x="85" y="227" class="small" text-anchor="middle">receive ring</text>
+  <path class="line" d="M85,130 V183" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="230" y="185" width="250" height="54" rx="6" class="data"/>
+  <text x="242" y="207">RX DMA region</text>
+  <text x="242" y="227" class="small">virt_rx read-write, copier read-only</text>
+  <rect x="490" y="185" width="250" height="54" rx="6" class="data"/>
+  <text x="502" y="207">client RX region, one per client</text>
+  <text x="502" y="227" class="small">mapped into copier and client</text>
+  <path class="line" d="M140,212 H228" marker-end="url(#arrow)"/>
+  <text x="184" y="204" class="small" text-anchor="middle">receives into</text>
+  <path class="line dash" d="M285,130 V183"/>
+  <path class="line dash" d="M455,130 V183"/>
+  <path class="line dash" d="M510,130 V183"/>
+  <path class="line dash" d="M685,130 V183"/>
+</svg>

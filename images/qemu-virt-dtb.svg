@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 290" width="760" height="290" role="img">
+  <title>How a qemu-arm-virt kernel gets its device tree</title>
+  <desc>Configuring the kernel runs QEMU with dumpdtb, decompiles the generated device tree with dtc and appends it with an overlay to KernelDTSList; the kernel must then be run under QEMU with the same machine properties, core count and memory.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="290" fill="#ffffff"/>
+  <text x="24" y="36" text-anchor="start" class="head">Configuring the kernel</text>
+  <rect x="24" y="54" width="210" height="56" rx="6" class="fw"/>
+  <text x="129.0" y="78" text-anchor="middle">QEMU, run with</text>
+  <text x="129.0" y="96" text-anchor="middle" class="mono">dumpdtb=...</text>
+  <rect x="284" y="54" width="130" height="56" rx="6" class="data"/>
+  <text x="349.0" y="78" text-anchor="middle">generated</text>
+  <text x="349.0" y="96" text-anchor="middle">device tree</text>
+  <rect x="464" y="54" width="150" height="56" rx="6" class="data"/>
+  <text x="539.0" y="78" text-anchor="middle" class="mono">KernelDTSList</text>
+  <text x="539.0" y="96" text-anchor="middle" class="small">with the overlay</text>
+  <rect x="664" y="54" width="72" height="56" rx="6" class="kernel"/>
+  <text x="700.0" y="87" text-anchor="middle">kernel</text>
+  <path class="line" d="M234,82 H284" marker-end="url(#arrow)"/>
+  <path class="line" d="M414,82 H464" marker-end="url(#arrow)"/>
+  <path class="line" d="M614,82 H664" marker-end="url(#arrow)"/>
+  <text x="439" y="74" text-anchor="middle" class="mono">dtc</text>
+  <text x="24" y="196" text-anchor="start" class="head">Running it</text>
+  <rect x="24" y="214" width="210" height="56" rx="6" class="fw"/>
+  <text x="129.0" y="247" text-anchor="middle">QEMU, running the kernel</text>
+  <path class="line" d="M700,110 V242 H234" marker-end="url(#arrow)"/>
+  <text x="467" y="234" text-anchor="middle" class="small">run under</text>
+  <path class="line dash accent" d="M129,110 V214"/>
+  <text x="141" y="150" text-anchor="start" class="small">must be the same machine properties,</text>
+  <text x="141" y="166" text-anchor="start" class="small">core count and memory</text>
+</svg>

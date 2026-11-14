@@ -2,6 +2,19 @@
 
 > A memory-mapped x86 timer, found through an ACPI table, with one main counter and several comparators; meant to replace the PIT and RTC, absent or only 32 bits wide on the clouds.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md) · [Arm generic timer](arm-generic-timer.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Timer device, one per machine |
+| Architecture | x86 |
+| Introduced | Early 2000s, specified by Intel and Microsoft |
+| Reached through | MMIO, usually at `0xfed00000` |
+| Found through | The ACPI `HPET` table (see [ACPI tables](acpi-tables.md)) |
+| Key numbers | One main counter, 32 or 64 bits wide; at least three comparators |
+| seL4 use | None in the kernel; util_libs' pc99 ltimer prefers it and falls back to the [PIT](pit.md) |
+| On the clouds | EC2 Nitro: 32-bit counter at 62.5 MHz at `0xfed00000`. Compute Engine x86: none |
+
 ## What it is
 
 Intel and Microsoft specified the HPET in the early 2000s to replace the
@@ -14,6 +27,10 @@ memory-mapped registers per system:
   register layout from memory);
 - at least three **comparators** ("timers"), each raising an interrupt
   when the main counter reaches its value, one-shot or periodic.
+
+![The ACPI HPET table points to one block of registers holding a capabilities register, a main counter and three comparators, each comparator raising an interrupt.](../images/hpet-block.svg)
+
+*One HPET: every comparator compares against the same main counter.*
 
 The rate is not fixed by convention as the PIT's is: software reads it
 from the capabilities register. The specification sets only limits on

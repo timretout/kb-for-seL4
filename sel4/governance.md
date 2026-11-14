@@ -2,7 +2,19 @@
 
 > Who decides what goes into seL4: the seL4 Foundation's Technical Steering Committee sets process and grants the reviewer and committer roles, and substantial changes pass through a public RFC before any pull request is accepted.
 
+[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [Upstream CI](ci.md)
+
 Read first: [Contributing a patch](contributing.md).
+
+| At a glance | |
+|---|---|
+| Kind | Organisation and process: who decides what goes into seL4 |
+| Bodies | Governing Board (funds, brand); Technical Steering Committee (all technical matters) |
+| TSC | Thirteen members in November 2026, chaired by Gerwin Klein (Proofcraft) |
+| Roles | Contributor, reviewer, committer, system admin, TSC member |
+| RFCs | Pull requests to [`seL4/rfcs`](https://github.com/seL4/rfcs); decided by the TSC |
+| Versioning | Semantic versioning for the kernel, Microkit and rust-sel4 |
+| Latest releases | seL4 17.0.0, Microkit 2.4.0 |
 
 ## What it is
 

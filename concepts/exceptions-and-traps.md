@@ -2,7 +2,19 @@
 
 > The three ways a CPU leaves user code for the kernel (a faulting instruction, a system call instruction, an asynchronous interrupt), what hardware saves and what software must, and how the kernel returns; every seL4 architecture funnels these into the same five C functions in `src/api/syscall.c`.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [Common ideas](../INDEX.md#common-ideas) · ← [Privilege levels](privilege-levels.md) · [Virtual memory](virtual-memory.md) →
+
 Read first: [Privilege levels](privilege-levels.md).
+
+| At a glance | |
+|---|---|
+| Kind | CPU mechanism: how control passes from user code to the kernel and back |
+| Architecture | x86, Arm, RISC-V |
+| Reached through | A faulting instruction, a system call instruction (`syscall`, `svc`, `ecall`), or an interrupt |
+| Key numbers | Three causes; five C entry functions in seL4 |
+| seL4 code | `traps.S` and `c_traps.c` per architecture; [`src/api/syscall.c`](https://github.com/seL4/seL4/blob/master/src/api/syscall.c) |
+| seL4 config | `CONFIG_FASTPATH`, `CONFIG_MAX_NUM_WORK_UNITS_PER_PREEMPTION` |
+| seL4 use | Interrupts masked for the whole entry; a fault becomes a message to a [fault handler](../sel4/faults.md) |
 
 ## What it is
 
@@ -158,6 +170,10 @@ than that pointer changing in between. With `CONFIG_FASTPATH`, the
 assembly sends Call and ReplyRecv to `c_handle_fastpath_call` and
 `c_handle_fastpath_reply_recv` first, which fall back to `slowpath()`
 and so `handleSyscall` when their conditions fail.
+
+![Every seL4 kernel entry has the same shape: assembly saves the user registers into the old thread's TCB, a c_handle function calls one of five functions in syscall.c, and restore_user_context loads the registers of the current thread from its TCB and returns.](../images/exceptions-and-traps-sel4-entry.svg)
+
+*Nothing is saved on a stack and nothing returns to the point of entry: a thread switch is `ksCurThread` changing between the save and the load.*
 
 seL4 handles no fault itself. There is no demand paging, no
 copy-on-write and no signal delivery in the kernel: a fault becomes an

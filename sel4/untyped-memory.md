@@ -2,7 +2,20 @@
 
 > Untyped capabilities stand for blocks of physical memory that are not yet any kernel object; `seL4_Untyped_Retype` carves objects out of one, and revoking it is the only way to get the memory back, which is how seL4 leaves all memory allocation to user level.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Kernel objects](kernel-objects.md) · [System calls and invocations](syscalls-and-invocations.md) →
+
 Read first: [Capabilities](capabilities.md), [Kernel objects](kernel-objects.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism; there is no untyped object, all state is in the capability |
+| Key source | [`src/object/untyped.c`](https://github.com/seL4/seL4/blob/master/src/object/untyped.c), [`include/object/untyped.h`](https://github.com/seL4/seL4/blob/master/include/object/untyped.h) |
+| Config options | `CONFIG_MAX_NUM_BOOTINFO_UNTYPED_CAPS` (230), `CONFIG_RETYPE_FAN_OUT_LIMIT` (256), `CONFIG_RESET_CHUNK_BITS` (8) |
+| API | `seL4_Untyped_Retype`; memory comes back by `seL4_CNode_Revoke` |
+| Object size | 2^4 bytes up to 2^47 (x86-64, AArch64) or 2^38 (RV64) |
+| Built on | The [capability derivation tree](capabilities.md) |
+| Used by | Allocators in [seL4_libs](sel4-libs.md); [Microkit](microkit.md)'s build-time layout |
+| Verified | `resetUntypedCap` is verified code |
 
 ## What it is
 

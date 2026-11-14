@@ -2,6 +2,19 @@
 
 > x86's interrupt controllers: a local APIC in each core takes interrupts, sends IPIs and holds a timer, while I/O APICs route device interrupt pins to vectors on chosen cores; seL4 drives both and lets user level pick the vector for each pin or MSI.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [IRQ](irq.md) · [GICv3 and the ITS](gicv3-its.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Interrupt controllers: a local APIC in every core, and one or more I/O APICs |
+| Architecture | x86 |
+| Reached through | Local APIC: MMIO, normally `0xfee00000` (xAPIC), or MSRs (x2APIC). I/O APIC: MMIO, normally `0xfec00000`, through `IOREGSEL` and `IOWIN` |
+| Found through | [ACPI](acpi-tables.md) MADT; CPUID leaf 1, ECX bit 21, for x2APIC |
+| Key numbers | Device vectors 32 to 255; usually 24 pins per I/O APIC; one 64-bit redirection entry per pin |
+| seL4 code | [`src/arch/x86/kernel/apic.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/apic.c), [`src/plat/pc99/machine/ioapic.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/ioapic.c) |
+| seL4 config | `KernelIRQController`, `KernelLAPICMode`, `KernelMaxNumIOAPIC` |
+| On the clouds | EC2's virtual x86 types: one I/O APIC, xAPIC mode. `c5n.metal`: nine I/O APICs, x2APIC |
+
 ## What it is
 
 The original PC had one 8259 PIC (programmable interrupt controller),
@@ -123,6 +136,12 @@ User level asks for an I/O APIC interrupt with
 for an MSI with `seL4_IRQControl_GetMSI(bus, dev, func, handle, vector)`
 ([`src/arch/x86/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/interrupt.c)).
 Microkit's `<irq>` element takes the same fields.
+
+![A chain of numbers from ISA IRQ to GSI to I/O APIC index and pin to CPU vector to seL4 IRQ number, with seL4_IRQControl_GetIOAPIC supplying the I/O APIC, the pin and a vector argument that is added to 0x30.](../images/apic-pin-to-vector.svg)
+
+*The numbers an I/O APIC interrupt goes by, and what turns each into the
+next. The red arrow is the step most often got wrong: the `vector`
+argument is an offset, not the CPU vector (see Gotchas).*
 
 ## Gotchas
 

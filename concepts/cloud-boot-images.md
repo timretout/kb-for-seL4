@@ -2,7 +2,20 @@
 
 > What it takes to get a kernel that is not Linux running on EC2 or Compute Engine: a GPT disk image with an EFI system partition and a boot loader at the fallback path, the import and registration steps of each cloud, and reading the serial log.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [Compute Engine machine types](gce-machine-types.md) · [ENA](ena.md) →
+
 Read first: [Cloud virtual machines](cloud-vms.md), [UEFI](uefi.md), [x86 boot](x86-boot.md).
+
+| At a glance | |
+|---|---|
+| Kind | Procedure: building a boot disk and importing it as a cloud image |
+| Disk | GPT with one 64 MiB FAT32 EFI system partition at 1 MiB |
+| Loader path | `\EFI\BOOT\BOOTX64.EFI` on x86-64, `\EFI\BOOT\BOOTAA64.EFI` on 64-bit Arm |
+| x86 loader | GRUB, loading the kernel with `multiboot2` and the root task with `module2` |
+| Arm loader | [elfloader](../sel4/elfloader.md) built as an EFI application |
+| Into EC2 | `import-snapshot`, then `register-image` with `--ena-support` and `--boot-mode` |
+| Into Compute Engine | `disk.raw` in an `oldgnu` tar, then `gcloud compute images create` |
+| seL4 code | [`boot_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot_sys.c), [`cmdline.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/cmdline.c); [`elfloader-tool`](https://github.com/seL4/seL4_tools/tree/master/elfloader-tool) |
 
 ## What it is
 
@@ -37,6 +50,11 @@ One small disk serves both clouds and both boot modes:
 - No root file system and no operating system are needed in the image.
   Tools: `parted` for the table, `mkfs.vfat` and `mcopy` (mtools) to
   fill the partition without mounting it.
+
+![On x86 the UEFI firmware runs GRUB from the fallback path, and GRUB loads the seL4 kernel with multiboot2 and the root task with module2; on Arm the file at the fallback path is the elfloader, built as an EFI application that carries the kernel, device tree and root task.](../images/cloud-boot-images-chain.svg)
+
+*What sits at the fallback path on each architecture, as the next
+paragraphs explain: x86 needs GRUB in between, Arm does not.*
 
 **x86.** seL4 has no UEFI entry point on x86, only Multiboot, so the
 file at the fallback path is GRUB, built as one self-contained EFI

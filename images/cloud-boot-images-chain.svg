@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 312" width="760" height="312" role="img">
+  <title>Boot chain of a cloud disk image on x86 and on Arm</title>
+  <desc>On x86 the UEFI firmware runs GRUB from the fallback path, which loads the seL4 kernel with multiboot2 and the root task with module2. On Arm the file at the fallback path is the elfloader built as an EFI application, carrying the kernel, device tree and root task.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+    .plain { fill: #ffffff; stroke: #6e7781; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="312" fill="#ffffff"/>
+  <text x="24" y="34" class="head">x86</text>
+  <rect x="24" y="56" width="150" height="60" rx="6" class="fw"/>
+  <text x="40" y="81" class="head">UEFI firmware</text>
+  <text x="40" y="101" class="small">runs the fallback path</text>
+  <path class="line" d="M174,86 H222" marker-end="url(#arrow)"/>
+  <rect x="224" y="56" width="200" height="60" rx="6" class="fw"/>
+  <text x="240" y="81" class="head">GRUB</text>
+  <text x="240" y="101" class="mono">\EFI\BOOT\BOOTX64.EFI</text>
+  <rect x="536" y="40" width="200" height="50" rx="6" class="kernel"/>
+  <text x="552" y="61" class="head">seL4 kernel</text>
+  <text x="552" y="80" class="mono">/boot/sel4-kernel</text>
+  <rect x="536" y="104" width="200" height="50" rx="6" class="user"/>
+  <text x="552" y="125" class="head">Root task</text>
+  <text x="552" y="144" class="mono">/boot/sel4-rootserver</text>
+  <path class="line" d="M424,78 L534,66" marker-end="url(#arrow)"/>
+  <path class="line" d="M424,96 L534,126" marker-end="url(#arrow)"/>
+  <text x="436" y="58" class="mono">multiboot2</text>
+  <text x="436" y="138" class="mono">module2</text>
+  <text x="24" y="186" class="head">Arm</text>
+  <rect x="24" y="206" width="150" height="60" rx="6" class="fw"/>
+  <text x="40" y="231" class="head">UEFI firmware</text>
+  <text x="40" y="251" class="small">runs the fallback path</text>
+  <path class="line" d="M174,236 H222" marker-end="url(#arrow)"/>
+  <rect x="224" y="180" width="512" height="112" rx="6" class="fw"/>
+  <text x="240" y="204" class="head">elfloader, built as an EFI application</text>
+  <text x="240" y="224" class="mono">\EFI\BOOT\BOOTAA64.EFI</text>
+  <rect x="240" y="238" width="150" height="40" rx="6" class="kernel"/>
+  <text x="315" y="263" text-anchor="middle">seL4 kernel</text>
+  <rect x="406" y="238" width="150" height="40" rx="6" class="data"/>
+  <text x="481" y="263" text-anchor="middle">device tree</text>
+  <rect x="572" y="238" width="150" height="40" rx="6" class="user"/>
+  <text x="647" y="263" text-anchor="middle">root task</text>
+</svg>

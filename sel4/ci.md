@@ -2,7 +2,20 @@
 
 > The GitHub Actions checks a seL4 pull request meets (lint, style, licences, compile matrix, sel4test in simulation, the preprocess check) and the ones only a maintainer's label or a merge starts (hardware runs, proofs, manifest deployment).
 
+[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [Contributing a patch](contributing.md) · [Governance and RFCs](governance.md) →
+
 Read first: [Contributing a patch](contributing.md).
+
+| At a glance | |
+|---|---|
+| Kind | Process: GitHub Actions checks on pull requests and pushes |
+| Repository | [`seL4/ci-actions`](https://github.com/seL4/ci-actions) (shared workflows and actions) |
+| Key source | `.github/workflows/` in each repository; each action's `steps.sh` |
+| Triggers | `pull_request`, `pull_request_target` (label-gated), `push` to `master` |
+| Labels | `hw-build`, `hw-test`, `hw-bench`, `proof-test`; added by maintainers |
+| Built on | The Foundation's Docker images; the machine queue ([`seL4/machine_queue`](https://github.com/seL4/machine_queue)) for hardware |
+| Used by | Every repository in the `seL4` organisation |
+| Verified | The preprocess check: no difference means the proofs cannot be affected |
 
 ## What it is
 
@@ -24,6 +37,12 @@ request from a fork can run:
 | `pull_request` | the fork's code, no secrets | everything that only needs a hosted runner |
 | `pull_request_target` | the base repository's workflow and secrets | hardware runs and proofs; gated on a label that only maintainers can add |
 | `push` to `master` | secrets | post-merge testing and "deploy" jobs that update manifests |
+
+![Three columns, one per trigger: pull_request runs PR / Checks, PR / Preprocess, CI, Compile, C Parser, seL4Test / Sim, RefMan and XML; pull_request_target runs HW and Proofs when labelled; push to master runs Proof Sync, Deploy and Trigger.](../images/ci-triggers.svg)
+
+*The kernel's workflows (tabulated below) grouped by what starts them: a
+fork's pull request gets only the left column until a maintainer adds a
+label.*
 
 ### Workflows of `seL4/seL4`
 

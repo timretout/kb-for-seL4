@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 345" width="760" height="345" role="img">
+  <title>AArch64 table walk, 4 KiB granule and 48-bit addresses</title>
+  <desc>A virtual address is split into four 9-bit indexes. The top bits choose TTBR0 or TTBR1; each index selects a descriptor in the table for levels 0 to 3. Level 1 may map a 1 GiB block, level 2 a 2 MiB block and level 3 a 4 KiB page.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="345" fill="#ffffff"/>
+  <text x="16" y="28" class="head">Virtual address bits</text>
+  <rect x="16" y="40" width="114" height="36" rx="0" class="data"/>
+  <text x="73.0" y="63.0" text-anchor="middle" class="small">63 to 48</text>
+  <rect x="130" y="40" width="154" height="36" rx="0" class="data"/>
+  <text x="207.0" y="63.0" text-anchor="middle" class="small">47 to 39</text>
+  <rect x="284" y="40" width="154" height="36" rx="0" class="data"/>
+  <text x="361.0" y="63.0" text-anchor="middle" class="small">38 to 30</text>
+  <rect x="438" y="40" width="154" height="36" rx="0" class="data"/>
+  <text x="515.0" y="63.0" text-anchor="middle" class="small">29 to 21</text>
+  <rect x="592" y="40" width="98" height="36" rx="0" class="data"/>
+  <text x="641.0" y="63.0" text-anchor="middle" class="small">20 to 12</text>
+  <rect x="690" y="40" width="54" height="36" rx="0" class="data"/>
+  <text x="717.0" y="63.0" text-anchor="middle" class="small">11 to 0</text>
+  <text x="73" y="94" text-anchor="middle" class="small dim">all 0s or all 1s</text>
+  <rect x="16" y="130" width="88" height="60" rx="6" class="hw"/>
+  <text x="60.0" y="148.0" text-anchor="middle" class="mono">TTBR0</text>
+  <text x="60.0" y="165.0" text-anchor="middle" class="small">or</text>
+  <text x="60.0" y="182.0" text-anchor="middle" class="mono">TTBR1</text>
+  <path class="line" d="M60,100 V130" marker-end="url(#arrow)"/>
+  <rect x="130" y="130" width="126" height="60" rx="6" class="data"/>
+  <text x="193.0" y="156.5" text-anchor="middle">Level 0 table</text>
+  <text x="193.0" y="173.5" text-anchor="middle" class="small">one entry: 512 GiB</text>
+  <path class="line" d="M193,76 V130" marker-end="url(#arrow)"/>
+  <text x="201" y="108" class="small dim">index</text>
+  <rect x="284" y="130" width="126" height="60" rx="6" class="data"/>
+  <text x="347.0" y="156.5" text-anchor="middle">Level 1 table</text>
+  <text x="347.0" y="173.5" text-anchor="middle" class="small">one entry: 1 GiB</text>
+  <path class="line" d="M347,76 V130" marker-end="url(#arrow)"/>
+  <text x="355" y="108" class="small dim">index</text>
+  <rect x="438" y="130" width="126" height="60" rx="6" class="data"/>
+  <text x="501.0" y="156.5" text-anchor="middle">Level 2 table</text>
+  <text x="501.0" y="173.5" text-anchor="middle" class="small">one entry: 2 MiB</text>
+  <path class="line" d="M501,76 V130" marker-end="url(#arrow)"/>
+  <text x="509" y="108" class="small dim">index</text>
+  <rect x="592" y="130" width="126" height="60" rx="6" class="data"/>
+  <text x="655.0" y="156.5" text-anchor="middle">Level 3 table</text>
+  <text x="655.0" y="173.5" text-anchor="middle" class="small">one entry: 4 KiB</text>
+  <path class="line" d="M641,76 V130" marker-end="url(#arrow)"/>
+  <text x="649" y="108" class="small dim">index</text>
+  <path class="line" d="M104,160 H130" marker-end="url(#arrow)"/>
+  <path class="line" d="M256,160 H284" marker-end="url(#arrow)"/>
+  <path class="line" d="M410,160 H438" marker-end="url(#arrow)"/>
+  <path class="line" d="M564,160 H592" marker-end="url(#arrow)"/>
+  <path class="line" d="M347,190 V240" marker-end="url(#arrow)"/>
+  <rect x="284" y="240" width="126" height="40" rx="6" class="data"/>
+  <text x="347.0" y="265.0" text-anchor="middle">1 GiB block</text>
+  <path class="line" d="M501,190 V240" marker-end="url(#arrow)"/>
+  <rect x="438" y="240" width="126" height="40" rx="6" class="data"/>
+  <text x="501.0" y="265.0" text-anchor="middle">2 MiB block</text>
+  <path class="line" d="M655,190 V240" marker-end="url(#arrow)"/>
+  <rect x="592" y="240" width="126" height="40" rx="6" class="data"/>
+  <text x="655.0" y="265.0" text-anchor="middle">4 KiB page</text>
+  <text x="16" y="318" class="small">Each table is one 4 KiB page of 512 eight-byte descriptors, indexed by 9 bits of the address.</text>
+</svg>

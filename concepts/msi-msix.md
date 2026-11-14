@@ -2,6 +2,17 @@
 
 > A PCI device interrupts by writing a value to an address instead of asserting a wire; MSI allows up to 32 vectors set in configuration space, MSI-X up to 2048 from a table in a BAR.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [PCI and PCI Express](pci.md) · [UARTs: 16550 and PL011](uart.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Interrupt mechanism for [PCI](pci.md) devices: a memory write in place of a wire |
+| Architecture | x86 and Arm GICv3 |
+| Reached through | MSI: a capability in configuration space; MSI-X: a table in a BAR |
+| Key numbers | MSI 1 to 32 vectors, a power of two; MSI-X 1 to 2048 |
+| seL4 use | x86: an IRQ handler capability for an MSI vector, device programmed by user level; Arm: none upstream |
+| On the clouds | NVMe, ENA and gVNIC are designed around MSI-X, one vector per queue |
+
 ## What it is
 
 Legacy [PCI](pci.md) interrupts are four shared wires (INTA to INTD) routed through
@@ -24,6 +35,11 @@ What the address and data mean depends on the architecture:
 - **Arm GICv3:** the address is the ITS's `GITS_TRANSLATER` register and
   the data is an EventID, which the ITS translates to an LPI (see
   [GICv3 and the ITS](gicv3-its.md)).
+
+![A PCI device interrupts by writing a data value to an address: on x86 the address is in the 0xfee00000 range and the data holds the vector; on Arm GICv3 the address is GITS_TRANSLATER and the data is an EventID, which the ITS translates to an LPI.](../images/msi-msix-write.svg)
+
+*The same write means different things on the two architectures: the
+address picks the receiver and the data says which interrupt.*
 
 Modern devices such as NVMe and cloud network cards (ENA, gVNIC) are
 designed around MSI-X, one vector per queue.

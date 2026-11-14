@@ -2,7 +2,20 @@
 
 > The path of a change into upstream seL4: a pull request from a fork on GitHub, signed-off commits in a fixed message format, astyle-formatted C with SPDX headers, review by committers, and, for the kernel, a proof that still holds.
 
+[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [rust-sel4](rust-sel4.md) · [Upstream CI](ci.md) →
+
 Read first: [Source layout](source-layout.md), [Verification](verification.md).
+
+| At a glance | |
+|---|---|
+| Kind | Process: a pull request from a personal fork, reviewed and merged by a committer |
+| Repository | GitHub organisation [`seL4`](https://github.com/seL4) |
+| Key source | [`CONTRIBUTING.md`](https://github.com/seL4/seL4/blob/master/CONTRIBUTING.md), `seL4_tools/misc/.gitlint`, `seL4_tools/misc/astylerc` |
+| Sign-off | `Signed-off-by` on every commit (DCO); no contributor licence agreement |
+| Key numbers | Subject at most 50 characters, body lines 72, C lines 120; at least one approving review |
+| Licences | Kernel `GPL-2.0-only`; `libsel4` and user-level libraries `BSD-2-Clause`; documentation `CC-BY-SA-4.0` |
+| Built on | [CI](ci.md) checks; an RFC first for large changes ([Governance](governance.md)) |
+| Verified | A kernel change is invisible to the proofs or comes with a proof update ([Proof impact](proof-impact.md)) |
 
 ## What it is
 

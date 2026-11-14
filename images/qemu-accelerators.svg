@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340" role="img">
+  <title>QEMU under TCG and under KVM</title>
+  <desc>Under TCG, QEMU translates guest instructions to host instructions and models the devices, for any guest on any host; under KVM the Linux host's hardware virtualisation runs guest code directly and QEMU only emulates devices, so guest and host architecture must match.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="340" fill="#ffffff"/>
+  <text x="24" y="36" text-anchor="start" class="head">TCG, the default</text>
+  <text x="396" y="36" text-anchor="start" class="head">KVM</text>
+  <rect x="24" y="56" width="340" height="44" rx="6" class="kernel"/>
+  <text x="194.0" y="83" text-anchor="middle">guest code, any architecture</text>
+  <rect x="24" y="140" width="340" height="70" rx="6" class="fw"/>
+  <text x="194.0" y="172" text-anchor="middle">QEMU: translates guest instructions to host</text>
+  <text x="194.0" y="188" text-anchor="middle">instructions, block by block; models the devices</text>
+  <rect x="24" y="250" width="340" height="44" rx="6" class="hw"/>
+  <text x="194.0" y="277" text-anchor="middle">host CPU, any architecture</text>
+  <path class="line" d="M194,100 V140" marker-end="url(#arrow)"/>
+  <path class="line" d="M194,210 V250" marker-end="url(#arrow)"/>
+  <rect x="396" y="56" width="150" height="44" rx="6" class="kernel"/>
+  <text x="471.0" y="83" text-anchor="middle">guest code</text>
+  <rect x="576" y="140" width="160" height="70" rx="6" class="fw"/>
+  <text x="656.0" y="172" text-anchor="middle">QEMU: only</text>
+  <text x="656.0" y="188" text-anchor="middle">emulates devices</text>
+  <rect x="396" y="250" width="340" height="44" rx="6" class="hw"/>
+  <text x="566.0" y="277" text-anchor="middle">host CPU, same architecture as the guest</text>
+  <path class="line" d="M471,100 V250" marker-end="url(#arrow)"/>
+  <text x="480" y="170" text-anchor="start" class="small">run directly by</text>
+  <text x="480" y="186" text-anchor="start" class="small">the host's KVM</text>
+  <path class="line" d="M546,78 H656 V140" marker-end="url(#arrow)"/>
+  <text x="601" y="70" text-anchor="middle" class="small">devices</text>
+  <text x="24" y="322" text-anchor="start" class="small dim">Slow, and time is elastic.</text>
+  <text x="396" y="322" text-anchor="start" class="small dim">Fast, with real CPU behaviour.</text>
+</svg>

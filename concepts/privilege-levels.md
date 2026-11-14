@@ -2,6 +2,19 @@
 
 > The CPU modes that separate user code, kernel, hypervisor and firmware on x86 (rings, VMX root, SMM), Arm (EL0 to EL3) and RISC-V (U, S, M): seL4 runs in ring 0, EL1 or EL2, or S-mode, and something more privileged usually sits beneath it.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [Common ideas](../INDEX.md#common-ideas) · ← [History and key papers](../sel4/history-and-papers.md) · [Exceptions, interrupts and traps](exceptions-and-traps.md) →
+
+| At a glance | |
+|---|---|
+| Kind | CPU mechanism: modes that separate user code, kernel, hypervisor and firmware |
+| Architecture | x86, Arm, RISC-V |
+| Reached through | An [exception, interrupt or system call](exceptions-and-traps.md) |
+| Key numbers | x86: four rings; AArch64: four exception levels; RISC-V: three modes (unchecked) |
+| seL4 code | `init_gdt()` in [`src/arch/x86/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/kernel/vspace.c); [`include/arch/riscv/arch/sbi.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/sbi.h) |
+| seL4 config | `KernelVTX`, `KernelArmHypervisorSupport` |
+| seL4 use | Runs in ring 0, EL1 or EL2, or S-mode |
+| On the clouds | The provider's hypervisor sits beneath the kernel ([cloud VMs](cloud-vms.md)) |
+
 ## What it is
 
 A CPU that ran every instruction for everyone could not protect a
@@ -97,6 +110,10 @@ can run with or without guests.
 | x86 | ring 0 (VMX root if `KernelVTX`) | SMM firmware; a hypervisor on a cloud VM |
 | Arm | EL1, or EL2 with `KernelArmHypervisorSupport` | EL3 firmware; a hypervisor on a cloud VM |
 | RISC-V | S-mode | M-mode firmware (OpenSBI) |
+
+![The privilege levels of x86, Arm and RISC-V side by side, one row per role from application down to run-time firmware, with the levels seL4 runs in coloured orange: ring 0, EL1 or EL2, and S-mode.](../images/privilege-levels-side-by-side.svg)
+
+*Read down for more privilege. On x86 the hypervisor row is not a separate level: VMX root is the ordinary ring 0 with extra instructions, and SMM stands beside the rings.*
 
 - **x86.** The kernel's code segment has descriptor privilege level 0
   and user threads get one with level 3; no other ring is used

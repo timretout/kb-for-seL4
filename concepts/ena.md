@@ -2,7 +2,19 @@
 
 > Amazon's network card, the only NIC on EC2 Nitro instances: a PCI device with a small register block, an admin queue for management and pairs of submission and completion rings for packets, with MSI-X interrupts.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [Booting a custom kernel on a cloud](cloud-boot-images.md) · [gVNIC](gvnic.md) →
+
 Read first: [PCI](pci.md), [MSI and MSI-X](msi-msix.md), [Amazon EC2 and the Nitro system](ec2.md).
+
+| At a glance | |
+|---|---|
+| Kind | Network card: a PCI function implemented by a Nitro card |
+| Reached through | [PCI](pci.md) BAR 0 (registers, doorbells, MSI-X table); BAR 2 for LLQ |
+| Found through | PCI ID `1d0f:ec20` (and `ec21`, `0ec2`, `1ec2`), class `02/00/00` |
+| Interrupt | [MSI-X](msi-msix.md) only: vector 0 management, vector 1+n for I/O queue pair n |
+| Key numbers | 64-byte admin entries; 16-byte TX and RX descriptors; 8-byte TX completions |
+| seL4 code | None upstream: no driver in [sDDF](../sel4/sddf.md) or `libethdrivers` |
+| On the clouds | The NIC of every EC2 Nitro instance, virtual or metal |
 
 ## What it is
 
@@ -106,6 +118,11 @@ queue during initialisation.
 A queue pair is one **submission queue** (SQ) and one **completion
 queue** (CQ), and they come in two directions, so a minimal driver has
 four rings: TX SQ, TX CQ, RX SQ, RX CQ.
+
+![A minimal ENA driver has four rings in guest memory: the driver fills the TX SQ and RX SQ, the device answers in the TX CQ and RX CQ, and the driver writes each SQ's doorbell and the interrupt unmask register in BAR 0.](../images/ena-io-queues.svg)
+
+*Submission rings flow from driver to device and completion rings
+back; the paragraphs below give what each entry holds.*
 
 - `CREATE_CQ` takes the ring's address, depth, entry size and MSI-X
   vector, and returns the CQ's index and the BAR 0 offsets of its

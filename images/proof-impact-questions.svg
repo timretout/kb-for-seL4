@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" role="img">
+  <title>The five questions for predicting proof impact</title>
+  <desc>Questions 1 to 3 are asked of each hunk in order and the first yes means no impact. A yes to question 4, boot or assumed machine-interface code, means the preprocess check fails but the proofs are very likely unaffected. Otherwise the hunk changes verified code and the proofs must be rerun and probably updated.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="440" fill="#ffffff"/>
+
+  <rect class="data" x="30" y="20" width="400" height="56" rx="6"/>
+  <text x="46" y="44">1. Is the file outside every verified</text>
+  <text x="62" y="63">configuration's build?</text>
+  <path class="line" d="M430,48 H518" marker-end="url(#arrow)"/>
+  <text x="474" y="41" text-anchor="middle" class="small">yes</text>
+  <path class="line" d="M230,76 V104" marker-end="url(#arrow)"/>
+  <text x="240" y="95" class="small">no</text>
+  <rect class="data" x="30" y="106" width="400" height="56" rx="6"/>
+  <text x="46" y="130">2. Is the hunk under an #ifdef that every</text>
+  <text x="62" y="149">verified configuration makes false?</text>
+  <path class="line" d="M430,134 H518" marker-end="url(#arrow)"/>
+  <text x="474" y="127" text-anchor="middle" class="small">yes</text>
+  <path class="line" d="M230,162 V190" marker-end="url(#arrow)"/>
+  <text x="240" y="181" class="small">no</text>
+  <rect class="data" x="30" y="192" width="400" height="56" rx="6"/>
+  <text x="46" y="216">3. Is it only comments or whitespace,</text>
+  <text x="62" y="235">or in non-kernel files?</text>
+  <path class="line" d="M430,220 H518" marker-end="url(#arrow)"/>
+  <text x="474" y="213" text-anchor="middle" class="small">yes</text>
+  <path class="line" d="M230,248 V276" marker-end="url(#arrow)"/>
+  <text x="240" y="267" class="small">no</text>
+  <rect class="data" x="30" y="278" width="400" height="56" rx="6"/>
+  <text x="46" y="302">4. Is the function BOOT_CODE, or an assumed</text>
+  <text x="62" y="321">machine-interface function?</text>
+  <path class="line" d="M430,306 H518" marker-end="url(#arrow)"/>
+  <text x="474" y="299" text-anchor="middle" class="small">yes</text>
+  <path class="line" d="M230,334 V362" marker-end="url(#arrow)"/>
+  <text x="240" y="353" class="small">no</text>
+  <rect class="data" x="520" y="20" width="220" height="228" rx="6"/>
+  <text x="630" y="130" text-anchor="middle" class="head">no impact</text>
+  <text x="630" y="150" text-anchor="middle" class="small">ends the matter for the hunk</text>
+
+  <rect class="data" x="520" y="271" width="220" height="70" rx="6"/>
+  <text x="630" y="294" text-anchor="middle" class="head">preprocess fails</text>
+  <text x="630" y="313" text-anchor="middle" class="small">proofs very likely unaffected:</text>
+  <text x="630" y="330" text-anchor="middle" class="small">say so, ask for <tspan class="mono">proof-test</tspan></text>
+
+  <rect class="data accent" x="30" y="364" width="400" height="56" rx="6"/>
+  <text x="46" y="388" class="head">5. Otherwise: it changes verified code</text>
+  <text x="62" y="407">proofs must be rerun and probably updated</text>
+</svg>

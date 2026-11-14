@@ -2,7 +2,19 @@
 
 > A notification object is one word of pending signal bits that senders OR into without ever blocking and a receiver collects by waiting; it is how seL4 delivers interrupts and how Microkit channels and sDDF queues say "there is work".
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [IPC and endpoints](ipc.md) · [Faults and fault handlers](faults.md) →
+
 Read first: [IPC and endpoints](ipc.md), [Threads and TCBs](threads.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel object |
+| Key source | [`src/object/notification.c`](https://github.com/seL4/seL4/blob/master/src/object/notification.c) |
+| Config options | `KernelSignalFastpath` (AArch64 MCS, optional) |
+| API | `seL4_Signal`, `seL4_Wait`, `seL4_Poll`, `seL4_TCB_BindNotification` |
+| Object size | 32 bytes on x86-64 non-MCS, 64 on MCS |
+| Built on | The [IPC](ipc.md) system calls, applied to a notification capability; badges |
+| Used by | [Interrupt delivery](irq-handling.md), [Microkit](microkit.md) channels, [sDDF](sddf.md) queues |
 
 ## What it is
 
@@ -47,15 +59,10 @@ but adds no bit.
 | Waiting | One or more threads blocked in Wait | unused; queue of TCBs |
 | Active | Signals pending, nobody waiting | the ORed badges |
 
-```
-            Signal                       Signal (ORs more bits in)
-   Idle ────────────▶ Active ◀──┐  ──────┘
-    ▲ │                 │
-    │ │ Wait            │ Wait / Poll: return word, clear
-    │ ▼                 ▼
-  Waiting ──Signal──▶ (head waiter runs with the badge;
-                       Idle when the queue empties)
-```
+![A notification moves between Idle, Waiting and Active: Wait on Idle gives Waiting, Signal on Idle gives Active, further signals OR more bits in, and Wait or Poll on Active returns the word and clears it.](../images/notifications-states.svg)
+
+*The three states. Only Active uses the word; a signal to a Waiting
+notification goes to the head waiter and is never stored.*
 
 A signal to a Waiting notification wakes exactly one thread, the head
 of the queue, and hands it that one badge.

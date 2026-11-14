@@ -2,7 +2,19 @@
 
 > A thread's CSpace is the tree of CNodes (tables of capability slots) reachable from its root CNode; a CPtr is resolved through it a few bits at a time using each CNode's guard and radix, and CNode invocations name slots by an explicit root, index and depth.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Capabilities](capabilities.md) · [Kernel objects](kernel-objects.md) →
+
 Read first: [Capabilities](capabilities.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism: how a CPtr names a capability slot |
+| Key source | [`src/kernel/cspace.c`](https://github.com/seL4/seL4/blob/master/src/kernel/cspace.c) |
+| Config options | `CONFIG_ROOT_CNODE_SIZE_BITS` (`KernelRootCNodeSizeBits`) |
+| API | Guard set by `seL4_CNode_Mint`, `seL4_CNode_Mutate`, `seL4_TCB_SetSpace`, `seL4_TCB_Configure`; slots named by root, index, depth |
+| Object size | A CNode has 2^radix slots |
+| Built on | [Capabilities](capabilities.md) |
+| Used by | Every system call (invocation addressing); `seL4_CNode_*`; `seL4_Untyped_Retype`'s destination; the IPC receive slot |
 
 ## What it is
 
@@ -59,16 +71,11 @@ has guard size 44 (guard 0) and radix 8; slot `0x02` of the root holds
 a capability to a second CNode with guard size 4 (guard `0xA`) and
 radix 8.
 
-```
-CPtr 0x0000000000002A07, depth 64
+![The CPtr 0x2A07 at depth 64 splits into a 44-bit root guard, the root index 0x02, the second CNode's 4-bit guard 0xA and its index 0x07, which lead through slot 0x02 of the root CNode to slot 0x07 of the second CNode.](../images/cspace-resolve.svg)
 
- 63                    20 19    12 11   8 7      0
- +-----------------------+--------+------+--------+
- | 44 bits: guard 0      |  0x02  | 0xA  |  0x07  |
- +-----------------------+--------+------+--------+
-   root guard              root     L2     L2
-                           index    guard  index
-```
+*Each CNode capability on the way consumes its guard bits and then its
+radix bits; the guard and radix of the second CNode come from the
+capability in root slot `0x02`, not from the CNode.*
 
 With depth
 52 and CPtr `0x02`, resolution stops after the root's index and names

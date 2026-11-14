@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360" role="img">
+  <title>Resolving a CPtr through a two-level CSpace</title>
+  <desc>A 64-bit CPtr 0x2A07 split into a 44-bit root guard of 0, a root index of 0x02, a 4-bit second guard of 0xA and a second index of 0x07. Slot 0x02 of the root CNode holds a capability to a second CNode, and slot 0x07 of that CNode is the slot the CPtr names.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="360" fill="#ffffff"/>
+  <text x="40" y="32">CPtr <tspan class="mono">0x0000000000002A07</tspan>, depth 64</text>
+  <rect x="40" y="64" width="320" height="36" class="data"/>
+  <text x="200.0" y="87" text-anchor="middle">44 bits: guard 0</text>
+  <text x="200.0" y="118" class="small dim" text-anchor="middle">root guard</text>
+  <rect x="360" y="64" width="120" height="36" class="kernel"/>
+  <text x="420.0" y="87" class="mono" text-anchor="middle">0x02</text>
+  <text x="420.0" y="118" class="small dim" text-anchor="middle">root index</text>
+  <rect x="480" y="64" width="120" height="36" class="data"/>
+  <text x="540.0" y="87" class="mono" text-anchor="middle">0xA</text>
+  <text x="540.0" y="118" class="small dim" text-anchor="middle">second guard</text>
+  <rect x="600" y="64" width="120" height="36" class="kernel"/>
+  <text x="660.0" y="87" class="mono" text-anchor="middle">0x07</text>
+  <text x="660.0" y="118" class="small dim" text-anchor="middle">second index</text>
+  <text x="40" y="58" class="small dim" text-anchor="start">63</text>
+  <text x="356" y="58" class="small dim" text-anchor="end">20</text>
+  <text x="364" y="58" class="small dim" text-anchor="start">19</text>
+  <text x="476" y="58" class="small dim" text-anchor="end">12</text>
+  <text x="484" y="58" class="small dim" text-anchor="start">11</text>
+  <text x="596" y="58" class="small dim" text-anchor="end">8</text>
+  <text x="604" y="58" class="small dim" text-anchor="start">7</text>
+  <text x="720" y="58" class="small dim" text-anchor="end">0</text>
+  <text x="40" y="158" class="small">root capability: guard 0 (size 44), radix 8</text>
+  <text x="480" y="158" class="small">second CNode</text>
+  <rect x="40" y="168" width="240" height="34" class="data"/>
+  <text x="52" y="190" class="dim">slot <tspan class="mono">0x00</tspan></text>
+  <rect x="40" y="202" width="240" height="34" class="data"/>
+  <text x="52" y="224" class="dim">slot <tspan class="mono">0x01</tspan></text>
+  <rect x="40" y="236" width="240" height="34" class="kernel" style="stroke:#cf222e"/>
+  <text x="52" y="258">slot <tspan class="mono">0x02</tspan>: CNode capability</text>
+  <rect x="40" y="270" width="240" height="34" class="data"/>
+  <text x="52" y="292" class="dim">... 2^8 slots</text>
+  <rect x="480" y="168" width="240" height="34" class="data"/>
+  <text x="492" y="190" class="dim">slot <tspan class="mono">0x00</tspan></text>
+  <rect x="480" y="202" width="240" height="34" class="data"/>
+  <text x="492" y="224" class="dim">...</text>
+  <rect x="480" y="236" width="240" height="34" class="kernel" style="stroke:#cf222e"/>
+  <text x="492" y="258">slot <tspan class="mono">0x07</tspan>: the slot named</text>
+  <rect x="480" y="270" width="240" height="34" class="data"/>
+  <text x="492" y="292" class="dim">... 2^8 slots</text>
+  <path class="line" d="M280,253 H380 V185 H478" marker-end="url(#arrow)"/>
+  <text x="380" y="276" class="small" text-anchor="middle">its capability: guard 0xA</text>
+  <text x="380" y="292" class="small" text-anchor="middle">(size 4), radix 8</text>
+  <text x="40" y="340" class="small dim">With depth 52 and CPtr 0x02, resolution stops after the root index and names root slot 0x02 itself.</text>
+
+</svg>

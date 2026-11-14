@@ -2,7 +2,20 @@
 
 > How interrupts reach an S-mode kernel on RISC-V: three per-hart lines (software, timer, external) in `sip`/`sie`, fed by the CLINT through firmware and by the PLIC interrupt controller, with AIA as the newer alternative; seL4 drives the PLIC directly and gets its timer and IPIs through SBI calls.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [RISC-V](../INDEX.md#risc-v) · ← [RISC-V paging and traps](riscv-paging-and-traps.md) · [ACPI tables](acpi-tables.md) →
+
 Read first: [RISC-V basics](riscv-basics.md), [RISC-V paging and traps](riscv-paging-and-traps.md), [IRQ](irq.md).
+
+| At a glance | |
+|---|---|
+| Kind | Interrupt architecture (three per-hart lines, the CLINT, the PLIC, AIA) |
+| Architecture | RISC-V |
+| Reached through | CSRs `sip`, `sie` and `sstatus.SIE`; the PLIC by MMIO; timer and IPIs by SBI calls |
+| Found through | [Device tree](device-tree.md): the PLIC node (`riscv,plic0`, `sifive,plic-1.0.0`) and `timebase-frequency` |
+| Interrupt | `scause` codes: supervisor software 1, timer 5, external 9 |
+| Key numbers | PLIC sources 1 to 1023, 0 means none; priority 0 never interrupts |
+| seL4 code | [`src/arch/riscv/machine/hardware.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/machine/hardware.c), [`riscv_plic0.h`](https://github.com/seL4/seL4/blob/master/include/drivers/irq/riscv_plic0.h) |
+| seL4 use | Drives the PLIC directly; timer and IPIs through SBI calls; no AIA, ACLINT or Sstc support |
 
 ## What it is
 
@@ -32,6 +45,11 @@ pending, external is taken before software before timer.
 "External" is a single line. Which device caused it is a question
 for the interrupt controller, not for the CPU, and there is no
 equivalent of x86's vector number.
+
+![Devices reach a hart through the PLIC, which drives the `SEIP` bit of `sip`; the CLINT timer and another hart's `sbi_send_ipi` go to M-mode firmware, which sets `STIP` and `SSIP`.](../images/riscv-interrupts-sources.svg)
+
+*Only the external line arrives without firmware in the path; the
+sections below take the CLINT, the SBI timer call and the PLIC in turn.*
 
 ### CLINT: timer and software interrupts for M-mode
 

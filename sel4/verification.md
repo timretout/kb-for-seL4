@@ -2,7 +2,19 @@
 
 > seL4's proofs show, for a few exact kernel configurations, that the C code behaves as an abstract specification says and that the specification enforces integrity and confidentiality; boot code, assembly, hardware and every other configuration are assumed, not proved.
 
+[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [Debugging](debugging.md) · [l4v and Isabelle](l4v.md) →
+
 Read first: [Overview](overview.md), [Kernel design](kernel-design.md).
+
+| At a glance | |
+|---|---|
+| Kind | Machine-checked proofs in Isabelle/HOL, for a few exact kernel configurations |
+| Repository | [`seL4/l4v`](https://github.com/seL4/l4v) (proofs); the kernel holds the C and the verified configuration files |
+| Key source | [`CAVEATS.md`](https://github.com/seL4/seL4/blob/master/CAVEATS.md), `configs/<ARCH>_<plat>_verified.cmake` |
+| Config options | `KernelVerificationBuild ON`, `KernelMaxNumNodes 1`, `KernelPrinting OFF`, `KernelBenchmarks none` |
+| Built on | [Verified C subset](verified-c-subset.md); the domain scheduler for confidentiality |
+| Verified | Functional correctness on `ARM`, `ARM_HYP`, `AARCH64`, `RISCV64`, `X64` and RISC-V [MCS](mcs.md); security proofs on some |
+| Assumed | [Boot code](boot-code.md), assembly, hardware, compiler and linker, cache and TLB management, timing channels, DMA |
 
 ## What it is
 
@@ -14,25 +26,10 @@ layer can show is a behaviour the upper layer allows. So a property
 proved of the top layer (if it is of the kind refinement preserves)
 holds of the bottom one.
 
-```
-  security properties: integrity, authority confinement,
-  confidentiality / non-interference
-        |  proved about
-        v
-  abstract specification        what the kernel does, as functions on an
-        ^                       abstract state; nondeterministic where the
-        |  refinement proof 1   detail does not matter
-        |
-  design (executable) spec      how: data structures and algorithms,
-        ^                       generated from a Haskell prototype
-        |  refinement proof 2
-        |
-  C code                        the kernel source, translated into
-        ^                       Isabelle by a C parser
-        |  translation validation (some architectures)
-        |
-  binary                        the compiled kernel.elf
-```
+![A stack of five layers: security properties are proved about the abstract specification, the design specification refines the abstract one, the C code refines the design specification, and translation validation links the binary to the C code on some architectures.](../images/verification-stack.svg)
+
+*Each arrow is a proof about the layer it points at; the two refinement
+proofs together are functional correctness.*
 
 - **Functional correctness** is the two refinement proofs together: the C
   code implements the abstract specification. As a consequence the C code

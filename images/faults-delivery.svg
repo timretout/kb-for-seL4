@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 370" width="760" height="370" role="img">
+  <title>Delivery of a fault to its handler</title>
+  <desc>When a thread faults the kernel records the fault in its TCB and sends a message describing it to the thread's fault endpoint, as if the thread had done seL4_Call. The fault handler fixes the cause and replies, which resumes the thread; with no reply the thread stays blocked.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="370" fill="#ffffff"/>
+  <rect x="30" y="20" width="180" height="36" rx="6" class="user"/>
+  <text x="120" y="43" text-anchor="middle" class="head">Faulting thread</text>
+  <path class="line dash" d="M120,56 V330"/>
+  <rect x="290" y="20" width="180" height="36" rx="6" class="kernel"/>
+  <text x="380" y="43" text-anchor="middle" class="head">Kernel</text>
+  <path class="line dash" d="M380,56 V330"/>
+  <rect x="550" y="20" width="180" height="36" rx="6" class="user"/>
+  <text x="640" y="43" text-anchor="middle" class="head">Fault handler</text>
+  <path class="line dash" d="M640,56 V330"/>
+  <path class="line" d="M120,100 H376" marker-end="url(#arrow)"/>
+  <text x="250" y="92" text-anchor="middle" class="small">page fault, bad capability, ...</text>
+  <text x="388" y="122" text-anchor="start" class="small dim">1. records the fault in the thread's TCB</text>
+  <path class="line" d="M380,175 H636" marker-end="url(#arrow)"/>
+  <text x="510" y="151" text-anchor="middle" class="small">2. message to the fault endpoint:</text>
+  <text x="510" y="167" text-anchor="middle" class="small">label = fault type, MRs describe it</text>
+  <text x="128" y="195" text-anchor="start" class="small dim">blocked, as if it had done</text>
+  <text x="128" y="211" text-anchor="start" class="mono">seL4_Call</text>
+  <text x="204" y="211" text-anchor="start" class="small dim">there</text>
+  <text x="632" y="235" text-anchor="end" class="small dim">fixes the cause: maps a page,</text>
+  <text x="632" y="251" text-anchor="end" class="small dim">emulates an instruction, ...</text>
+  <path class="line" d="M640,285 H384" marker-end="url(#arrow)"/>
+  <text x="510" y="277" text-anchor="middle" class="small">3. reply</text>
+  <path class="line" d="M380,315 H124" marker-end="url(#arrow)"/>
+  <text x="250" y="307" text-anchor="middle" class="small">resumed</text>
+  <text x="380" y="352" text-anchor="middle" class="small">With no reply the thread stays blocked for good.</text>
+</svg>

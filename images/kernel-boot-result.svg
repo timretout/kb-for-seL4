@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 345" width="760" height="345" role="img">
+  <title>What boot builds for the root task</title>
+  <desc>At the end of boot the kernel has built the initial thread TCB, whose CSpace root is the root CNode and whose VSpace root is an address space mapping the user image, the IPC buffer and the BootInfo frame, plus a per-core idle thread. The root CNode holds capabilities to itself, the TCB, IRQ and domain control, the frames and the untypeds.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="345" fill="#ffffff"/>
+  <text x="16" y="40" class="head">At the end of boot</text>
+  <text x="16" y="60" class="small dim">the kernel's own state is</text>
+  <text x="16" y="76" class="small dim">a handful of objects</text>
+  <rect class="kernel" x="16" y="120" width="200" height="84" rx="6"/>
+  <text x="30" y="144" class="head">Initial thread TCB</text>
+  <text x="30" y="166">entry point <tspan class="mono">v_entry</tspan></text>
+  <text x="30" y="188">maximum priority</text>
+  <rect class="kernel" x="16" y="250" width="200" height="60" rx="6"/>
+  <text x="30" y="274" class="head">Idle thread (per core)</text>
+  <text x="30" y="296" class="small dim">runs in kernel mode</text>
+  <rect class="kernel" x="300" y="24" width="444" height="156" rx="6"/>
+  <text x="314" y="48" class="head">Root CNode</text>
+  <text x="410" y="48" class="mono dim">BIT(CONFIG_ROOT_CNODE_SIZE_BITS) slots</text>
+  <text x="314" y="72"><tspan class="mono">seL4_CapInitThreadCNode</tspan>: this CNode</text>
+  <text x="314" y="91"><tspan class="mono">seL4_CapInitThreadTCB</tspan>: the TCB</text>
+  <text x="314" y="110"><tspan class="mono">seL4_CapIRQControl</tspan>, domain control</text>
+  <text x="314" y="129">frame caps: BootInfo, IPC buffer, user image</text>
+  <text x="314" y="148">untyped caps: all remaining memory, device regions</text>
+  <text x="314" y="167">empty slots</text>
+  <rect class="kernel" x="300" y="214" width="444" height="112" rx="6"/>
+  <text x="314" y="238" class="head">Address space</text>
+  <text x="420" y="238" class="small dim">top-level page table, kernel mappings copied in</text>
+  <rect class="user" x="316" y="254" width="176" height="44" rx="6"/>
+  <text x="404" y="281" text-anchor="middle">user image</text>
+  <rect class="data" x="502" y="254" width="108" height="44" rx="6"/>
+  <text x="556" y="281" text-anchor="middle">IPC buffer</text>
+  <rect class="data" x="620" y="254" width="112" height="44" rx="6"/>
+  <text x="676" y="281" text-anchor="middle">BootInfo</text>
+  <text x="316" y="316" class="small dim">virtual range <tspan class="mono">it_v_reg</tspan>: the two frames come just after the image</text>
+  <path class="line" d="M196,120 V92 H300" marker-end="url(#arrow)"/>
+  <text x="206" y="85" class="small">CSpace root</text>
+  <path class="line" d="M196,204 V234 H300" marker-end="url(#arrow)"/>
+  <text x="206" y="227" class="small">VSpace root</text>
+</svg>

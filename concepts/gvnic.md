@@ -2,7 +2,19 @@
 
 > Compute Engine's own paravirtual network card, the only NIC on third-generation and later machine series and on Arm: a PCI device with a big-endian register block, an admin queue, and two unrelated descriptor formats (GQI and DQO).
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [ENA](ena.md) · [NVMe](nvme.md) →
+
 Read first: [PCI](pci.md), [MSI and MSI-X](msi-msix.md), [Google Compute Engine](gce.md).
+
+| At a glance | |
+|---|---|
+| Kind | Paravirtual network card (PCI device) |
+| Reached through | Three 32-bit memory BARs: 0 registers (big-endian), 1 MSI-X table, 2 doorbells |
+| Found through | PCI ID `1ae0:0042`, class `0x0200` |
+| Interrupt | [MSI-X](msi-msix.md) only: one management vector, the rest for notification blocks |
+| Key numbers | 64-byte admin commands in one page; four queue formats (GQI or DQO, RDA or QPL) |
+| seL4 code | None upstream: no driver in [sDDF](../sel4/sddf.md) |
+| On the clouds | Only NIC on Compute Engine's third-generation and later series and on Arm |
 
 ## What it is
 
@@ -61,6 +73,11 @@ slot, increments its own counter, writes the counter to
 The device fills in the command's status word: 1 is
 `GVE_ADMINQ_COMMAND_PASSED`, values from `0xfffffff0` up are errors.
 There is no completion interrupt.
+
+![The driver writes a 64-byte command into the next slot of the admin queue page, writes its command count to adminq_doorbell in BAR 0, and polls adminq_event_counter until the device, which fills in the status word, has caught up.](../images/gvnic-admin-queue.svg)
+
+*One admin command: two counters, one written by the driver and one
+by the device, take the place of a completion ring.*
 
 | Opcode | Command | What it does |
 |---|---|---|

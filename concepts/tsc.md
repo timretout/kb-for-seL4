@@ -2,6 +2,19 @@
 
 > A 64-bit per-core x86 counter read with `RDTSC`; cheap to read and, on modern CPUs, constant-rate, but nothing architectural tells the kernel its frequency.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [PIT](pit.md) · [Local APIC timer and TSC deadline mode](lapic-timer.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Per-core 64-bit counter |
+| Architecture | x86 |
+| Reached through | The `RDTSC` or `RDTSCP` instruction, or an MSR |
+| Found through | Invariant TSC: CPUID leaf `0x80000007`, EDX bit 8 (unchecked) |
+| seL4 code | `tsc_init()` in [`src/plat/pc99/machine/hardware.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/hardware.c) |
+| seL4 config | `CONFIG_PC99_TSC_FREQUENCY` |
+| seL4 use | Rate found at boot, in whole MHz, in `x86KStscMhz`; the [MCS](../sel4/mcs.md) kernel expresses every deadline in TSC ticks |
+| On the clouds | Measurements in VMs are noisy: a t3a.micro once measured 1% high |
+
 ## What it is
 
 Every x86 core has a 64-bit counter, the TSC, read with `RDTSC` or

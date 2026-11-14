@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img">
+  <title>Where ISA IRQ 0 arrives on the I/O APIC</title>
+  <desc>The PIT on ISA IRQ 0 arrives on I/O APIC pin 2 in QEMU, whose MADT has an override to GSI 2, and on pin 0 on EC2 Nitro and Compute Engine x86 types, which have no override for IRQ 0.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="350" fill="#ffffff"/>
+  <text x="40" y="36" text-anchor="start" class="head">QEMU: the MADT has an override for ISA IRQ 0, to GSI 2</text>
+  <rect x="40" y="83" width="170" height="44" rx="6" class="hw"/>
+  <text x="125.0" y="110" text-anchor="middle">PIT, ISA IRQ 0</text>
+  <rect x="470" y="50" width="250" height="110" rx="6" class="hw"/>
+  <text x="650" y="110" text-anchor="middle">I/O APIC</text>
+  <rect x="482" y="60" width="90" height="26" rx="6" class="data"/>
+  <text x="527" y="78" text-anchor="middle" class="small">pin 0</text>
+  <rect x="482" y="92" width="90" height="26" rx="6" class="data"/>
+  <text x="527" y="110" text-anchor="middle" class="small">pin 1</text>
+  <rect x="482" y="124" width="90" height="26" rx="6" class="data"/>
+  <text x="527" y="142" text-anchor="middle" class="small">pin 2</text>
+  <path class="line accent" d="M210,105 L482,137" marker-end="url(#arrow)"/>
+  <text x="40" y="206" text-anchor="start" class="head">EC2 Nitro and Compute Engine x86: no override for IRQ 0</text>
+  <rect x="40" y="253" width="170" height="44" rx="6" class="hw"/>
+  <text x="125.0" y="280" text-anchor="middle">PIT, ISA IRQ 0</text>
+  <rect x="470" y="220" width="250" height="110" rx="6" class="hw"/>
+  <text x="650" y="280" text-anchor="middle">I/O APIC</text>
+  <rect x="482" y="230" width="90" height="26" rx="6" class="data"/>
+  <text x="527" y="248" text-anchor="middle" class="small">pin 0</text>
+  <rect x="482" y="262" width="90" height="26" rx="6" class="data"/>
+  <text x="527" y="280" text-anchor="middle" class="small">pin 1</text>
+  <rect x="482" y="294" width="90" height="26" rx="6" class="data"/>
+  <text x="527" y="312" text-anchor="middle" class="small">pin 2</text>
+  <path class="line accent" d="M210,275 L482,243" marker-end="url(#arrow)"/>
+</svg>

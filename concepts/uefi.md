@@ -2,7 +2,20 @@
 
 > The firmware interface that replaced the PC BIOS and is standard on Arm servers and cloud instances: it loads a PE executable from a FAT partition and offers it services and tables; x86 seL4 hides it behind GRUB, and the Arm elfloader can be built as a UEFI application.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [x86 boot: BIOS, GRUB and Multiboot](x86-boot.md) · [8259 PIC](pic-8259.md) →
+
 Read first: [x86 boot](x86-boot.md), [ACPI tables](acpi-tables.md).
+
+| At a glance | |
+|---|---|
+| Kind | Firmware interface specification |
+| Architecture | x86-64 and AArch64 |
+| Introduced | Began as Intel's EFI for Itanium (unchecked) |
+| Key numbers | Fallback loader paths `\EFI\BOOT\BOOTX64.EFI` and `\EFI\BOOT\BOOTAA64.EFI` (unchecked) |
+| seL4 code | Arm elfloader: [`efi_init.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/binaries/efi/efi_init.c); x86 kernel: none |
+| seL4 config | `ElfloaderImageEFI` (Arm only) |
+| seL4 use | x86: hidden behind GRUB, with [Multiboot 2](x86-boot.md) carrying the ACPI RSDP; Arm: the [elfloader](../sel4/elfloader.md) built as a UEFI application |
+| On the clouds | Arm instances boot `BOOTAA64.EFI` and use ACPI; x86 clouds offer UEFI on current instance types (unchecked) |
 
 ## What it is
 
@@ -140,6 +153,11 @@ calls both; `load_images` in `src/common.c` uses a `kernel.dtb` from the
 elfloader's own archive if `ElfloaderIncludeDtb` put one there, otherwise
 the firmware's. Because firmware may have loaded the image where the
 kernel will go, the EFI path ends with `relocate_below_kernel`.
+
+![Two lanes from UEFI firmware to the seL4 kernel: on x86-64 GRUB is the UEFI application and enters seL4 in the Multiboot 2 state; on Arm the elfloader is the UEFI application and starts a kernel configured from a device tree.](../images/uefi-sel4-paths.svg)
+
+*On both architectures something else is the UEFI application; the kernel
+itself never is.*
 
 **What this leaves undone on ACPI-only Arm machines.** The Arm kernel
 takes its memory regions and device addresses from a device tree at build

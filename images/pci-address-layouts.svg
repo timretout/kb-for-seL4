@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img">
+  <title>Bus, device and function in three PCI addresses</title>
+  <desc>The bus, device and function numbers (8, 5 and 3 bits) packed three ways: as the 16-bit requester ID, in the address written to port 0xcf8, and in the ECAM offset, each with the shifts the page gives.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="350" fill="#ffffff"/>
+  <text x="40" y="38" text-anchor="start" class="head">Requester ID, 16 bits</text>
+  <rect x="230" y="50" width="150" height="36" class="hw"/>
+  <text x="305.0" y="73" text-anchor="middle">bus, 8 bits</text>
+  <text x="305.0" y="104" text-anchor="middle" class="mono">&lt;&lt; 8</text>
+  <rect x="380" y="50" width="130" height="36" class="hw"/>
+  <text x="445.0" y="73" text-anchor="middle">device, 5 bits</text>
+  <text x="445.0" y="104" text-anchor="middle" class="mono">&lt;&lt; 3</text>
+  <rect x="510" y="50" width="110" height="36" class="hw"/>
+  <text x="565.0" y="73" text-anchor="middle">function, 3 bits</text>
+  <text x="40" y="148" text-anchor="start" class="head">Address written to port <tspan class="mono">0xcf8</tspan></text>
+  <rect x="40" y="160" width="130" height="36" class="data"/>
+  <text x="105" y="183" text-anchor="middle" class="mono">0x80000000</text>
+  <rect x="170" y="160" width="60" height="36" class="data" style="fill:#ffffff"/>
+  <rect x="230" y="160" width="150" height="36" class="hw"/>
+  <text x="305.0" y="183" text-anchor="middle">bus, 8 bits</text>
+  <text x="305.0" y="214" text-anchor="middle" class="mono">&lt;&lt; 16</text>
+  <rect x="380" y="160" width="130" height="36" class="hw"/>
+  <text x="445.0" y="183" text-anchor="middle">device, 5 bits</text>
+  <text x="445.0" y="214" text-anchor="middle" class="mono">&lt;&lt; 11</text>
+  <rect x="510" y="160" width="110" height="36" class="hw"/>
+  <text x="565.0" y="183" text-anchor="middle">function, 3 bits</text>
+  <text x="565.0" y="214" text-anchor="middle" class="mono">&lt;&lt; 8</text>
+  <rect x="620" y="160" width="100" height="36" class="data"/>
+  <text x="670" y="183" text-anchor="middle">offset</text>
+  <text x="720" y="214" text-anchor="end" class="small dim">a multiple of 4</text>
+  <text x="40" y="258" text-anchor="start" class="head">ECAM: added to the window's base</text>
+  <rect x="230" y="270" width="150" height="36" class="hw"/>
+  <text x="305.0" y="293" text-anchor="middle">bus, 8 bits</text>
+  <text x="305.0" y="324" text-anchor="middle" class="mono">&lt;&lt; 20</text>
+  <rect x="380" y="270" width="130" height="36" class="hw"/>
+  <text x="445.0" y="293" text-anchor="middle">device, 5 bits</text>
+  <text x="445.0" y="324" text-anchor="middle" class="mono">&lt;&lt; 15</text>
+  <rect x="510" y="270" width="110" height="36" class="hw"/>
+  <text x="565.0" y="293" text-anchor="middle">function, 3 bits</text>
+  <text x="565.0" y="324" text-anchor="middle" class="mono">&lt;&lt; 12</text>
+  <rect x="620" y="270" width="100" height="36" class="data"/>
+  <text x="670" y="293" text-anchor="middle">offset</text>
+  <text x="720" y="324" text-anchor="end" class="small dim">4 KiB a function</text>
+</svg>

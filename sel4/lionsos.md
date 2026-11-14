@@ -2,7 +2,18 @@
 
 > LionsOS is Trustworthy Systems' operating system assembled from Microkit protection domains and sDDF drivers (file systems, network stack, language runtimes); libvmm is the companion library for writing virtual machine monitors that run Linux and other guests beside them.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [sDDF networking](sddf-net.md) · [CAmkES and capDL](camkes-capdl.md) →
+
 Read first: [Microkit](microkit.md), [sDDF](sddf.md).
+
+| At a glance | |
+|---|---|
+| Kind | Operating system kit (LionsOS) and VMM library (libvmm) |
+| Repository | `au-ts/lionsos`, `au-ts/libvmm` |
+| Key source | LionsOS `components/`, `examples`; libvmm `src/virtio/` |
+| API | libvmm: a PD with a `virtual_machine` element; guest exits arrive at `fault` |
+| Built on | [Microkit](microkit.md), [sDDF](sddf.md) |
+| Verified | No; designed with verification in mind |
 
 ## What it is
 
@@ -53,6 +64,10 @@ writing that VMM as a Microkit PD whose SDF entry contains a
 `virtual_machine` element: the PD's `fault` entry point receives guest
 exits and passes them to the library. It replaces, for Microkit, the
 older `libsel4vm` used by CAmkES VMs.
+
+![A Linux guest runs beside a VMM protection domain built with libvmm; the kernel delivers guest exits to the VMM's fault entry point, and the VMM implements the guest's virtio devices as clients of sDDF classes.](../images/lionsos-libvmm.svg)
+
+*A libvmm VMM between a guest and the rest of the system: exits come up from the kernel as faults, and each virtio device (described below) is an sDDF client.*
 
 What it supports, from its README:
 

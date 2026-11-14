@@ -2,7 +2,20 @@
 
 > The RISC-V architecture as a kernel sees it: 31 integer registers, named extensions, three privilege modes, control and status registers, and firmware services reached through the SBI; seL4 runs in S-mode on top of OpenSBI, and its 64-bit RISC-V port is one of the verified configurations.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [RISC-V](../INDEX.md#risc-v) · ← [Arm virtualisation (EL2)](arm-virtualisation.md) · [RISC-V paging and traps](riscv-paging-and-traps.md) →
+
 Read first: [Privilege levels](privilege-levels.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor architecture |
+| Architecture | RISC-V |
+| Reached through | CSRs, with the `Zicsr` instructions; firmware through `ecall` (the SBI) |
+| Found through | Extensions from the `riscv,isa` strings in the [device tree](device-tree.md) |
+| Key numbers | 32 integer registers `x0` to `x31`, `x0` always zero; three modes M, S, U; up to 4096 CSRs |
+| seL4 code | [`src/arch/riscv/`](https://github.com/seL4/seL4/tree/master/src/arch/riscv) |
+| seL4 config | `KernelArch` = `riscv`; `KernelSel4Arch` = `riscv64` or `riscv32` |
+| seL4 use | Kernel in S-mode on OpenSBI, using only legacy SBI calls; `RISCV64` is a verified configuration |
 
 ## What it is
 
@@ -183,6 +196,11 @@ secondary harts with SBI HSM calls and jumps to `_start` in
 `init_kernel` and then "returns" into `restore_user_context` to start
 the root task. There is no upstream support for the H extension, so
 seL4 is not a hypervisor on RISC-V.
+
+![OpenSBI runs in M-mode and starts the elfloader in S-mode, which jumps to the seL4 kernel, also in S-mode, with user threads above in U-mode; an `ecall` from U-mode is an seL4 system call and an `ecall` from S-mode is an SBI call to OpenSBI.](../images/riscv-basics-modes.svg)
+
+*The same instruction, `ecall`, crosses both boundaries; the mode it
+comes from decides who answers.*
 
 **Platforms** (directories of
 [`src/plat/`](https://github.com/seL4/seL4/tree/master/src/plat) whose

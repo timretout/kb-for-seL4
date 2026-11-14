@@ -2,7 +2,20 @@
 
 > The chain from reset to a kernel on a 64-bit Arm machine: boot ROM, Trusted Firmware-A (BL1, BL2, BL31), then U-Boot or UEFI, which starts the seL4 elfloader at EL2 or EL1 with the MMU off; the entry conditions each stage leaves decide what the loader and kernel may assume.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [AArch64 paging](aarch64-paging.md) · [PSCI and SMCCC](psci-smccc.md) →
+
 Read first: [AArch64 basics](aarch64-basics.md), [AArch64 exceptions](aarch64-exceptions.md).
+
+| At a glance | |
+|---|---|
+| Kind | Boot sequence (firmware stages and kernel entry conditions) |
+| Architecture | Arm (64-bit) |
+| Found through | Machine described by a [device tree](device-tree.md) or [ACPI tables](acpi-tables.md) handed over by the bootloader |
+| Key numbers | Entry at EL2 or EL1, MMU off, DTB address in `x0`; Linux `Image` header of 64 bytes, magic `0x644d5241` |
+| seL4 code | [`sys_boot.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/sys_boot.c) (elfloader), [`src/arch/arm/64/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/head.S) |
+| seL4 config | `ElfloaderImage` (`elf`, `binary`, `uimage`, `efi`), `KernelArmHypervisorSupport` |
+| seL4 use | Kernel is started by the [elfloader](../sel4/elfloader.md) or Microkit's loader, not by the bootloader |
+| On the clouds | Needs the `efi` elfloader image and a built-in device tree; the kernel has no Arm ACPI code |
 
 ## What it is
 
@@ -27,6 +40,11 @@ names are used even for firmware that is not TF-A.
 | BL31 | EL3 Runtime Software | EL3 | Initialises the interrupt controller and power controller, then stays to serve `SMC` calls | **Yes** |
 | BL32 | Secure-EL1 Payload | Secure EL1 | Optional trusted OS such as OP-TEE | Yes, if present |
 | BL33 | Non-trusted Firmware | EL2, or EL1 if there is no EL2 | The ordinary bootloader: U-Boot or UEFI | Usually not (UEFI keeps runtime services) |
+
+![The boot chain: boot ROM, BL1 and BL2 run in turn, BL2 loads BL31 (which stays resident at EL3), the optional BL32 and BL33 (U-Boot or UEFI), and BL33 starts the seL4 elfloader or Microkit's loader, which starts the kernel.](../images/arm-boot-chain.svg)
+
+*Only BL31 (red outline) is still there once the kernel runs. The last
+two boxes are seL4's part of the chain, described under "In seL4" below.*
 
 Two points matter later:
 

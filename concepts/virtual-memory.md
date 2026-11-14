@@ -2,7 +2,19 @@
 
 > How an MMU translates the addresses programs use into physical ones through multi-level page tables, with TLBs, address-space identifiers, large pages, permissions and a second stage for virtual machines; seL4 does no demand paging and exposes the tables themselves as objects, keeping only a fixed window of its own.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [Common ideas](../INDEX.md#common-ideas) · ← [Exceptions, interrupts and traps](exceptions-and-traps.md) · [FPU and SIMD state](fpu-state.md) →
+
 Read first: [Privilege levels](privilege-levels.md).
+
+| At a glance | |
+|---|---|
+| Kind | CPU mechanism: address translation by the MMU through page tables |
+| Architecture | x86-64, AArch64, RISC-V |
+| Reached through | Root register: `CR3`, `TTBR0_EL1` and `TTBR1_EL1`, `satp` |
+| Key numbers | 4 KiB pages; 9 bits per level; large pages of 2 MiB and 1 GiB |
+| seL4 code | [`include/machine.h`](https://github.com/seL4/seL4/blob/master/include/machine.h), [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c) |
+| seL4 use | No demand paging; page tables are [objects](../sel4/vspace.md); a fixed kernel window (`PPTR_BASE` to `PPTR_TOP`) |
+| On the clouds | A second stage under the kernel, which it cannot see |
 
 ## What it is
 
@@ -177,6 +189,10 @@ The kernel image itself is linked at a different address,
 `KERNEL_ELF_BASE`, mapped separately, and addresses in it convert with
 `kpptr_to_paddr`. A small region at `KDEV_BASE` holds the kernel's
 own device mappings (interrupt controller, timer, debug UART).
+
+![The kernel's half of the address space holds the kernel window, which maps physical memory from PADDR_BASE to PADDR_TOP at a fixed offset, and separately the kernel image and the kernel's own devices; RAM above PADDR_TOP falls outside the window.](../images/virtual-memory-kernel-window.svg)
+
+*The window is one addition away from physical memory. RAM beyond its end (red) cannot hold kernel objects and reaches user level only as device untypeds.*
 
 Every kernel object must lie inside the window. The kernel reaches
 TCBs, CNodes, endpoints and page tables by pointer while running on

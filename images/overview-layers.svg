@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 410" width="760" height="410" role="img">
+  <title>seL4 and what runs above it</title>
+  <desc>The seL4 kernel is the only code in the most privileged mode and provides a short list of services; the root task, device drivers, file systems, network stacks and memory management policy are user-level programs that reach it through about a dozen system calls.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="410" fill="#ffffff"/>
+  <text x="24" y="36" class="head">User level</text>
+  <rect x="24" y="48" width="169" height="90" rx="6" class="user"/>
+  <rect x="205" y="48" width="169" height="90" rx="6" class="user"/>
+  <rect x="386" y="48" width="169" height="90" rx="6" class="user"/>
+  <rect x="567" y="48" width="169" height="90" rx="6" class="user"/>
+  <text x="108.5" y="72" class="head" text-anchor="middle">Root task</text>
+  <text x="108.5" y="94" class="small" text-anchor="middle">created by the kernel at</text>
+  <text x="108.5" y="110" class="small" text-anchor="middle">boot, with capabilities</text>
+  <text x="108.5" y="126" class="small" text-anchor="middle">to every resource</text>
+  <text x="289.5" y="72" class="head" text-anchor="middle">Device drivers</text>
+  <text x="289.5" y="94" class="small" text-anchor="middle">device registers as</text>
+  <text x="289.5" y="110" class="small" text-anchor="middle">mapped frames, interrupt</text>
+  <text x="289.5" y="126" class="small" text-anchor="middle">as a notification</text>
+  <text x="470.5" y="76" class="head" text-anchor="middle">File systems,</text>
+  <text x="470.5" y="96" class="head" text-anchor="middle">network stacks,</text>
+  <text x="470.5" y="116" class="head" text-anchor="middle">process loading</text>
+  <text x="651.5" y="72" class="head" text-anchor="middle">Memory management</text>
+  <text x="651.5" y="90" class="head" text-anchor="middle">policy</text>
+  <text x="651.5" y="110" class="small" text-anchor="middle">who handles page faults,</text>
+  <text x="651.5" y="126" class="small" text-anchor="middle">when memory is reclaimed</text>
+  <path class="line" d="M60,143 V195" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="80" y="165">About a dozen system calls, all variations on "send a message to a</text>
+  <text x="80" y="184">capability" and "receive a message from a capability"</text>
+  <rect x="24" y="200" width="712" height="124" rx="6" class="kernel"/>
+  <text x="40" y="224" class="head">seL4 kernel: the only code in the processor's most privileged mode</text>
+  <text x="40" y="250" class="small">Threads and scheduling · Address spaces · Synchronous message passing · Asynchronous signals</text>
+  <text x="40" y="270" class="small">Interrupt delivery · Access control · Memory for all of these (untyped) · Fault forwarding</text>
+  <text x="40" y="290" class="small">Virtual machines (optional)</text>
+  <text x="40" y="312" class="small dim">Its only drivers: the interrupt controller, one timer for the scheduler, a debug serial port in debug builds</text>
+  <rect x="24" y="344" width="712" height="44" rx="6" class="hw"/>
+  <text x="380" y="371" text-anchor="middle">The machine: processor, memory, devices</text>
+</svg>

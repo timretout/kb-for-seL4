@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img">
+  <title>From a C call to the seL4 kernel</title>
+  <desc>An invocation stub calls seL4_Call, which uses a system call wrapper to trap into the kernel; a C library call goes through musllibc and sel4_vsyscall in libsel4muslcsys, which turns it into seL4 operations.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="400" fill="#ffffff"/>
+  <rect x="20" y="20" width="720" height="40" rx="6" class="user"/>
+  <text x="380" y="45" text-anchor="middle">C program that includes &lt;sel4/sel4.h&gt;, linked with musllibc</text>
+  <text x="30" y="84" class="head">libsel4</text>
+  <rect x="30" y="95" width="320" height="54" rx="6" class="user"/>
+  <text x="42" y="117" class="mono">seL4_Untyped_Retype(...)</text>
+  <text x="42" y="137" class="small">invocation stub, generated from XML</text>
+  <path class="line" d="M190,149 V178" marker-end="url(#arrow)"/>
+  <rect x="30" y="180" width="320" height="54" rx="6" class="user"/>
+  <text x="42" y="202" class="mono">seL4_Call</text>
+  <text x="42" y="222" class="small">thin C function</text>
+  <path class="line" d="M190,234 V263" marker-end="url(#arrow)"/>
+  <rect x="30" y="265" width="320" height="54" rx="6" class="user"/>
+  <text x="42" y="287">system call wrapper</text>
+  <text x="42" y="307" class="small">inline assembly: loads registers and traps</text>
+  <path class="line" d="M190,319 V348" marker-end="url(#arrow)"/>
+  <text x="198" y="340" class="mono">syscall</text>
+  <path class="line" d="M190,60 V93" marker-end="url(#arrow)"/>
+  <text x="410" y="84" class="head">C library</text>
+  <rect x="410" y="95" width="320" height="54" rx="6" class="user"/>
+  <text x="422" y="117" class="mono">printf, malloc</text>
+  <text x="422" y="137" class="small">musllibc: makes Linux system calls</text>
+  <path class="line" d="M570,149 V178" marker-end="url(#arrow)"/>
+  <text x="578" y="170" class="mono">__sysinfo</text>
+  <rect x="410" y="180" width="320" height="54" rx="6" class="user"/>
+  <text x="422" y="202" class="mono">sel4_vsyscall</text>
+  <text x="422" y="222" class="small">libsel4muslcsys: table of Linux system calls</text>
+  <path class="line" d="M490,234 V263" marker-end="url(#arrow)"/>
+  <path class="line" d="M650,234 V263" marker-end="url(#arrow)"/>
+  <text x="482" y="254" class="mono" text-anchor="end">writev</text>
+  <text x="658" y="254" class="mono">brk, mmap</text>
+  <rect x="410" y="265" width="155" height="54" rx="6" class="user"/>
+  <text x="420" y="287" class="mono">seL4_DebugPutChar</text>
+  <text x="420" y="307" class="small">or a serial driver</text>
+  <rect x="575" y="265" width="155" height="54" rx="6" class="data"/>
+  <text x="585" y="287">morecore array</text>
+  <text x="585" y="307" class="small">or a vspace</text>
+  <path class="line" d="M570,60 V93" marker-end="url(#arrow)"/>
+  <rect x="20" y="350" width="720" height="36" rx="6" class="kernel"/>
+  <text x="380" y="373" text-anchor="middle">seL4 kernel</text>
+</svg>

@@ -2,6 +2,18 @@
 
 > CPUID leaves from `0x40000000` that a hypervisor fills in to identify itself; leaf `0x40000010`, where offered, gives the TSC and local APIC timer rates so a guest need not measure them.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [Timer calibration](timer-calibration.md) · [HPET](hpet.md) →
+
+| At a glance | |
+|---|---|
+| Kind | CPUID leaves a hypervisor fills in |
+| Architecture | x86 |
+| Reached through | The `CPUID` instruction, leaves `0x40000000` and up |
+| Found through | CPUID leaf 1, ECX bit 31 (unchecked); the highest leaf is in EAX of `0x40000000` |
+| Key numbers | Leaf `0x40000010`: EAX is the TSC rate in kHz, EBX the local APIC timer's rate in kHz |
+| seL4 use | None upstream: seL4 measures instead (see [timer calibration](timer-calibration.md)) |
+| On the clouds | Every EC2 Nitro type tried offers `0x40000010`, with 1 000 000 kHz in EBX |
+
 ## What it is
 
 `CPUID` is the x86 instruction that reports what the processor supports.
@@ -21,6 +33,11 @@ the local APIC timer's rate in kHz. A guest checks that the maximum leaf
 reported by `0x40000000` is at least `0x40000010` before reading it, and
 treats a zero as "not offered". It is not part of KVM's documented
 leaves, so its presence depends on the host, not on KVM.
+
+![Leaf 0x40000000 returns the highest hypervisor leaf in EAX and a vendor signature in EBX, ECX and EDX; leaf 0x40000010 returns the TSC rate in kHz in EAX and the local APIC timer's rate in kHz in EBX.](../images/hypervisor-cpuid-leaves-registers.svg)
+
+*What the two leaves return. EAX of the first leaf (outlined in red) says
+whether the timing leaf is there to read.*
 
 ## In seL4
 

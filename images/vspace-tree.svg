@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 392" width="760" height="392" role="img">
+  <title>Building an x86-64 VSpace</title>
+  <desc>An x86-64 VSpace is a chain of objects from the PML4 root through a PDPT, a page directory and a page table to a 4 KiB frame, each linked by its own Map invocation. An ASID pool, made through the ASIDControl cap, gives the root its ASID, and the frame cap records the ASID and address it is mapped at.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="392" fill="#ffffff"/>
+  <rect x="300" y="40" width="260" height="40" rx="6" class="kernel"/>
+  <text x="430" y="65" text-anchor="middle" class="mono">seL4_X64_PML4Object</text>
+  <path class="line" d="M430,80 V108" marker-end="url(#arrow)"/>
+  <text x="442" y="99" text-anchor="start" class="mono">seL4_X86_PDPT_Map</text>
+  <rect x="300" y="112" width="260" height="40" rx="6" class="kernel"/>
+  <text x="430" y="137" text-anchor="middle" class="mono">seL4_X86_PDPTObject</text>
+  <path class="line" d="M430,152 V180" marker-end="url(#arrow)"/>
+  <text x="442" y="171" text-anchor="start" class="mono">seL4_X86_PageDirectory_Map</text>
+  <rect x="300" y="184" width="260" height="40" rx="6" class="kernel"/>
+  <text x="430" y="209" text-anchor="middle" class="mono">seL4_X86_PageDirectoryObject</text>
+  <path class="line" d="M430,224 V252" marker-end="url(#arrow)"/>
+  <text x="442" y="243" text-anchor="start" class="mono">seL4_X86_PageTable_Map</text>
+  <rect x="300" y="256" width="260" height="40" rx="6" class="kernel"/>
+  <text x="430" y="281" text-anchor="middle" class="mono">seL4_X86_PageTableObject</text>
+  <path class="line" d="M430,296 V324" marker-end="url(#arrow)"/>
+  <text x="442" y="315" text-anchor="start" class="mono">seL4_X86_Page_Map</text>
+  <rect x="300" y="328" width="260" height="40" rx="6" class="data"/>
+  <text x="430" y="353" text-anchor="middle" class="mono">seL4_X86_4K</text>
+  <text x="430" y="28" text-anchor="middle" class="small dim">VSpace root</text>
+  <text x="572" y="353" text-anchor="start" class="small dim">a 4 KiB frame</text>
+  <rect x="50" y="40" width="180" height="40" rx="6" class="kernel"/>
+  <text x="140" y="65" text-anchor="middle">ASID pool</text>
+  <path class="line" d="M230,60 H296" marker-end="url(#arrow)"/>
+  <text x="140" y="100" text-anchor="middle" class="mono">seL4_X86_ASIDPool_Assign</text>
+  <text x="140" y="117" text-anchor="middle" class="small dim">gives the root an ASID</text>
+  <rect x="50" y="184" width="180" height="40" rx="6" class="kernel"/>
+  <text x="140" y="209" text-anchor="middle">ASIDControl cap</text>
+  <path class="line" d="M140,184 V128" marker-end="url(#arrow)"/>
+  <text x="140" y="244" text-anchor="middle" class="mono">seL4_X86_ASIDControl_MakePool</text>
+  <text x="140" y="261" text-anchor="middle" class="small dim">makes a pool</text>
+  <text x="20" y="320" text-anchor="start" class="small">The frame cap records where</text>
+  <text x="20" y="336" text-anchor="start" class="small">it is mapped:</text>
+  <text x="20" y="354" text-anchor="start" class="mono">capFMappedASID</text>
+  <text x="20" y="372" text-anchor="start" class="mono">capFMappedAddress</text>
+</svg>

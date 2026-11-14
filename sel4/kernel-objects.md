@@ -2,7 +2,18 @@
 
 > The fixed set of object types the seL4 kernel implements (TCBs, endpoints, CNodes, page tables, frames and so on), which are created by retyping untyped memory, and the capability types that exist with no object behind them.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [CSpaces and capability addressing](cspace.md) · [Untyped memory and retyping](untyped-memory.md) →
+
 Read first: [Capabilities](capabilities.md), [CSpaces](cspace.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel objects: the fixed set of types, and the capability types with no object |
+| Key source | [`libsel4/include/sel4/objecttype.h`](https://github.com/seL4/seL4/blob/master/libsel4/include/sel4/objecttype.h), [`src/object/objecttype.c`](https://github.com/seL4/seL4/blob/master/src/object/objecttype.c), [`include/object/structures.h`](https://github.com/seL4/seL4/blob/master/include/object/structures.h) |
+| Config options | `CONFIG_VTX`, `CONFIG_IOMMU`, `CONFIG_ARM_HYPERVISOR_SUPPORT`, MCS add types |
+| API | `seL4_Untyped_Retype` with a `seL4_ObjectType` |
+| Object size | A power of two, 2^(size bits) bytes; on 64-bit: endpoint 4, TCB 11 or 12 (RV64 10 or 11), frames 12 and up |
+| Built on | [Untyped memory](untyped-memory.md), [capabilities](capabilities.md) |
 
 ## What it is
 

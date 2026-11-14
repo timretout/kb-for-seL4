@@ -2,7 +2,19 @@
 
 > libsel4 is the kernel's ABI written down as C (types, constants, system call wrappers and generated invocation stubs), shipped in the kernel repository under a BSD licence; `sel4runtime` and a C library sit on top of it, and Microkit and rust-sel4 consume the same definitions by other routes.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Proof impact of a change](proof-impact.md) · [seL4_libs and util_libs](sel4-libs.md) →
+
 Read first: [System calls and invocations](syscalls-and-invocations.md), [Generated code](generated-code.md).
+
+| At a glance | |
+|---|---|
+| Kind | Library (C, nearly all headers): the kernel's ABI |
+| Repository | The kernel repository, `libsel4/` directory |
+| Key source | [`libsel4/include/sel4/`](https://github.com/seL4/seL4/tree/master/libsel4/include/sel4), [`libsel4/tools/`](https://github.com/seL4/seL4/tree/master/libsel4/tools) |
+| Config options | `LibSel4FunctionAttributes`, `LibSel4StubsUseIPCBufferOnly`, `LibSel4PrintInvocationErrors`, `LibSel4UseThreadLocals` |
+| API | `<sel4/sel4.h>`: system call wrappers (`seL4_Call`, ...) and generated invocation stubs |
+| Used by | `sel4runtime`, musllibc, [seL4_libs](sel4-libs.md), [Microkit](microkit.md), [rust-sel4](rust-sel4.md) |
+| Verified | No; the kernel code that decodes what it sends is |
 
 ## What it is
 
@@ -115,6 +127,10 @@ pieces of a static "morecore" array
 [vspace](sel4-libs.md), and a system call with no table entry prints
 a warning and fails. So `printf` and `malloc` work in a root task;
 `fork` or sockets do not.
+
+![An invocation stub reaches the kernel through seL4_Call and a system call wrapper, while a C library call goes through musllibc to sel4_vsyscall in libsel4muslcsys.](../images/libsel4-call-path.svg)
+
+*The two routes down from a C program: libsel4's two layers of function on the left, and on the right the Linux system calls musllibc makes, answered by `sel4_vsyscall`.*
 
 ### Other consumers
 

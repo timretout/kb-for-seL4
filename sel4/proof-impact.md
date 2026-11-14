@@ -2,7 +2,18 @@
 
 > A procedure for deciding, before sending a kernel patch, whether it changes code the proofs cover: whether a verified configuration compiles it, whether it is boot or machine-interface code, and what to write in the pull request either way.
 
+[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [The verified C subset](verified-c-subset.md) · [libsel4 and the runtime](libsel4.md) →
+
 Read first: [Verification](verification.md), [l4v](l4v.md), [Verified C subset](verified-c-subset.md).
+
+| At a glance | |
+|---|---|
+| Kind | Process: deciding whether a kernel patch changes code the proofs cover |
+| Repository | `seL4/seL4` pull requests; proof updates go to [l4v](l4v.md) |
+| Key source | `kernel_all.c_pp`; `ci-actions/preprocess/test_munge.sh` |
+| Built on | The preprocess check in [CI](ci.md) |
+| Used by | The pull request description; reviewers' `verification` and `proof-test` labels |
+| Verified | Checked for `L4V_ARCH` = ARM, ARM_HYP, AARCH64, RISCV64, X64 and the MCS variants of ARM and RISCV64 |
 
 ## What it is
 
@@ -53,6 +64,11 @@ ends the matter for that hunk.
 | 3 | Is it only comments or whitespace, or in non-kernel files (`libsel4` C, the manual, CMake that does not alter generated headers)? | no impact |
 | 4 | Is the function `BOOT_CODE`, or a machine-interface function the proofs treat as assumed? | preprocess fails, proofs very likely unaffected: say so, ask for `proof-test` |
 | 5 | Otherwise: it changes verified code | proofs must be rerun and probably updated |
+
+![A flow of the five questions: a yes to any of questions 1 to 3 means no impact, a yes to question 4 means the preprocess check fails but the proofs are very likely unaffected, and otherwise the hunk changes verified code.](../images/proof-impact-questions.svg)
+
+*The questions as a flow: only a hunk that falls through all four
+reaches the expensive case.*
 
 **Question 1: which files.** The verified platforms are a fixed list
 ([Verification](verification.md)). For x86 only `pc99` in 64-bit mode is

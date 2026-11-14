@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 580" width="760" height="580" role="img">
+  <title>The x86 boot chain to seL4</title>
+  <desc>From reset in real mode, BIOS or UEFI firmware starts GRUB, which loads the kernel and modules and enters the kernel in the Multiboot state: 32-bit protected mode with paging off. QEMU's -kernel option reaches the same state with no firmware boot loader. seL4's head.S climbs to long mode and boot_sys parses the Multiboot information.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="580" fill="#ffffff"/>
+  <rect x="147" y="16" width="250" height="36" rx="6" class="hw"/>
+  <text x="272" y="39" text-anchor="middle">CPU reset: real mode</text>
+  <path class="line" d="M222,52 V68 H138 V84" marker-end="url(#arrow)"/>
+  <path class="line" d="M322,52 V68 H406 V84" marker-end="url(#arrow)"/>
+  <rect x="24" y="84" width="228" height="52" rx="6" class="fw"/>
+  <text x="138" y="115" text-anchor="middle" class="head">BIOS (legacy) firmware</text>
+  <rect x="292" y="84" width="228" height="52" rx="6" class="fw"/>
+  <text x="406" y="106" text-anchor="middle" class="head">UEFI firmware</text>
+  <text x="406" y="124" text-anchor="middle" class="small">hands over in 64-bit long mode</text>
+  <path class="line" d="M138,136 V188" marker-end="url(#arrow)"/>
+  <text x="146" y="166" class="small">GRUB's <tspan class="mono">i386-pc</tspan> build</text>
+  <path class="line" d="M406,136 V188" marker-end="url(#arrow)"/>
+  <text x="414" y="166" class="small"><tspan class="mono">x86_64-efi</tspan> build</text>
+  <rect x="24" y="188" width="496" height="78" rx="6" class="fw"/>
+  <text x="38" y="210" class="head">GRUB 2</text>
+  <text x="38" y="228" class="small">reads the kernel and modules from disk, gets the memory map from</text>
+  <text x="38" y="244" class="small">firmware, leaves firmware behind and jumps to the kernel</text>
+  <text x="38" y="260" class="small"><tspan class="mono">multiboot</tspan>, <tspan class="mono">module</tspan>: Multiboot 1.  <tspan class="mono">multiboot2</tspan>, <tspan class="mono">module2</tspan>: Multiboot 2.</text>
+  <rect x="560" y="176" width="176" height="90" rx="6" class="fw"/>
+  <text x="572" y="198" class="head">QEMU <tspan class="mono">-kernel</tspan></text>
+  <text x="572" y="216" class="small">contains a Multiboot 1</text>
+  <text x="572" y="232" class="small">loader; no firmware</text>
+  <text x="572" y="248" class="small">boot loader runs</text>
+  <path class="line" d="M648,266 V344 H520" marker-end="url(#arrow)"/>
+  <path class="line" d="M272,266 V310" marker-end="url(#arrow)"/>
+  <rect x="24" y="310" width="496" height="68" rx="6" class="data accent"/>
+  <text x="38" y="332" class="head">State at kernel entry, both protocols</text>
+  <text x="38" y="350" class="small">32-bit protected mode, paging off, interrupts disabled;</text>
+  <text x="38" y="366" class="small"><tspan class="mono">EAX</tspan> = magic, <tspan class="mono">EBX</tspan> = address of the boot information</text>
+  <path class="line" d="M272,378 V422" marker-end="url(#arrow)"/>
+  <rect x="24" y="422" width="496" height="114" rx="6" class="kernel"/>
+  <text x="38" y="444" class="head">seL4 kernel</text>
+  <text x="38" y="464" class="small"><tspan class="mono">_start</tspan> in <tspan class="mono">head.S</tspan>, 32-bit code: saves <tspan class="mono">EAX</tspan> and <tspan class="mono">EBX</tspan>, loads a stack</text>
+  <text x="38" y="482" class="small"><tspan class="mono">common_init</tspan>, then a far jump into 64-bit code</text>
+  <text x="38" y="500" class="small"><tspan class="mono">boot_sys</tspan> switches on the magic: Multiboot 1 or 2 parser</text>
+  <text x="38" y="518" class="small">both parsers end in <tspan class="mono">try_boot_sys</tspan></text>
+  <path class="line" d="M520,479 H560" marker-end="url(#arrow)"/>
+  <rect x="560" y="446" width="176" height="66" rx="6" class="user"/>
+  <text x="572" y="468" class="head">root task</text>
+  <text x="572" y="486" class="small">loaded from the first</text>
+  <text x="572" y="502" class="small">module</text>
+  <text x="24" y="562" class="small dim">The loader's module carries the root task; x86 has no elfloader.</text>
+</svg>

@@ -2,7 +2,19 @@
 
 > seL4's scheduler: 256 fixed priorities with round-robin inside each, found through a two-level bitmap, under an optional fixed-schedule domain scheduler; it decides what runs after every kernel entry, so nearly every kernel patch touches its invariants.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Threads and TCBs](threads.md) · [MCS kernel](mcs.md) →
+
 Read first: [Threads and TCBs](threads.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism: fixed-priority round-robin scheduler under an optional domain scheduler |
+| Key source | [`src/kernel/thread.c`](https://github.com/seL4/seL4/blob/master/src/kernel/thread.c), [`include/kernel/thread.h`](https://github.com/seL4/seL4/blob/master/include/kernel/thread.h), [`include/model/statedata.h`](https://github.com/seL4/seL4/blob/master/include/model/statedata.h) |
+| Config options | `KernelNumPriorities` (256), `KernelNumDomains` (1), `KernelNumDomainSchedules` (100), `KernelTimerTickMS` (2), `KernelTimeSlice` (5), `KernelIsMCS` |
+| API | `seL4_Yield`, `seL4_TCB_SetPriority`, `seL4_TCB_SetMCPriority`, `seL4_DomainSet_Set` |
+| Built on | [Threads and TCBs](threads.md) |
+| Used by | Every kernel entry, which ends in `schedule()` |
+| Verified | The information-flow proof relies on the domain scheduler |
 
 ## What it is
 
@@ -140,6 +152,12 @@ cache line.
 idempotent. Code normally uses the `SCHED_ENQUEUE()`/`SCHED_APPEND()`
 macros, which on SMP also arrange an inter-processor interrupt if the
 thread belongs to another core.
+
+![One queue of TCBs per priority: chooseThread takes the head of the highest non-empty queue, tcbSchedEnqueue adds at the head, tcbSchedAppend adds at the tail, and the current thread is in no queue.](../images/scheduling-ready-queues.svg)
+
+*Which end a thread joins decides the round-robin order: the head for
+a woken or preempted thread, the tail for one whose slice expired or
+that yielded.*
 
 ### `ksSchedulerAction` and `schedule()`
 

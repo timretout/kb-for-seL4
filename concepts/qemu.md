@@ -2,7 +2,20 @@
 
 > QEMU emulates whole machines (x86 PCs, Arm and RISC-V `virt` boards) in software or with KVM, and is where most seL4 development and testing first runs; its machines resemble clouds only loosely.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Virtual and cloud machines](../INDEX.md#virtual-and-cloud-machines) · ← [IOMMUs: VT-d and SMMU](iommu.md) · [Cloud virtual machines](cloud-vms.md) →
+
 Read first: [x86 boot](x86-boot.md), [Arm boot](arm-boot.md), [Device trees](device-tree.md).
+
+| At a glance | |
+|---|---|
+| Kind | Full-system emulator |
+| Architectures | x86, Arm and RISC-V guests, one program each (`qemu-system-x86_64`, `qemu-system-aarch64`, `qemu-system-riscv64`) |
+| Accelerators | TCG (translation, the default) or KVM (unchecked) |
+| seL4 platforms | `pc99`, `qemu-arm-virt`, `qemu-riscv-virt`, `spike`; Microkit boards `qemu_virt_aarch64`, `qemu_virt_riscv64`, `x86_64_generic` |
+| seL4 code | [`simulate.py`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/simulate_scripts/simulate.py), [`simulation.cmake`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/helpers/simulation.cmake), [`qemu-arm-virt/config.cmake`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/config.cmake) |
+| seL4 config | `ARM_CPU`, `QEMU_MEMORY` (MiB, default 1024), `QEMU_GIC_VERSION` |
+| seL4 use | Where most development and testing first runs, through the `simulate` script |
+| On the clouds | Its machines resemble clouds only loosely |
 
 ## What it is
 
@@ -16,6 +29,11 @@ executes guest code in one of two ways:
 |---|---|---|
 | **TCG** (tiny code generator), the default | Translates guest instructions to host instructions, block by block. Any guest on any host. Slow (tens of times), and time is elastic | Cross-architecture work; exact control of CPU features |
 | **KVM** (`-accel kvm` or `-enable-kvm`) | The Linux host's hardware virtualisation runs guest code directly; QEMU only emulates devices. Guest and host architecture must match | Speed; real CPU behaviour. The same split clouds use, with their own device models in QEMU's place |
+
+![Under TCG, QEMU translates guest instructions to host instructions and models the devices, for any guest on any host; under KVM the host runs guest code directly and QEMU only emulates devices, so the architectures must match.](../images/qemu-accelerators.svg)
+
+*Where guest code runs under each accelerator. Under KVM, QEMU is left
+with the devices alone.*
 
 The description of QEMU's own options in this section is from memory
 and the commands seL4's tools issue; QEMU's documentation was not opened
@@ -158,6 +176,11 @@ are CMake variables. The RISC-V platform does the same. A consequence:
 the kernel must be run with the same machine properties, core count and
 memory it was built with, and `qemu-system-*` must be installed on the
 build machine.
+
+![Configuring the kernel runs QEMU with dumpdtb, decompiles the generated device tree with dtc and appends it with an overlay to KernelDTSList; the kernel must then be run under QEMU with the same machine properties, core count and memory.](../images/qemu-virt-dtb.svg)
+
+*QEMU appears twice: once to describe the machine to the kernel's
+build, once to be that machine. The two command lines must agree.*
 
 x86 needs none of this: the `pc99` kernel discovers memory and devices
 at boot, so one kernel runs under any `-m`, `-smp` and machine.

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" width="760" height="470" role="img">
+  <title>seL4 x86-64 virtual address layout</title>
+  <desc>User addresses run from 0 to USER_TOP. Everything the kernel maps lies under the last PML4 entry: the kernel window from PPTR_BASE to PPTR_TOP, the kernel image at KERNEL_ELF_BASE and the kernel devices from KDEV_BASE. High addresses are at the top; not to scale.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="470" fill="#ffffff"/>
+  <rect x="290" y="40" width="200" height="50" rx="6" class="kernel"/>
+  <text x="390.0" y="70" text-anchor="middle">kernel devices</text>
+  <text x="506" y="60" class="small">local APIC, I/O APICs, IOMMU,</text>
+  <text x="506" y="76" class="small">in 4 KiB pages</text>
+  <path class="line" d="M280,90 H290"/>
+  <text x="276" y="94" text-anchor="end" class="mono">KDEV_BASE  0xffffffff_c0000000</text>
+  <rect x="290" y="90" width="200" height="50" rx="6" class="kernel"/>
+  <text x="390.0" y="120" text-anchor="middle">kernel image</text>
+  <text x="506" y="110" class="small">starts at <tspan class="mono">PPTR_TOP + 0x100000</tspan>;</text>
+  <text x="506" y="126" class="small">loaded at physical 1 MiB</text>
+  <path class="line" d="M280,140 H290"/>
+  <text x="276" y="144" text-anchor="end" class="mono">KERNEL_ELF_BASE</text>
+  <rect x="290" y="140" width="200" height="24" rx="6" class="data"/>
+  <path class="line" d="M280,164 H290"/>
+  <text x="276" y="168" text-anchor="end" class="mono">PPTR_TOP  0xffffffff_80000000</text>
+  <rect x="290" y="164" width="200" height="120" rx="6" class="kernel accent"/>
+  <text x="390.0" y="220" text-anchor="middle" class="head">kernel window</text>
+  <text x="390.0" y="240" text-anchor="middle" class="small">510 GiB</text>
+  <text x="506" y="216" class="small">physical memory from</text>
+  <text x="506" y="232" class="small"><tspan class="mono">PADDR_BASE</tspan> 0, at a fixed offset</text>
+  <path class="line" d="M280,284 H290"/>
+  <text x="276" y="288" text-anchor="end" class="mono">PPTR_BASE  0xffffff80_00000000</text>
+  <path class="line dash" d="M290,284 V340"/>
+  <path class="line dash" d="M490,284 V340"/>
+  <text x="506" y="304" class="small dim">SMP builds keep per-VSpace TLB</text>
+  <text x="506" y="320" class="small dim">bitmaps (<tspan class="mono">TLBBITMAP_PPTR</tspan>) just</text>
+  <text x="506" y="336" class="small dim">below <tspan class="mono">PPTR_BASE</tspan></text>
+  <path class="line" d="M280,340 H290"/>
+  <text x="276" y="344" text-anchor="end" class="mono">USER_TOP  0x00007fff_ffffffff</text>
+  <rect x="290" y="340" width="200" height="70" rx="6" class="user"/>
+  <text x="390.0" y="380" text-anchor="middle">user addresses</text>
+  <path class="line" d="M280,410 H290"/>
+  <text x="276" y="414" text-anchor="end" class="mono">0</text>
+  <text x="24" y="446" class="small dim">Everything the kernel maps lives under the last PML4 entry. High addresses at the top; not to scale.</text>
+</svg>

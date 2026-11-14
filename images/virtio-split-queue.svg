@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" width="760" height="390" role="img">
+  <title>One request through a split virtqueue</title>
+  <desc>The driver fills a descriptor chain, puts its head index in the available ring and increments avail.idx, then notifies the device with a trapped register write; the device writes id and len to the used ring, increments used.idx and interrupts the driver.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="390" fill="#ffffff"/>
+  <rect x="24" y="40" width="120" height="310" rx="6" class="user"/>
+  <text x="84.0" y="192" text-anchor="middle">driver</text>
+  <text x="84.0" y="208" text-anchor="middle" class="small">(guest)</text>
+  <rect x="616" y="40" width="120" height="310" rx="6" class="fw"/>
+  <text x="676.0" y="192" text-anchor="middle">device</text>
+  <text x="676.0" y="208" text-anchor="middle" class="small">(hypervisor)</text>
+  <rect x="290" y="100" width="180" height="50" rx="6" class="data"/>
+  <text x="380.0" y="122" text-anchor="middle">descriptor table</text>
+  <text x="380.0" y="138" text-anchor="middle" class="small dim">driver writes</text>
+  <rect x="290" y="180" width="180" height="50" rx="6" class="data"/>
+  <text x="380.0" y="202" text-anchor="middle">available ring</text>
+  <text x="380.0" y="218" text-anchor="middle" class="small dim">driver writes</text>
+  <rect x="290" y="260" width="180" height="50" rx="6" class="data"/>
+  <text x="380.0" y="282" text-anchor="middle">used ring</text>
+  <text x="380.0" y="298" text-anchor="middle" class="small dim">device writes</text>
+  <path class="line" d="M144,65 H616" marker-end="url(#arrow)"/>
+  <text x="380" y="57" text-anchor="middle" class="small">3  notify ("kick"): a write to a transport register, which traps</text>
+  <path class="line" d="M144,125 H290" marker-end="url(#arrow)"/>
+  <text x="217" y="117" text-anchor="middle" class="small">1  fill a chain</text>
+  <path class="line" d="M144,205 H290" marker-end="url(#arrow)"/>
+  <text x="217" y="180" text-anchor="middle" class="small">2  head index in</text>
+  <text x="217" y="196" text-anchor="middle" class="small">ring, then <tspan class="mono">idx</tspan>++</text>
+  <path class="line" d="M616,285 H470" marker-end="url(#arrow)"/>
+  <text x="543" y="260" text-anchor="middle" class="small">4  <tspan class="mono">{id, len}</tspan>,</text>
+  <text x="543" y="276" text-anchor="middle" class="small">then <tspan class="mono">idx</tspan>++</text>
+  <path class="line" d="M616,336 H144" marker-end="url(#arrow)"/>
+  <text x="380" y="328" text-anchor="middle" class="small">5  interrupt</text>
+  <text x="380" y="372" text-anchor="middle" class="small dim">The three arrays are in guest memory, allocated by the driver.</text>
+</svg>

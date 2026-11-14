@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 316" width="760" height="316" role="img">
+  <title>A platform description becomes one kernel</title>
+  <desc>On Arm and RISC-V the board device tree, the seL4 overlay and hardware.yml become devices_gen.h (device mappings, interrupt numbers, avail_p_regs[] and physBase), and the platform config.cmake fills the generated platform header. Both are compiled into a kernel binary that runs on that machine and no other.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="316" fill="#ffffff"/>
+  <rect class="data" x="16" y="30" width="250" height="44" rx="6"/>
+  <text x="30" y="57" class="mono">tools/dts/&lt;board&gt;.dts</text>
+  <rect class="data" x="16" y="86" width="250" height="44" rx="6"/>
+  <text x="30" y="113" class="mono">overlay-&lt;plat&gt;.dts</text>
+  <rect class="data" x="16" y="142" width="250" height="44" rx="6"/>
+  <text x="30" y="169" class="mono">tools/hardware.yml</text>
+  <rect class="data" x="16" y="240" width="250" height="44" rx="6"/>
+  <text x="30" y="267" class="mono">src/plat/&lt;plat&gt;/config.cmake</text>
+  <rect class="data" x="310" y="46" width="220" height="124" rx="6"/>
+  <text x="324" y="70" class="mono">devices_gen.h</text>
+  <text x="324" y="94">device mappings</text>
+  <text x="324" y="114">interrupt numbers</text>
+  <text x="324" y="134" class="mono">avail_p_regs[]</text>
+  <text x="324" y="154" class="mono">physBase</text>
+  <rect class="data" x="310" y="224" width="220" height="76" rx="6"/>
+  <text x="324" y="247" class="head">Generated platform header</text>
+  <text x="324" y="268" class="mono">TIMER_FREQUENCY, MAX_IRQ</text>
+  <text x="324" y="288">driver header files</text>
+  <path class="line" d="M266,52 L310,82" marker-end="url(#arrow)"/>
+  <path class="line" d="M266,108 H310" marker-end="url(#arrow)"/>
+  <path class="line" d="M266,164 L310,134" marker-end="url(#arrow)"/>
+  <path class="line" d="M266,262 H310" marker-end="url(#arrow)"/>
+  <rect class="kernel" x="574" y="120" width="170" height="96" rx="6"/>
+  <text x="588" y="146" class="head">Kernel binary</text>
+  <text x="588" y="170">runs on that machine</text>
+  <text x="588" y="190">and no other</text>
+  <path class="line" d="M530,108 L574,146" marker-end="url(#arrow)"/>
+  <path class="line" d="M530,262 L574,196" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" role="img">
+  <title>The Arm generic timer</title>
+  <desc>One system counter, shared by all cores, feeds each core's timers: non-secure physical, virtual, hypervisor and secure physical. Each timer raises its own private peripheral interrupt at the GIC, usually PPI 30, 27, 26 and 29.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="330" fill="#ffffff"/>
+  <rect x="20" y="120" width="190" height="64" rx="6" class="hw"/>
+  <text x="115" y="148" text-anchor="middle">system counter</text>
+  <text x="115" y="166" text-anchor="middle" class="small dim">64-bit, constant rate</text>
+  <text x="20" y="210" class="small dim">count:</text>
+  <text x="64" y="210" class="mono">CNTPCT_EL0</text>
+  <text x="20" y="230" class="small dim">rate:</text>
+  <text x="64" y="230" class="mono">CNTFRQ_EL0</text>
+  <text x="20" y="250" class="small dim">(set by firmware at boot)</text>
+  <rect x="280" y="30" width="250" height="280" rx="6" fill="#ffffff" stroke="#3b6bb5" stroke-width="1.5"/>
+  <text x="296" y="54" class="head">each core's timers</text>
+  <path class="line" d="M210,152 H280" marker-end="url(#arrow)"/>
+  <text x="245" y="144" text-anchor="middle" class="small dim">count</text>
+  <rect x="640" y="30" width="104" height="280" rx="6" class="hw"/>
+  <text x="692" y="175" text-anchor="middle">GIC</text>
+  <rect x="296" y="70" width="218" height="42" rx="6" class="hw"/>
+  <text x="405" y="96" text-anchor="middle">non-secure physical</text>
+  <path class="line" d="M514,91 H640" marker-end="url(#arrow)"/>
+  <text x="585" y="83" text-anchor="middle">PPI 30</text>
+  <rect x="296" y="128" width="218" height="42" rx="6" class="hw"/>
+  <text x="405" y="154" text-anchor="middle">virtual</text>
+  <path class="line" d="M514,149 H640" marker-end="url(#arrow)"/>
+  <text x="585" y="141" text-anchor="middle">PPI 27</text>
+  <rect x="296" y="186" width="218" height="42" rx="6" class="hw"/>
+  <text x="405" y="212" text-anchor="middle">hypervisor</text>
+  <path class="line" d="M514,207 H640" marker-end="url(#arrow)"/>
+  <text x="585" y="199" text-anchor="middle">PPI 26</text>
+  <rect x="296" y="244" width="218" height="42" rx="6" class="hw"/>
+  <text x="405" y="270" text-anchor="middle">secure physical</text>
+  <path class="line" d="M514,265 H640" marker-end="url(#arrow)"/>
+  <text x="585" y="257" text-anchor="middle">PPI 29</text>
+</svg>

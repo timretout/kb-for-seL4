@@ -2,6 +2,18 @@
 
 > Finding how fast a clock runs by timing it against another whose rate is known; on x86 seL4 does this at boot for the TSC and the local APIC timer, using the PIT.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [Local APIC timer and TSC deadline mode](lapic-timer.md) · [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Boot-time measurement of one clock against another |
+| Architecture | x86 only in seL4 |
+| Key numbers | One 50 ms [PIT](pit.md) period per measurement; about 100 ms per calibration |
+| seL4 code | `measure_tsc_khz()` in [`hardware.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/hardware.c), `apic_measure_freq()` in [`apic.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/apic.c), `pit_wait_wraparound()` in [`pit.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/pit.c) |
+| seL4 config | `CONFIG_PC99_TSC_FREQUENCY` skips the TSC measurement |
+| seL4 use | Times the [TSC](tsc.md) and the [local APIC timer](lapic-timer.md) against the PIT |
+| On the clouds | Compute Engine's N1 PIT count can rise just after a reload |
+
 ## What it is
 
 A kernel that sets timers needs each timer's rate. When the hardware does
@@ -24,6 +36,12 @@ The answer can only be as good as three things:
 Lining up first matters: a measurement waits for one wraparound
 **untimed**, to start exactly at the beginning of a period, then times the
 next whole one.
+
+![The PIT count is a sawtooth; the measurement waits untimed for the first reload, reads clock A there, and reads it again at the next reload, one whole period later.](../images/timer-calibration-measure.svg)
+
+*One measurement against the [PIT](pit.md). The first wait only lines the
+measurement up with the start of a period; the two reads of clock A are a
+whole period apart.*
 
 Retrying until two measurements agree looks robust but is not on its own:
 if the code between measurements (a warning printed to a serial port, say)

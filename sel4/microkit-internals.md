@@ -2,7 +2,18 @@
 
 > How the `microkit` tool turns a system description into a boot image (a capDL specification realised by the Rust capDL initialiser as root task), and how the loader, monitor and libmicrokit's event loop map Microkit's abstractions onto seL4 objects.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Microkit](microkit.md) · [sDDF](sddf.md) →
+
 Read first: [Microkit](microkit.md), [Capabilities](capabilities.md), [BootInfo and the root task](bootinfo-and-root-task.md).
+
+| At a glance | |
+|---|---|
+| Kind | Framework internals: tool, loader, initialiser, monitor, libmicrokit |
+| Repository | The [Microkit](microkit.md) repository |
+| Key source | `tool/microkit/`, `loader/`, `initialiser/`, `monitor/src/main.c`, `libmicrokit/src/main.c` |
+| Config options | Every SDK kernel: `KernelIsMCS`, `KernelRootCNodeSizeBits=17`, `LibSel4UseThreadLocals=OFF`, `KernelNumDomains=16` |
+| API | libmicrokit calls `seL4_Recv`, `seL4_ReplyRecv`, `seL4_NBSendRecv`, `seL4_Signal`, `seL4_Call` |
+| Built on | capDL; `sel4-capdl-initializer` from [rust-sel4](rust-sel4.md) |
 
 ## What it is
 
@@ -146,6 +157,10 @@ notifications").
 | child fault | the child's fault endpoint is the parent's endpoint, badged `1<<62 \| child id` |
 | `protected` returning | `seL4_ReplyRecv` through the PD's one reply object |
 
+![A protection domain has one endpoint and one notification bound to its TCB; calls and child faults arrive on the endpoint, notifies and interrupts on the notification, each with a badge.](../images/microkit-internals-pd-objects.svg)
+
+*Everything a PD receives comes in through its one endpoint or the notification bound to its TCB, and the badge says what it was.*
+
 The event loop (`handler_loop` in `libmicrokit/src/main.c`) is:
 
 ```c
@@ -165,6 +180,10 @@ notification wake-up is a bit set of channels, and bits 62 and 63 are
 reserved to tell faults and calls apart: hence 62 usable channel
 identifiers. `seL4_NBSendRecv` is how `microkit_deferred_notify` and
 `microkit_deferred_irq_ack` fold one send into the next wait.
+
+![The 64-bit badge: bit 62 marks a child fault, bit 63 a protected procedure call, and otherwise the low bits are a set of notified channels.](../images/microkit-internals-badge.svg)
+
+*How `handler_loop` reads the badge, in the order it tests the bits.*
 
 The CSpace is one CNode whose slots are fixed constants shared by
 `microkit.h` and `capdl/builder.rs`:

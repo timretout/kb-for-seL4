@@ -2,7 +2,20 @@
 
 > How to read a Compute Engine machine type name such as `c4a-standard-2`, and what the series behind it decides for a kernel: architecture, CPU, network card, disk interface and bare-metal availability.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [Google Compute Engine](gce.md) · [Booting a custom kernel on a cloud](cloud-boot-images.md) →
+
 Read first: [Google Compute Engine](gce.md).
+
+| At a glance | |
+|---|---|
+| Kind | Naming scheme for Compute Engine virtual hardware |
+| Name parts | Series (family, generation, vendor letter), shape, vCPUs: `c4a-standard-2` |
+| Architecture | x86 (Intel, AMD) and Arm |
+| Devices | x86 generations 1 and 2: virtio-net and virtio-scsi, [gVNIC](gvnic.md) optional; generation 3 on and all Arm: gVNIC and [NVMe](nvme.md) only |
+| Firmware | UEFI on every series tried |
+| Bare metal | `-metal` types on C3, C4, C4D, C4A, Z3 |
+| Look up with | `gcloud compute machine-types describe` |
+| seL4 use | None in code; decides what to test on and what a build must match |
 
 ## What it is
 

@@ -2,7 +2,19 @@
 
 > `seL4/rust-sel4` is the Rust support for seL4 user level: the `sel4` crate of typed bindings generated from the kernel's own interface files, runtimes for root tasks and Microkit protection domains, the capDL initialiser Microkit boots with, a kernel loader, and target specifications; the kernel itself stays in C.
 
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [CAmkES and capDL](camkes-capdl.md) · [Contributing a patch](contributing.md) →
+
 Read first: [libsel4 and the runtime](libsel4.md), [Microkit](microkit.md).
+
+| At a glance | |
+|---|---|
+| Kind | Libraries (`no_std` Rust crates) and a few complete programs |
+| Repository | [`seL4/rust-sel4`](https://github.com/seL4/rust-sel4) |
+| Key source | [`crates/sel4/src/`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4/src), [`crates/sel4-microkit/`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4-microkit), [`crates/sel4-capdl-initializer/`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4-capdl-initializer) |
+| Config options | `SEL4_INCLUDE_DIRS` or `SEL4_PREFIX` (environment); `sel4_cfg` attributes |
+| API | `Cap<T>` with invocations as methods; `#[root_task]`; `#[protection_domain]` and `Handler` |
+| Built on | The headers, bitfield and XML files libsel4 is generated from; a nightly toolchain |
+| Used by | [Microkit](microkit.md), through the capDL initialiser |
 
 ## What it is
 
@@ -101,6 +113,10 @@ of a kernel build (`cmake --install`), using
   domain are reached with `memory_region_symbol!(name: *mut T)`, which
   reads the variable the `microkit` tool patches with the region's
   address (`setvar_vaddr`).
+
+![sel4-sys and sel4-config are generated from one kernel build's headers, bitfield files, invocation XML and configuration JSON; the sel4 crate sits on them, and the sel4-root-task and sel4-microkit runtimes sit on that.](../images/rust-sel4-crates.svg)
+
+*The binding crates and the two runtimes. Everything above the `sel4` crate is generated from one kernel build, which is why the API changes shape with the configuration.*
 
 ### Complete programs
 

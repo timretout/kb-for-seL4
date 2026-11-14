@@ -2,6 +2,19 @@
 
 > The IBM PC's original expansion bus; long gone as a slot, it lives on as the fixed set of legacy PC devices (PIT, 8259 PICs, COM ports, RTC, keyboard) at their old I/O ports and IRQ numbers 0 to 15, which every x86 machine and hypervisor still provides.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [Arm generic timer](arm-generic-timer.md) · [PCI and PCI Express](pci.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Legacy bus, surviving as a fixed set of PC devices |
+| Architecture | x86 |
+| Introduced | 1981 (IBM PC, 8-bit); 1984 (PC/AT, 16-bit) |
+| Reached through | [I/O ports](io-ports.md) at fixed addresses |
+| Found through | Fixed by convention, with no discovery |
+| Interrupt | ISA IRQs 0 to 15, from the two [8259 PICs](pic-8259.md); now delivered through the [I/O APIC](apic.md) |
+| seL4 use | IRQs 0 to 15 at vectors `0x20`–`0x2f`; the [PIT](pit.md) for boot calibration, COM1 for the debug console |
+| On the clouds | ISA IRQ 0 on I/O APIC pin 0 on EC2 Nitro and Compute Engine x86 types (pin 2 in QEMU) |
+
 ## What it is
 
 The IBM PC (1981) had an 8-bit expansion bus, a buffered copy of the 8088
@@ -80,6 +93,12 @@ code states the mapping).
   pin 2. EC2's Nitro types and Compute Engine's x86 types have no override
   for IRQ 0, so the PIT is on pin 0; code that assumes pin 2 waits forever
   for its first timer interrupt. See [PIT](pit.md).
+
+  ![The PIT's ISA IRQ 0 arrives on I/O APIC pin 2 in QEMU, whose MADT has an override to GSI 2, and on pin 0 on EC2 Nitro and Compute Engine x86 types, which have no override.](../images/isa-irq0-pin.svg)
+
+  *The same device and the same ISA IRQ, on a different I/O APIC pin:
+  only the MADT says which.*
+
 - **Not every IRQ under 16 is ISA.** QEMU's MADT also has level-triggered
   overrides for those IRQs below 16 that it gives to PCI devices, and
   EC2's Nitro types override IRQs 5, 9, 10 and 11.

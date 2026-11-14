@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 410" width="760" height="410" role="img">
+  <title>From CMake options to CONFIG macros</title>
+  <desc>Initial-cache files, a project settings.cmake and command-line overrides set CMake cache options that the config.cmake files declare. The build writes them out as gen_config.h, which kernel sources include through config.h and autoconf.h, and as JSON and YAML that Microkit and rust-sel4 read.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="410" fill="#ffffff"/>
+  <rect class="data" x="16" y="24" width="228" height="56" rx="6"/>
+  <text x="30" y="47">Stand-alone: initial cache</text>
+  <text x="30" y="67" class="mono">-C configs/*.cmake</text>
+  <rect class="data" x="266" y="24" width="228" height="56" rx="6"/>
+  <text x="280" y="47">Project: <tspan class="mono">init-build.sh</tspan></text>
+  <text x="280" y="67" class="mono">-C settings.cmake</text>
+  <rect class="data" x="516" y="24" width="228" height="56" rx="6"/>
+  <text x="530" y="47">Overrides on command line</text>
+  <text x="530" y="67" class="mono">-DKernelPrinting=ON</text>
+  <path class="line" d="M130,80 V120" marker-end="url(#arrow)"/>
+  <path class="line" d="M380,80 V120" marker-end="url(#arrow)"/>
+  <path class="line" d="M630,80 V120" marker-end="url(#arrow)"/>
+  <rect class="data" x="16" y="120" width="728" height="80" rx="6"/>
+  <text x="30" y="143">CMake cache: options declared in the <tspan class="mono">config.cmake</tspan> files with</text>
+  <text x="30" y="165" class="mono">config_option()   config_string()   config_choice()</text>
+  <text x="30" y="187" class="dim"><tspan class="mono">KernelFastpath</tspan> in CMake is <tspan class="mono">CONFIG_FASTPATH</tspan> in C</text>
+  <path class="line" d="M191,200 V240" marker-end="url(#arrow)"/>
+  <path class="line" d="M569,200 V240" marker-end="url(#arrow)"/>
+  <rect class="data" x="16" y="240" width="350" height="56" rx="6"/>
+  <text x="30" y="263" class="mono">gen_config/kernel/gen_config.h</text>
+  <text x="30" y="283" class="mono dim">#define CONFIG_FASTPATH 1</text>
+  <rect class="data" x="394" y="240" width="350" height="56" rx="6"/>
+  <text x="408" y="263" class="mono">gen_config.json, gen_config.yaml</text>
+  <text x="408" y="283" class="dim">the same as JSON and YAML</text>
+  <path class="line" d="M191,296 V336" marker-end="url(#arrow)"/>
+  <path class="line" d="M569,296 V336" marker-end="url(#arrow)"/>
+  <rect class="kernel" x="16" y="336" width="350" height="56" rx="6"/>
+  <text x="30" y="359">Kernel sources: <tspan class="mono">#include &lt;config.h&gt;</tspan></text>
+  <text x="30" y="379" class="dim">which pulls in <tspan class="mono">autoconf/autoconf.h</tspan></text>
+  <rect class="data" x="394" y="336" width="350" height="56" rx="6"/>
+  <text x="408" y="359">Microkit and rust-sel4 read them</text>
+  <text x="408" y="379" class="dim">to learn how the kernel was configured</text>
+</svg>

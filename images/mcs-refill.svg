@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 282" width="760" height="282" role="img">
+  <title>A sporadic server refill</title>
+  <desc>A thread uses an amount u of its budget starting at time t. That amount comes back as a new refill usable from t plus one period, no sooner.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="282" fill="#ffffff"/>
+  <path class="line" d="M40,150 H730" marker-end="url(#arrow)"/>
+  <text x="728" y="172" class="small dim" text-anchor="end">time</text>
+  <rect x="140" y="110" width="110" height="40" rx="6" class="user"/>
+  <text x="195" y="135" text-anchor="middle">uses u</text>
+  <path class="line" d="M140,150 V162"/>
+  <text x="140" y="180" text-anchor="middle">t</text>
+  <path class="line" d="M540,150 V162"/>
+  <text x="540" y="180" text-anchor="middle">t + period</text>
+  <rect x="450" y="40" width="180" height="40" rx="6" class="kernel" style="stroke:#cf222e"/>
+  <text x="540" y="65" text-anchor="middle">refill: (t + period, u)</text>
+  <path class="line accent" d="M540,80 V148" marker-end="url(#arrow)"/>
+  <path class="line dash" d="M195,108 C220,50 330,50 448,58" marker-end="url(#arrow)"/>
+  <text x="250" y="44" class="small">comes back one period later</text>
+  <path class="line" d="M140,208 H540" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+  <text x="340" y="228" class="small" text-anchor="middle">one period</text>
+  <text x="40" y="262" class="small dim">Over any window of one period the thread gets at most its budget.</text>
+
+</svg>

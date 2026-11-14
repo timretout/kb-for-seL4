@@ -2,7 +2,19 @@
 
 > How an AArch64 core enters and leaves a higher exception level: a 16-entry vector table at `VBAR_ELx`, the syndrome in `ESR_ELx`, the return state in `ELR_ELx` and `SPSR_ELx`, and `ERET`; seL4's whole kernel entry and exit is built on it.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [AArch64](../INDEX.md#aarch64) · ← [AArch64 basics](aarch64-basics.md) · [AArch64 paging](aarch64-paging.md) →
+
 Read first: [AArch64 basics](aarch64-basics.md), [Exceptions, interrupts and traps](exceptions-and-traps.md).
+
+| At a glance | |
+|---|---|
+| Kind | Processor mechanism (exception entry and return) |
+| Architecture | Arm ([AArch64](aarch64-basics.md)) |
+| Reached through | System registers `VBAR_ELx`, `ESR_ELx`, `ELR_ELx`, `SPSR_ELx`, `FAR_ELx`; the `ERET` instruction |
+| Key numbers | 16 vector entries of 0x80 bytes (2 KiB); four kinds; exception class in `ESR_ELx` bits 31 to 26 |
+| seL4 code | [`src/arch/arm/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/traps.S), [`src/arch/arm/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/c_traps.c) |
+| seL4 config | `CONFIG_ARM_HYPERVISOR_SUPPORT` (`_el1` or `_el2` registers), `CONFIG_AARCH64_SERROR_IGNORE` |
+| seL4 use | All kernel entry and exit; a system call is `svc #0` with its number in `X7` |
 
 ## What it is
 
@@ -136,6 +148,12 @@ of ksCurThread's registers>`. So on entry:
 
 There is one kernel stack per core, not per thread, and it is empty on
 every entry: the kernel never blocks inside itself.
+
+![The path from a user thread into the seL4 kernel and back: the processor takes the exception, the vector table entry runs `kernel_enter` to save registers into the TCB, `lsp_i` loads the kernel stack, a C handler runs and `restore_user_context` ends in `eret`.](../images/aarch64-exceptions-entry.svg)
+
+*The stack pointer does two jobs: on entry it points into the TCB, so
+`kernel_enter` can save registers before any stack exists, and only then
+is it switched to the per-core kernel stack.*
 
 **Dispatch.** `lower_el_sync` shifts `ESR` right by `ESR_EC_SHIFT` (26)
 and compares the class:

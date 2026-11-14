@@ -2,6 +2,19 @@
 
 > The per-core x86 timer built into each local APIC, programmed either as a countdown at an unknown bus-derived rate or, in TSC deadline mode, as an absolute TSC value.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [TSC](tsc.md) · [Timer calibration](timer-calibration.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Per-core timer built into the [local APIC](apic.md) |
+| Architecture | x86 |
+| Reached through | The LVT timer entry and a divide register; the `IA32_TSC_DEADLINE` MSR in TSC deadline mode |
+| Found through | CPUID leaf 1, ECX bit 24, for TSC deadline mode |
+| Key numbers | Three modes: one-shot, periodic, TSC deadline |
+| seL4 code | `apic_init()` in [`src/arch/x86/kernel/apic.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/apic.c) |
+| seL4 use | [MCS](../sel4/mcs.md): a one-shot deadline for every scheduling decision. Non-MCS: a periodic tick |
+| On the clouds | TSC deadline mode on EC2's Intel Nitro types; not on its AMD ones (t3a, m6a, m7a) or Compute Engine's N1 |
+
 ## What it is
 
 Each x86 core has a [local APIC](apic.md) (Advanced Programmable Interrupt

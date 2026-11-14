@@ -2,7 +2,19 @@
 
 > x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions; seL4 keeps user threads away from the instructions and hands out ranges of ports as IOPort capabilities.
 
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [x86-64 exceptions and system calls](x86-exceptions-syscalls.md) · [x86 boot: BIOS, GRUB and Multiboot](x86-boot.md) →
+
 Read first: [x86-64 basics](x86-64-basics.md).
+
+| At a glance | |
+|---|---|
+| Kind | Address space for device registers (port-mapped I/O), set against MMIO |
+| Architecture | x86 |
+| Reached through | The `in` and `out` instructions |
+| Key numbers | 65536 ports (16-bit numbers); `seL4_CapIOPortControl` is slot 7 |
+| seL4 code | [`src/arch/x86/object/ioport.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/ioport.c) |
+| seL4 use | User threads cannot run `in` or `out`; port ranges are IOPort capabilities and each access is a system call |
+| On the clouds | Usually COM1 and PCI configuration ports; PIT, PIC or keyboard controller may be absent |
 
 ## What it is
 
@@ -138,6 +150,10 @@ All device access is MMIO: device memory is handed to the root task
 as device [untypeds](../sel4/untyped-memory.md), retyped into frames
 and mapped into a driver's [VSpace](../sel4/vspace.md); x86 MMIO
 devices work the same way.
+
+![Two routes from user level to a device in seL4: a port access is a system call on an IOPort capability and the kernel executes in or out, while a memory-mapped device is reached by loads and stores to a frame mapped in the driver's VSpace.](../images/io-ports-sel4-access.svg)
+
+*The kernel sits on the path of every port access and of no MMIO access.*
 
 ## Gotchas
 

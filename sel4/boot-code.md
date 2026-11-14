@@ -2,6 +2,15 @@
 
 > Kernel code marked `BOOT_CODE` runs once before the first user thread and is then discarded; seL4's functional correctness proof does not cover it, which changes what a patch to it costs.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Kernel boot sequence](kernel-boot.md) · [Elfloader](elfloader.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism (the `BOOT_CODE` mark and the proof boundary) |
+| Key source | On x86: `boot_sys.c`, `boot.c`, `pit.c`, `hardware.c`, `apic.c` |
+| Used by | [Kernel boot](kernel-boot.md); [timer calibration](../concepts/timer-calibration.md) |
+| Verified | No: covered by assumptions about the state it leaves, not by proof |
+
 ## What it is
 
 seL4 splits the kernel image into code that runs only while the kernel

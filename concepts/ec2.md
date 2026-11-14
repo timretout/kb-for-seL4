@@ -2,7 +2,19 @@
 
 > How EC2 runs a guest: the Nitro hypervisor and cards, AMIs and boot modes, EBS, the serial console and other ways to see a kernel boot, and the hardware (PCI devices, interrupt controllers, timers) a guest kernel finds.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [Cloud virtual machines](cloud-vms.md) · [EC2 instance types](ec2-instance-types.md) →
+
 Read first: [Cloud virtual machines](cloud-vms.md), [PCI](pci.md), [ACPI tables](acpi-tables.md).
+
+| At a glance | |
+|---|---|
+| Kind | Cloud platform: virtual machines, and whole servers on `metal` types |
+| Architecture | `x86_64` and `arm64` (Graviton) |
+| Hypervisor | Nitro (derived from KVM) since about 2017; Xen on older types; none on `metal` |
+| Firmware | BIOS or [UEFI](uefi.md) on x86, by boot mode; UEFI only on Graviton; ACPI on both |
+| Devices | [ENA](ena.md) and [NVMe](nvme.md), PCI vendor `0x1d0f`; no [virtio](virtio.md) |
+| Console | Serial port only: 16550A at I/O port `0x3f8` on virtual x86, a memory-mapped PCI 16550 on Graviton and metal |
+| seL4 use | `pc99` runs on virtual x86 Nitro types; no upstream Arm platform or ENA driver |
 
 ## What it is
 
@@ -32,6 +44,11 @@ Linux identifies it as KVM, and it offers KVM's paravirtual interfaces
 (observed on t3, c5, c7i, m6a, 2026). A `metal` instance has no hypervisor
 at all, but still gets its network and disks from Nitro cards, so the
 same two device drivers serve both.
+
+![An EC2 host holds the instance, the Nitro hypervisor that divides CPUs and memory, the Nitro cards that present network and disks to the instance as PCI functions, and a security chip.](../images/ec2-nitro.svg)
+
+*The hypervisor is small because the I/O is on the cards; a `metal`
+instance loses the hypervisor and keeps the cards.*
 
 ### What a Nitro guest sees
 

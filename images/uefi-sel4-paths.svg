@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 372" width="760" height="372" role="img">
+  <title>How seL4 is started from UEFI on x86-64 and on Arm</title>
+  <desc>On x86-64 GRUB is the UEFI application: it reads the kernel and root task, calls ExitBootServices and enters seL4 in the Multiboot 2 state, with the ACPI RSDP in tags 14 and 15. On Arm the elfloader is the UEFI application: it exits boot services, discards the memory map and looks for a device tree before starting the kernel.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+    </marker>
+  </defs>
+  <rect width="760" height="372" fill="#ffffff"/>
+  <text x="24" y="28" class="head">x86-64: GRUB is the UEFI application</text>
+  <rect x="24" y="42" width="160" height="108" rx="6" class="fw"/>
+  <text x="36" y="64" class="head">UEFI firmware</text>
+  <text x="36" y="84" class="small">loads the PE image,</text>
+  <text x="36" y="100" class="small">applies relocations,</text>
+  <text x="36" y="116" class="small">calls its entry point</text>
+  <path class="line" d="M184,96 H228" marker-end="url(#arrow)"/>
+  <path class="line" d="M488,96 H540" marker-end="url(#arrow)"/>
+  <text x="24" y="206" class="head">Arm: the elfloader is the UEFI application</text>
+  <rect x="24" y="220" width="160" height="108" rx="6" class="fw"/>
+  <text x="36" y="242" class="head">UEFI firmware</text>
+  <text x="36" y="262" class="small">loads the PE image,</text>
+  <text x="36" y="278" class="small">applies relocations,</text>
+  <text x="36" y="294" class="small">calls its entry point</text>
+  <path class="line" d="M184,274 H228" marker-end="url(#arrow)"/>
+  <path class="line" d="M488,274 H540" marker-end="url(#arrow)"/>
+  <rect x="228" y="42" width="260" height="108" rx="6" class="fw"/>
+  <text x="240" y="64" class="head">GRUB, as <tspan class="mono">BOOTX64.EFI</tspan></text>
+  <text x="240" y="84" class="small">reads the kernel and root task</text>
+  <text x="240" y="100" class="small">from the ESP, calls <tspan class="mono">ExitBootServices</tspan>,</text>
+  <text x="240" y="116" class="small">drops to the Multiboot state</text>
+  <rect x="540" y="42" width="204" height="108" rx="6" class="kernel"/>
+  <text x="552" y="64" class="head">seL4 kernel</text>
+  <text x="552" y="84" class="small">entered in 32-bit protected</text>
+  <text x="552" y="100" class="small">mode; takes the ACPI RSDP</text>
+  <text x="552" y="116" class="small">from Multiboot 2 tags</text>
+  <text x="552" y="132" class="small">14 and 15</text>
+  <rect x="228" y="220" width="260" height="108" rx="6" class="fw"/>
+  <text x="240" y="242" class="head">elfloader, image type efi</text>
+  <text x="240" y="262" class="small"><tspan class="mono">efi_main</tspan> saves the system table</text>
+  <text x="240" y="278" class="small"><tspan class="mono">efi_exit_boot_services</tspan>: gets the</text>
+  <text x="240" y="294" class="small">memory map, exits, discards the map</text>
+  <text x="240" y="310" class="small"><tspan class="mono">efi_get_fdt</tspan> looks for a device tree</text>
+  <rect x="540" y="220" width="204" height="108" rx="6" class="kernel"/>
+  <text x="552" y="242" class="head">seL4 kernel</text>
+  <text x="552" y="262" class="small">memory and devices from a</text>
+  <text x="552" y="278" class="small">device tree at build time;</text>
+  <text x="552" y="294" class="small">no Arm ACPI parser</text>
+  <text x="24" y="352" class="small dim">The elfloader does not look up the ACPI RSDP and has nothing to pass an ACPI pointer through.</text>
+</svg>

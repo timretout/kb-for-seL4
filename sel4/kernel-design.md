@@ -2,7 +2,17 @@
 
 > The rules every line of seL4 follows: one kernel stack per core and no blocking inside the kernel, interrupts off except at explicit preemption points that abort and restart the system call, no kernel heap, errors as return values, and a small set of global state; knowing them explains why kernel code looks the way it does.
 
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Virtualisation support](hypervisor.md) · [Source layout](source-layout.md) →
+
 Read first: [seL4 overview](overview.md), [Source layout](source-layout.md).
+
+| At a glance | |
+|---|---|
+| Kind | Kernel mechanism (the design rules and execution model) |
+| Key source | `src/api/syscall.c`, [`src/model/preemption.c`](https://github.com/seL4/seL4/blob/master/src/model/preemption.c), `src/model/statedata.c` |
+| Config options | `CONFIG_KERNEL_STACK_BITS`, `CONFIG_MAX_NUM_WORK_UNITS_PER_PREEMPTION`, `CONFIG_RESET_CHUNK_BITS` |
+| Built on | [Untyped memory](untyped-memory.md) in place of a heap; the [verified C subset](verified-c-subset.md) |
+| Verified | The proofs model the kernel as a function from (state, event) to state; debug-only code is outside them |
 
 ## What it is
 
@@ -86,6 +96,11 @@ cannot continue from where it was. Instead:
   chosen, `activateThread()` sets its program counter to the restart
   address (`getRestartPC()`: the system call instruction itself), so the
   thread simply executes the same system call again.
+
+![An invocation sets the caller to Restart before doing any work; if it completes the state becomes Running, and if a preemption point fires the state stays Restart and activateThread() later points the thread back at the system call instruction.](../images/kernel-design-restart.svg)
+
+*The red arrow is the restart: there is no kernel stack to resume on, so a
+preempted thread runs the whole system call again.*
 
 Long operations are written so that each step makes durable progress and
 leaves kernel state consistent: a preempted revoke has already deleted

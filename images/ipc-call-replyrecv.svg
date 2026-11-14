@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 345" width="760" height="345" role="img">
+  <title>IPC round trip with Call and ReplyRecv</title>
+  <desc>A server waits on an endpoint with seL4_ReplyRecv. A client's seL4_Call delivers the message and badge directly to the server and blocks the client for the reply. The server's next seL4_ReplyRecv answers the client and waits for the next one, so a round trip is two kernel entries.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="345" fill="#ffffff"/>
+  <rect x="50" y="20" width="160" height="36" rx="6" class="user"/>
+  <text x="130" y="43" text-anchor="middle" class="head">Client</text>
+  <path class="line dash" d="M130,56 V300"/>
+  <rect x="300" y="20" width="160" height="36" rx="6" class="kernel"/>
+  <text x="380" y="43" text-anchor="middle" class="head">Endpoint</text>
+  <path class="line dash" d="M380,56 V300"/>
+  <rect x="550" y="20" width="160" height="36" rx="6" class="user"/>
+  <text x="630" y="43" text-anchor="middle" class="head">Server</text>
+  <path class="line dash" d="M630,56 V300"/>
+  <path class="line" d="M630,100 H384" marker-end="url(#arrow)"/>
+  <text x="505" y="92" text-anchor="middle" class="mono">seL4_ReplyRecv</text>
+  <text x="505" y="118" text-anchor="middle" class="small dim">no sender yet: the server waits</text>
+  <path class="line" d="M130,165 H376" marker-end="url(#arrow)"/>
+  <text x="255" y="157" text-anchor="middle" class="mono">seL4_Call</text>
+  <path class="line" d="M384,165 H626" marker-end="url(#arrow)"/>
+  <text x="505" y="157" text-anchor="middle" class="small">message and badge, copied directly</text>
+  <text x="138" y="185" text-anchor="start" class="small dim">blocked for the reply</text>
+  <text x="622" y="205" text-anchor="end" class="small dim">handles the request</text>
+  <path class="line" d="M630,250 H134" marker-end="url(#arrow)"/>
+  <text x="505" y="242" text-anchor="middle" class="mono">seL4_ReplyRecv</text>
+  <text x="255" y="242" text-anchor="middle" class="small">the reply</text>
+  <path class="line" d="M630,280 H384" marker-end="url(#arrow)"/>
+  <text x="505" y="297" text-anchor="middle" class="small dim">then waits for the next client</text>
+  <text x="380" y="330" text-anchor="middle" class="small">One round trip is two kernel entries: the client's Call and the server's ReplyRecv.</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 352" width="760" height="352" role="img">
+  <title>What the elfloader does and hands over</title>
+  <desc>The boot loader runs the elfloader, which on Arm loads the kernel, device tree and root task, leaves EL2 if the kernel runs at EL1, builds boot page tables, starts the other cores, enables the MMU and jumps to the kernel entry with the six init_kernel arguments. In memory the kernel segments sit at the addresses in its program headers, the DTB copy at the next page boundary and the root task after that.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: #57606a; }
+    .hw { fill: #ddebff; stroke: #3b6bb5; }
+    .fw { fill: #eee3fb; stroke: #7a52b3; }
+    .kernel { fill: #ffe8cc; stroke: #b86e14; }
+    .user { fill: #dcf3e1; stroke: #3d8a50; }
+    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: #cf222e; }
+    .accent-fill { fill: #cf222e; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+    </marker>
+  </defs>
+  <rect width="760" height="352" fill="#ffffff"/>
+  <rect class="fw" x="16" y="60" width="140" height="70" rx="6"/>
+  <text x="30" y="84" class="head">Boot loader</text>
+  <text x="30" y="104" class="small dim">loads and runs</text>
+  <text x="30" y="120" class="small dim">the image</text>
+  <rect class="fw" x="196" y="24" width="264" height="184" rx="6"/>
+  <text x="210" y="48" class="head">Elfloader (Arm)</text>
+  <text x="210" y="76">load kernel, DTB and root task</text>
+  <text x="210" y="98">leave EL2 for an EL1 kernel</text>
+  <text x="210" y="120">build boot page tables</text>
+  <text x="210" y="142">start the other cores</text>
+  <text x="210" y="164">enable the MMU</text>
+  <text x="210" y="186">jump to the kernel's ELF entry</text>
+  <rect class="kernel" x="500" y="24" width="244" height="126" rx="6"/>
+  <text x="514" y="48" class="head">Kernel</text>
+  <text x="514" y="72" class="mono" xml:space="preserve">init_kernel(ui_p_reg_start,</text>
+  <text x="514" y="91" class="mono" xml:space="preserve">    ui_p_reg_end, pv_offset,</text>
+  <text x="514" y="110" class="mono" xml:space="preserve">    v_entry, dtb_addr_p,</text>
+  <text x="514" y="129" class="mono" xml:space="preserve">    dtb_size)</text>
+  <rect class="user" x="500" y="176" width="244" height="50" rx="6"/>
+  <text x="514" y="197" class="head">Root task</text>
+  <text x="514" y="215" class="small dim">DTB copy passed on in BootInfo</text>
+  <path class="line" d="M156,95 H196" marker-end="url(#arrow)"/>
+  <path class="line" d="M460,86 H500" marker-end="url(#arrow)"/>
+  <path class="line" d="M622,150 V176" marker-end="url(#arrow)"/>
+  <text x="16" y="262" class="head">Physical memory after <tspan class="mono">load_images()</tspan></text>
+  <rect class="kernel" x="16" y="274" width="244" height="40" rx="6"/>
+  <text x="138" y="299" text-anchor="middle">kernel segments</text>
+  <rect class="data" x="260" y="274" width="160" height="40" rx="6"/>
+  <text x="340" y="299" text-anchor="middle">DTB copy</text>
+  <rect class="user" x="420" y="274" width="220" height="40" rx="6"/>
+  <text x="530" y="299" text-anchor="middle">root task</text>
+  <text x="20" y="334" class="small dim">addresses from its program headers</text>
+  <text x="264" y="334" class="small dim">next page boundary</text>
+  <text x="424" y="334" class="small dim">after that, packed upwards</text>
+</svg>

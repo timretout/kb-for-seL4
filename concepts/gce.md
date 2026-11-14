@@ -2,7 +2,20 @@
 
 > Google Cloud's virtual machine service: a KVM-based hypervisor with Google's own device model, UEFI firmware with ACPI on both x86 and Arm, virtio or Google-specific PCI devices, and a logged serial port as the only console.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Cloud platforms](../INDEX.md#cloud-platforms) · ← [EC2 instance types](ec2-instance-types.md) · [Compute Engine machine types](gce-machine-types.md) →
+
 Read first: [Cloud virtual machines](cloud-vms.md), [PCI](pci.md), [ACPI tables](acpi-tables.md).
+
+| At a glance | |
+|---|---|
+| Kind | Cloud platform: virtual machines |
+| Architecture | x86 and Arm |
+| Hypervisor | Linux KVM |
+| Firmware | UEFI 2.7 (EDK II) with ACPI; no device tree on Arm |
+| Devices | [virtio](virtio.md) or [gVNIC](gvnic.md), virtio-scsi or NVMe, by series |
+| Console | Serial port 1 only (COM1 at `0x3f8` on x86, PL011 at `0x09000000` on Arm), logged, latest 1 MiB kept |
+| Key numbers | No [HPET](hpet.md); [PIT](pit.md) IRQ 0 on I/O APIC pin 0; `CNTFRQ_EL0` 1 GHz on C4A and N4A, 25 MHz on T2A |
+| seL4 use | x86 `pc99` boots through GRUB and Multiboot2; no Arm platform; no gVNIC driver in sDDF |
 
 ## What it is
 
@@ -98,6 +111,11 @@ Observed on `t2a-standard-1`, `c4a-standard-1` and `n4a-standard-1` in
   66 (interrupt 98), where QEMU has SPI 1. The SPCR table names it.
 - RAM from `0x40000000`; PCI ECAM at `0x3f000000` with gVNIC
   (`1ae0:0042`), virtio-rng and an NVMe controller (`1ae0:001f`).
+
+![The fixed physical addresses of a Compute Engine Arm guest in rising order: GICv3 distributor, ITS and redistributors, four PL011 UARTs, the PCI ECAM region, then RAM.](../images/gce-arm-memory-map.svg)
+
+*The layout is that of QEMU's `virt` board; the UART interrupt is
+not.*
 
 ### Serial ports
 

@@ -2,6 +2,18 @@
 
 > Arm's interrupt controller (distributor, per-core redistributors, CPU interface) and its ITS, which turns devices' MSI writes into LPIs using tables in memory.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [Local APIC and I/O APIC](apic.md) · [PIT](pit.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Interrupt controller, with an optional translation service (ITS) for message signalled interrupts |
+| Architecture | Arm |
+| Reached through | `GICD_*` and `GICR_*` registers; system registers `ICC_*_EL1` for the CPU interface; the ITS's command queue in memory |
+| Key numbers | INTIDs: SGIs 0 to 15, PPIs 16 to 31, SPIs 32 to 1019, LPIs 8192 and up |
+| seL4 config | `KernelArmGicV3ITS` (a prototype, not upstream) |
+| seL4 use | Upstream handles SPIs, PPIs and SGIs; no LPIs or ITS |
+| On the clouds | EC2: 128 LPIs on t4g, 256 on m9g. Compute Engine's bare-metal types have six ITSes |
+
 ## What it is
 
 The Generic Interrupt Controller, version 3, has these parts:
@@ -13,6 +25,11 @@ The Generic Interrupt Controller, version 3, has these parts:
 - the **CPU interface**, reached through system registers (`ICC_*_EL1`),
   where a core acknowledges and ends interrupts;
 - optionally one or more **ITS**es.
+
+![A wired device's SPI goes through the distributor to a core; each core has a redistributor and a CPU interface; a PCI device sends an EventID to the ITS, which sends an LPI to one core's redistributor.](../images/gicv3-its-parts.svg)
+
+*The parts of a GICv3 and the two routes an interrupt takes. The lower
+route, through the ITS, is explained under "LPIs and the ITS" below.*
 
 Interrupt IDs (INTIDs) come in ranges:
 

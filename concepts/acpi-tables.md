@@ -2,6 +2,16 @@
 
 > The tables PC (and Arm server) firmware leaves in memory to describe the machine: the RSDP points to the XSDT, which lists tables such as the MADT (interrupt controllers), HPET, MCFG (PCI) and DSDT.
 
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Firmware and platform description](../INDEX.md#firmware-and-platform-description) · ← [RISC-V interrupts and timers](riscv-interrupts.md) · [Device trees](device-tree.md) →
+
+| At a glance | |
+|---|---|
+| Kind | Firmware tables describing the machine |
+| Architecture | PCs and Arm servers |
+| Found through | The RSDP root pointer: in the BIOS area (`0xe0000` to `0xfffff`), or handed over by [UEFI](uefi.md) or the bootloader |
+| seL4 use | x86 kernel parses the MADT and DMAR at boot (unchecked: which tables exactly) and passes the RSDP to the root task in bootinfo |
+| On the clouds | EC2 Nitro and Compute Engine x86: overrides for IRQs 5, 9, 10 and 11 only, none for IRQ 0 |
+
 ## What it is
 
 ACPI (Advanced Configuration and Power Interface) does two jobs: power
