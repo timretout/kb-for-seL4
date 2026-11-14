@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Check sel4-kb's pages: structure, index, relative links, reference marks.
+
+Usage: ci/check   (from anywhere; exits non-zero on any problem)
+"""
+
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+PAGE_DIRS = ["concepts", "sel4"]
+SECTIONS = ["What it is", "In seL4", "Gotchas", "See also", "References", "My notes"]
+LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
+MARK = re.compile(r"\*(Checked \d{4}-\d{2}-\d{2}|Unchecked)[^*]*\*")
+
+problems = []
+
+
+def problem(path, msg):
+    problems.append(f"{path.relative_to(ROOT)}: {msg}")
+
+
+def check_links(path, text):
+    for target in LINK.findall(text):
+        if re.match(r"[a-z]+:", target) or target.startswith("#"):
+            continue
+        file_part = target.split("#", 1)[0]
+        if not (path.parent / file_part).resolve().exists():
+            problem(path, f"broken link {target}")
+
+
+def check_page(path):
+    text = path.read_text()
+    lines = text.splitlines()
+    if not lines or not lines[0].startswith("# "):
+        problem(path, "first line is not a '# Title'")
+    if not any(l.startswith("> ") for l in lines[1:4]):
+        problem(path, "no '> summary' line under the title")
+    found = [l[3:].strip() for l in lines if l.startswith("## ")]
+    if found != SECTIONS:
+        problem(path, f"sections are {found}, expected {SECTIONS}")
+    refs = re.search(r"^## References\n(.*?)^## ", text, re.S | re.M)
+    if refs:
+        items = re.split(r"^- ", refs.group(1), flags=re.M)[1:]
+        if not items:
+            problem(path, "References is empty")
+        for item in items:
+            if not MARK.search(item):
+                first = item.strip().splitlines()[0][:60]
+                problem(path, f"reference has no Checked/Unchecked mark: {first}")
+    check_links(path, text)
+
+
+def main():
+    pages = sorted(p for d in PAGE_DIRS for p in (ROOT / d).glob("*.md"))
+    for page in pages:
+        check_page(page)
+
+    index = ROOT / "INDEX.md"
+    index_text = index.read_text()
+    check_links(index, index_text)
+    listed = {(ROOT / t.split("#")[0]).resolve() for t in LINK.findall(index_text)}
+    for page in pages:
+        if page.resolve() not in listed:
+            problem(page, "not listed in INDEX.md")
+
+    for extra in ["README.md", "CLAUDE.md"]:
+        check_links(ROOT / extra, (ROOT / extra).read_text())
+
+    for p in problems:
+        print(p)
+    print(f"{len(pages)} pages, {len(problems)} problems")
+    return 1 if problems else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
