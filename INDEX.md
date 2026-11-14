@@ -20,10 +20,10 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 ### Common ideas
 
 - [Privilege levels](concepts/privilege-levels.md): The CPU modes that separate user code, kernel, hypervisor and firmware on x86 (rings, VMX root, SMM), Arm (EL0 to EL3) and RISC-V (U, S, M): seL4 runs in ring 0, EL1 or EL2, or S-mode, and something more privileged usually sits beneath it.
-- [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md): Stub: how a CPU enters the kernel: synchronous exceptions, system calls and asynchronous interrupts, vectors, saved state, and return; the architecture-neutral picture.
-- [Virtual memory](concepts/virtual-memory.md): Stub: page tables, multi-level translation, TLBs, ASIDs, large pages and the kernel/user split, independent of architecture.
-- [FPU and SIMD state](concepts/fpu-state.md): Stub: floating-point and vector register state, lazy against eager switching, XSAVE on x86, and how seL4 handles it.
-- [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md): Stub: how secondary cores are started and how cores interrupt each other on x86 (INIT/SIPI), Arm (PSCI) and RISC-V (SBI HSM).
+- [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md): The three ways a CPU leaves user code for the kernel (a faulting instruction, a system call instruction, an asynchronous interrupt), what hardware saves and what software must, and how the kernel returns; every seL4 architecture funnels these into the same five C functions in `src/api/syscall.c`.
+- [Virtual memory](concepts/virtual-memory.md): How an MMU translates the addresses programs use into physical ones through multi-level page tables, with TLBs, address-space identifiers, large pages, permissions and a second stage for virtual machines; seL4 does no demand paging and exposes the tables themselves as objects, keeping only a fixed window of its own.
+- [FPU and SIMD state](concepts/fpu-state.md): The floating-point and vector registers are extra per-thread state, hundreds to thousands of bytes, that a kernel must save and restore; how and when it does so (lazily by trap, or eagerly) is a performance and security choice, and on x86 the save format and size are build options seL4 checks at boot.
+- [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md): How a multicore machine goes from one running core to all of them: INIT and STARTUP IPIs on x86, PSCI `CPU_ON` on Arm, SBI HSM on RISC-V; on x86 the seL4 kernel does it itself, on Arm and RISC-V the elfloader does it first.
 - [ELF and linking](concepts/elf.md): Stub: the ELF format, segments against sections, linker scripts, physical against virtual load addresses; what the kernel image, elfloader and Microkit do with ELF files.
 
 ### x86-64
@@ -33,26 +33,26 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 - [x86-64 paging](concepts/x86-paging.md): How x86-64 translates 48-bit virtual addresses through four levels of 512-entry tables rooted at `CR3`, with the entry flags, large pages, PCIDs and TLB rules a kernel must respect; seL4 exposes each level as an object type and keeps its own window in the top 512 GiB.
 - [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md): How an x86-64 CPU enters the kernel (through the IDT for exceptions and interrupts, through `syscall` or `sysenter` for system calls), what it saves and where, and how seL4's `traps.S` turns each entry into a saved register context in the current TCB.
 - [I/O ports and MMIO](concepts/io-ports.md): x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions; seL4 keeps user threads away from the instructions and hands out ranges of ports as IOPort capabilities.
-- [x86 boot: BIOS, GRUB and Multiboot](concepts/x86-boot.md): Stub: how a PC gets from reset to a kernel: BIOS or UEFI, the boot loader, Multiboot 1 and 2, and the state seL4 expects on entry.
-- [UEFI](concepts/uefi.md): Stub: the firmware interface that replaced the BIOS on PCs and is standard on Arm servers: boot services, the memory map, configuration tables, and what a kernel inherits from it.
-- [8259 PIC](concepts/pic-8259.md): Stub: the original PC interrupt controller pair, why it must still be masked or remapped, and seL4's use of it.
-- [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md): Stub: VMX root and non-root operation, the VMCS, VM exits, EPT, and what a guest kernel can and cannot see.
+- [x86 boot: BIOS, GRUB and Multiboot](concepts/x86-boot.md): How a PC gets from reset to a kernel: BIOS or UEFI firmware, a boot loader (usually GRUB), and the Multiboot 1 and 2 protocols that hand seL4 its memory map, root task image and ACPI pointer in 32-bit protected mode.
+- [UEFI](concepts/uefi.md): The firmware interface that replaced the PC BIOS and is standard on Arm servers and cloud instances: it loads a PE executable from a FAT partition and offers it services and tables; x86 seL4 hides it behind GRUB, and the Arm elfloader can be built as a UEFI application.
+- [8259 PIC](concepts/pic-8259.md): The PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports; every x86 kernel, seL4 included, still has to remap and mask it at boot even when it uses the APICs instead.
+- [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md): Intel's hardware support for running guest operating systems (VMX root and non-root operation, the VMCS, EPT) and AMD's equivalent: it is what seL4's x86 hypervisor mode drives, and what every cloud instance seL4 boots on is running under.
 
 ### AArch64
 
 - [AArch64 basics](concepts/aarch64-basics.md): The 64-bit Arm execution state: 31 general registers, a stack pointer per exception level, PSTATE, and hundreds of system registers read with `MRS` and written with `MSR`; every line of seL4's Arm code assumes them.
 - [AArch64 exceptions](concepts/aarch64-exceptions.md): How an AArch64 core enters and leaves a higher exception level: a 16-entry vector table at `VBAR_ELx`, the syndrome in `ESR_ELx`, the return state in `ELR_ELx` and `SPSR_ELx`, and `ERET`; seL4's whole kernel entry and exit is built on it.
 - [AArch64 paging](concepts/aarch64-paging.md): AArch64 address translation: two page table roots (`TTBR0` for the low half of the address space, `TTBR1` for the high half), up to four levels of 4 KiB tables, ASIDs to tag TLB entries, and an optional second stage for hypervisors; seL4's VSpace objects are these tables.
-- [Arm boot flow](concepts/arm-boot.md): Stub: from reset through TF-A and U-Boot or UEFI to a kernel: exception level on entry, the image header, and where the elfloader fits.
-- [PSCI and SMCCC](concepts/psci-smccc.md): Stub: the Arm firmware calling convention and the power-state interface used to start and stop cores.
-- [GICv2](concepts/gicv2.md): Stub: the older Arm interrupt controller (distributor and memory-mapped CPU interface), interrupt types (SGI, PPI, SPI), and seL4's driver.
-- [Arm virtualisation (EL2)](concepts/arm-virtualisation.md): Stub: EL2, stage 2 translation, trapping, the virtual GIC and virtual timer, and why seL4 runs at EL2 in hypervisor builds.
+- [Arm boot flow](concepts/arm-boot.md): The chain from reset to a kernel on a 64-bit Arm machine: boot ROM, Trusted Firmware-A (BL1, BL2, BL31), then U-Boot or UEFI, which starts the seL4 elfloader at EL2 or EL1 with the MMU off; the entry conditions each stage leaves decide what the loader and kernel may assume.
+- [PSCI and SMCCC](concepts/psci-smccc.md): Arm's standard way for a kernel to call firmware or a hypervisor (SMCCC: a function identifier in `x0`, then `SMC` or `HVC`), and the standard service built on it for starting, stopping and resetting cores (PSCI); seL4's loaders use it to start secondary cores and the kernel can pass calls through for user level.
+- [GICv2](concepts/gicv2.md): Arm's older standard interrupt controller, with at most eight cores and every register memory-mapped: a shared distributor (GICD) that enables, prioritises and routes interrupts, and a per-core CPU interface (GICC) where the kernel acknowledges and completes them; seL4's driver for many Arm boards.
+- [Arm virtualisation (EL2)](concepts/arm-virtualisation.md): What exception level 2 adds to an Arm core so that a hypervisor can run guests: trap controls in `HCR_EL2`, a second stage of address translation, virtual interrupts through the GIC's list registers and a virtual timer; an seL4 kernel built as a hypervisor runs entirely at EL2.
 
 ### RISC-V
 
-- [RISC-V basics](concepts/riscv-basics.md): Stub: registers, privilege modes, CSRs, extensions and the SBI firmware interface.
-- [RISC-V paging and traps](concepts/riscv-paging-and-traps.md): Stub: Sv39/Sv48 translation, satp, and trap handling through stvec, scause and sepc.
-- [RISC-V interrupts and timers](concepts/riscv-interrupts.md): Stub: the PLIC, CLINT, the SBI timer, and the newer AIA and Sstc extensions.
+- [RISC-V basics](concepts/riscv-basics.md): The RISC-V architecture as a kernel sees it: 31 integer registers, named extensions, three privilege modes, control and status registers, and firmware services reached through the SBI; seL4 runs in S-mode on top of OpenSBI, and its 64-bit RISC-V port is one of the verified configurations.
+- [RISC-V paging and traps](concepts/riscv-paging-and-traps.md): How an S-mode kernel on RISC-V translates addresses (Sv39 or Sv48 tables rooted at `satp`, one entry format at every level) and takes traps (one handler at `stvec`, cause in `scause`, return with `sret`); seL4's whole entry path is one assembly function, `trap_entry`, and one page table object type.
+- [RISC-V interrupts and timers](concepts/riscv-interrupts.md): How interrupts reach an S-mode kernel on RISC-V: three per-hart lines (software, timer, external) in `sip`/`sie`, fed by the CLINT through firmware and by the PLIC interrupt controller, with AIA as the newer alternative; seL4 drives the PLIC directly and gets its timer and IPIs through SBI calls.
 
 ## Part 3: Platform and devices
 
@@ -91,20 +91,20 @@ The hardware around the CPU: how it is described to software, how devices interr
 ### Virtual and cloud machines
 
 - [QEMU](concepts/qemu.md): Stub: the emulator most seL4 development runs on: machine types, the options that matter, KVM, and how seL4's simulate scripts drive it.
-- [Cloud virtual machines](concepts/cloud-vms.md): Stub: what hardware EC2, Compute Engine and Azure present to a guest kernel (firmware, interrupt controllers, timers, consoles, NICs) and how that differs from a PC or development board.
+- [Cloud virtual machines](concepts/cloud-vms.md): What hardware Amazon EC2, Google Compute Engine and Azure present to a guest kernel, and how that differs from a PC or a development board: custom network and disk devices, missing legacy devices, UEFI with ACPI on every architecture, and a serial log as the only debug channel.
 
 ### Cloud platforms
 
 The two clouds the porting work targets. Start with the cloud virtual machines page above.
 
-- [Amazon EC2 and the Nitro system](concepts/ec2.md): Stub: how EC2 runs a guest: the Nitro hypervisor and cards, AMIs and boot modes, EBS, the serial console and other ways to see a kernel boot, and the hardware a guest kernel finds.
-- [EC2 instance types](concepts/ec2-instance-types.md): Stub: how to read an EC2 instance type name, the families and generations (Intel, AMD, Graviton), virtualised against metal, and what differs between them for a kernel port.
-- [Google Compute Engine](concepts/gce.md): Stub: how Compute Engine runs a guest: its KVM-based hypervisor, images and UEFI boot, Shielded VM, disks, the serial console, and the hardware a guest kernel finds.
-- [Compute Engine machine types](concepts/gce-machine-types.md): Stub: how to read a Compute Engine machine type name, the families and generations (N1 to C4, AMD, Arm), and what differs between them for a kernel port.
-- [Booting a custom kernel on a cloud](concepts/cloud-boot-images.md): Stub: what it takes to get a kernel that is not Linux started on EC2 and Compute Engine: disk image layout, the EFI system partition and boot loader, registering or importing the image, and getting console output back.
-- [ENA](concepts/ena.md): Stub: the Elastic Network Adapter, EC2's network device: its PCI identity, admin and I/O queues, and what a driver must do.
-- [gVNIC](concepts/gvnic.md): Stub: Google's virtual NIC, required on newer Compute Engine machine types: its PCI identity, queue formats (GQI and DQO), and what a driver must do.
-- [NVMe](concepts/nvme.md): Stub: the storage interface both clouds present disks through: controller registers, admin and I/O queue pairs, namespaces, and how EBS and local disks appear.
+- [Amazon EC2 and the Nitro system](concepts/ec2.md): How EC2 runs a guest: the Nitro hypervisor and cards, AMIs and boot modes, EBS, the serial console and other ways to see a kernel boot, and the hardware (PCI devices, interrupt controllers, timers) a guest kernel finds.
+- [EC2 instance types](concepts/ec2-instance-types.md): How to read an EC2 instance type name (`m7g.large`, `c5n.metal`) and what it implies for a kernel: CPU vendor and generation, hypervisor, boot modes, and whether it is bare metal.
+- [Google Compute Engine](concepts/gce.md): Google Cloud's virtual machine service: a KVM-based hypervisor with Google's own device model, UEFI firmware with ACPI on both x86 and Arm, virtio or Google-specific PCI devices, and a logged serial port as the only console.
+- [Compute Engine machine types](concepts/gce-machine-types.md): How to read a Compute Engine machine type name such as `c4a-standard-2`, and what the series behind it decides for a kernel: architecture, CPU, network card, disk interface and bare-metal availability.
+- [Booting a custom kernel on a cloud](concepts/cloud-boot-images.md): What it takes to get a kernel that is not Linux running on EC2 or Compute Engine: a GPT disk image with an EFI system partition and a boot loader at the fallback path, the import and registration steps of each cloud, and reading the serial log.
+- [ENA](concepts/ena.md): Amazon's network card, the only NIC on EC2 Nitro instances: a PCI device with a small register block, an admin queue for management and pairs of submission and completion rings for packets, with MSI-X interrupts.
+- [gVNIC](concepts/gvnic.md): Compute Engine's own paravirtual network card, the only NIC on third-generation and later machine series and on Arm: a PCI device with a big-endian register block, an admin queue, and two unrelated descriptor formats (GQI and DQO).
+- [NVMe](concepts/nvme.md): The standard PCI storage controller interface, and the one EC2 uses for every disk and Compute Engine for its newer machine types: registers in BAR 0, an admin queue, and pairs of submission and completion queues in host memory.
 
 ## Part 4: The seL4 kernel
 
@@ -123,21 +123,21 @@ The kernel's model and API, in the order the concepts build on each other.
 - [IPC and endpoints](sel4/ipc.md): seL4's synchronous message passing: threads rendezvous at endpoint objects to copy a few words and capabilities, with Call/ReplyRecv forming the remote procedure call that every seL4 system is built from and that the kernel's fastpath exists to make quick.
 - [Notifications](sel4/notifications.md): A notification object is one word of pending signal bits that senders OR into without ever blocking and a receiver collects by waiting; it is how seL4 delivers interrupts and how Microkit channels and sDDF queues say "there is work".
 - [Faults and fault handlers](sel4/faults.md): When a thread does something the kernel cannot complete (a bad capability, a page fault, an illegal instruction, on MCS an exhausted budget), the kernel turns it into an IPC message to the thread's fault endpoint, so paging, debugging and crash handling are all user-level servers.
-- [Address spaces (VSpace)](sel4/vspace.md): Stub: frames, page tables and ASIDs as kernel objects; mapping, unmapping and the per-architecture object hierarchy.
-- [Interrupt delivery](sel4/irq-handling.md): Stub: IRQControl and IRQHandler capabilities, binding an interrupt to a notification, acknowledging, and per-architecture variants (I/O APIC, MSI, trigger modes, SGIs).
-- [BootInfo and the root task](sel4/bootinfo-and-root-task.md): Stub: the initial thread, the capabilities it starts with, and the BootInfo structure that describes them.
-- [SMP](sel4/smp.md): Stub: seL4 on multiple cores: the big kernel lock, IPIs, thread affinity, and the alternative multikernel approach.
+- [Address spaces (VSpace)](sel4/vspace.md): A seL4 address space is a tree of page-table objects that user level retypes from untyped memory and links together with `Map` invocations, with frames at the leaves and an ASID naming the root; the kernel only checks and installs what it is asked to.
+- [Interrupt delivery](sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification: the root task's `IRQControl` cap mints one `IRQHandler` cap per interrupt, a driver binds a notification to it, and the kernel holds the line quiet until the driver acknowledges.
+- [BootInfo and the root task](sel4/bootinfo-and-root-task.md): At the end of boot the kernel creates one user thread, the root task, hands it a capability to everything in the machine, and describes what it handed over in a `seL4_BootInfo` page; every seL4 system starts by reading that page.
+- [SMP](sel4/smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler state, threads pinned to cores and IPIs for anything one core must do to another; this configuration is not verified, which is why a one-kernel-per-core "multikernel" design is being pursued instead.
 - [Virtualisation support](sel4/hypervisor.md): Stub: seL4 as a hypervisor: VCPU objects, hypervisor mode on Arm and VT-x on x86, and the user-level virtual machine monitors built on them.
 
 ### Inside the kernel
 
-- [Kernel design and execution model](sel4/kernel-design.md): Stub: an event-driven kernel with one stack per core, no blocking in the kernel, preemption points, and the invariants this buys.
-- [Source layout](sel4/source-layout.md): Stub: a tour of the kernel repository: where architecture, platform, object and API code lives, and how to find your way.
-- [Build system and configuration](sel4/build-system.md): Stub: CMake, the configuration options and how they reach C, platform selection, and building the kernel standalone or within a project.
-- [Generated code](sel4/generated-code.md): Stub: the bitfield generator, syscall and invocation XML, and hardware headers generated from device trees.
-- [Kernel boot sequence](sel4/kernel-boot.md): Stub: what the kernel does from its entry point to the first user thread on x86, Arm and RISC-V.
+- [Kernel design and execution model](sel4/kernel-design.md): The rules every line of seL4 follows: one kernel stack per core and no blocking inside the kernel, interrupts off except at explicit preemption points that abort and restart the system call, no kernel heap, errors as return values, and a small set of global state; knowing them explains why kernel code looks the way it does.
+- [Source layout](sel4/source-layout.md): A tour of the `seL4/seL4` repository: generic code in `src/{api,kernel,object,model,machine}`, one directory per architecture and per platform beside it, a mirrored `include/` tree chosen by include paths, and `libsel4` for user level; with a table of where to look for what.
+- [Build system and configuration](sel4/build-system.md): seL4 builds with CMake and Ninja: options declared in `config.cmake` files become `CONFIG_*` macros in a generated `gen_config.h`, a platform name selects architecture and sources, and the kernel builds either alone from a `configs/*.cmake` file or inside a project through `init-build.sh`.
+- [Generated code](sel4/generated-code.md): Much of what the kernel compiles is not in the repository: capability and object accessors come from bitfield specifications (`.bf`), system call numbers, invocation labels and libsel4 stubs from XML, device addresses and memory regions from device trees, and `CONFIG_*` macros from CMake, all written into the build directory.
+- [Kernel boot sequence](sel4/kernel-boot.md): The path from the kernel's entry point to the first user thread: architecture assembly sets up a stack and the kernel's address space, C code discovers or is told the machine's memory, then generic helpers build the root task's CNode, address space, thread and untypeds before the first `schedule()`.
 - [Boot code and the proof boundary](sel4/boot-code.md): Kernel code marked `BOOT_CODE` runs once before the first user thread and is then discarded; seL4's functional correctness proof does not cover it, which changes what a patch to it costs.
-- [Elfloader](sel4/elfloader.md): Stub: the loader that unpacks the kernel and root task on Arm and RISC-V, sets up initial page tables and starts secondary cores.
+- [Elfloader](sel4/elfloader.md): The small boot program from `seL4_tools` that Arm and RISC-V images start with: it carries the kernel and root task ELF files in a CPIO archive, loads them, builds first page tables, enables the MMU, starts the other cores and jumps to the kernel's `init_kernel` with the user image's location.
 - [Platform ports](sel4/platform-port.md): Stub: what adding or changing a platform involves on each architecture: device tree and hardware.yml, platform CMake, drivers, and x86's single pc99 platform.
 - [Debugging](sel4/debugging.md): Stub: debug builds, kernel printing, debug system calls, GDB with QEMU, benchmarking support, and reading a kernel fault dump.
 
