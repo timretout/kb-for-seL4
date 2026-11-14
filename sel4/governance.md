@@ -22,7 +22,7 @@ Read first: [Contributing a patch](contributing.md).
 
 The **seL4 Foundation** owns the seL4 trademark and hosts the code and
 proofs in the GitHub organisation `seL4`. It was set up in 2020 as a
-project under the Linux Foundation (unchecked year). As of November 2026
+project under the Linux Foundation. As of November 2026
 its website says it is established as a Swiss association with the legal
 name "seL4 International", and the members page says it is "transitioning
 from being hosted by the Linux Foundation to being its own organisation".
@@ -68,18 +68,18 @@ says reviewers are typically already active contributors. The recorded
 votes show the usual progression of reviewer, then committer, then TSC
 over some years.
 
-Who maintains what, in practice (unchecked beyond the affiliations listed
-on the roles and TSC pages):
+Who maintains what, as far as the Foundation's roadmap and its roles and
+TSC pages show:
 
-- **Proofcraft**: the proofs (`l4v`) and the verified kernel
-  configurations; its engineers form most of the GitHub `verification`
-  team that judges proof impact.
+- **Proofcraft**: the proofs (`l4v`); the roadmap names it for every
+  verification item, and four of the thirteen TSC members are from it.
 - **UNSW Trustworthy Systems**: where seL4 was created (as NICTA, later
-  Data61); now Microkit, sDDF, LionsOS and much kernel work. sDDF and
+  Data61); the roadmap names it for Microkit, sDDF and LionsOS, and most
+  committers outside the TSC are from it. sDDF and
   LionsOS live in UNSW's own organisation `au-ts`, outside the
   Foundation's process.
-- **Kry10**, **DornerWorks**, **NIO** and individuals: platform ports,
-  kernel features, reviews.
+- **Kry10**, **DornerWorks**, **NIO** and unaffiliated individuals hold
+  the other TSC, committer and reviewer places.
 
 ### The RFC process
 
@@ -136,7 +136,7 @@ in `src/implemented` and `src/active` today:
 
 The [MCS](mcs.md) kernel itself and rust-sel4 are not in this list as
 RFCs of their own: MCS predates the repository, and only refinements of
-its API appear (unchecked whether older RFCs for either exist elsewhere).
+its API appear.
 
 ### Releases and versions
 
@@ -159,8 +159,10 @@ refers to the official code and proofs from the Foundation's
 repositories, and that any verification claim made with it is accurate: a
 fork or an unverified configuration must not be passed off as "verified
 seL4". The code of conduct applies to every repository and channel; each
-repository's `CODE_OF_CONDUCT.md` points to the one on the docs site,
-which is based on the Contributor Covenant (unchecked).
+repository's `CODE_OF_CONDUCT.md` points to a docs-site address that
+now redirects to the Foundation's website. The text says it is adapted
+from the Node.js policy on trolling, the Robigalia and Rust codes of
+conduct and the Contributor Covenant 1.4.0.
 
 ## In seL4
 
@@ -220,9 +222,15 @@ which is based on the Contributor Covenant (unchecked).
   no RFC for a platform on a supported architecture. *Checked 2026-11-14.*
 - [Trademark guidelines](https://sel4.systems/Legal/trademark.html):
   permitted use of the name. *Checked 2026-11-14.*
-- [Code of conduct](https://docs.sel4.systems/processes/conduct.html):
-  the text itself. *Unchecked: only the pointer in `CODE_OF_CONDUCT.md`
-  was read.*
+- [Code of conduct](https://sel4.systems/Contribute/conduct.html):
+  the text itself and its sources; `CODE_OF_CONDUCT.md` links
+  `docs.sel4.systems/processes/conduct.html`, which redirects here.
+  *Checked 2026-11-14.*
+- [seL4 Foundation news, 2020](https://sel4.systems/news/2020.html):
+  the Foundation's launch on 7 April 2020, set up under the Linux
+  Foundation. *Checked 2026-11-14.*
+- [Development roadmap](https://sel4.systems/roadmap.html): who is
+  named for each item. *Checked 2026-11-14.*
 
 ## My notes
 

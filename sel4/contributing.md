@@ -143,9 +143,10 @@ What differs for the kernel repository:
 - **Platforms.** A new board on an architecture that is already supported
   needs no RFC, but the Foundation asks for a named maintainer and has
   its own checklist ([Platform port](platform-port.md)).
-- **Change log.** User-visible changes add an entry to `CHANGES.md`;
-  recent history has many commits tagged `CHANGES:` (unchecked whether
-  this is a written rule).
+- **Change log.** A comment at the top of `CHANGES.md` asks kernel
+  engineers to add an entry there for every change to code (not for
+  documentation or comments), at the end of the list for the upcoming
+  release; such commits are often tagged `CHANGES:`.
 
 A first pull request description should give: why the change is needed,
 how it works, what was tested and on which machines, links to companion
@@ -168,8 +169,9 @@ pull requests in other repositories, and a statement of proof impact.
   proof run and anything that deploys need a maintainer's label or run
   only after merge ([CI](ci.md)).
 - **DCO is not a CLA.** There is no contributor licence agreement to
-  sign; the sign-off line is the whole of it. How the sign-off is checked
-  (a GitHub app or by reviewers) is unchecked.
+  sign; the sign-off line is the whole of it. The Foundation's DCO page
+  says the repositories are configured to accept only pull requests in
+  which every commit is signed off.
 
 ## See also
 
@@ -211,7 +213,12 @@ pull requests in other repositories, and a statement of proof impact.
   mailing list, Discourse, Mattermost, the fortnightly hangout.
   *Checked 2026-11-14.*
 - [Developer Certificate of Origin](https://developercertificate.org/):
-  the text the sign-off declares. *Unchecked: not opened today.*
+  the text the sign-off declares (version 1.1). *Checked 2026-11-14.*
+- [Developer Certificate of Origin (DCO)](https://sel4.systems/Contribute/dco.html)
+  on the Foundation's site: no other agreement, how sign-off is
+  enforced. *Checked 2026-11-14.*
+- [seL4 `CHANGES.md`](https://github.com/seL4/seL4/blob/master/CHANGES.md),
+  the comment at the top: when to add an entry. *Checked 2026-11-14.*
 
 ## My notes
 

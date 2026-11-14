@@ -93,33 +93,37 @@ Reproducing the main checks before sending a pull request:
   `misc/style-changed.sh` does the same for every modified or untracked
   file of the working tree (`git ls-files -mo`). `git diff` afterwards
   should show only what you meant. Needs `astyle`, and Python's `guardonce`, `autopep8` and
-  `cmake-format` for the other file types (unchecked list).
+  `cmake-format` (version 0.6.13 exactly) for the other file types.
 - **Gitlint.**
   `gitlint --config <seL4_tools>/misc/.gitlint --commits upstream/master..HEAD lint`,
   the command the action runs.
 - **Whitespace.** `git diff --check upstream/master..HEAD`.
 - **Licences.** `reuse lint` at the top of the repository (the action
-  wraps the REUSE tool; its exact options are unchecked).
+  installs REUSE 5.0.2 and runs exactly that).
 - **Compile matrix.** Build the kernel alone from a verified
   configuration, for example
   `cmake -G Ninja -B build -DCMAKE_TOOLCHAIN_FILE=gcc.cmake -C configs/X64_verified.cmake && ninja -C build kernel.elf`
   (the action's `compile_kernel.sh` does this for
-  `configs/<ARCH>_verified.cmake` and, where one exists,
-  `configs/<ARCH>_MCS_verified.cmake`; the exact remaining flags are
-  unchecked; see [Build system](build-system.md)).
+  `configs/<ARCH>_verified.cmake` and then for MCS, with
+  `configs/<ARCH>_MCS_verified.cmake` where one exists and otherwise
+  the first file plus `-DKernelIsMCS=TRUE`; it also passes
+  `-DCMAKE_INSTALL_PREFIX`, and for a cross build `-D<ARCH>=TRUE` with
+  gcc or `-DTRIPLE=<triple>` with LLVM; see
+  [Build system](build-system.md)).
 - **sel4test in simulation.** In a sel4test tree:
   `../init-build.sh -DPLATFORM=x86_64 -DSIMULATION=TRUE`, `ninja`,
   `./simulate`; success prints `All is well in the universe`
-  (unchecked today; see [sel4test](sel4test.md)).
+  (see [sel4test](sel4test.md)).
 - **Preprocess.** `ci-actions/preprocess/test_munge.sh` compares two git
   revisions of the kernel for one `L4V_ARCH`; it needs an `l4v` checkout
   because the preprocessing rule lives in `l4v/spec/cspec/c/`
   ([l4v](l4v.md)). The quick approximation is in
   [Proof impact](proof-impact.md).
 
-The Docker images the actions use are published from
-[`seL4/seL4-CAmkES-L4v-dockerfiles`](https://github.com/seL4/seL4-CAmkES-L4v-dockerfiles)
-(unchecked today), which is the easiest way to get the same compiler
+The Docker images the actions build on (`trustworthysystems/sel4`,
+`camkes` and `l4v` on Docker Hub) are published from
+[`seL4/seL4-CAmkES-L4v-dockerfiles`](https://github.com/seL4/seL4-CAmkES-L4v-dockerfiles),
+which is the easiest way to get the same compiler
 versions.
 
 ## Gotchas
@@ -140,8 +144,7 @@ versions.
   unusual option combination can break without CI noticing; the hardware
   build matrix after merge is much wider.
 - **Link check failures can be someone else's.** The link checker fetches
-  external URLs, so an unrelated dead link can fail a pull request
-  (unchecked how often).
+  external URLs, so an unrelated dead link can fail a pull request.
 - **Jobs guarded by `github.repository_owner == 'seL4'` are skipped in a
   fork.** Running the workflows in your own fork gives the hosted-runner
   checks only.
@@ -181,8 +184,22 @@ versions.
 - [Pull requests](https://sel4.systems/Contribute/pull-requests.html),
   "Tests": the required checks and who adds the labels.
   *Checked 2026-11-14.*
-- [GitHub Actions: events that trigger workflows](https://docs.github.com/en/actions/reference/events-that-trigger-workflows):
-  `pull_request` against `pull_request_target`. *Unchecked: from memory.*
+- [GitHub Actions: events that trigger workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows):
+  `pull_request` (no secrets for a fork) against `pull_request_target`
+  (runs in the context of the base repository). *Checked 2026-11-14.*
+- [`seL4_tools/misc`](https://github.com/seL4/seL4_tools/tree/master/misc):
+  `style.sh`, `style.py`, `style-c.sh`, `style-py.sh`, `style-cmake.sh`
+  and the tools each needs. *Checked 2026-11-14.*
+- [`ci-actions/license-check/steps.sh`](https://github.com/seL4/ci-actions/blob/master/license-check/steps.sh),
+  [`link-check/action.yml`](https://github.com/seL4/ci-actions/blob/master/link-check/action.yml)
+  and the actions' `Dockerfile`s (`FROM trustworthysystems/...`).
+  *Checked 2026-11-14.*
+- [`seL4-CAmkES-L4v-dockerfiles` README](https://github.com/seL4/seL4-CAmkES-L4v-dockerfiles/blob/master/README.md):
+  the images CI pushes to Docker Hub. *Checked 2026-11-14.*
+- [sel4test `apps/sel4test-driver/src/main.c`](https://github.com/seL4/sel4test/blob/master/apps/sel4test-driver/src/main.c)
+  and the [seL4Test page](https://docs.sel4.systems/projects/sel4test/):
+  the success line; `init-build.sh`, `ninja`, `./simulate`.
+  *Checked 2026-11-14.*
 
 ## My notes
 

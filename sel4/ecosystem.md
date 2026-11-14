@@ -127,10 +127,9 @@ Read downwards as "is used by". Things worth knowing from the picture:
   sDDF has its own drivers and does not use `libplatsupport`; Microkit
   has its own loader and does not use the elfloader.
 - `capdl` sits under CAmkES but is independent of it; rust-sel4 has its
-  own capDL loader, and Microkit's tool now emits a capDL-style
-  specification consumed by an initialiser task (unchecked: the
-  `initialiser` directory exists in the Microkit tree, its design was
-  not read).
+  own capDL loader, and Microkit's tool now embeds a capDL
+  specification that the initial task, a capDL initialiser built on
+  rust-sel4's `sel4_capdl_initializer`, turns into the running system.
 - `sel4test` is the kernel's test suite but lives in generation 1, so
   a kernel port or feature must keep `seL4_tools`, `util_libs` and
   `seL4_libs` working even if the system you care about is a Microkit
@@ -173,12 +172,12 @@ remain in production use and maintained.
   together with its proof update ([Proof impact of a change](proof-impact.md)).
   l4v tags releases as `seL4-<version>`.
 - The generation 1 libraries and tools mostly have no version numbers
-  of their own. What defines a consistent set is a **manifest**: the
-  default manifest follows every repository's tip, and each kernel
-  release has a pinned manifest of the revisions tested with it
-  (unchecked: the manifest file naming per release).
-- **CAmkES** and **capDL** have their own release tags, made alongside
-  kernel releases (unchecked).
+  of their own. What defines a consistent set is a **manifest**: in
+  `sel4test-manifest`, `master.xml` follows every repository's tip,
+  `default.xml` pins the revisions last tested together, and each
+  kernel release is a tag of the manifest repository (`17.0.0`).
+- **CAmkES** has its own release tags (`camkes-3.13.1`), one made for
+  each kernel release; **capDL** has its own version tags (`0.6.1`).
 - **Microkit** has its own versions (2.x) and names the kernel commit
   it supports in a manifest (`seL4/microkit-manifest`); its
   `DEVELOPER.md` says other kernel commits generally work but only the
@@ -186,11 +185,11 @@ remain in production use and maintained.
   kernel fix reaches Microkit users when Microkit moves its pin.
 - **sDDF**, **libvmm** and **LionsOS** make occasional tagged releases
   and each names the Microkit SDK version it builds against; LionsOS
-  takes sDDF and libvmm as git submodules (unchecked for LionsOS;
-  libvmm's README says it takes sDDF as a submodule).
-- **rust-sel4** tracks kernel releases and Microkit versions through
-  the kernel configuration it is built against, not through its own
-  version numbers (unchecked).
+  takes sDDF and libvmm as git submodules under `dep/`, and libvmm
+  takes sDDF the same way.
+- **rust-sel4** has its own version tags (`v6.0.0` is the newest), and
+  its README names the kernel and Microkit versions it is known to work
+  with (seL4 17.0.0 and Microkit 2.4.0 now).
 
 ### Where to ask
 
@@ -203,8 +202,8 @@ the Mattermost chat at
 and a fortnightly open video hangout. Bugs and patches go to the
 repository concerned as GitHub issues and pull requests
 ([Contributing a patch](contributing.md)). The **seL4 Summit** is the
-annual conference (unchecked: its first year; the Foundation's pages
-say 2021 in one place and list summits from 2022 in another); talks are published and are a good
+annual conference (the Foundation's summit page lists those from 2022
+on); talks are published and are a good
 way to see who works on what.
 
 ## In seL4
@@ -234,8 +233,10 @@ and `libmicrokit` for each combination.
 
 - **A pull request to one repository is tested against the tips of the
   others.** A kernel change that needs a library change must be
-  coordinated; `ci-actions` understands "depends-on" style links between
-  pull requests (unchecked: exact syntax).
+  coordinated; `ci-actions` reads a line of the form
+  `Test with: seL4/seL4_tools#123` in the pull request description and
+  tests against that pull request (a branch or commit works too, as
+  `org/repo@ref`).
 - **`seL4_libs` says of itself that it has no assurance.** Verified
   kernel, unverified everything else: do not read the kernel's proofs
   as covering the libraries, the elfloader, CAmkES glue or Microkit's
@@ -244,8 +245,9 @@ and `libmicrokit` for each combination.
   the system-call bindings) is not `seL4_libs`; `libplatsupport`
   (util_libs) is not `libsel4platsupport` (seL4_libs, its seL4 glue);
   `camkes` is the examples repository and `camkes-tool` the tool.
-- **`musllibc` is an old fork.** Its age and the indirection through
-  `libsel4muslcsys` cause surprises with modern toolchains (unchecked).
+- **`musllibc` is a fork, not upstream musl.** Its `sel4` branch is at
+  musl 1.2.5 (its `VERSION` file), and its system calls go through a
+  table of handlers in `libsel4muslcsys` (seL4_libs), not to a kernel.
 - **Not everything in `au-ts` is upstream seL4.** Those repositories
   are a research group's, with their own review and stability
   standards; libvmm's README calls itself not ready for production.
@@ -281,9 +283,32 @@ and `libmicrokit` for each combination.
   Microkit and sDDF, maturity statement. *Checked 2026-11-14.*
 - [seL4 support page](https://sel4.systems/support.html): forum,
   mailing list, chat, hangout, summit. *Checked 2026-11-14.*
-- [seL4 documentation site](https://docs.sel4.systems/): project pages
-  for each repository and the release pages. *Unchecked: release pages
-  not opened today.*
+- [seL4 releases](https://docs.sel4.systems/releases/seL4.html) and
+  [CAmkES releases](https://docs.sel4.systems/releases/camkes.html) on
+  the documentation site: one CAmkES release for each kernel release.
+  *Checked 2026-11-14.*
+- [sel4test-manifest](https://github.com/seL4/sel4test-manifest):
+  `default.xml` (pinned revisions), `master.xml` (tips) and the release
+  tags; tags of [camkes-tool](https://github.com/seL4/camkes-tool/tags),
+  [capdl](https://github.com/seL4/capdl/tags) and
+  [rust-sel4](https://github.com/seL4/rust-sel4/tags), read with
+  `git ls-remote`. *Checked 2026-11-14.*
+- [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md),
+  "capDL Initialiser", and
+  [`initialiser/src/main.rs`](https://github.com/seL4/microkit/blob/main/initialiser/src/main.rs):
+  the capDL specification and the initial task. *Checked 2026-11-14.*
+- [rust-sel4 README](https://github.com/seL4/rust-sel4/blob/main/README.md),
+  "Compatible versions of related seL4 Foundation projects".
+  *Checked 2026-11-14.*
+- [LionsOS `.gitmodules`](https://github.com/au-ts/lionsos/blob/main/.gitmodules):
+  sDDF and libvmm under `dep/`. *Checked 2026-11-14.*
+- [`ci-actions/scripts/get-prs`](https://github.com/seL4/ci-actions/blob/master/scripts/get-prs):
+  the `Test with:` syntax. *Checked 2026-11-14.*
+- [musllibc `VERSION`](https://github.com/seL4/musllibc/blob/sel4/VERSION)
+  and [`libsel4muslcsys/src/vsyscall.c`](https://github.com/seL4/seL4_libs/blob/master/libsel4muslcsys/src/vsyscall.c):
+  the musl version and the system call table. *Checked 2026-11-14.*
+- [seL4 Summit](https://sel4.systems/Summit/): annual, summits listed
+  from 2022. *Checked 2026-11-14.*
 
 ## My notes
 

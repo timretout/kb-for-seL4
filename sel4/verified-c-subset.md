@@ -72,9 +72,9 @@ which the parser enforces and some of which keep the proofs tractable:
 - New `struct`s prefix field names with the struct's name, as field
   names share one namespace in the proofs.
 
-Function pointers and pointer casts beyond the object macros are also
-absent from verified kernel code (unchecked which of these the parser
-rejects outright and which are convention).
+For kernel code the conventions add one more: do not cast explicitly
+between pointers and references (integers used as, say, offsets into
+structures); use the object macros such as `TCB_REF` and `TCB_PTR`.
 
 ## In seL4
 
@@ -194,9 +194,10 @@ Two checks ([CI](ci.md)):
   the `kernel_all_pp_wrapper` target. *Checked 2026-11-14.*
 - [`ci-actions/preprocess`](https://github.com/seL4/ci-actions/tree/master/preprocess):
   what the preprocess check compares. *Checked 2026-11-14.*
-- Cock, "Bitfields and tagged unions in C: verification through
-  automatic generation", VERIFY 2008: the bitfield generator, cited by
-  the parser manual for unions. *Unchecked: from the manual's citation.*
+- [Cock, "Bitfields and tagged unions in C: verification through
+  automatic generation", VERIFY 2008](https://trustworthy.systems/publications/nictaabstracts/Cock_08.abstract):
+  the bitfield generator, cited by the parser manual for unions
+  (publication page and abstract read). *Checked 2026-11-14.*
 
 ## My notes
 

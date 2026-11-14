@@ -20,9 +20,9 @@ seL4 is an operating system **microkernel**: the only code that runs in
 the processor's most privileged mode
 ([privilege levels](../concepts/privilege-levels.md)), kept as small as
 it can be. It is the latest of the L4 family of microkernels
-([history](history-and-papers.md)), about 10,000 lines of C plus a
-little assembly per architecture (unchecked: the figure the project
-quotes for the verified 32-bit Arm kernel). It is not an operating
+([history](history-and-papers.md)), between about 10,000 and 16,000 lines of source in its verified
+configurations (the FAQ gives 10,000 for 64-bit RISC-V, 12,100 for
+32-bit Arm and 16,000 for x64), a little of it assembly. It is not an operating
 system in the Linux sense: on its own it boots, starts one user program
 and can do nothing useful until that program builds a system on top.
 
@@ -128,8 +128,8 @@ settings each proof applies to are the `configs/*_verified.cmake` files
 printing, fastpath on). Features outside those files are unverified
 code even on a verified architecture: multicore (SMP), x86
 virtualisation, and most combinations with MCS, whose proofs
-(`*_MCS_verified.cmake`) are still in progress (unchecked: see the
-verification page for the current state). The boot code and the
+(`*_MCS_verified.cmake`) are complete for 64-bit RISC-V and in progress
+for Arm ([the seL4 proofs](verification.md)). The boot code and the
 assembly are assumed correct, not proved
 ([boot code and the proof boundary](boot-code.md)).
 
@@ -185,8 +185,8 @@ group in order; each page there assumes the ones before it.
 
 - [seL4 Reference Manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
   chapters 1 "Introduction" and 2 "Kernel Services and Objects": the
-  kernel's own summary of its services. *Unchecked: PDF not opened
-  today; cited from memory of its structure.*
+  kernel's own summary of its services (the manual for 17.0.0).
+  *Checked 2026-11-14.*
 - [seL4 `configs/`](https://github.com/seL4/seL4/tree/master/configs):
   the `*_verified.cmake` files, one per verified configuration and
   platform. *Checked 2026-11-14.*
@@ -196,10 +196,15 @@ group in order; each page there assumes the ones before it.
   "Running the proofs": the five `L4V_ARCH` values and that `ARM` has
   the most complete proofs. *Checked 2026-11-14.*
 - [The seL4 Microkernel: An Introduction](https://sel4.systems/About/seL4-whitepaper.pdf)
-  (Heiser, white paper): the best long-form overview for a newcomer.
-  *Unchecked: not opened today.*
-- [seL4 FAQ](https://sel4.systems/About/FAQ.html): what is and is not
-  verified, in plain terms. *Unchecked: not opened today.*
+  (Heiser, white paper, revision 1.4.1 of 2026-07-17): the best
+  long-form overview for a newcomer. *Checked 2026-11-14.*
+- [seL4 FAQ](https://sel4.systems/About/FAQ.html), "What is the size of
+  seL4?" and the verification questions: source size per verified
+  architecture; what is and is not verified, in plain terms.
+  *Checked 2026-11-14.*
+- [seL4 `CAVEATS.md`](https://github.com/seL4/seL4/blob/master/CAVEATS.md),
+  "MCS": the RISC-V MCS proof complete, AArch64 in progress.
+  *Checked 2026-11-14.*
 
 ## My notes
 

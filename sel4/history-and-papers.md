@@ -29,66 +29,66 @@ has since changed.
 
 **Liedtke's L3 and L4.** First-generation microkernels such as Mach
 moved operating-system services to user level but were slow: a
-message between two processes cost on the order of 100 microseconds
-(unchecked), and
+message between two processes cost on the order of 100 microseconds, and
 systems built on them paid that for every service call. Jochen Liedtke
 showed with L3 and then L4 (1993) that this was a property of those
 kernels and not of the idea, with IPC 10 to 20 times faster. His
 paper "On µ-kernel construction" (SOSP 1995) stated the principle
 that still defines the family: a concept belongs in the kernel only if
 moving it outside would prevent the system's required functionality
-(the **minimality principle**). The original L4 was hand-written
-i486 assembly, offering three abstractions: address spaces, threads
-and IPC (unchecked: paper not opened today).
+(the **minimality principle**). The original L4 was written entirely in
+i486 assembly, and was built on two basic concepts, threads and address
+spaces, with IPC between them.
 
 **Pistachio and Fiasco.** The second generation re-implemented the L4
 interface in higher-level languages for portability: L4Ka::Hazelnut
-and then L4Ka::Pistachio at Karlsruhe (C++, many architectures, with
-UNSW contributing ports), and Fiasco at TU Dresden (C++, preemptible,
-aimed at real time; its descendant Fiasco.OC / L4Re is still
-developed). They showed that a fast microkernel need not be assembly
-or tied to one CPU (unchecked).
+(C) and then L4Ka::Pistachio (C++, many architectures, with
+UNSW contributing ports) at Karlsruhe, and Fiasco at TU Dresden (C++,
+made fully preemptible for real time; as Fiasco.OC it was in 2013 the
+oldest L4 codebase still maintained). They showed that a fast microkernel need not be assembly
+or tied to one CPU.
 
-**OKL4.** NICTA's embedded group spun out Open Kernel Labs in 2006
-with a Pistachio-derived kernel for phones. OKL4 shipped in the
-baseband (modem) processors of Qualcomm chipsets, reaching billions of
-devices, and a later L4-family kernel runs in the secure enclave of
-Apple devices. This is where the L4 family proved itself commercially,
-and where the people who designed seL4 learned what deployment needs
-(unchecked: figures as given in "From L3 to seL4").
+**OKL4.** NICTA forked Pistachio for embedded systems as
+L4-embedded, which Qualcomm adopted for the firmware of its modem
+processors. The NICTA spinout Open Kernel Labs took the kernel over and
+renamed it OKL4; it shipped on billions of Qualcomm modem chips, and
+L4-embedded itself runs in the secure enclave of iOS devices. This is
+where the L4 family proved itself commercially, among the people who
+went on to design seL4.
 
 **KeyKOS and EROS.** L4 had weak access control: threads were named
 by global identifiers and anyone could send to anyone. The fix came
 from a different tradition, the capability systems KeyKOS (1980s) and
-its successor EROS (Shapiro, 1999), in which every right is an
+its successor EROS (begun in 1991; Shapiro's paper is from 1999), in which every right is an
 unforgeable token held by a process, and authority can be reasoned
 about by following tokens. seL4 took capabilities for *everything*,
-including kernel memory, from that line; its
-[capability derivation tree](capabilities.md) and the idea of
-user-level memory management through [untyped memory](untyped-memory.md)
-are the seL4 team's additions (unchecked).
+including kernel memory; "From L3 to seL4" calls this model of
+kernel memory, managed from user level through
+[untyped memory](untyped-memory.md) and recorded in the
+[capability derivation tree](capabilities.md), seL4's main
+contribution to OS design.
 
 ![Liedtke's L3 and L4 lead to the second-generation kernels Hazelnut, Pistachio and Fiasco and to OKL4, then to seL4 as the third generation, which also takes capabilities from the separate line of KeyKOS and EROS.](../images/history-and-papers-lineage.svg)
 
-*Two lines meet in seL4: the L4 family for the kernel design, and the capability systems for access control. The diagram carries the same unchecked marks as the paragraphs above.*
+*Two lines meet in seL4: the L4 family for the kernel design, and the capability systems for access control.*
 
 ### seL4's timeline
 
 | When | What |
 |---|---|
 | 2004 | The L4.verified project starts at NICTA (Australia's ICT research centre, in Sydney, with UNSW): Kevin Elphinstone leads the design of a kernel meant to be verifiable, Gerwin Klein the specification and proof |
-| 2004 to 2007 | Design by iterating a Haskell prototype that served both as executable kernel (under a simulator) and as the source of the formal specification; then a manual re-implementation in C (unchecked: dates) |
+| 2004 to 2009 | Design by iterating a Haskell prototype that served both as executable kernel (under a simulator) and as the source of the formal specification; then a manual re-implementation in C |
 | 29 July 2009 | The functional-correctness proof is complete: the C code for 32-bit Arm refines the abstract specification |
 | October 2009 | "seL4: Formal Verification of an OS Kernel" at SOSP |
 | 2012 to 2013 | Integrity and authority confinement, then information-flow noninterference; translation validation extends the proof from C to the binary (S&P and PLDI 2013) |
 | 2012 to 2017 | DARPA's HACMS programme puts seL4 in autonomous vehicles, among them Boeing's Unmanned Little Bird helicopter; the x64 port and the first proofs beyond 32-bit Arm date from it |
-| 29 July 2014 | Kernel and proofs released as open source (GPLv2 kernel, BSD libraries: licences unchecked) |
-| 2016 | NICTA is merged into CSIRO as Data61; the group becomes Trustworthy Systems at Data61 (unchecked: year) |
-| 2018 to 2020 | Scheduling-context capabilities published (EuroSys 2018) and merged as the [MCS](mcs.md) configuration; RISC-V port, with functional correctness proved for 64-bit RISC-V in 2020 (unchecked: year) |
-| 7 April 2020 | The seL4 Foundation is created (under the Linux Foundation: unchecked), with Data61, UNSW, HENSOLDT Cyber, DornerWorks, Cog Systems and Ghost as founding members ([Governance and RFCs](governance.md)) |
+| 29 July 2014 | Kernel and proofs released as open source (the kernel is under GPLv2, user-level code under BSD) |
+| 2015 to 2016 | NICTA is merged into CSIRO as Data61 (announced 28 August 2015, with NICTA a separate legal entity until at least 1 July 2016); the group moves with it |
+| 2018 to 2020 | Scheduling-context capabilities published (EuroSys 2018) and merged as the [MCS](mcs.md) configuration; RISC-V port, with functional correctness proved for 64-bit RISC-V in June 2020 |
+| 7 April 2020 | The seL4 Foundation is created, set up under the Linux Foundation, with Data61, UNSW, HENSOLDT Cyber, DornerWorks, Cog Systems and Ghost as founding members ([Governance and RFCs](governance.md)) |
 | 2021 | CSIRO stops funding the group. Trustworthy Systems continues at UNSW Sydney; Proofcraft is founded by the verification leads to maintain and extend the proofs commercially; Kry10 is founded by other former team members |
-| 2021 to 2023 | The seL4 Core Platform is developed at UNSW and Breakaway Consulting, adopted by the Foundation and renamed [Microkit](microkit.md) (RFC-5) (unchecked: years) |
-| 2023 on | AArch64 hypervisor-mode proofs; sDDF and LionsOS; MCS proof configurations (`configs/*_MCS_verified.cmake`) appear; ACM Software System Award to the seL4 team in 2023 for the 2022 award year (unchecked) |
+| 2020 to 2023 | The seL4 Core Platform is developed by Breakaway Consulting and UNSW (RFC-5 proposed in November 2020), renamed [Microkit](microkit.md) and announced as an official Foundation project in November 2023 |
+| 2023 on | AArch64 hypervisor-mode proofs; sDDF and LionsOS; MCS proof configurations (`configs/*_MCS_verified.cmake`) appear; the 2022 ACM Software System Award goes to the seL4 team (announced May 2023) |
 | 30 October 2026 | seL4 17.0.0 |
 
 Two threads run through this. First, **verification shaped the
@@ -180,7 +180,7 @@ In order of usefulness to someone about to write kernel patches.
     [Publication page](https://trustworthy.systems/publications/abstracts/Ge_YCH_19.abstract).
     Preventing timing channels through shared hardware state by
     partitioning caches and cloning the kernel image. A research
-    direction, mostly not in mainline (unchecked).
+    direction: the mainline kernel has no option for either.
 
 A short retrospective worth adding: Heiser, Klein and Andronick,
 "seL4 in Australia: From Research to Real-World Trustworthy Systems",
@@ -210,7 +210,7 @@ The history is visible in the source.
   ([`structures_64.bf`](https://github.com/seL4/seL4/blob/master/include/object/structures_64.bf)).
   MDB stands for *mapping database*, the L4 structure that recorded
   which address space had mapped pages to which, so that mappings
-  could be revoked recursively (unchecked: expansion from memory).
+  could be revoked recursively.
   seL4 generalised it to all
   capabilities as the [capability derivation tree](capabilities.md)
   and kept the name.
@@ -221,10 +221,12 @@ The history is visible in the source.
   timeouts (only blocking and polling variants), no in-kernel
   long-message copying, no global thread identifiers, no kernel memory
   pool, no recursive address-space `map`/`grant` IPC items.
-- **Copyright headers** trace the institutions: NICTA, then
-  `Data61, CSIRO (ABN 41 687 119 230)`, then Proofcraft, UNSW and
-  contributing companies on newer files (unchecked beyond the Data61
-  form).
+- **Copyright headers** trace the institutions:
+  `General Dynamics C4 Systems` on the files of the 2014 release, then
+  `Data61, CSIRO (ABN 41 687 119 230)`, then UNSW, Proofcraft and
+  contributing companies such as HENSOLDT Cyber and DornerWorks on
+  newer files. NICTA appears only as an affiliation in
+  `CONTRIBUTORS.md`.
 - **`KernelIsMCS`** is the 2018 paper as a build option, still a
   separate configuration from the original scheduler because the
   proofs for it are separate ([MCS kernel](mcs.md)).
@@ -233,7 +235,7 @@ The history is visible in the source.
 
 - **Papers describe the kernel of their year.** The SOSP 2009 kernel
   was 32-bit Arm only, had no MCS, no SMP, a different IPC fault and
-  reply model in places, and "8,700 lines of C" (unchecked); do not quote such
+  reply model in places, and "8,700 lines of C"; do not quote such
   figures for today's kernel.
 - **"seL4 is verified" always needs a configuration.** The claims in
   items 3, 4, 10 and 11 hold for specific architecture and option
@@ -273,6 +275,40 @@ The history is visible in the source.
   publication pages opened and titles confirmed; the summaries of
   their content above are from memory. *Checked 2026-11-14 (titles
   and links only).*
+- [Elphinstone and Heiser, "From L3 to seL4" (PDF)](https://trustworthy.systems/publications/nicta_full_text/6930.pdf),
+  sections 1, 2, 3.1, 3.4 and 4.5: IPC of about 100 µs before L4 and
+  the factor of 10 to 20, the assembly original, Hazelnut in C,
+  Pistachio and Fiasco in C++, L4-embedded, Qualcomm and OKL4, the
+  minimality principle, the mapping database, EROS's influence and
+  kernel memory as seL4's main contribution. *Checked 2026-11-14.*
+- [Klein et al., SOSP 2009 (PDF)](https://trustworthy.systems/publications/nicta_full_text/1852.pdf),
+  abstract and sections 2 and 5: 8,700 lines of C and 600 of
+  assembler, the Haskell prototype run on a QEMU-derived simulator.
+  *Checked 2026-11-14.*
+- [Härtig et al., "The Performance of µ-Kernel-Based Systems", SOSP 1997](https://pdos.csail.mit.edu/6.828/2020/readings/microkernel.pdf),
+  section 3: L4's two basic concepts, threads and address spaces, and
+  IPC. *Checked 2026-11-14.*
+- seL4 Foundation news for
+  [2020](https://sel4.systems/news/2020.html) (the Foundation set up
+  under the Linux Foundation; RISC-V functional correctness, 9 June)
+  and [2023](https://sel4.systems/news/2023.html) (the 2022 ACM
+  Software System Award, 5 May; Microkit an official Foundation
+  project, 20 November), and the
+  [awards page](https://sel4.systems/Research/awards.html).
+  *Checked 2026-11-14.*
+- [iTnews, "NICTA no more as CSIRO takes over"](https://www.itnews.com.au/news/nicta-no-more-as-csiro-takes-over-408536),
+  28 August 2015: the merger into CSIRO as Data61. *Checked 2026-11-14.*
+- Wikipedia, [KeyKOS](https://en.wikipedia.org/wiki/KeyKOS) and
+  [EROS](https://en.wikipedia.org/wiki/EROS_(microkernel)): KeyKOS
+  named in 1985, EROS begun in 1991 as its reconstruction.
+  *Checked 2026-11-14.*
+- [seL4 `LICENSE.md`](https://github.com/seL4/seL4/blob/master/LICENSE.md)
+  (GPLv2 kernel, BSD user level),
+  [`CONTRIBUTORS.md`](https://github.com/seL4/seL4/blob/master/CONTRIBUTORS.md)
+  and [`config.cmake`](https://github.com/seL4/seL4/blob/master/config.cmake)
+  (no kernel-clone or cache-colouring option); copyright holders
+  counted with `git grep` over `src`, `include` and `libsel4`.
+  *Checked 2026-11-14.*
 - [Lyons et al., EuroSys 2018](https://trustworthy.systems/publications/abstracts/Lyons_MAH_18.abstract),
   [Ge et al., EuroSys 2019](https://trustworthy.systems/publications/abstracts/Ge_YCH_19.abstract),
   [Heiser, Klein, Andronick, CACM 2020](https://trustworthy.systems/publications/abstracts/Heiser_KA_20.abstract),
@@ -281,15 +317,18 @@ The history is visible in the source.
 - [LionsOS paper, arXiv:2501.06234](https://arxiv.org/abs/2501.06234):
   title and authors. *Checked 2026-11-14.*
 - [seL4 whitepaper](https://sel4.systems/About/seL4-whitepaper.pdf)
-  and [reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf).
-  *Unchecked: links resolve, PDFs not opened today.*
-- [RFC-5 Microkit](https://sel4.github.io/rfcs/implemented/0050-microkit.html).
-  *Unchecked: link resolves and the file is in `seL4/rfcs`
-  `src/implemented/`, text not read today.*
-- Liedtke, "On µ-kernel construction", SOSP 1995
-  ([ACM](https://dl.acm.org/doi/10.1145/224056.224075)); Shapiro,
-  Smith and Farber, "EROS: a fast capability system", SOSP 1999.
-  *Unchecked: cited from memory, DOI not opened.*
+  (revision 1.4.1 of 2026-07-17; section 2.2 for OKL4 on Qualcomm
+  modems and L4-embedded in the iOS secure enclave) and
+  [reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf)
+  (for 17.0.0; chapter list). *Checked 2026-11-14.*
+- [RFC-5 Microkit](https://sel4.github.io/rfcs/implemented/0050-microkit.html):
+  previous title "seL4 Core Platform", proposed 2020-11-19, summary
+  and motivation. *Checked 2026-11-14.*
+- [Liedtke, "On µ-kernel construction", SOSP 1995](https://dl.acm.org/doi/10.1145/224056.224075);
+  [Shapiro, Smith and Farber, "EROS: a fast capability system", SOSP 1999](https://dl.acm.org/doi/10.1145/319151.319163).
+  *Unchecked: dl.acm.org refuses scripted fetches; both as cited in
+  "From L3 to seL4", which quotes the minimality principle from the
+  first.*
 - [seL4 `src/object/cnode.c`](https://github.com/seL4/seL4/blob/master/src/object/cnode.c),
   [`include/object/structures_64.bf`](https://github.com/seL4/seL4/blob/master/include/object/structures_64.bf)
   and [l4v `spec/haskell`](https://github.com/seL4/l4v/tree/master/spec/haskell):

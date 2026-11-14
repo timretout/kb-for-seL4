@@ -55,8 +55,8 @@ proofs together are functional correctness.*
   given a capDL description, creates exactly the described objects and
   capabilities ([CAmkES and capDL](camkes-capdl.md)).
 - **Worst-case execution time**: a sound static analysis of the binary's
-  kernel paths was done on older Arm hardware as research; it is not part
-  of the maintained proofs (unchecked).
+  kernel paths was done for Armv6 processors as research; the white
+  paper says it has since fallen into abeyance.
 
 ### What is covered now
 
@@ -101,7 +101,7 @@ assumes:
 - **DMA.** A device that can write memory by itself bypasses the kernel.
   The verified configurations have the IOMMU drivers off (no SMMU, no
   VT-d), so a system must give DMA-capable devices only to trusted
-  components (unchecked wording; see [IOMMU](../concepts/iommu.md)).
+  components (see [IOMMU](../concepts/iommu.md)).
 - **The proof tools**: Isabelle's kernel, the C parser's semantics for C,
   and the specifications meaning what a reader takes them to mean.
 
@@ -171,14 +171,21 @@ assumes:
 - [l4v `README.md`](https://github.com/seL4/l4v/blob/master/README.md):
   the specifications and proofs by directory. *Checked 2026-11-14.*
 - [Verified configurations](https://docs.sel4.systems/projects/sel4/verified-configurations.html):
-  the docs site's table. *Unchecked: not fetched; `CAVEATS.md` used
-  instead.*
-- [The proof and its assumptions](https://sel4.systems/Verification/assumptions.html):
-  the Foundation's plain-language list. *Unchecked: URL from memory.*
-- Klein et al., "Comprehensive formal verification of an OS
-  microkernel", ACM TOCS 32(1), 2014: the refinement stack, security
-  proofs, binary verification and WCET analysis in one paper.
-  *Unchecked: from memory.*
+  the docs site's lists per architecture, "Unverified Features".
+  *Checked 2026-11-14.*
+- [What the proofs assume](https://sel4.systems/Verification/assumptions.html):
+  the Foundation's plain-language list. *Checked 2026-11-14.*
+- [seL4 `CAVEATS.md`](https://github.com/seL4/seL4/blob/master/CAVEATS.md),
+  "Devices, DMA, and Device-Untypeds": the DMA assumption, IOMMU and
+  SMMU outside the verified configurations. *Checked 2026-11-14.*
+- [The seL4 Microkernel: An Introduction](https://sel4.systems/About/seL4-whitepaper.pdf)
+  (white paper, revision 1.4.1), on worst-case execution time: the
+  analysis for Armv6 and its lapse. *Checked 2026-11-14.*
+- [Klein et al., "Comprehensive formal verification of an OS
+  microkernel", ACM TOCS 32(1), 2014](https://trustworthy.systems/publications/nictaabstracts/Klein_AEMSKH_14.abstract):
+  the refinement stack, security proofs, binary verification and WCET
+  analysis in one paper (publication page and abstract read).
+  *Checked 2026-11-14.*
 
 ## My notes
 

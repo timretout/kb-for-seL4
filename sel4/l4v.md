@@ -102,8 +102,7 @@ that level changes), and then the proofs are repaired.
 caches each finished **session** as a heap image, so a second run redoes
 only what changed. The README gives the resources: most proofs fit in
 4 GB of memory, the C refinement wants about 16 GB, and up to about 8
-cores are useful. A full run from nothing for one architecture takes
-some hours of machine time (unchecked: no figure in the README). The
+cores are useful. It gives no figure for how long a full run takes. The
 exact Isabelle version is pinned: the `repo` manifest checks it out as
 `l4v/isabelle`.
 
@@ -124,9 +123,11 @@ How kernel and proofs stay in step:
 
 - [`seL4/verification-manifest`](https://github.com/seL4/verification-manifest)
   holds `repo` manifests. `default.xml` pins the last kernel and `l4v`
-  commits for which the proofs passed together; `devel.xml` tracks the
-  `master` branches; `mcs.xml` and `mcs-devel.xml` do the same for the
-  MCS proofs; there are manifests for releases.
+  commits for which the proofs passed together; `devel.xml` takes `l4v`
+  at its `master` branch with a fixed kernel revision that CI advances;
+  `mcs.xml` and `mcs-devel.xml` do the same for the
+  MCS proofs (the `rt` branch of `l4v`); each release has a manifest
+  (`17.0.0.xml`).
 - After a push to the kernel's `master`, the "Proof Sync" workflow runs
   the preprocess check against the manifest. If `kernel_all.c_pp` is
   unchanged for every verified configuration, it advances the kernel
@@ -140,7 +141,8 @@ How kernel and proofs stay in step:
   is.
 - `l4v` has its own commit message rules (`docs/commit-messages.md`):
   the subject may be up to 78 characters because it begins with tags
-  naming the affected part, such as `riscv crefine:` (unchecked example).
+  naming the affected part, such as `arm refine:` or
+  `aarch64 aspec+ainvs:`.
 
 In the kernel repository the proofs are visible only as the
 `configs/*_verified.cmake` files, the `kernel_all_pp_wrapper` build
@@ -190,13 +192,13 @@ for the C parser.
   the `repo` commands, `devel.xml` against the default manifest.
   *Checked 2026-11-14.*
 - [l4v `docs/commit-messages.md`](https://github.com/seL4/l4v/blob/master/docs/commit-messages.md):
-  78-character subject with tags. *Checked 2026-11-14.*
+  78-character subject with tags, "Tag Examples". *Checked 2026-11-14.*
 - [seL4 `preprocess-deploy.yml`](https://github.com/seL4/seL4/blob/master/.github/workflows/preprocess-deploy.yml):
   the Proof Sync flow and the `devel.xml`, `mcs-devel.xml` manifests.
   *Checked 2026-11-14.*
 - [`seL4/verification-manifest`](https://github.com/seL4/verification-manifest):
-  the manifest files. *Unchecked: file names taken from the workflows,
-  repository not opened.*
+  the manifest files and the README's account of each kind.
+  *Checked 2026-11-14.*
 
 ## My notes
 

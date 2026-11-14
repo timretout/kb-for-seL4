@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img">
   <title>The L4 lineage and the capability systems behind seL4</title>
-  <desc>Liedtke's L3 and L4 were re-implemented in C++ as L4Ka::Hazelnut, L4Ka::Pistachio and Fiasco; OKL4 derives from Pistachio; seL4 is the third generation of the L4 family and takes capabilities from the separate line of KeyKOS and EROS.</desc>
+  <desc>Liedtke's L3 and L4 were re-implemented in C as L4Ka::Hazelnut and in C++ as L4Ka::Pistachio and Fiasco; OKL4 derives from Pistachio; seL4 is the third generation of the L4 family and takes capabilities from the separate line of KeyKOS and EROS.</desc>
   <style>
     svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
     @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
@@ -33,17 +33,17 @@
   <text x="179" y="85" text-anchor="middle">L4 (1993)</text>
   <path class="line" d="M94,80 H124" marker-end="url(#arrow)"/>
   <rect x="274" y="24" width="322" height="238" rx="6" class="data" style="fill:none" stroke-dasharray="5 4"/>
-  <text x="290" y="46" class="small head">Second generation: the L4 interface in C++</text>
+  <text x="290" y="46" class="small head">Second generation: the L4 interface in C and C++</text>
   <rect x="290" y="60" width="126" height="40" rx="6" class="data"/>
   <text x="353" y="85" text-anchor="middle">L4Ka::Hazelnut</text>
   <rect x="446" y="60" width="134" height="40" rx="6" class="data"/>
   <text x="513" y="85" text-anchor="middle">L4Ka::Pistachio</text>
   <rect x="446" y="130" width="134" height="40" rx="6" class="data"/>
-  <text x="513" y="155" text-anchor="middle">OKL4 (2006)</text>
+  <text x="513" y="155" text-anchor="middle">OKL4</text>
   <rect x="290" y="200" width="126" height="40" rx="6" class="data"/>
   <text x="353" y="225" text-anchor="middle">Fiasco</text>
   <rect x="446" y="200" width="134" height="40" rx="6" class="data"/>
-  <text x="513" y="225" text-anchor="middle">Fiasco.OC / L4Re</text>
+  <text x="513" y="225" text-anchor="middle">Fiasco.OC</text>
   <path class="line" d="M234,80 H290" marker-end="url(#arrow)"/>
   <path class="line" d="M416,80 H446" marker-end="url(#arrow)"/>
   <path class="line" d="M513,100 V130" marker-end="url(#arrow)"/>
@@ -57,9 +57,9 @@
   <text x="24" y="280" class="small head">Capability systems</text>
   <rect x="24" y="292" width="140" height="40" rx="6" class="data"/>
   <text x="94" y="317" text-anchor="middle">KeyKOS (1980s)</text>
-  <rect x="194" y="292" width="120" height="40" rx="6" class="data"/>
-  <text x="254" y="317" text-anchor="middle">EROS (1999)</text>
+  <rect x="194" y="292" width="150" height="40" rx="6" class="data"/>
+  <text x="269" y="317" text-anchor="middle">EROS (from 1991)</text>
   <path class="line" d="M164,312 H194" marker-end="url(#arrow)"/>
-  <path class="line dash" d="M314,312 H681 V190" marker-end="url(#arrow)"/>
-  <text x="330" y="304" class="small">capabilities for everything, including kernel memory</text>
+  <path class="line dash" d="M344,312 H681 V190" marker-end="url(#arrow)"/>
+  <text x="360" y="304" class="small">capabilities for everything, including kernel memory</text>
 </svg>
