@@ -9,7 +9,7 @@
 | Kind | CPU mechanism: modes that separate user code, kernel, hypervisor and firmware |
 | Architecture | x86, Arm, RISC-V |
 | Reached through | An [exception, interrupt or system call](exceptions-and-traps.md) |
-| Key numbers | x86: four rings; AArch64: four exception levels; RISC-V: three modes (unchecked) |
+| Key numbers | x86: four rings; AArch64: four exception levels; RISC-V: three modes |
 | seL4 code | `init_gdt()` in [`src/arch/x86/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/kernel/vspace.c); [`include/arch/riscv/arch/sbi.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/sbi.h) |
 | seL4 config | `KernelVTX`, `KernelArmHypervisorSupport` |
 | seL4 use | Runs in ring 0, EL1 or EL2, or S-mode |
@@ -27,10 +27,6 @@ interrupt masking, I/O, halting) either faults or is silently ignored.
 The only way up is a controlled entry: an
 [exception, interrupt or system call](exceptions-and-traps.md), which
 jumps to an address the more privileged level chose earlier.
-
-The architecture facts on this page come from the vendor manuals, which
-were not opened today (unchecked); the seL4 facts are checked against
-the source.
 
 ### x86
 
@@ -122,8 +118,8 @@ can run with or without guests.
   With `KernelVTX` the kernel executes `VMXON` and offers VCPU objects
   so that a user-level monitor can run guests
   ([`src/arch/x86/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/vcpu.c)).
-  seL4 has no support for AMD's SVM (unchecked beyond finding no SVM
-  code in `src/arch/x86`).
+  seL4 has no support for AMD's SVM: there is no SVM code in
+  `src/arch/x86`.
 - **Arm.** The level is a build-time choice. With
   `KernelArmHypervisorSupport` (CMake, in
   [`src/arch/arm/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/arm/config.cmake))
@@ -137,7 +133,8 @@ can run with or without guests.
   registers (`sstatus`, `stvec`, ...). It calls M-mode for the timer,
   console and IPIs through `sbi_call()`, an `ecall`, in
   [`include/arch/riscv/arch/sbi.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/sbi.h).
-  Upstream seL4 has no H-extension support (unchecked).
+  Upstream seL4 has no H-extension support: nothing in the tree
+  touches the hypervisor registers (`hstatus`, `hgatp`).
 
 The verified configurations say which level was proved; see
 [verification](../sel4/verification.md).
@@ -187,16 +184,32 @@ The verified configurations say which level was proved; see
 - [seL4 `include/arch/riscv/arch/sbi.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/sbi.h):
   the SBI calls and the `ecall` that makes them. *Checked 2026-11-14.*
 - [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 3: chapter 5 "Protection" (rings), the VMX chapters, and the
-  "System Management Mode" chapter. *Unchecked (intel.com refuses
-  scripted fetches).*
+  [combined volumes PDF](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3: chapter 6
+  "Protection" (rings; chapter 5 in older revisions), section 5.6 for
+  supervisor-mode and user-mode accesses, chapter 26 "Introduction to
+  Virtual Machine Extensions" and chapter 34 "System Management Mode".
+  *Checked 2026-11-14.*
 - [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
   section D1 "The AArch64 System Level Programmers' Model": exception
   levels and security states. *Unchecked (developer.arm.com refuses
   scripted fetches).*
-- [The RISC-V Instruction Set Manual, Volume II: Privileged Architecture](https://github.com/riscv/riscv-isa-manual/releases):
-  privilege modes, and the hypervisor extension chapter. *Unchecked
-  (not opened today).*
+- [Linux kernel documentation, "Booting AArch64 Linux"](https://docs.kernel.org/arch/arm64/booting.html)
+  ([source](https://github.com/torvalds/linux/blob/master/Documentation/arch/arm64/booting.rst)):
+  EL0 to EL3, the secure and non-secure counterparts, EL2 as the
+  hypervisor level, EL2 and EL3 optional. *Checked 2026-11-14.*
+- [Linux `arch/arm64/include/asm/esr.h`](https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/esr.h)
+  and ["Internal ABI between the kernel and HYP"](https://github.com/torvalds/linux/blob/master/Documentation/virt/kvm/arm/hyp-abi.rst):
+  the `SVC`, `HVC` and `SMC` exception classes, and `hvc` as the call
+  from EL1 to EL2. *Checked 2026-11-14.*
+- [Trusted Firmware-A, "Firmware Design"](https://github.com/ARM-software/arm-trusted-firmware/blob/master/docs/design/firmware-design.rst):
+  EL3 runtime software, reached with `SMC`, implementing PSCI.
+  *Checked 2026-11-14.*
+- [The RISC-V Instruction Set Manual, Volume II: Privileged Architecture](https://github.com/riscv/riscv-isa-manual/releases),
+  read as source: ["Privilege Levels" and the SBI in the introduction](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/intro.adoc),
+  [the hypervisor extension chapter](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/hypervisor.adoc)
+  (HS, VS and VU modes) and [`satp` in the supervisor chapter](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc)
+  (active only in S and U mode). *Checked 2026-11-14.*
 
 ## My notes
 

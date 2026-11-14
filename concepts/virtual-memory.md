@@ -282,14 +282,15 @@ refuses to map user frames at or above it.
 - [The RISC-V Instruction Set Manual, Volume II, supervisor chapter](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc),
   "Sv39": the plainest specification of a multi-level walk, written
   as an algorithm. *Checked 2026-11-14.*
-- Intel 64 and IA-32 Architectures Software Developer's Manual, volume
-  3, chapter 4 "Paging". *Unchecked: intel.com refuses scripted
-  fetches; the x86 and Arm facts in "What it is" are from memory and
-  are covered in detail, with their own marks, on the
-  per-architecture pages.*
-- Arm Architecture Reference Manual for A-profile (DDI 0487), chapter
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+  ([PDF](https://cdrdv2.intel.com/v1/dl/getContent/671200), September 2026 edition), volume 3, chapter 5 "Paging"
+  (chapter 4 in older editions): the x86-64 column of the table, SMEP
+  and SMAP, `invlpg`, PCIDs and global pages. *Checked 2026-11-14.*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest), chapter
   D8 "The AArch64 Virtual Memory System Architecture". *Unchecked:
-  developer.arm.com refuses scripted fetches.*
+  developer.arm.com refuses scripted fetches; the Arm facts in "What it
+  is" are covered, with their own references, on
+  [AArch64 paging](aarch64-paging.md).*
 
 ## My notes
 

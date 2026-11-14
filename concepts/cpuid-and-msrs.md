@@ -10,21 +10,20 @@ Read first: [x86-64 basics](x86-64-basics.md).
 |---|---|
 | Kind | Feature discovery instruction (`cpuid`) and control registers with no instruction of their own (MSRs) |
 | Architecture | x86 |
-| Reached through | Instructions: `cpuid` in any ring; `rdmsr` and `wrmsr` in ring 0 only (unchecked) |
-| Key numbers | Leaf ranges from `0x0`, `0x40000000` and `0x80000000`; an MSR is 64 bits, named by a 32-bit index (unchecked) |
+| Reached through | Instructions: `cpuid` in any ring; `rdmsr` and `wrmsr` in ring 0 only |
+| Key numbers | Leaf ranges from `0x0`, `0x40000000` and `0x80000000`; an MSR is 64 bits, named by a 32-bit index |
 | seL4 code | [`include/arch/x86/arch/machine.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/machine.h), [`src/arch/x86/machine/cpu_identification.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/machine/cpu_identification.c) |
 | seL4 config | `KernelX86MicroArch`, `KernelSyscall`, `KernelFSGSBase`, `KernelSupportPCID` and others |
 | seL4 use | Checks features at boot and stops if one is missing; programs a dozen MSRs |
-| On the clouds | A hypervisor can hide feature bits and refuse MSRs; x2APIC, PCID, TSC deadline and VMX are often hidden (unchecked) |
+| On the clouds | A hypervisor can hide feature bits and refuse MSRs; VMX is hidden unless nested virtualisation is enabled |
 
 ## What it is
 
 x86 grew by accretion, so two processors of the same year can differ
 in dozens of features, and a hypervisor can hide more. Software asks
 with `cpuid` and then configures what it found, mostly through MSRs.
-The architecture facts here are from the Intel and AMD manuals, not
-opened today (unchecked); MSR numbers and CPUID bits quoted from seL4
-are checked.
+The architecture facts here are from the Intel manual; MSR numbers and
+CPUID bits are also quoted from seL4.
 
 ### CPUID
 
@@ -57,13 +56,13 @@ taken from seL4's source where it tests them directly:
 |---|---|
 | PAT | leaf 1, EDX bit 16 |
 | VMX | leaf 1, ECX bit 5 |
-| PCID | leaf 1, ECX bit 17 (unchecked) |
+| PCID | leaf 1, ECX bit 17 |
 | x2APIC | leaf 1, ECX bit 21 |
 | TSC deadline timer | leaf 1, ECX bit 24 (`CPUID_TSC_DEADLINE_BIT`) |
 | XSAVE | leaf 1, ECX bit 26 |
-| "running under a hypervisor" | leaf 1, ECX bit 31 (unchecked) |
-| FSGSBASE, SMEP, INVPCID, SMAP | leaf 7, EBX bits 0, 7, 10, 20 (unchecked) |
-| IBRS/IBPB, `IA32_ARCH_CAPABILITIES` present | leaf 7, EDX bits 26, 29 (unchecked) |
+| "running under a hypervisor" | leaf 1, ECX bit 31 |
+| FSGSBASE, SMEP, INVPCID, SMAP | leaf 7, EBX bits 0, 7, 10, 20 |
+| IBRS/IBPB, `IA32_ARCH_CAPABILITIES` present | leaf 7, EDX bits 26, 29 |
 
 The displayed family and model are assembled from base and extended
 fields of leaf 1 EAX by a rule that differs slightly between Intel and
@@ -100,10 +99,10 @@ how the `syscall` MSRs are used.
 
 ### Under a hypervisor
 
-In a virtual machine `cpuid` always exits to the hypervisor on Intel
-(unchecked), which answers with whatever it wants the guest to see: it
-can clear feature bits (x2APIC, PCID, TSC deadline, VMX are often
-hidden), cap the maximum leaf, and add the `0x40000000` range. MSR
+In a virtual machine `cpuid` always exits to the hypervisor on Intel,
+which answers with whatever it wants the guest to see: it
+can clear feature bits (VMX is hidden on a cloud instance unless nested
+virtualisation is enabled), cap the maximum leaf, and add the `0x40000000` range. MSR
 accesses are filtered through a bitmap: each MSR is either passed
 through, emulated, or refused with #GP. So "the CPU model has it" does
 not mean "this VM has it", for both features and MSRs.
@@ -183,7 +182,7 @@ not mean "this VM has it", for both features and MSRs.
   it only for listed Intel models; on AMD and unlisted models it falls
   back to PIT calibration.
 - **CPUID leaves above the maximum return junk, not zero** on Intel
-  (the data of the highest basic leaf; unchecked). Check the maximum
+  (the data of the highest basic leaf). Check the maximum
   leaf first; seL4's direct reads of leaf 7 assume it exists.
 - **The Meltdown check trusts the hypervisor's CPUID.** If a VM hides
   `IA32_ARCH_CAPABILITIES`, seL4 cannot tell and takes the `else`
@@ -226,13 +225,26 @@ not mean "this VM has it", for both features and MSRs.
 - [seL4 `src/plat/pc99/machine/hardware.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/hardware.c):
   `tsc_init()`, the platform info ratio field and the KVM comment.
   *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 2A, the CPUID instruction reference (all leaves and bits), and
-  volume 4 "Model-Specific Registers". *Unchecked (intel.com refuses
-  scripted fetches).*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+  ([PDF](https://cdrdv2.intel.com/v1/dl/getContent/671200), September 2026 edition; chapter numbers move between
+  editions): volume 1, chapter 21 "Processor Identification and Feature
+  Determination" (the leaf ranges, the leaves and feature bits above,
+  leaf 1 ECX bit 31 "always 0, allocated for software emulation", what a
+  leaf above the maximum returns); volume 2, the `CPUID`, `RDMSR` and
+  `WRMSR` instruction references (privilege, #GP, `CPUID` always causing
+  a VM exit); volume 4, chapter 2 "Model-Specific Registers (MSRs)",
+  section 2.1 "Architectural MSRs" (the `IA32_` prefix, the MSRs in the
+  table); volume 3, section 27.6.9 (MSR bitmaps). *Checked 2026-11-14.*
+- [Linux `arch/x86/include/asm/cpufeatures.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/cpufeatures.h):
+  the same bit numbers; names leaf 1 ECX bit 31 "Running on a
+  hypervisor". *Checked 2026-11-14.*
+- [Google Cloud, "About nested virtualization"](https://docs.cloud.google.com/compute/docs/instances/nested-virtualization/overview)
+  and [Amazon EC2, "Use nested virtualization"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html):
+  VT-x reaches a guest only when nested virtualisation is enabled for
+  the instance. *Checked 2026-11-14.*
 - [AMD64 Architecture Programmer's Manual, volume 3](https://www.amd.com/en/search/documentation/hub.html),
   appendix E "Obtaining Processor Information Via the CPUID
-  Instruction". *Unchecked (not opened today).*
+  Instruction". *Unchecked (amd.com's document pages need a browser).*
 
 ## My notes
 

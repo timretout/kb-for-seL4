@@ -10,19 +10,18 @@ Read first: [Virtual memory](virtual-memory.md), [x86-64 basics](x86-64-basics.m
 |---|---|
 | Kind | Address translation mechanism: four levels of page tables |
 | Architecture | x86-64 |
-| Reached through | `CR3` holds the top table; `invlpg` and `invpcid` invalidate (unchecked) |
-| Key numbers | 48-bit virtual addresses; 512 eight-byte entries a table; pages of 4 KiB, 2 MiB and 1 GiB (unchecked) |
+| Reached through | `CR3` holds the top table; `invlpg` and `invpcid` invalidate |
+| Key numbers | 48-bit virtual addresses; 512 eight-byte entries a table; pages of 4 KiB, 2 MiB and 1 GiB |
 | seL4 code | [`src/arch/x86/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/kernel/vspace.c), [`hardware.h`](https://github.com/seL4/seL4/blob/master/include/plat/pc99/plat/64/plat_mode/machine/hardware.h) |
 | seL4 config | `KernelHugePage`, `KernelSupportPCID`, `KernelSkimWindow` |
 | seL4 use | One object type per level ([VSpace](../sel4/vspace.md)); 510 GiB kernel window under the last PML4 entry |
-| On the clouds | `PCID` and `INVPCID` are often hidden in VMs |
+| On the clouds | `PCID` is missing on some instance types |
 
 ## What it is
 
 Paging is mandatory in long mode: every address a program or the
 kernel uses is virtual. The architecture facts here are from the Intel
-and AMD manuals, not opened today (unchecked); seL4 constants and
-names are checked unless marked.
+manual; seL4 constants and names are from the source.
 
 ### The walk
 
@@ -193,13 +192,15 @@ on a vulnerable CPU.
 
 - **The kernel window is 510 GiB, not all of memory.** Physical
   addresses at or above `PADDR_TOP` cannot be kernel objects; RAM
-  above it is dropped at boot, and devices above it are still usable
-  as user-mapped frames (unchecked).
+  above it is left out of the kernel's memory at boot
+  (`add_mem_p_regs`) and, like devices above it, reaches user level
+  only as device untypeds, usable as user-mapped frames.
 - **Editing an entry is not enough.** Any patch that clears or
   narrows a mapping needs the matching invalidation, on every core
   that may have it cached; look for the `invalidate*` call beside each
   table write.
-- **`PCID`/`INVPCID` are often hidden in VMs**, and `head.S` hangs
+- **`PCID`/`INVPCID` are missing on some cloud instance types** (EC2's
+  `t3a` has no PCID: see [EC2 instance types](ec2-instance-types.md)), and `head.S` hangs
   with a one-line message if `KernelSupportPCID` is set and they are
   missing. Build with it off for a virtual CPU you have not checked.
 - **The PS bit position means PAT in a PT entry.** Bit 7 is PS at the
@@ -243,17 +244,23 @@ on a vulnerable CPU.
 - [seL4 `src/arch/x86/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/x86/config.cmake):
   `KernelHugePage`, `KernelSupportPCID`, `KernelSkimWindow` (help text
   and default). *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 3 chapter 4 "Paging": 4.5 (4-level and 5-level paging, entry
-  formats), 4.6 (access rights, SMEP, SMAP), 4.10 (TLBs, PCIDs,
-  invalidation); 11.12 (PAT). *Unchecked (intel.com refuses scripted
-  fetches).*
+- [seL4 `src/arch/x86/kernel/boot_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot_sys.c)
+  (`add_mem_p_regs`) and [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c)
+  (`create_untypeds`): memory above `PADDR_TOP` is ignored as kernel
+  memory and given out as device untypeds. *Checked 2026-11-14.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+  ([PDF](https://cdrdv2.intel.com/v1/dl/getContent/671200), September 2026 edition; chapter numbers move between
+  editions: paging was chapter 4 in older ones),
+  volume 3 chapter 5 "Paging": 5.1 (control bits, CPUID enumeration), 5.5
+  (4-level and 5-level paging, entry formats), 5.6 (access rights, SMEP,
+  SMAP), 5.7 (page faults), 5.10 (TLBs, PCIDs, invalidation); 14.12
+  (PAT). *Checked 2026-11-14.*
 - [AMD64 Architecture Programmer's Manual, volume 2](https://www.amd.com/en/search/documentation/hub.html),
-  chapter 5 "Page Translation and Protection". *Unchecked (not opened
-  today).*
+  chapter 5 "Page Translation and Protection". *Unchecked (amd.com's
+  document pages need a browser).*
 - [Meltdown: Reading Kernel Memory from User Space](https://meltdownattack.com/meltdown.pdf)
-  (Lipp et al., 2018): the attack the SKIM window answers. *Unchecked
-  (not opened today).*
+  (Lipp et al., 2018): the attack the SKIM window answers.
+  *Checked 2026-11-14.*
 
 ## My notes
 

@@ -47,8 +47,7 @@ Every core has one. It:
 - takes the **end of interrupt** (EOI): software writes the EOI register
   when done, and the local APIC will then deliver the next interrupt of
   equal or lower priority. Priority is the vector's upper four bits, so a
-  higher vector is higher priority (unchecked beyond Microkit's manual
-  saying so);
+  higher vector is higher priority;
 - is enabled through the spurious interrupt vector register (SVR), which
   also names the vector used when an interrupt vanishes between being
   signalled and being taken.
@@ -58,10 +57,11 @@ Its registers are reached in one of two modes:
 | Mode | Access | Notes |
 |---|---|---|
 | xAPIC | Memory-mapped, base in the `IA32_APIC_BASE` MSR, normally `0xfee00000` | 8-bit APIC IDs |
-| x2APIC | MSRs from `0x800` (unchecked) | 32-bit APIC IDs; CPUID leaf 1, ECX bit 21, says the CPU has it |
+| x2APIC | MSRs `0x800` to `0x8ff` | 32-bit APIC IDs; CPUID leaf 1, ECX bit 21, says the CPU has it |
 
 Once firmware has switched a core to x2APIC it cannot simply go back to
-xAPIC (unchecked: the SDM requires disabling the APIC first).
+xAPIC: the local APIC has to be disabled first, and writing the xAPIC
+setting to `IA32_APIC_BASE` directly raises #GP.
 
 ### I/O APIC
 
@@ -77,7 +77,7 @@ Its **redirection table** has one 64-bit entry per pin, at register
 | Field | Bits | Meaning |
 |---|---|---|
 | Vector | 0–7 | The vector to deliver |
-| Delivery mode | 8–10 | Fixed, NMI, ExtINT... (unchecked) |
+| Delivery mode | 8–10 | Fixed (0), lowest priority (1), SMI (2), NMI (4), INIT (5), ExtINT (7) |
 | Destination mode | 11 | Physical or logical destination |
 | Polarity | 13 | Active high or active low |
 | Trigger mode | 15 | Edge or level ([IRQ](irq.md) explains the difference) |
@@ -216,12 +216,17 @@ argument is an offset, not the CPU vector (see Gotchas).*
 - [Linux kernel documentation, "IO-APIC"](https://docs.kernel.org/arch/x86/i386/IO-APIC.html):
   why the I/O APIC exists (routing to any CPU) and multiple I/O APICs.
   *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 3, the APIC chapter: local APIC registers, LVT, EOI, priority,
-  x2APIC. *Unchecked (intel.com refuses scripted fetches).*
-- Intel 82093AA I/O APIC datasheet: the redirection table entry format.
-  *Unchecked (intel.com refuses scripted fetches; field layout taken from
-  seL4's `ioapic.c`).*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3, chapter 13 "Advanced Programmable Interrupt
+  Controller (APIC)" (chapter 10 or 11 in older revisions): 13.4 local
+  APIC registers, 13.5.1 LVT, 13.8 EOI and priority (13.8.3: the
+  priority class is bits 7:4 of the vector), 13.9 spurious interrupt,
+  13.12 x2APIC (13.12.1.2 for the MSR range, 13.12.5 for the state
+  transitions). *Checked 2026-11-14.*
+- [Intel 82093AA I/O APIC datasheet](https://pdos.csail.mit.edu/6.828/2018/readings/ia32/ioapic.pdf)
+  (a copy kept by MIT's 6.828 course), section 3.2.4 "I/O Redirection
+  Table Registers": the entry format and the delivery modes.
+  *Checked 2026-11-14.*
 - [OSDev wiki, "APIC"](https://wiki.osdev.org/APIC) and
   ["IOAPIC"](https://wiki.osdev.org/IOAPIC): practical guides.
   *Unchecked (the site refuses scripted fetches).*

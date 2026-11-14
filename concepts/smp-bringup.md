@@ -36,9 +36,7 @@ entries hold 32-bit ones) and an enabled flag: see
 hyperthreading four logical cores can be 0, 2, 1, 3.
 
 **Starting.** The BSP writes its local APIC's interrupt command register
-(ICR) to send two inter-processor interrupts (IPIs) addressed by APIC ID
-(the delivery mode values and timings below are from memory of the Intel
-SDM, unchecked):
+(ICR) to send two inter-processor interrupts (IPIs) addressed by APIC ID:
 
 1. **INIT** (delivery mode 5) resets the target core to its power-on
    state, but it then waits instead of running the reset vector.
@@ -50,8 +48,9 @@ So the entry point must be page-aligned and below 1 MiB, and the code
 there must be 16-bit. Kernels copy a small **trampoline** to low memory
 that repeats, for this core, the climb the BSP made at boot: load a GDT,
 set `CR0.PE`, far-jump to 32-bit code, enable paging and long mode, jump
-to the kernel proper. The classic recipe waits 10 ms after INIT and sends
-STARTUP twice 200 µs apart; modern CPUs need neither.
+to the kernel proper. The classic recipe (the SDM's example) waits 10 ms
+after INIT and sends STARTUP twice 200 µs apart; Linux drops the delays
+on modern CPUs but still sends STARTUP twice.
 
 In x2APIC mode the ICR is one 64-bit MSR with a 32-bit destination, and
 is needed to address APIC IDs of 255 and above.
@@ -79,8 +78,7 @@ RISC-V cores are **harts** (hardware threads). The supervisor binary
 interface's hart state management extension gives
 `sbi_hart_start(hartid, start_addr, opaque)`: the hart starts in S-mode
 at `start_addr` with `a0` = its hart ID and `a1` = `opaque`, with
-`satp` = 0 (no paging) and interrupts off (unchecked: SBI specification,
-chapter "Hart State Management Extension"). Before HSM, firmware released
+`satp` = 0 (no paging) and interrupts off (`sstatus.SIE` = 0). Before HSM, firmware released
 all harts into the payload at once and they raced for a lottery to
 choose the boot hart.
 
@@ -191,10 +189,10 @@ the `IpiRemoteCall_t` enum in each architecture's
 - `start_boot_aps` waits forever for each AP. A core that the MADT lists
   as enabled but that never starts (or a hypervisor that drops the
   STARTUP IPI) hangs boot after "Starting node #N", with no timeout.
-- seL4 sends one INIT and one STARTUP with no delays in between
-  (unchecked beyond `start_cpu`'s two calls; any delay would be inside
-  the `apic_send_*` functions). Hardware that needs the classic timing
-  is old; hypervisors do not.
+- seL4 sends one INIT (assert, then level de-assert) and one STARTUP
+  with no delays in between: `start_cpu` makes two calls, and the
+  `apic_send_*` functions they reach only write the ICR. Hardware that
+  needs the classic timing is old; hypervisors do not.
 - On Arm and RISC-V the kernel waits for exactly `CONFIG_MAX_NUM_NODES`
   cores. Build with a number higher than the machine has, or lose one
   `CPU_ON`, and the primary spins forever in `release_secondary_cpus`.
@@ -236,15 +234,26 @@ the `IpiRemoteCall_t` enum in each architecture's
   [`drivers/smp-spin-table.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/drivers/smp-spin-table.c),
   [`arch-riscv/boot.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-riscv/boot.c).
   *Checked 2026-11-14.*
-- Intel SDM volume 3, section 9.4 "Multiple-Processor (MP)
-  Initialization" and section 11.6 "Issuing Interprocessor Interrupts".
-  *Unchecked: intel.com refuses scripted fetches; section numbers from
-  memory.*
-- Arm Power State Coordination Interface (DEN0022), section 5.6
-  "CPU_ON". *Unchecked: developer.arm.com refuses scripted fetches.*
+- seL4 [`src/arch/x86/kernel/xapic.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/xapic.c)
+  and [`x2apic.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/x2apic.c):
+  `apic_send_init_ipi()` and `apic_send_startup_ipi()`, delivery modes
+  5 and 6, no delays. *Checked 2026-11-14.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3, section 11.4
+  "Multiple-Processor (MP) Initialization" (the `000VV000H` start
+  address; the 10 ms and 200 µs delays in the example of 11.4.4),
+  section 13.6 "Issuing Interprocessor Interrupts" (delivery modes) and
+  13.12.9 "ICR Operation in x2APIC Mode". *Checked 2026-11-14.*
+- Linux [`arch/x86/kernel/smpboot.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/smpboot.c):
+  `smp_set_init_udelay()` uses no delay on modern processors;
+  `num_starts` is 2. *Checked 2026-11-14.*
+- [Arm Power State Coordination Interface (DEN0022)](https://developer.arm.com/documentation/den0022/latest),
+  section 5.6 "CPU_ON". *Unchecked: developer.arm.com refuses scripted
+  fetches.*
 - [RISC-V SBI specification](https://github.com/riscv-non-isa/riscv-sbi-doc),
-  "Hart State Management Extension (EID 0x48534D)". *Unchecked: not
-  opened today.*
+  ["Hart State Management Extension (EID #0x48534D "HSM")"](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-hsm.adoc),
+  "Hart start": the register state a started hart sees.
+  *Checked 2026-11-14.*
 
 ## My notes
 

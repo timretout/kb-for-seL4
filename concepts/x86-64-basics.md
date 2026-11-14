@@ -10,7 +10,7 @@ Read first: [Privilege levels](privilege-levels.md).
 |---|---|
 | Kind | Processor architecture: AMD's 64-bit extension of 32-bit x86 |
 | Architecture | x86-64 (also AMD64, Intel 64, "long mode") |
-| Key numbers | Sixteen 64-bit general-purpose registers; 48-bit virtual addresses with 4-level paging; 128-byte red zone (unchecked) |
+| Key numbers | Sixteen 64-bit general-purpose registers; 48-bit virtual addresses with 4-level paging; 128-byte red zone |
 | seL4 code | `src/arch/x86/64/`, starting at [`src/arch/x86/64/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/head.S) |
 | seL4 config | `KernelArch` `x86` with sel4arch `x86_64` or `ia32` |
 | seL4 use | Climbs to long mode itself in `head.S`; GDT and TSS set up per core; per-CPU data through `gs` on SMP |
@@ -19,10 +19,7 @@ Read first: [Privilege levels](privilege-levels.md).
 
 x86-64 (also AMD64, Intel 64, "long mode") is AMD's 64-bit extension of
 the 32-bit x86 architecture (IA-32). It kept everything older for
-compatibility, so a kernel meets forty years of layers. The
-architecture facts here come from the Intel and AMD manuals, which were
-not opened today (unchecked); names and constants quoted from seL4 are
-checked.
+compatibility, so a kernel meets forty years of layers.
 
 ### Registers
 
@@ -60,8 +57,9 @@ everything but Windows: integer arguments in `rdi, rsi, rdx, rcx, r8,
 r9`, the rest on the stack; result in `rax`; `rbx, rbp, r12` to `r15`
 preserved by the callee; stack 16-byte aligned at a `call`. User code
 may use 128 bytes below `rsp` (the red zone) without moving `rsp`,
-which a kernel must disable for its own code (`-mno-red-zone`) because
-an interrupt would overwrite it.
+which a kernel must disable for its own code (`-mno-red-zone`) or
+protect by taking interrupts on another stack, because an interrupt
+pushed onto the same stack would overwrite it.
 
 Assembly comes in two syntaxes. seL4 and Linux use AT&T: source first,
 `%` on registers, `$` on constants, so `movl %cr0, %eax` copies CR0
@@ -139,8 +137,9 @@ are translated, and bits 63 to 48 must all equal bit 47. Such an
 address is **canonical**. That splits the space into a low half
 (`0` to `0x00007fff_ffffffff`, user) and a high half
 (`0xffff8000_00000000` up, kernel) with an unusable hole between.
-Using a non-canonical address raises a general protection fault, not a
-page fault.
+Using a non-canonical address raises a general protection fault (a
+stack fault, #SS, if the access is a stack reference), not a page
+fault.
 
 ## In seL4
 
@@ -197,10 +196,14 @@ siblings), so `#include <mode/machine.h>` resolves per build.
 
 - **32-bit writes zero-extend, 16- and 8-bit writes do not.** A patch
   that changes `movl` to `movw` changes the upper bits.
-- **The kernel has no red zone and no FPU.** Kernel C must be built so
-  that the compiler neither uses the red zone nor emits SSE; seL4's
-  build flags do this (unchecked today), and hand-written assembly must
-  keep to it.
+- **The kernel has no FPU, and its red zone needs care.** Kernel C
+  must be built so that the compiler does not emit SSE: seL4's
+  `CMakeLists.txt` passes `-mno-mmx -mno-sse -mno-sse2 -mno-3dnow`,
+  and hand-written assembly must keep to it. seL4 does not pass
+  `-mno-red-zone`. Instead every IDT gate uses IST 1, so the CPU never
+  pushes onto the kernel stack, and the nested-interrupt path in
+  `traps.S` skips 128 bytes below the interrupted `rsp` "to respect
+  the red zone".
 - **`gs` has two bases.** After `swapgs` the "user" value is in
   `IA32_KERNEL_GS_BASE`, so code that sets a thread's GS base from
   inside the kernel must write that MSR, not `GS_BASE`. seL4's
@@ -209,8 +212,8 @@ siblings), so `#include <mode/machine.h>` resolves per build.
   wraps the GDT install in a pair of `swapgs` for this reason.
 - **A TSS descriptor is 16 bytes** in long mode, which is why
   `GDT_CS_3` is index 5, not 4.
-- **Non-canonical addresses raise #GP, with no faulting address in
-  `CR2`.**
+- **Non-canonical addresses raise #GP (or #SS), with no faulting
+  address in `CR2`.**
 
 ## See also
 
@@ -240,17 +243,26 @@ siblings), so `#include <mode/machine.h>` resolves per build.
   OSXSAVE, SMEP, SMAP; IF, DF, IOPL, AC). *Checked 2026-11-14.*
 - [seL4 `include/arch/x86/arch/64/mode/machine.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/64/mode/machine.h):
   the `swapgs` comment and GS base accessors. *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 1 chapter 3 (registers, modes, canonical addresses) and volume
-  3 chapters 2 "System Architecture Overview", 3 "Protected-Mode Memory
-  Management" and 8.7 "Task Management in 64-bit Mode".
-  *Unchecked (intel.com refuses scripted fetches).*
-- [AMD64 Architecture Programmer's Manual, volume 2: System Programming](https://www.amd.com/en/search/documentation/hub.html),
-  chapters 1, 4 and 14 (long mode and how to enter it). *Unchecked (not
-  opened today).*
-- [System V Application Binary Interface, AMD64 Architecture Processor Supplement](https://gitlab.com/x86-psABIs/x86-64-ABI),
+- [seL4 `CMakeLists.txt`](https://github.com/seL4/seL4/blob/master/CMakeLists.txt)
+  and [`src/arch/x86/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/traps.S):
+  the x86 compiler flags (no SSE, no `-mno-red-zone`) and the red-zone
+  skip in `EXPAND_EXCEPT_0`. *Checked 2026-11-14.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 1 chapter 3
+  (registers, modes, 3.3.7.1 "Canonical Addressing") and volume 3
+  chapters 2 "System Architecture Overview" (control registers,
+  `IA32_EFER`), 3 "Protected-Mode Memory Management", 10.7 "Task
+  Management in 64-bit Mode" (8.7 in older revisions) and 12.8.5
+  "Initializing IA-32e Mode". *Checked 2026-11-14.*
+- [AMD64 Architecture Programmer's Manual, volume 2: System Programming](https://www.amd.com/en/search/documentation/hub.html)
+  (publication 24593), chapters 1, 4 and 14 (long mode and how to enter
+  it). *Unchecked (amd.com serves no PDF to scripted fetches; the
+  chapter titles were read in a mirrored copy of revision 3.38).*
+- [System V Application Binary Interface, AMD64 Architecture Processor Supplement](https://gitlab.com/x86-psABIs/x86-64-ABI)
+  ([source of chapter 3](https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/low-level-sys-info.tex)),
   section 3.2 "Function Calling Sequence": argument registers,
-  callee-saved registers, red zone. *Unchecked (not opened today).*
+  callee-saved registers, `DF`, stack alignment, red zone.
+  *Checked 2026-11-14.*
 
 ## My notes
 

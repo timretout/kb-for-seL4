@@ -29,13 +29,15 @@ them. So they are handled separately.
 |---|---|---|
 | x86, x87 + SSE | 8 × 80-bit x87 (aliased as MMX), 16 × 128-bit `XMM`, `MXCSR` control | 512 (FXSAVE area) |
 | x86, + AVX | upper halves making 16 × 256-bit `YMM` | 512 + 64 header + 256 = 832 |
-| x86, + AVX-512 | 32 × 512-bit `ZMM`, 8 mask registers `k0`–`k7` | about 2.7 KiB |
-| AArch64 | 32 × 128-bit `V0`–`V31`, `FPSR`, `FPCR` | 528 |
-| AArch64 SVE | vectors up to 2048 bits | up to about 8 KiB |
+| x86, + AVX-512 | 32 × 512-bit `ZMM`, 8 mask registers `k0`–`k7` | 64 + 512 + 1024 = 1600 more, at offsets CPUID reports |
+| AArch64 | 32 × 128-bit `V0`–`V31`, `FPSR`, `FPCR` | 520 |
+| AArch64 SVE | vectors up to 2048 bits | up to 8 KiB for 32 vectors |
 | RISC-V F/D | 32 × 64-bit `f0`–`f31`, `fcsr` | 264 |
 
-(Sizes are from memory of the architecture manuals, unchecked, except
-that seL4's x86 defaults below agree with the first two rows.)
+(The x86 sizes follow from the XSAVE layout below, and seL4's x86
+defaults agree with the first two rows. The AArch64 and RISC-V figures
+are the sizes of seL4's `user_fpu_state_t`, the RISC-V one with four
+bytes of padding.)
 
 ### Lazy and eager switching
 
@@ -65,7 +67,7 @@ x86 has accumulated several instructions for the job:
 
 | Instruction | Saves | Notes |
 |---|---|---|
-| `FXSAVE` / `FXRSTOR` | x87, MMX, SSE | fixed 512-byte area, 16-byte aligned; needs `CR4.OSFXSR` |
+| `FXSAVE` / `FXRSTOR` | x87, MMX, SSE | fixed 512-byte area, 16-byte aligned; without `CR4.OSFXSR` it may not save the SSE registers |
 | `XSAVE` / `XRSTOR` | any components named in a mask | 512-byte legacy area, 64-byte header with the `XSTATE_BV` bitmap, then extended components; 64-byte aligned; needs `CR4.OSXSAVE` |
 | `XSAVEOPT` | as `XSAVE` | skips components unchanged since the last restore |
 | `XSAVEC` | as `XSAVE` | compacted layout: only enabled components, packed |
@@ -73,8 +75,8 @@ x86 has accumulated several instructions for the job:
 
 Which components exist and are enabled is the 64-bit register **XCR0**
 (extended control register 0), written with `XSETBV`: bit 0 x87, bit 1
-SSE, bit 2 AVX, bits 5 to 7 AVX-512. A component not enabled in XCR0
-cannot be used by any code: AVX instructions fault with `#UD`. So the
+SSE, bit 2 AVX, bits 5 to 7 AVX-512. A component from AVX up that is
+not enabled in XCR0 cannot be used by any code: AVX instructions fault with `#UD`. So the
 kernel's choice of XCR0 decides what user programs may use.
 [CPUID](cpuid-and-msrs.md) leaf `0x0D` describes all this: sub-leaf 0
 gives the supported XCR0 bits in `EDX:EAX` and the area size for the
@@ -92,10 +94,10 @@ In 2018 lazy switching on Intel CPUs turned out to leak
 (CVE-2018-3665, "LazyFP"): with `CR0.TS` set, an FPU instruction still
 executes *speculatively* on the previous thread's register contents
 before the `#NM` is taken, and a cache side channel recovers them.
-Those registers hold AES keys among other things. Linux and other x86
-kernels moved to eager switching, which had already become as fast in
-practice because almost every thread uses SSE (it is how compilers copy
-memory) (unchecked: from memory of the advisory and the Linux history).
+Those registers hold AES keys among other things. The fix is eager
+switching. Linux already switched eagerly by default, because almost
+every process touches these registers sooner or later (SIMD is used
+even to copy memory), so laziness only bought an `#NM` trap.
 
 ## In seL4
 
@@ -139,8 +141,9 @@ threads that have the FPU disabled does not need a reload.
 marks a thread as not using the FPU. The kernel then never saves or
 loads FPU state for it and runs it with the FPU disabled, so an FPU
 instruction in it traps and is reported as a fault to its fault handler
-(see [faults](../sel4/faults.md); unchecked which fault type each
-architecture reports). This is the way to keep switches
+(see [faults](../sel4/faults.md)): each architecture's trap code passes
+it to `handleUserLevelFault`, which raises a user exception fault,
+numbered 7 on x86, the `#NM` vector. This is the way to keep switches
 between, say, small driver threads cheap.
 
 **x86 options**
@@ -220,15 +223,40 @@ owner.
   (`seL4_TCBFlag_fpuDisabled`) and
   [`libsel4/include/interfaces/object-api.xml`](https://github.com/seL4/seL4/blob/master/libsel4/include/interfaces/object-api.xml)
   (`seL4_TCB_SetFlags`). *Checked 2026-11-14.*
-- Intel SDM volume 1, chapter 13 "Managing State Using the XSAVE Feature
-  Set"; volume 3, section 2.5 (`CR0.TS`, `CR4.OSXSAVE`). *Unchecked:
-  intel.com refuses scripted fetches.*
+- seL4 [`src/api/syscall.c`](https://github.com/seL4/seL4/blob/master/src/api/syscall.c)
+  (`handleUserLevelFault`), [`src/arch/x86/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/c_traps.c),
+  [`src/arch/arm/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/c_traps.c)
+  and [`src/arch/riscv/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/c_traps.c):
+  the fault a trapped FPU instruction becomes. *Checked 2026-11-14.*
+- seL4 [`include/arch/arm/arch/64/mode/machine/registerset.h`](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/64/mode/machine/registerset.h)
+  and [`include/arch/riscv/arch/machine/registerset.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/machine/registerset.h):
+  `user_fpu_state_t`. *Checked 2026-11-14.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+  ([PDF](https://cdrdv2.intel.com/v1/dl/getContent/671200), September 2026 edition): volume 1, chapter 13 "Managing
+  State Using the XSAVE Feature Set" (13.1 to 13.4: components, CPUID
+  leaf `0x0D`, XCR0, the area's layout); volume 2, `FXSAVE`; volume 3,
+  section 2.5 (`CR0.TS`, `CR4.OSFXSR`, `CR4.OSXSAVE`).
+  *Checked 2026-11-14.*
+- [QEMU `target/i386/cpu.h`](https://github.com/qemu/qemu/blob/master/target/i386/cpu.h):
+  the sizes of the AVX (256 bytes), opmask (64), `ZMM_Hi256` (512) and
+  `Hi16_ZMM` (1024) components. *Checked 2026-11-14.*
 - Stecklina and Prescher, "LazyFP: Leaking FPU Register State using
   Microarchitectural Side-Channels", 2018
   ([arXiv:1806.07480](https://arxiv.org/abs/1806.07480)); CVE-2018-3665.
-  *Unchecked: not opened today.*
-- Arm Architecture Reference Manual (DDI 0487), `CPACR_EL1`; RISC-V
-  privileged specification, `sstatus.FS`. *Unchecked: from memory.*
+  *Checked 2026-11-14.*
+- [Linux `arch/arm64/include/asm/esr.h`](https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/esr.h)
+  (`ESR_ELx_EC_FP_ASIMD`, `0x07`), [`sysreg.h`](https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/sysreg.h)
+  (`CPACR_EL1_FPEN`) and [`kvm_arm.h`](https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/kvm_arm.h)
+  (`CPTR_EL2_TFP`). *Checked 2026-11-14.*
+- Stephens et al., "The ARM Scalable Vector Extension", 2017
+  ([arXiv:1803.06185](https://arxiv.org/abs/1803.06185)): vector lengths
+  from 128 to 2048 bits. *Checked 2026-11-14.*
+- [The RISC-V Instruction Set Manual, Volume II, machine chapter](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/machine.adoc),
+  the `FS` field of `mstatus` (`sstatus.FS` is the same field): Off,
+  Initial, Clean, Dirty, and an illegal-instruction exception when Off.
+  *Checked 2026-11-14.*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
+  `CPACR_EL1`. *Unchecked (developer.arm.com refuses scripted fetches).*
 
 ## My notes
 

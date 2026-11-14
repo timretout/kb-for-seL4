@@ -11,16 +11,14 @@ Read first: [Exceptions and traps](exceptions-and-traps.md), [x86-64 basics](x86
 | Kind | Kernel entry mechanisms: the IDT, and `syscall` or `sysenter` |
 | Architecture | x86-64 |
 | Reached through | `lidt` for the IDT; MSRs `LSTAR`, `STAR` and `FMASK` for `syscall` |
-| Key numbers | Up to 256 vectors, 0 to 31 for CPU exceptions (unchecked); seL4 gives user level vectors 48 to 155 |
+| Key numbers | Up to 256 vectors, 0 to 31 for CPU exceptions; seL4 gives user level vectors 48 to 155 |
 | seL4 code | [`src/arch/x86/64/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/x86/64/traps.S), [`src/arch/x86/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/c_traps.c) |
 | seL4 config | `KernelSyscall` (default `syscall` on x86_64), `KernelFSGSBase` |
 | seL4 use | Each entry saves the user registers into the current TCB; one kernel stack per core |
 
 ## What it is
 
-x86-64 has two unrelated kernel entry mechanisms. The architecture
-facts here are from the Intel and AMD manuals, not opened today
-(unchecked), except where seL4's source restates them.
+x86-64 has two unrelated kernel entry mechanisms.
 
 ### The IDT
 
@@ -46,7 +44,8 @@ local [APIC](apic.md)) and software.
 | 18 | #MC | machine check: hardware error | no |
 
 Others that push an error code: 10 (#TS), 11 (#NP), 12 (#SS), 17
-(#AC). The page-fault error code has bit 0 = page was present, bit 1 =
+(#AC) and, on CPUs with control-flow enforcement (CET), 21 (#CP). The
+page-fault error code has bit 0 = page was present, bit 1 =
 write, bit 2 = from user mode, bit 4 = instruction fetch.
 
 ### What the CPU does on delivery
@@ -140,10 +139,12 @@ does this by pointing `rsp` at the right slot of the TCB and using
   vector 3, DPL 3 for the rest so user `int n` reaches the kernel as a
   fault. `init_tss()` leaves `RSP0` zero and points **IST 1** at
   `x64KSIRQStack`, a per-core array just big enough for the CPU's
-  frame (`IRQ_STACK_SIZE` is 6 words); the saved values are then
-  transferred into the TCB (unchecked exactly where; `INT_SAVE_STATE`
-  skips those slots). On ia32, by contrast, the TSS stack pointer aims
-  into the TCB so the CPU pushes straight into it (unchecked).
+  frame (`IRQ_STACK_SIZE` is 6 words); `c_x64_handle_interrupt()` in
+  `src/arch/x86/64/c_traps.c` then copies the error code, `RIP`,
+  `RFLAGS` and `RSP` from there into the TCB (`INT_SAVE_STATE` skips
+  those slots). On ia32, by contrast, the TSS's `esp0` aims at the end
+  of the TCB's register array so the CPU pushes straight into it
+  (`include/arch/x86/arch/32/mode/stack.h`).
 
 C side:
 [`src/arch/x86/c_traps.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/c_traps.c)
@@ -244,17 +245,25 @@ bases are set (`inst`, `msr`).
 - [seL4 `include/plat/pc99/plat/64/plat_mode/machine/hardware.h`](https://github.com/seL4/seL4/blob/master/include/plat/pc99/plat/64/plat_mode/machine/hardware.h):
   the `USER_TOP` comment about `syscall` at the last address.
   *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 3 chapter 6 "Interrupt and Exception Handling" (vector table
-  6-1, 6.14 "Exception and Interrupt Handling in 64-bit Mode",
-  IST); volume 2 for `SYSCALL`, `SYSRET`, `SYSENTER`, `SWAPGS`.
-  *Unchecked (intel.com refuses scripted fetches).*
-- [AMD64 Architecture Programmer's Manual, volume 2](https://www.amd.com/en/search/documentation/hub.html),
-  chapter 8 "Exceptions and Interrupts" and section 6.1 "Fast System
-  Call". *Unchecked (not opened today).*
+- [seL4 `include/arch/x86/arch/32/mode/stack.h`](https://github.com/seL4/seL4/blob/master/include/arch/x86/arch/32/mode/stack.h):
+  ia32 sets the TSS's `esp0` to the top of the thread's register
+  context. *Checked 2026-11-14.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3 chapter 7
+  "Interrupt and Exception Handling" (vector table 7-1, 7.12.1.3 for
+  the flags cleared, 7.14 "Exception and Interrupt Handling in 64-bit
+  Mode", 7.14.5 "Interrupt Stack Table"; chapter 6 in older
+  revisions), figure 5-12 for the page-fault error code; volume 2 for
+  `SYSCALL`, `SYSRET`, `SYSENTER`, `SWAPGS`, `RDFSBASE`.
+  *Checked 2026-11-14.*
+- [AMD64 Architecture Programmer's Manual, volume 2: System Programming](https://www.amd.com/en/search/documentation/hub.html)
+  (publication 24593), chapter 8 "Exceptions and Interrupts" and
+  section 6.1 "Fast System Call and Return". *Unchecked (amd.com serves
+  no PDF to scripted fetches; the section titles were read in a mirrored
+  copy of revision 3.38).*
 - [Linux kernel documentation, "Kernel Entries"](https://docs.kernel.org/arch/x86/entry_64.html):
   the `swapgs` rules and IST use, from Linux's point of view.
-  *Unchecked (not opened today).*
+  *Checked 2026-11-14.*
 
 ## My notes
 

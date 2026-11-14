@@ -42,7 +42,7 @@ The words differ between architectures and cause real confusion:
 
 | Architecture | Vocabulary |
 |---|---|
-| x86 | *interrupt* is asynchronous. *Exception* is synchronous and comes as a *fault* (reported before the instruction, which can be restarted: page fault), a *trap* (reported after it: breakpoint) or an *abort* (no reliable restart: machine check). (unchecked: Intel SDM not opened) |
+| x86 | *interrupt* is asynchronous. *Exception* is synchronous and comes as a *fault* (reported before the instruction, which can be restarted: page fault), a *trap* (reported after it: breakpoint) or an *abort* (no reliable restart: machine check). |
 | Arm | *exception* covers everything, interrupts included. Synchronous exceptions, IRQ, FIQ and SError are its four kinds; a memory fault is an *abort*. |
 | RISC-V | *exception* is synchronous, *interrupt* is asynchronous, and *trap* is the transfer of control that either causes. |
 
@@ -263,12 +263,19 @@ Two properties make this simple and are part of what the
 - [The RISC-V Instruction Set Manual, Volume I, introduction](https://github.com/riscv/riscv-isa-manual/blob/main/src/unpriv/intro.adoc),
   "Exceptions, Traps, and Interrupts": the definitions of the three
   words. *Checked 2026-11-14.*
-- Intel 64 and IA-32 Architectures Software Developer's Manual, volume
-  3, chapter 6 "Interrupt and Exception Handling": fault, trap, abort.
-  *Unchecked: intel.com refuses scripted fetches.*
-- Arm Architecture Reference Manual for A-profile (DDI 0487), chapter
-  D1 "The AArch64 System Level Programmers' Model": exception kinds
-  and entry. *Unchecked: developer.arm.com refuses scripted fetches.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3, chapter 7
+  "Interrupt and Exception Handling" (chapter 6 in older revisions):
+  7.1 for interrupt and exception, 7.5 "Exception Classifications" for
+  fault, trap and abort, table 7-1 for each vector's class.
+  *Checked 2026-11-14.*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
+  chapter D1 "The AArch64 System Level Programmers' Model": exception
+  kinds and entry. *Unchecked: developer.arm.com refuses scripted
+  fetches.*
+- [Linux `arch/arm64/kernel/entry.S`](https://github.com/torvalds/linux/blob/master/arch/arm64/kernel/entry.S):
+  the AArch64 vector table, one entry for each of synchronous, IRQ, FIQ
+  and SError from each of four origins. *Checked 2026-11-14.*
 
 ## My notes
 

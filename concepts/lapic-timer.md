@@ -87,9 +87,10 @@ budget and period. The non-MCS kernel uses a periodic tick.
 - [Linux KVM documentation, "Timekeeping Virtualization for X86-Based Architectures"](https://docs.kernel.org/virt/kvm/x86/timekeeping.html),
   section 2.3 "APIC": a short overview and why it is awkward to
   virtualise. *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 3, the APIC chapter's section on the APIC timer, including TSC
-  deadline mode. *Unchecked (intel.com refuses scripted fetches).*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3, section 13.5.4 "APIC Timer" and 13.5.4.1
+  "TSC-Deadline Mode" (chapter 13 is the APIC chapter; 10 or 11 in
+  older revisions). *Checked 2026-11-14.*
 - [OSDev wiki, "APIC Timer"](https://wiki.osdev.org/APIC_Timer): a
   practical guide, including calibrating it against the PIT. *Unchecked
   (the site refuses scripted fetches).*

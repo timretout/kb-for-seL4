@@ -9,7 +9,7 @@
 | Kind | Per-core 64-bit counter |
 | Architecture | x86 |
 | Reached through | The `RDTSC` or `RDTSCP` instruction, or an MSR |
-| Found through | Invariant TSC: CPUID leaf `0x80000007`, EDX bit 8 (unchecked) |
+| Found through | Invariant TSC: CPUID leaf `0x80000007`, EDX bit 8 |
 | seL4 code | `tsc_init()` in [`src/plat/pc99/machine/hardware.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/hardware.c) |
 | seL4 config | `CONFIG_PC99_TSC_FREQUENCY` |
 | seL4 use | Rate found at boot, in whole MHz, in `x86KStscMhz`; the [MCS](../sel4/mcs.md) kernel expresses every deadline in TSC ticks |
@@ -23,7 +23,7 @@ instruction, no device access, no trap even in most VMs.
 
 On early CPUs it counted core clock cycles, so it sped up and slowed with
 power management. Modern CPUs have an **invariant TSC** (advertised in
-CPUID leaf `0x80000007`, EDX bit 8 (unchecked)) that ticks at a constant
+CPUID leaf `0x80000007`, EDX bit 8) that ticks at a constant
 rate whatever the core's speed or sleep state, which makes it a proper
 clock.
 
@@ -85,10 +85,11 @@ non-MCS kernel needs the rate only to set its periodic tick.
   power states and virtualisation. *Checked 2026-11-14.*
 - [seL4 `hardware.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/hardware.c):
   `tsc_init()` and `measure_tsc_khz()`. *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 3, the chapter on time-stamp counters, and volume 2, `CPUID`
-  leaves `0x15` and `0x80000007`. *Unchecked (intel.com refuses scripted
-  fetches; chapter numbers not given for that reason).*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3, section 20.17 "Time-Stamp Counter" and 20.17.1
+  "Invariant TSC", and volume 1, chapter 21, `CPUID` leaves `15H` and
+  `80000007H` (in volume 2's `CPUID` entry in older revisions).
+  *Checked 2026-11-14.*
 
 ## My notes
 

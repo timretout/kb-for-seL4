@@ -23,8 +23,8 @@ Read first: [x86-64 basics](x86-64-basics.md), [x86 paging](x86-paging.md).
 An x86 core leaves reset in **real mode**: 16-bit code, segment:offset
 addressing that reaches 1 MiB, no paging and no protection. It starts
 executing at the **reset vector**, physical address `0xfffffff0`, 16 bytes
-below 4 GiB, where the firmware ROM is mapped (unchecked: Intel SDM
-volume 3, section 10.1.4). Firmware initialises memory and devices, then
+below 4 GiB, where the firmware ROM is mapped (Intel SDM volume 3,
+section 12.1.4). Firmware initialises memory and devices, then
 finds something to boot. There are two kinds of firmware.
 
 | | BIOS (legacy) | [UEFI](uefi.md) |
@@ -35,7 +35,7 @@ finds something to boot. There are two kinds of firmware.
 | Services | software interrupts (`int 0x10` video, `int 0x13` disk, `int 0x15` memory map "E820") | function tables: boot services and runtime services |
 | ACPI root pointer | found by scanning low memory | given in a configuration table |
 
-(The BIOS column is from memory, unchecked.) A BIOS loader cannot fit in
+A BIOS loader cannot fit in
 446 bytes of MBR code, so it comes in stages: the MBR code loads a larger
 image from fixed sectors, which understands file systems and loads the
 rest. A UEFI loader is one ordinary file and can call firmware to read
@@ -189,8 +189,8 @@ For images that boot on cloud machines, see
 
 ## Gotchas
 
-- QEMU `-kernel` speaks only Multiboot 1 (unchecked beyond seL4's own use
-  of it), so a kernel built with only `KernelMultiboot2Header` will not
+- QEMU `-kernel` speaks only Multiboot 1 (its loader looks for the
+  `0x1BADB002` magic alone), so a kernel built with only `KernelMultiboot2Header` will not
   start there. Test Multiboot 2 paths with GRUB in a disk image.
 - Under Multiboot 1 on UEFI firmware the RSDP scan of the BIOS area finds
   nothing and boot stops in `acpi_init`. Use `multiboot2` in `grub.cfg`
@@ -238,11 +238,28 @@ For images that boot on cloud machines, see
   (the `elf32-i386` conversion) and
   [`simulate.py`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/simulate_scripts/simulate.py).
   *Checked 2026-11-14.*
-- Intel SDM volume 3, chapter 10 "Processor Management and
-  Initialization": reset state and mode switching. *Unchecked: intel.com
-  refuses scripted fetches.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://cdrdv2.intel.com/v1/dl/getContent/671200)
+  (order number 325462-093US, September 2026), volume 3 chapter 12
+  "Processor Management and Initialization" (chapter 10 in older
+  revisions): 12.1 reset state, 12.1.4 "First Instruction Executed",
+  12.9 "Mode Switching". *Checked 2026-11-14.*
 - [GRUB manual](https://www.gnu.org/software/grub/manual/grub/grub.html):
-  `multiboot2`, `module2` commands. *Unchecked: not opened today.*
+  "GRUB image files" (the 512-byte `boot.img` and the stages after it),
+  and the `multiboot`, `module`, `multiboot2` and `module2` commands.
+  *Checked 2026-11-14.*
+- SeaBIOS [`src/boot.c`](https://github.com/coreboot/seabios/blob/master/src/boot.c)
+  (`boot_disk()`) and [`src/std/disk.h`](https://github.com/coreboot/seabios/blob/master/src/std/disk.h)
+  (`struct mbr_s`): a BIOS reads one sector with `int 0x13` to
+  `0x7c00`, checks the `0xaa55` signature and jumps to it; the
+  partition table starts at byte 446. *Checked 2026-11-14.*
+- Linux [`arch/x86/boot/memory.c`](https://github.com/torvalds/linux/blob/master/arch/x86/boot/memory.c)
+  (the `int 0x15` E820 memory map),
+  [`arch/x86/boot/tty.c`](https://github.com/torvalds/linux/blob/master/arch/x86/boot/tty.c)
+  (`int 0x10`) and
+  [`drivers/acpi/acpica/tbxfroot.c`](https://github.com/torvalds/linux/blob/master/drivers/acpi/acpica/tbxfroot.c)
+  (the RSDP scan of low memory). *Checked 2026-11-14.*
+- QEMU [`hw/i386/multiboot.c`](https://github.com/qemu/qemu/blob/master/hw/i386/multiboot.c):
+  `-kernel` recognises only the Multiboot 1 magic. *Checked 2026-11-14.*
 
 ## My notes
 

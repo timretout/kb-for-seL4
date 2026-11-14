@@ -10,12 +10,12 @@ Read first: [Privilege levels](privilege-levels.md), [x86 paging](x86-paging.md)
 |---|---|
 | Kind | Processor extension for running guests: Intel VT-x (VMX), AMD SVM |
 | Architecture | x86 |
-| Found through | [CPUID](cpuid-and-msrs.md) leaf 1 `ECX` bit 5; `IA32_FEATURE_CONTROL` MSR (unchecked) |
-| Key numbers | A 4 KiB VMCS for each virtual CPU; four-level EPT; 16-bit VPID (unchecked) |
+| Found through | [CPUID](cpuid-and-msrs.md) leaf 1 `ECX` bit 5; `IA32_FEATURE_CONTROL` MSR |
+| Key numbers | A 4 KiB VMCS for each virtual CPU; four-level EPT; 16-bit VPID |
 | seL4 code | [`src/arch/x86/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/vcpu.c) |
 | seL4 config | `KernelVTX` (default off) |
 | seL4 use | Hypervisor on Intel only, with a user-level VMM handling exits; not in any verified configuration |
-| On the clouds | An ordinary EC2 or Compute Engine instance does not advertise VMX (unchecked) |
+| On the clouds | An ordinary EC2 or Compute Engine instance does not advertise VMX |
 
 ## What it is
 
@@ -23,10 +23,9 @@ Classic x86 could not be virtualised cleanly: some instructions that
 reveal or change privileged state do not trap in ring 3. Intel's **VT-x**
 (the instruction set extension is **VMX**, virtual machine extensions)
 and AMD's **SVM** fixed that in 2005 and 2006 by adding a second
-dimension of privilege instead of another ring. This page is from memory
-of the Intel SDM, volume 3, chapters 24 to 29, which cannot be fetched by
-script: the hardware description is unchecked; "In seL4" is checked
-against the source.
+dimension of privilege instead of another ring. The Intel description
+here follows the Intel SDM, volume 3, chapters 26 to 32; "In seL4" is
+checked against the source.
 
 ### Root and non-root operation
 
@@ -97,8 +96,8 @@ addresses, and a four-level EPT (PML4, PDPT, PD, PT, like
 [ordinary paging](x86-paging.md) but with read, write and execute bits)
 owned by the hypervisor translates guest-physical to host-physical. A
 missing translation is an EPT violation exit, the guest's equivalent of
-a page fault to user level. The cost is a longer TLB miss: up to 24
-memory references for one translation.
+a page fault to user level. The cost is a longer TLB miss: every step
+of the guest's walk is itself translated.
 
 ![Translation in two stages: the guest's own page tables take a guest-virtual address to a guest-physical one, and the hypervisor's EPT takes that to a host-physical address, with an EPT violation exit when the EPT has no translation.](../images/x86-virtualisation-ept.svg)
 
@@ -128,11 +127,11 @@ one does not run on the other.
 ### Nested virtualisation and clouds
 
 A guest that wants to be a hypervisor itself needs the outer hypervisor
-to emulate VMX: **nested virtualisation**. It is slow and a large attack
-surface, so clouds mostly leave it off: an ordinary EC2 or Compute Engine
+to emulate VMX: **nested virtualisation**. It costs performance, and
+clouds leave it off unless asked: an ordinary EC2 or Compute Engine
 instance's CPUID does not advertise VMX, and VT-x for the tenant is
-available only on bare-metal instance types or where the provider has
-enabled nesting for a machine family (see
+available only on bare-metal instance types or where the provider
+offers nesting for a machine family and it is enabled for the instance (see
 [EC2 instance types](ec2-instance-types.md) and
 [Compute Engine machine types](gce-machine-types.md)).
 
@@ -149,10 +148,10 @@ a guest:
   [ENA](ena.md), [gVNIC](gvnic.md)); some legacy parts are simply
   absent.
 - Every port access, many MSR accesses and `CPUID` cost a VM exit,
-  microseconds instead of nanoseconds, so calibration loops that poll a
+  far slower than the instruction itself, so calibration loops that poll a
   port behave differently.
 - The [TSC](tsc.md) may be offset or scaled by the VMCS, and a vCPU can
-  be descheduled for milliseconds at any instruction.
+  be descheduled at any instruction.
 
 ## In seL4
 
@@ -210,14 +209,16 @@ The code is
 ## Gotchas
 
 - On a cloud VM without nested virtualisation, a `KernelVTX` kernel
-  prints "vt-x: not supported" at boot. Whether boot then continues or
-  stops depends on `vtx_init`'s caller (unchecked).
+  prints "vt-x: not supported" at boot and stops: `vtx_init` returns
+  false, so `init_cpu` in `src/arch/x86/kernel/boot.c` does, and boot
+  fails.
 - Firmware can lock `IA32_FEATURE_CONTROL` with VMX disabled; only a
   firmware setting fixes that.
 - The VMM, not the kernel, must emulate `CPUID`, the APIC, the PIT and
   everything else that exits; seL4 uses neither APICv nor posted
-  interrupts (unchecked: no such control bits were seen set in
-  `vcpu_init`).
+  interrupts: `init_vtx_fixed_values` asks for no such control bits, and
+  the virtual-APIC and posted-interrupt VMCS fields are not among those
+  `decodeWriteVMCS` lets a VMM write.
 - A VMCS is cached per core. Migrating a VCPU's thread between cores
   needs a `VMCLEAR` on the old core first, which is what the
   `IpiRemoteCall_ClearCurrentVCPU` remote call is for (see
@@ -239,19 +240,41 @@ The code is
 ## References
 
 - seL4 [`src/arch/x86/object/vcpu.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/vcpu.c):
-  `vtx_init`, `handleVmexit`, the invocation decoders.
+  `vtx_init`, `init_vtx_fixed_values`, `handleVmexit`, the invocation
+  decoders (`decodeWriteVMCS`'s list of writable fields).
   *Checked 2026-11-14.*
+- seL4 [`src/arch/x86/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot.c):
+  `init_cpu` fails when `vtx_init` does. *Checked 2026-11-14.*
 - seL4 [`libsel4/sel4_arch_include/x86_64/interfaces/object-api-sel4-arch.xml`](https://github.com/seL4/seL4/blob/master/libsel4/sel4_arch_include/x86_64/interfaces/object-api-sel4-arch.xml)
   and the `arch_include/x86` interface file: `seL4_X86_VCPU` and
   `seL4_X86_EPT*` methods. *Checked 2026-11-14.*
 - seL4 [`src/arch/x86/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/x86/config.cmake)
   (`KernelVTX`). *Checked 2026-11-14.*
-- Intel SDM volume 3, chapters 24 "Introduction to Virtual Machine
-  Extensions" to 29 "VMX Support for Address Translation", and appendix C
-  "VMX Basic Exit Reasons". *Unchecked: intel.com refuses scripted
-  fetches; chapter numbers from memory.*
-- AMD64 Architecture Programmer's Manual volume 2, chapter 15 "Secure
-  Virtual Machine". *Unchecked: from memory.*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, combined volumes](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+  ([PDF](https://cdrdv2.intel.com/v1/dl/getContent/671200), September 2026 edition; chapter numbers move between
+  editions), volume 3: chapters 26 "Introduction to Virtual Machine
+  Extensions" (root and non-root operation, `IA32_FEATURE_CONTROL`,
+  `VMXON`), 27 "Virtual Machine Control Structures" (the areas, the
+  16-bit VPID in 27.6.12), 28 "VMX Non-Root Operation" (28.1.2: `CPUID`
+  exits unconditionally), 31 "VMX Support for Address Translation" (VPID,
+  EPT) and 32 "APIC Virtualization and Virtual Interrupts"; appendix C
+  "VMX Basic Exit Reasons" (the numbers in the table).
+  *Checked 2026-11-14.*
+- [Linux `arch/x86/include/asm/svm.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/svm.h)
+  and [`msr-index.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/msr-index.h):
+  AMD's `struct vmcb` with its exit code, and `EFER_SVME`.
+  *Checked 2026-11-14.*
+- [Wikipedia, "x86 virtualization"](https://en.wikipedia.org/wiki/X86_virtualization):
+  why classic x86 could not be trapped and emulated; VT-x in 2005, AMD's
+  extension in 2006; RVI as AMD's name for nested paging.
+  *Checked 2026-11-14.*
+- [Google Cloud, "About nested virtualization"](https://docs.cloud.google.com/compute/docs/instances/nested-virtualization/overview)
+  and [Amazon EC2, "Use nested virtualization"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html):
+  nesting is enabled per instance, on some machine families only; AWS
+  points performance-sensitive users at bare metal. *Checked 2026-11-14.*
+- [AMD64 Architecture Programmer's Manual, volume 2](https://www.amd.com/en/search/documentation/hub.html),
+  chapter 15 "Secure Virtual Machine". *Unchecked (amd.com's document
+  pages need a browser; chapter number from memory).*
 
 ## My notes
 
