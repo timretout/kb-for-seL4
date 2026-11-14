@@ -60,7 +60,7 @@ and call).
 ## Gotchas
 
 - **IRQ 0 is not always [I/O APIC](apic.md) pin 2.** On most PCs, and in QEMU, the
-  [ACPI](acpi-tables.md) MADT has an interrupt source override sending ISA
+  [ACPI](acpi-tables.md) MADT has an interrupt source override sending [ISA](isa.md)
   IRQ 0 to pin 2. EC2's Nitro types and Compute Engine's x86 types have
   no override for IRQ 0, so the PIT is on pin 0. Read the MADT; never
   assume pin 2.
@@ -76,6 +76,7 @@ and call).
 
 ## See also
 
+- [ISA](isa.md): the legacy device family the PIT belongs to
 - [Local APIC and I/O APIC](apic.md): the I/O APIC pin its interrupt arrives on
 - [Timer calibration](timer-calibration.md): what the PIT is used for in seL4
 - [HPET](hpet.md): the timer meant to replace it

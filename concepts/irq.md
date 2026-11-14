@@ -18,7 +18,7 @@ comes from mixing them up:
 | Meaning | Example |
 |---|---|
 | The **line or pin** a device drives | I/O APIC pin 0; PCI `INTA` |
-| The **source number** in a numbering scheme | ISA IRQ 4 (COM1); Arm INTID 37 |
+| The **source number** in a numbering scheme | [ISA](isa.md) IRQ 4 (COM1); Arm INTID 37 |
 | The **vector** the CPU is interrupted with | x86 vector `0x30` |
 
 On x86 the three are separate and something must map one to the next: the
@@ -124,6 +124,7 @@ notes that the kernel keeps the interrupt masked until then.
 
 ## See also
 
+- [ISA](isa.md): where the legacy IRQ numbers 0 to 15 come from
 - [Local APIC and I/O APIC](apic.md): x86's interrupt controllers
 - [GICv3 and the ITS](gicv3-its.md): Arm's interrupt controller
 - [MSI and MSI-X](msi-msix.md): interrupts as memory writes instead of wires

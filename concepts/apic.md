@@ -75,7 +75,7 @@ The version register's bits 16 to 23 give the number of pins minus one.
 
 Firmware describes the I/O APICs in the [ACPI](acpi-tables.md) MADT: each
 one's address and its **global system interrupt (GSI) base**, the number
-of its pin 0 in a machine-wide numbering. ISA IRQ *n* is GSI *n* unless an
+of its pin 0 in a machine-wide numbering. [ISA](isa.md) IRQ *n* is GSI *n* unless an
 interrupt source override says otherwise.
 
 MSIs bypass the I/O APIC entirely: the device writes straight into the
@@ -152,6 +152,7 @@ Microkit's `<irq>` element takes the same fields.
 
 ## See also
 
+- [ISA](isa.md): the legacy devices whose interrupts arrive on I/O APIC pins
 - [IRQ](irq.md): edge and level, and how seL4 hands interrupts to user level
 - [Local APIC timer and TSC deadline mode](lapic-timer.md): the timer inside the local APIC
 - [MSI and MSI-X](msi-msix.md): interrupts written straight to a local APIC
