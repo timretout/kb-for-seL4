@@ -9,7 +9,7 @@ the page that explains each.
 
 What seL4 is and how the project fits together. Read these first.
 
-- [seL4 overview](sel4/overview.md): Stub: what seL4 is (a capability-based, formally verified microkernel), what it does and deliberately does not do, and a map of the rest of this knowledge base.
+- [seL4 overview](sel4/overview.md): seL4 is a small, fast, capability-based microkernel with a machine-checked proof that its C code implements its specification; it provides threads, address spaces, IPC and access control, and leaves drivers, file systems and all policy to user level.
 - [Ecosystem and repositories](sel4/ecosystem.md): Stub: the repositories and components around the kernel (seL4_tools, seL4_libs, util_libs, sel4test, Microkit, sDDF, LionsOS, CAmkES, capDL, rust-sel4, l4v) and how they depend on each other.
 - [History and key papers](sel4/history-and-papers.md): Stub: the L4 lineage, seL4's timeline, and a reading list of the papers and documents worth knowing.
 
@@ -19,7 +19,7 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 
 ### Common ideas
 
-- [Privilege levels](concepts/privilege-levels.md): Stub: user, kernel, hypervisor and firmware modes across x86 (rings, VMX root), Arm (EL0 to EL3) and RISC-V (U, S, M), and which one seL4 runs in.
+- [Privilege levels](concepts/privilege-levels.md): The CPU modes that separate user code, kernel, hypervisor and firmware on x86 (rings, VMX root, SMM), Arm (EL0 to EL3) and RISC-V (U, S, M): seL4 runs in ring 0, EL1 or EL2, or S-mode, and something more privileged usually sits beneath it.
 - [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md): Stub: how a CPU enters the kernel: synchronous exceptions, system calls and asynchronous interrupts, vectors, saved state, and return; the architecture-neutral picture.
 - [Virtual memory](concepts/virtual-memory.md): Stub: page tables, multi-level translation, TLBs, ASIDs, large pages and the kernel/user split, independent of architecture.
 - [FPU and SIMD state](concepts/fpu-state.md): Stub: floating-point and vector register state, lazy against eager switching, XSAVE on x86, and how seL4 handles it.
@@ -28,11 +28,11 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 
 ### x86-64
 
-- [x86-64 basics](concepts/x86-64-basics.md): Stub: registers, operating modes (real, protected, long), segmentation's remains (GDT, TSS, FS/GS), control registers, and the calling convention.
-- [CPUID and MSRs](concepts/cpuid-and-msrs.md): Stub: how x86 software discovers CPU features (CPUID) and controls them (model-specific registers), with the leaves and MSRs seL4 uses.
-- [x86-64 paging](concepts/x86-paging.md): Stub: four-level page tables, CR3, PCID, large pages, NX, and the kernel window seL4 sets up.
-- [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md): Stub: the IDT, interrupt stacks, SYSCALL/SYSRET and SYSENTER, SWAPGS, and seL4's entry and exit paths.
-- [I/O ports and MMIO](concepts/io-ports.md): Stub: x86's separate I/O port address space against memory-mapped registers, and seL4's IOPort capabilities.
+- [x86-64 basics](concepts/x86-64-basics.md): The registers, operating modes, leftover segmentation (GDT, TSS, FS and GS bases), control registers and calling convention of 64-bit x86, as much as is needed to read seL4's `src/arch/x86/64/`.
+- [CPUID and MSRs](concepts/cpuid-and-msrs.md): How x86 software discovers what the processor can do (the `cpuid` instruction) and reaches the hundreds of control registers that have no instruction of their own (`rdmsr`/`wrmsr`); seL4 checks features at boot and programs a dozen MSRs.
+- [x86-64 paging](concepts/x86-paging.md): How x86-64 translates 48-bit virtual addresses through four levels of 512-entry tables rooted at `CR3`, with the entry flags, large pages, PCIDs and TLB rules a kernel must respect; seL4 exposes each level as an object type and keeps its own window in the top 512 GiB.
+- [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md): How an x86-64 CPU enters the kernel (through the IDT for exceptions and interrupts, through `syscall` or `sysenter` for system calls), what it saves and where, and how seL4's `traps.S` turns each entry into a saved register context in the current TCB.
+- [I/O ports and MMIO](concepts/io-ports.md): x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions; seL4 keeps user threads away from the instructions and hands out ranges of ports as IOPort capabilities.
 - [x86 boot: BIOS, GRUB and Multiboot](concepts/x86-boot.md): Stub: how a PC gets from reset to a kernel: BIOS or UEFI, the boot loader, Multiboot 1 and 2, and the state seL4 expects on entry.
 - [UEFI](concepts/uefi.md): Stub: the firmware interface that replaced the BIOS on PCs and is standard on Arm servers: boot services, the memory map, configuration tables, and what a kernel inherits from it.
 - [8259 PIC](concepts/pic-8259.md): Stub: the original PC interrupt controller pair, why it must still be masked or remapped, and seL4's use of it.
@@ -40,9 +40,9 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 
 ### AArch64
 
-- [AArch64 basics](concepts/aarch64-basics.md): Stub: registers, exception levels, system registers, AArch32 in passing, and the calling convention.
-- [AArch64 exceptions](concepts/aarch64-exceptions.md): Stub: the vector table, ESR/ELR/SPSR/FAR, SVC/HVC/SMC, and seL4's entry and exit paths.
-- [AArch64 paging](concepts/aarch64-paging.md): Stub: TTBR0/TTBR1, translation granules and levels, ASIDs, memory attributes, and stage 2 translation.
+- [AArch64 basics](concepts/aarch64-basics.md): The 64-bit Arm execution state: 31 general registers, a stack pointer per exception level, PSTATE, and hundreds of system registers read with `MRS` and written with `MSR`; every line of seL4's Arm code assumes them.
+- [AArch64 exceptions](concepts/aarch64-exceptions.md): How an AArch64 core enters and leaves a higher exception level: a 16-entry vector table at `VBAR_ELx`, the syndrome in `ESR_ELx`, the return state in `ELR_ELx` and `SPSR_ELx`, and `ERET`; seL4's whole kernel entry and exit is built on it.
+- [AArch64 paging](concepts/aarch64-paging.md): AArch64 address translation: two page table roots (`TTBR0` for the low half of the address space, `TTBR1` for the high half), up to four levels of 4 KiB tables, ASIDs to tag TLB entries, and an optional second stage for hypervisors; seL4's VSpace objects are these tables.
 - [Arm boot flow](concepts/arm-boot.md): Stub: from reset through TF-A and U-Boot or UEFI to a kernel: exception level on entry, the image header, and where the elfloader fits.
 - [PSCI and SMCCC](concepts/psci-smccc.md): Stub: the Arm firmware calling convention and the power-state interface used to start and stop cores.
 - [GICv2](concepts/gicv2.md): Stub: the older Arm interrupt controller (distributor and memory-mapped CPU interface), interrupt types (SGI, PPI, SPI), and seL4's driver.
@@ -99,17 +99,17 @@ The kernel's model and API, in the order the concepts build on each other.
 
 ### Model and API
 
-- [Capabilities](sel4/capabilities.md): Stub: unforgeable tokens that name a kernel object and carry rights; copying, minting, badging, moving, deleting and revoking them, and the capability derivation tree.
-- [CSpaces and capability addressing](sel4/cspace.md): Stub: CNodes, slots, guards and depth: how a thread's capability space is built and how a capability pointer is resolved.
-- [Kernel objects](sel4/kernel-objects.md): Stub: every object type the kernel implements, its size and purpose, per architecture.
-- [Untyped memory and retyping](sel4/untyped-memory.md): Stub: how all memory is handed to user level as untyped capabilities and turned into objects by retyping; watermarks, device untypeds, revocation and reuse.
-- [System calls and invocations](sel4/syscalls-and-invocations.md): Stub: the handful of real system calls, how object methods are invocations sent through them, message registers and the IPC buffer, error reporting.
-- [Threads and TCBs](sel4/threads.md): Stub: the thread control block, what configuring a thread involves, priorities and maximum controlled priority, suspend and resume, register access.
-- [Scheduling](sel4/scheduling.md): Stub: the priority round-robin scheduler, ready queues and bitmaps, the domain scheduler, and what changes under MCS.
+- [Capabilities](sel4/capabilities.md): A capability is an unforgeable, kernel-held token naming one kernel object plus the rights its holder has; every seL4 operation is authorised by one, and the kernel tracks how capabilities were derived so that access can be revoked.
+- [CSpaces and capability addressing](sel4/cspace.md): A thread's CSpace is the tree of CNodes (tables of capability slots) reachable from its root CNode; a CPtr is resolved through it a few bits at a time using each CNode's guard and radix, and CNode invocations name slots by an explicit root, index and depth.
+- [Kernel objects](sel4/kernel-objects.md): The fixed set of object types the seL4 kernel implements (TCBs, endpoints, CNodes, page tables, frames and so on), which are created by retyping untyped memory, and the capability types that exist with no object behind them.
+- [Untyped memory and retyping](sel4/untyped-memory.md): Untyped capabilities stand for blocks of physical memory that are not yet any kernel object; `seL4_Untyped_Retype` carves objects out of one, and revoking it is the only way to get the memory back, which is how seL4 leaves all memory allocation to user level.
+- [System calls and invocations](sel4/syscalls-and-invocations.md): seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability; every operation on a kernel object is an invocation, a message sent to the object's capability whose label selects the method, which the kernel decodes and answers itself.
+- [Threads and TCBs](sel4/threads.md): A seL4 thread is a thread control block (TCB) object: saved registers plus the capabilities and scheduling parameters that say where it runs, what it can name and who hears about its faults; every user-level system starts by configuring some.
+- [Scheduling](sel4/scheduling.md): seL4's scheduler: 256 fixed priorities with round-robin inside each, found through a two-level bitmap, under an optional fixed-schedule domain scheduler; it decides what runs after every kernel entry, so nearly every kernel patch touches its invariants.
 - [MCS kernel](sel4/mcs.md): A seL4 build option that replaces the periodic tick with scheduling contexts (a budget of CPU time per period) and one-shot timer deadlines; Microkit uses it, so its timer must be accurate.
-- [IPC and endpoints](sel4/ipc.md): Stub: synchronous message passing through endpoints: send, receive, call, reply, capability transfer, badges, and the fastpath.
-- [Notifications](sel4/notifications.md): Stub: asynchronous signals as a word of bits; binding to a thread, and their use for interrupts and shared-memory protocols.
-- [Faults and fault handlers](sel4/faults.md): Stub: what happens when a thread faults: fault endpoints, fault message formats, replying to restart, and timeout faults under MCS.
+- [IPC and endpoints](sel4/ipc.md): seL4's synchronous message passing: threads rendezvous at endpoint objects to copy a few words and capabilities, with Call/ReplyRecv forming the remote procedure call that every seL4 system is built from and that the kernel's fastpath exists to make quick.
+- [Notifications](sel4/notifications.md): A notification object is one word of pending signal bits that senders OR into without ever blocking and a receiver collects by waiting; it is how seL4 delivers interrupts and how Microkit channels and sDDF queues say "there is work".
+- [Faults and fault handlers](sel4/faults.md): When a thread does something the kernel cannot complete (a bad capability, a page fault, an illegal instruction, on MCS an exhausted budget), the kernel turns it into an IPC message to the thread's fault endpoint, so paging, debugging and crash handling are all user-level servers.
 - [Address spaces (VSpace)](sel4/vspace.md): Stub: frames, page tables and ASIDs as kernel objects; mapping, unmapping and the per-architecture object hierarchy.
 - [Interrupt delivery](sel4/irq-handling.md): Stub: IRQControl and IRQHandler capabilities, binding an interrupt to a notification, acknowledging, and per-architecture variants (I/O APIC, MSI, trigger modes, SGIs).
 - [BootInfo and the root task](sel4/bootinfo-and-root-task.md): Stub: the initial thread, the capabilities it starts with, and the BootInfo structure that describes them.
@@ -132,10 +132,10 @@ The kernel's model and API, in the order the concepts build on each other.
 
 What is proved, about what, and what that means for anyone changing kernel code.
 
-- [The seL4 proofs](sel4/verification.md): Stub: the proof stack (abstract specification, executable specification, C, binary), the security properties, the assumptions, and which configurations are verified.
-- [l4v and Isabelle](sel4/l4v.md): Stub: the proof repository and its structure, the tools involved (Isabelle/HOL, the C parser, AutoCorres), and how to run a proof check.
-- [The verified C subset](sel4/verified-c-subset.md): Stub: the restrictions the C parser places on kernel code and the coding conventions that follow from them.
-- [Proof impact of a change](sel4/proof-impact.md): Stub: how to tell whether a kernel patch touches verified code, what kinds of change are cheap or expensive to re-prove, and how upstream handles it.
+- [The seL4 proofs](sel4/verification.md): seL4's proofs show, for a few exact kernel configurations, that the C code behaves as an abstract specification says and that the specification enforces integrity and confidentiality; boot code, assembly, hardware and every other configuration are assumed, not proved.
+- [l4v and Isabelle](sel4/l4v.md): `seL4/l4v` holds the Isabelle/HOL specifications and proofs of seL4; it reads the kernel's C as one preprocessed file per verified configuration, and a manifest repository records which kernel commit the proofs currently match.
+- [The verified C subset](sel4/verified-c-subset.md): Verified seL4 code must be written in the subset of C99 that the Isabelle C parser accepts (no unions, no `goto`, no fall-through, no address of a local, no side effects inside expressions), which explains much of the kernel's unusual C style.
+- [Proof impact of a change](sel4/proof-impact.md): A procedure for deciding, before sending a kernel patch, whether it changes code the proofs cover: whether a verified configuration compiles it, whether it is boot or machine-interface code, and what to write in the pull request either way.
 
 ## Part 6: User level
 
@@ -156,6 +156,6 @@ Everything above the kernel: libraries, tests and the frameworks systems are bui
 
 How changes get into seL4.
 
-- [Contributing a patch](sel4/contributing.md): Stub: the path of a change upstream: issues and pull requests, sign-off, commit and code style, licensing headers, review, and what differs for verified code.
-- [Upstream CI](sel4/ci.md): Stub: the checks a pull request meets: style and lint, compile and simulation tests, hardware tests on the machine queue, the preprocess check and proof runs.
-- [Governance and RFCs](sel4/governance.md): Stub: the seL4 Foundation, the technical steering committee, committers and reviewers, the RFC process, and releases.
+- [Contributing a patch](sel4/contributing.md): The path of a change into upstream seL4: a pull request from a fork on GitHub, signed-off commits in a fixed message format, astyle-formatted C with SPDX headers, review by committers, and, for the kernel, a proof that still holds.
+- [Upstream CI](sel4/ci.md): The GitHub Actions checks a seL4 pull request meets (lint, style, licences, compile matrix, sel4test in simulation, the preprocess check) and the ones only a maintainer's label or a merge starts (hardware runs, proofs, manifest deployment).
+- [Governance and RFCs](sel4/governance.md): Who decides what goes into seL4: the seL4 Foundation's Technical Steering Committee sets process and grants the reviewer and committer roles, and substantial changes pass through a public RFC before any pull request is accepted.
