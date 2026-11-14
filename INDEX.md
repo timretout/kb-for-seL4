@@ -10,7 +10,7 @@ the page that explains each.
 What seL4 is and how the project fits together. Read these first.
 
 - [seL4 overview](sel4/overview.md): seL4 is a small, fast, capability-based microkernel with a machine-checked proof that its C code implements its specification; it provides threads, address spaces, IPC and access control, and leaves drivers, file systems and all policy to user level.
-- [Ecosystem and repositories](sel4/ecosystem.md): Stub: the repositories and components around the kernel (seL4_tools, seL4_libs, util_libs, sel4test, Microkit, sDDF, LionsOS, CAmkES, capDL, rust-sel4, l4v) and how they depend on each other.
+- [Ecosystem and repositories](sel4/ecosystem.md): seL4 is some thirty repositories in two GitHub organisations: the kernel and its proofs, an older user-level world of CMake libraries and CAmkES, and a newer one of Microkit, sDDF and LionsOS; this page maps them and how they depend on each other.
 - [History and key papers](sel4/history-and-papers.md): Stub: the L4 lineage, seL4's timeline, and a reading list of the papers and documents worth knowing.
 
 ## Part 2: Processor fundamentals
@@ -24,7 +24,7 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 - [Virtual memory](concepts/virtual-memory.md): How an MMU translates the addresses programs use into physical ones through multi-level page tables, with TLBs, address-space identifiers, large pages, permissions and a second stage for virtual machines; seL4 does no demand paging and exposes the tables themselves as objects, keeping only a fixed window of its own.
 - [FPU and SIMD state](concepts/fpu-state.md): The floating-point and vector registers are extra per-thread state, hundreds to thousands of bytes, that a kernel must save and restore; how and when it does so (lazily by trap, or eagerly) is a performance and security choice, and on x86 the save format and size are build options seL4 checks at boot.
 - [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md): How a multicore machine goes from one running core to all of them: INIT and STARTUP IPIs on x86, PSCI `CPU_ON` on Arm, SBI HSM on RISC-V; on x86 the seL4 kernel does it itself, on Arm and RISC-V the elfloader does it first.
-- [ELF and linking](concepts/elf.md): Stub: the ELF format, segments against sections, linker scripts, physical against virtual load addresses; what the kernel image, elfloader and Microkit do with ELF files.
+- [ELF and linking](concepts/elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system; reading its program headers and the linker script behind them explains where each image is loaded, at which virtual address it runs, and what boot code can assume.
 
 ### x86-64
 
@@ -61,7 +61,7 @@ The hardware around the CPU: how it is described to software, how devices interr
 ### Firmware and platform description
 
 - [ACPI tables](concepts/acpi-tables.md): The tables PC (and Arm server) firmware leaves in memory to describe the machine: the RSDP points to the XSDT, which lists tables such as the MADT (interrupt controllers), HPET, MCFG (PCI) and DSDT.
-- [Device trees](concepts/device-tree.md): Stub: the data structure that describes non-discoverable hardware on Arm and RISC-V: source, blob, bindings, and how seL4's build and Microkit consume it.
+- [Device trees](concepts/device-tree.md): A device tree is a data structure describing hardware that cannot be discovered by probing; on Arm and RISC-V seL4's build compiles one into the kernel, and Microkit and sDDF generate system descriptions from it.
 
 ### Interrupts
 
@@ -84,13 +84,13 @@ The hardware around the CPU: how it is described to software, how devices interr
 - [ISA](concepts/isa.md): The IBM PC's original expansion bus; long gone as a slot, it lives on as the fixed set of legacy PC devices (PIT, 8259 PICs, COM ports, RTC, keyboard) at their old I/O ports and IRQ numbers 0 to 15, which every x86 machine and hypervisor still provides.
 - [PCI and PCI Express](concepts/pci.md): The bus by which almost every device in a PC, server or cloud virtual machine is found and reached: each function at a bus:device.function address has a configuration space that names it and holds its BARs, the windows through which its registers appear; PCI Express keeps that software model on point-to-point serial links and reaches the larger configuration space through ECAM.
 - [MSI and MSI-X](concepts/msi-msix.md): A PCI device interrupts by writing a value to an address instead of asserting a wire; MSI allows up to 32 vectors set in configuration space, MSI-X up to 2048 from a table in a BAR.
-- [UARTs: 16550 and PL011](concepts/uart.md): Stub: the two serial ports seL4 work meets most, their registers, and how the kernel and user level use them for a console.
-- [virtio](concepts/virtio.md): Stub: the standard paravirtual device family: virtqueues, the legacy and modern PCI transports and MMIO transport, feature negotiation, and the net, block and console devices.
-- [IOMMUs: VT-d and SMMU](concepts/iommu.md): Stub: hardware that translates and restricts device DMA, why a microkernel needs it, and seL4's IOSpace and SMMU support.
+- [UARTs: 16550 and PL011](concepts/uart.md): A UART is the serial port: the 16550 on x86 and many RISC-V and Arm boards and the PL011 on Arm are the two seL4 work meets most, and a serial port is the only console a debug kernel or a cloud instance has.
+- [virtio](concepts/virtio.md): virtio is the standard family of paravirtual devices (network, block, console and more) that hypervisors offer in place of emulated hardware: one queue mechanism, three transports, and the easiest real I/O for an seL4 system on QEMU or Compute Engine.
+- [IOMMUs: VT-d and SMMU](concepts/iommu.md): An IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a user-level driver from reading or writing all of memory through its device; seL4 has unverified support for Intel VT-d and Arm SMMUv2.
 
 ### Virtual and cloud machines
 
-- [QEMU](concepts/qemu.md): Stub: the emulator most seL4 development runs on: machine types, the options that matter, KVM, and how seL4's simulate scripts drive it.
+- [QEMU](concepts/qemu.md): QEMU emulates whole machines (x86 PCs, Arm and RISC-V `virt` boards) in software or with KVM, and is where most seL4 development and testing first runs; its machines resemble clouds only loosely.
 - [Cloud virtual machines](concepts/cloud-vms.md): What hardware Amazon EC2, Google Compute Engine and Azure present to a guest kernel, and how that differs from a PC or a development board: custom network and disk devices, missing legacy devices, UEFI with ACPI on every architecture, and a serial log as the only debug channel.
 
 ### Cloud platforms
@@ -127,7 +127,7 @@ The kernel's model and API, in the order the concepts build on each other.
 - [Interrupt delivery](sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification: the root task's `IRQControl` cap mints one `IRQHandler` cap per interrupt, a driver binds a notification to it, and the kernel holds the line quiet until the driver acknowledges.
 - [BootInfo and the root task](sel4/bootinfo-and-root-task.md): At the end of boot the kernel creates one user thread, the root task, hands it a capability to everything in the machine, and describes what it handed over in a `seL4_BootInfo` page; every seL4 system starts by reading that page.
 - [SMP](sel4/smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler state, threads pinned to cores and IPIs for anything one core must do to another; this configuration is not verified, which is why a one-kernel-per-core "multikernel" design is being pursued instead.
-- [Virtualisation support](sel4/hypervisor.md): Stub: seL4 as a hypervisor: VCPU objects, hypervisor mode on Arm and VT-x on x86, and the user-level virtual machine monitors built on them.
+- [Virtualisation support](sel4/hypervisor.md): seL4 can host virtual machines: the kernel supplies only VCPU objects and second-stage address spaces, and a user-level virtual machine monitor per guest does everything else, so a guest and its monitor are no more trusted than any other component.
 
 ### Inside the kernel
 
@@ -138,8 +138,8 @@ The kernel's model and API, in the order the concepts build on each other.
 - [Kernel boot sequence](sel4/kernel-boot.md): The path from the kernel's entry point to the first user thread: architecture assembly sets up a stack and the kernel's address space, C code discovers or is told the machine's memory, then generic helpers build the root task's CNode, address space, thread and untypeds before the first `schedule()`.
 - [Boot code and the proof boundary](sel4/boot-code.md): Kernel code marked `BOOT_CODE` runs once before the first user thread and is then discarded; seL4's functional correctness proof does not cover it, which changes what a patch to it costs.
 - [Elfloader](sel4/elfloader.md): The small boot program from `seL4_tools` that Arm and RISC-V images start with: it carries the kernel and root task ELF files in a CPIO archive, loads them, builds first page tables, enables the MMU, starts the other cores and jumps to the kernel's `init_kernel` with the user image's location.
-- [Platform ports](sel4/platform-port.md): Stub: what adding or changing a platform involves on each architecture: device tree and hardware.yml, platform CMake, drivers, and x86's single pc99 platform.
-- [Debugging](sel4/debugging.md): Stub: debug builds, kernel printing, debug system calls, GDB with QEMU, benchmarking support, and reading a kernel fault dump.
+- [Platform ports](sel4/platform-port.md): A platform is the kernel's build-time description of one board or machine family; porting on Arm and RISC-V means writing that description (device tree, overlay, `config.cmake`, drivers) across several repositories, while on x86 there is one platform, `pc99`, and a "port" means fixing its assumptions about the machine.
+- [Debugging](sel4/debugging.md): The tools for finding out why an seL4 system misbehaves: debug-build kernel output and error reasons, the debug system calls, the fault dump, GDB under QEMU, the hardware debug API, tracing, and how to read a first boot that fails.
 
 ## Part 5: Verification
 
@@ -154,16 +154,16 @@ What is proved, about what, and what that means for anyone changing kernel code.
 
 Everything above the kernel: libraries, tests and the frameworks systems are built with.
 
-- [libsel4 and the runtime](sel4/libsel4.md): Stub: the kernel's user-level interface library, how its stubs are generated, sel4runtime and the C library.
-- [seL4_libs and util_libs](sel4/sel4-libs.md): Stub: the classic user-level libraries: allocators (vka, allocman), vspace, simple, sel4utils, and platsupport's drivers.
-- [sel4test and sel4bench](sel4/sel4test.md): Stub: the kernel's test suite and benchmark suite: structure, how to build and run them, and how to read failures.
-- [Microkit](sel4/microkit.md): Stub: the minimal SDK for static systems: protection domains, channels, memory regions, the system description file and libmicrokit's event loop.
-- [Microkit internals](sel4/microkit-internals.md): Stub: how the Microkit tool turns a system description into a bootable image: the loader, the initialiser, the monitor, and patched ELF symbols.
-- [sDDF](sel4/sddf.md): Stub: the seL4 Device Driver Framework: drivers, virtualisers and clients joined by shared-memory queues and notifications.
-- [sDDF networking](sel4/sddf-net.md): Stub: the network subsystem in detail: queue layout, buffer ownership, RX and TX virtualisers, copiers, and what a NIC driver must do.
-- [LionsOS and libvmm](sel4/lionsos.md): Stub: the operating system built from Microkit and sDDF components, and the virtual machine monitor library beside it.
-- [CAmkES and capDL](sel4/camkes-capdl.md): Stub: the older component framework and the capability distribution language and loader beneath it.
-- [rust-sel4](sel4/rust-sel4.md): Stub: Rust support for seL4: the sel4 and sel4-microkit crates, the root-task runtime, the capDL initialiser, and building against a kernel.
+- [libsel4 and the runtime](sel4/libsel4.md): libsel4 is the kernel's ABI written down as C (types, constants, system call wrappers and generated invocation stubs), shipped in the kernel repository under a BSD licence; `sel4runtime` and a C library sit on top of it, and Microkit and rust-sel4 consume the same definitions by other routes.
+- [seL4_libs and util_libs](sel4/sel4-libs.md): The classic C libraries for building dynamic systems on seL4: seL4_libs (allocators, virtual memory, process creation, the BootInfo abstraction) and util_libs (platform drivers behind `ps_io_ops`, the `ltimer` timer interface, ELF, CPIO and FDT parsers); sel4test, sel4bench and CAmkES are built on them, Microkit and sDDF are not.
+- [sel4test and sel4bench](sel4/sel4test.md): sel4test is the kernel's functional test suite, a root task that runs each test in a fresh process and prints "All is well in the universe" when all pass; it is what upstream CI runs on every kernel pull request and the first thing to get running on a new machine, and sel4bench is its sibling for performance numbers.
+- [Microkit](sel4/microkit.md): The seL4 Foundation's small SDK for static systems: you write single-threaded protection domains against `libmicrokit`, describe them, their channels, memory regions and interrupts in an XML system description file, and the `microkit` tool turns that into a bootable image.
+- [Microkit internals](sel4/microkit-internals.md): How the `microkit` tool turns a system description into a boot image (a capDL specification realised by the Rust capDL initialiser as root task), and how the loader, monitor and libmicrokit's event loop map Microkit's abstractions onto seL4 objects.
+- [sDDF](sel4/sddf.md): Trustworthy Systems' framework for user-level device drivers on Microkit: small single-purpose protection domains (driver, virtualiser, client) joined by shared-memory queues and notifications, with a common pattern per device class.
+- [sDDF networking](sel4/sddf-net.md): The network class of sDDF in detail: free and active queues of buffer descriptors between driver, RX and TX virtualisers, per-client copiers and clients, who owns a buffer at each step, and what a NIC driver has to implement.
+- [LionsOS and libvmm](sel4/lionsos.md): LionsOS is Trustworthy Systems' operating system assembled from Microkit protection domains and sDDF drivers (file systems, network stack, language runtimes); libvmm is the companion library for writing virtual machine monitors that run Linux and other guests beside them.
+- [CAmkES and capDL](sel4/camkes-capdl.md): capDL is a language that describes a complete system as kernel objects and the capabilities between them, with a root task (the capDL loader or initialiser) that builds that system at boot; CAmkES is the older component framework that generates glue code and a capDL specification from an architecture description, now alongside Microkit, which uses capDL too.
+- [rust-sel4](sel4/rust-sel4.md): `seL4/rust-sel4` is the Rust support for seL4 user level: the `sel4` crate of typed bindings generated from the kernel's own interface files, runtimes for root tasks and Microkit protection domains, the capDL initialiser Microkit boots with, a kernel loader, and target specifications; the kernel itself stays in C.
 
 ## Part 7: Contributing
 
