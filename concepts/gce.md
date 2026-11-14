@@ -22,8 +22,8 @@ Read first: [Cloud virtual machines](cloud-vms.md), [PCI](pci.md), [ACPI tables]
 Compute Engine (GCE) runs guests ("instances" or "VMs") on Google's
 servers. The hypervisor is Linux KVM, but the user-space half, the part
 that emulates devices and that would be [QEMU](qemu.md) on a developer's
-machine, is Google's own program (unchecked: Google's security
-documentation says so; not opened today). So a guest sees KVM's CPU
+machine, is Google's own program: Google says it does not use QEMU and
+wrote its own virtual machine monitor. So a guest sees KVM's CPU
 behaviour (the `KVMKVMKVM` signature in the
 [hypervisor CPUID leaves](hypervisor-cpuid-leaves.md), the `kvm-clock`
 paravirtual clock) and a device set that only resembles QEMU's.
@@ -56,7 +56,7 @@ The words a porter needs:
 - **Metadata server**: an HTTP service at `169.254.169.254`
   (`metadata.google.internal`) from which a guest reads its
   configuration, SSH keys and start-up script, sending the header
-  `Metadata-Flavor: Google` (unchecked: from memory). A kernel port does
+  `Metadata-Flavor: Google`. A kernel port does
   not need it; the same key-value metadata is how the operator turns on
   the interactive serial console.
 
@@ -181,9 +181,10 @@ code, and what does not:
   2026). The image is the same either way.
 - **Serial output is lost with the instance.** Fetch it before deleting
   the VM.
-- **BIOS boot**: an image without `UEFI_COMPATIBLE` boots through a
-  legacy BIOS on the older x86 series (unchecked: not tried, and the
-  newest series may not offer it).
+- **BIOS boot**: `UEFI_COMPATIBLE` is what selects UEFI firmware, and
+  Google's own Linux images carry an MBR boot block "to support BIOS"
+  beside their EFI partition. Booting an image without the flag was
+  not tried, on any series.
 
 ## See also
 
@@ -207,8 +208,16 @@ code, and what does not:
   NIC and disk interface per series. *Checked 2026-11-14.*
 - [sDDF `drivers/`](https://github.com/au-ts/sddf/tree/main/drivers):
   the network, block and timer drivers that exist upstream. *Checked 2026-11-14.*
-- [About VM metadata](https://docs.cloud.google.com/compute/docs/metadata/overview):
-  the metadata server. *Unchecked.* Not opened.
+- [About VM metadata](https://docs.cloud.google.com/compute/docs/metadata/overview)
+  and [View and query VM metadata](https://docs.cloud.google.com/compute/docs/metadata/querying-metadata):
+  the metadata server's name and address; the `Metadata-Flavor: Google`
+  request header. *Checked 2026-11-14.*
+- [Google Cloud Blog, "7 ways we harden our KVM hypervisor at Google Cloud: security in plaintext"](https://cloud.google.com/blog/products/gcp/7-ways-we-harden-our-kvm-hypervisor-at-google-cloud-security-in-plaintext):
+  KVM with Google's own user-space virtual machine monitor in place of
+  QEMU. *Checked 2026-11-14.*
+- [Operating system details](https://docs.cloud.google.com/compute/docs/images/os-details):
+  Google's images have a GPT, an EFI partition and an MBR boot block
+  for BIOS. *Checked 2026-11-14.*
 
 ## My notes
 

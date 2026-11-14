@@ -174,15 +174,17 @@ entry, for longer headers.
 
 Whether a device insists on LLQ varies. The t3.micro does not offer it
 at all; Linux uses it wherever offered and falls back to regular mode
-otherwise. Amazon's driver notes say newer instance generations perform
-badly or not at all without it (unchecked), so a driver meant for more
-than one generation should implement it.
+otherwise. Amazon's best-practices notes call LLQ the default mode of
+operation on the majority of instance types since version 2.0 of its
+driver, so a driver meant for more than one generation should implement
+it.
 
 ### MTU and offloads
 
 The maximum MTU comes from `DEVICE_ATTRIBUTES` and the driver sets the
-one in use with `SET_FEATURE(MTU)`; EC2 allows 9001 inside a VPC
-(unchecked). Offloads are optional and discoverable: IPv4 header and
+one in use with `SET_FEATURE(MTU)`; EC2's jumbo frames are an MTU of
+9001, usable inside a VPC and cut to 1500 across an internet gateway.
+Offloads are optional and discoverable: IPv4 header and
 TCP/UDP checksum in both directions, TSO, and RSS (receive-side scaling:
 spreading flows over queues with a Toeplitz or CRC32 hash). A minimal
 driver uses none.
@@ -197,8 +199,11 @@ Amazon. Values: 0 normal, 1 keep-alive timeout, 2 admin timeout,
 RX descriptors, 7 initialisation error, 8 driver in invalid state,
 9 OS trigger, 10 OS watchdog, 11 shutdown, 12 user trigger, 13 generic,
 14 missed interrupt, 15 suspected poll starvation, 16 malformed RX
-descriptor. The field is four bits wide, so 16 does not fit without an
-extension the device must advertise (unchecked).
+descriptor. The field is four bits wide, so 16 does not fit: mainline
+Linux masks it to 0, and Amazon's own tree puts the upper bits in a
+second field (bits 27:24) when the device advertises the
+`ENA_ADMIN_EXTENDED_RESET_REASONS` capability, and reports 13 (generic)
+when it does not.
 
 ### A minimal driver, step by step
 
@@ -252,7 +257,7 @@ need:
   watchdog.
 
 Implementations to read, smallest first: iPXE's `ena.c` (one file,
-polling, regular mode only), FreeBSD's `if_ena`, DPDK's `net/ena`, and
+polling, LLQ with 128-byte entries where offered), FreeBSD's `if_ena`, DPDK's `net/ena`, and
 Linux's `ena_netdev.c`. All but iPXE sit on the shared `ena_com` layer
 from `amzn-drivers`, so reading `ena_com.c` once covers three of them.
 
@@ -306,10 +311,20 @@ from `amzn-drivers`, so reading `ena_com.c` once covers three of them.
   and [`ena_netdev.h`](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/amazon/ena/ena_netdev.h):
   PCI IDs; BAR numbers and vector indexes. *Checked 2026-11-14.*
 - [amzn-drivers](https://github.com/amzn/amzn-drivers): Amazon's own
-  tree of the Linux, FreeBSD and DPDK drivers, with release notes on
-  LLQ. *Unchecked: not opened today.*
+  tree of the Linux, FreeBSD and DPDK drivers. Its
+  [`ENA_Linux_Best_Practices.rst`](https://github.com/amzn/amzn-drivers/blob/master/kernel/linux/ena/ENA_Linux_Best_Practices.rst)
+  says where LLQ is the default, and its
+  [`ena_com.c`](https://github.com/amzn/amzn-drivers/blob/master/kernel/linux/common/ena_com/ena_com.c)
+  (`ena_com_dev_reset`) has the extended reset reason.
+  *Checked 2026-11-14.*
+- [Linux `ena_com.c`](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/amazon/ena/ena_com.c),
+  `ena_com_dev_reset`: the reset sequence, with the reason masked to
+  four bits. *Checked 2026-11-14.*
 - [iPXE `drivers/net/ena.c`](https://github.com/ipxe/ipxe/blob/master/src/drivers/net/ena.c):
-  the smallest complete driver. *Unchecked: not opened today.*
+  the smallest complete driver; no MSI-X vector on its queues, LLQ
+  configured where offered. *Checked 2026-11-14.*
+- [EC2 User Guide, "Network maximum transmission unit (MTU) for your EC2 instance"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/network_mtu.html):
+  jumbo frames of 9001 and where they stop. *Checked 2026-11-14.*
 - [seL4 `object-api-arch.xml` for x86](https://github.com/seL4/seL4/blob/master/libsel4/arch_include/x86/interfaces/object-api-arch.xml):
   `seL4_IRQControl_GetMSI`. *Checked 2026-11-14.*
 - [sDDF `drivers/network/`](https://github.com/au-ts/sddf/tree/main/drivers/network):

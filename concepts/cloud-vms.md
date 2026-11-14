@@ -43,9 +43,8 @@ design, found as [PCI](pci.md) functions, and nothing else:
 - Compute Engine: legacy virtio-net and virtio-scsi on older machine
   series, [gVNIC](gvnic.md) and NVMe on newer ones.
 - Azure: *synthetic* devices that are not on PCI at all. They sit on
-  VMBus, Hyper-V's message channel between guest and host, found
-  through ACPI and set up with hypercalls: `netvsc` for network,
-  `storvsc` for disks (unchecked).
+  VMBus, Hyper-V's message channel between guest and host; Linux's
+  drivers for them are `netvsc` for network and `storvsc` for disks.
 
 So an operating system with no driver for the provider's NIC has no
 network there, whatever else works.
@@ -60,12 +59,12 @@ in the per-cloud pages; Azure on one `Standard_D2s_v5`):
 |---|---|---|---|
 | [PIT](pit.md) | yes | yes | no |
 | [HPET](hpet.md) | yes, 32-bit counter | no | no |
-| 8259 PIC | (unchecked) | (unchecked) | no ("NULL legacy PIC") |
+| 8259 PIC | not recorded | not recorded | no ("NULL legacy PIC") |
 | I/O APIC, 24 pins | yes | yes | yes |
 | COM1 16550 at `0x3f8` | yes | yes, and three more | yes |
-| PS/2 controller | (unchecked) | yes | no |
-| VGA | yes (an Amazon PCI device) | no | no (a synthetic framebuffer, unchecked) |
-| CMOS RTC | (unchecked) | (unchecked) | (unchecked) |
+| PS/2 controller | not recorded | yes | no |
+| VGA | yes (an Amazon PCI device) | no | no (a synthetic framebuffer) |
+| CMOS RTC | not recorded | not recorded | yes (Hyper-V virtualises one) |
 
 A kernel that calibrates its timers against the PIT, as seL4's x86
 kernel does, therefore has a problem on Azure that it does not have on
@@ -77,7 +76,7 @@ Current instance types boot through [UEFI](uefi.md) firmware (EDK II on
 all three clouds) and describe their hardware with
 [ACPI tables](acpi-tables.md). EC2's x86 types and Compute Engine's
 older ones also offer a legacy BIOS; Azure's Generation 1 VMs are
-BIOS-only and Generation 2 UEFI-only (unchecked).
+BIOS-only and Generation 2 UEFI-only.
 
 The important consequence is on Arm. Boards hand the kernel a device
 tree; every cloud Arm VM offers **ACPI only**. seL4 and its loader take
@@ -121,7 +120,8 @@ dollars.
 ### The three clouds side by side
 
 EC2 and Compute Engine rows are observed (2026) or from their pages
-here; the Azure column is (unchecked) except where "observed" appears.
+here; the Azure column is from Microsoft's pages and Linux's Hyper-V
+documentation (References) except where "observed" appears.
 
 | | EC2 (Nitro) | Compute Engine | Azure |
 |---|---|---|---|
@@ -137,7 +137,7 @@ here; the Azure column is (unchecked) except where "observed" appears.
 | Arm CPUs | Graviton 2 to 4 | Ampere Altra (T2A), Axion (C4A, N4A) | Ampere Altra, Cobalt |
 | PSCI conduit on Arm | `hvc` | `hvc` | `smc` (observed) |
 | Nested virtualisation | on request, some types | on request, mostly Intel series | offered by default on the type observed |
-| Bare metal | `.metal` types | `-metal` types (C3, C4, C4A...) | no general offering |
+| Bare metal | `.metal` types | `-metal` types (C3, C4, C4A...) | not looked into |
 
 Older EC2 types (`t2`, and others before 2017) run on Xen, not Nitro,
 and are a different machine again; ignore them for new work.
@@ -205,13 +205,24 @@ is why it is the first thing to boot.
 - [Compute Engine: troubleshooting using the serial console](https://docs.cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console):
   four ports, 1 MiB kept. *Checked 2026-11-14.*
 - [Linux KVM documentation, "Timekeeping Virtualization for X86-Based Architectures"](https://docs.kernel.org/virt/kvm/x86/timekeeping.html):
-  why emulated timers and the TSC behave as they do in a guest. *Unchecked.* Not reopened today.
-- [AWS: the Nitro System](https://docs.aws.amazon.com/whitepapers/latest/security-design-of-aws-nitro-system/security-design-of-aws-nitro-system.html):
-  the hypervisor and Nitro cards. *Unchecked.* Not opened.
-- [Azure: Generation 1 and 2 virtual machines](https://learn.microsoft.com/en-us/azure/virtual-machines/generation-2):
-  BIOS against UEFI. *Unchecked.* Not opened.
+  why emulated timers and the TSC behave as they do in a guest. *Checked 2026-11-14.*
+- [AWS: The Security Design of the AWS Nitro System, "The components of the Nitro System"](https://docs.aws.amazon.com/whitepapers/latest/security-design-of-aws-nitro-system/the-components-of-the-nitro-system.html):
+  the hypervisor and Nitro cards. *Checked 2026-11-14.*
+- [Azure support for Generation 2 VMs](https://learn.microsoft.com/en-us/azure/virtual-machines/generation-2):
+  BIOS (Generation 1) against UEFI (Generation 2). *Checked 2026-11-14.*
 - [Linux documentation, "VMBus"](https://docs.kernel.org/virt/hyperv/vmbus.html):
-  Hyper-V's synthetic devices. *Unchecked.* Not opened.
+  Hyper-V's synthetic devices, `netvsc` and `storvsc`, the synthetic
+  frame buffer. *Checked 2026-11-14.*
+- [Linux documentation, Hyper-V "Clocks and Timers"](https://docs.kernel.org/virt/hyperv/clocks.html):
+  synthetic timers and the TSC; a PIT on Generation 1 only; a
+  virtualised RTC; no HPET. *Checked 2026-11-14.*
+- [Azure: Microsoft Azure Network Adapter (MANA) overview](https://learn.microsoft.com/en-us/azure/virtual-network/accelerated-networking-mana-overview)
+  and [NVMe overview](https://learn.microsoft.com/en-us/azure/virtual-machines/nvme-overview):
+  MANA and Mellanox NICs beside the virtual switch; NVMe disks on the
+  v6 and later sizes. *Checked 2026-11-14.*
+- Azure: [Dpsv5 size series](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/general-purpose/dpsv5-series)
+  and [Cobalt processor-based virtual machines](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/cobalt-overview):
+  the Ampere Altra and Cobalt 100 Arm sizes. *Checked 2026-11-14.*
 
 ## My notes
 

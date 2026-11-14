@@ -61,8 +61,8 @@ access. From `struct gve_registers` in Linux's `gve_register.h`:
 
 On PCI revision 0 the admin queue is announced by its page frame
 number in `adminq_pfn`; later revisions use the base address and length
-registers instead (unchecked in the Linux source today; both observed
-instances were revision 0).
+registers instead (`gve_adminq_alloc` in Linux's `gve_adminq.c`; both
+observed instances were revision 0).
 
 ### The admin queue
 
@@ -129,11 +129,11 @@ read the device options, not assume):
 | `c4-standard-2`, `c4a-standard-1` | GQI QPL, DQO RDA | DQO RDA |
 | `n4a-standard-1` | DQO QPL at least | DQO QPL |
 
-GQI RDA exists in the drivers, but DPDK's documentation says Compute
-Engine never released it (unchecked).
+GQI RDA exists in the drivers, but DPDK's documentation calls it
+deprecated and says it was not released in production.
 
-Descriptor layouts in outline (unchecked: from the Linux headers
-`gve_desc.h` and `gve_desc_dqo.h`, not reopened today):
+Descriptor layouts in outline (from the Linux headers `gve_desc.h` and
+`gve_desc_dqo.h`):
 
 - GQI transmit: 16-byte descriptors; a packet descriptor (flags,
   checksum offsets, descriptor count, total length, segment length,
@@ -209,7 +209,7 @@ What such a driver needs from the system:
 Reference implementations: Linux
 (`drivers/net/ethernet/google/gve/`, the fullest), FreeBSD
 (`sys/dev/gve/`), DPDK (`drivers/net/gve/`), and iPXE
-(`src/drivers/net/gve.c`, the smallest, GQI QPL only (unchecked)).
+(`src/drivers/net/gve.c`, the smallest; it handles all four formats).
 
 ## Gotchas
 
@@ -249,12 +249,21 @@ Reference implementations: Linux
   the register block and status bits. *Checked 2026-11-14.*
 - [Linux `gve_adminq.h`](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/google/gve/gve_adminq.h):
   opcodes, command structures, device option ids. *Checked 2026-11-14.*
+- [Linux `gve_adminq.c`](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/google/gve/gve_adminq.c),
+  `gve_adminq_alloc`: `adminq_pfn` on revision 0, base address and
+  length registers on later revisions. *Checked 2026-11-14.*
 - [Linux `gve_desc.h`](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/google/gve/gve_desc.h)
-  and `gve_desc_dqo.h`: descriptor layouts. *Unchecked.* Not opened today.
+  and [`gve_desc_dqo.h`](https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/google/gve/gve_desc_dqo.h):
+  descriptor layouts and the 2-byte receive pad. *Checked 2026-11-14.*
 - [GoogleCloudPlatform/compute-virtual-ethernet-linux](https://github.com/GoogleCloudPlatform/compute-virtual-ethernet-linux):
-  Google's out-of-tree copy of the Linux driver. *Unchecked.* Not opened.
-- [DPDK GVE poll mode driver](https://doc.dpdk.org/guides/nics/gve.html):
-  which formats Compute Engine has released. *Unchecked.* Not opened.
+  Google's out-of-tree copy of the Linux driver; its README gives the
+  PCI IDs. *Checked 2026-11-14.*
+- [DPDK GVE poll mode driver](https://github.com/DPDK/dpdk/blob/main/doc/guides/nics/gve.rst)
+  (rendered at [doc.dpdk.org](https://doc.dpdk.org/guides/nics/gve.html)):
+  GQI RDA deprecated and not released in production. *Checked 2026-11-14.*
+- [iPXE `drivers/net/gve.c`](https://github.com/ipxe/ipxe/blob/master/src/drivers/net/gve.c):
+  a small driver that selects among GQI or DQO, QPL or RDA from the
+  device options. *Checked 2026-11-14.*
 - [sDDF `drivers/network`](https://github.com/au-ts/sddf/tree/main/drivers/network):
   no gVNIC driver upstream. *Checked 2026-11-14.*
 

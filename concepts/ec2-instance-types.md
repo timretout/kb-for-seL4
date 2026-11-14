@@ -58,7 +58,7 @@ series | options    size
   `2xlarge` ... A `large` is 2 vCPUs, and each step doubles. A vCPU is
   a hardware thread on most Intel and older AMD types, so `large` is one
   core with two threads; on Graviton and on `m7a` and later AMD types a
-  vCPU is a whole core (unchecked). `metal` means the whole server with
+  vCPU is a whole core. `metal` means the whole server with
   no hypervisor; newer families also have sized metal (`metal-24xl`).
 
 So `m6id.xlarge` is general purpose, 6th generation, Intel, with local
@@ -68,30 +68,32 @@ server with fast networking, bare.
 ### Generations that matter
 
 Marks: **obs** = seen on a booted instance of the type in brackets,
-2026; **unc** = unchecked, from memory of AWS's descriptions.
+2026; **doc** = from AWS's specification tables and hypervisor and
+boot mode lists (References), not booted.
 
 | Types | CPU | Hypervisor | Boot modes | Mark |
 |---|---|---|---|---|
-| `t2`, `m4`, `c4`, `r4` | Intel Haswell/Broadwell Xeon | Xen | `legacy-bios` only | obs (t2.micro: Xen, BIOS only); CPU unc |
+| `t2`, `m4`, `c4`, `r4` | Intel Xeon E5 v3 (`m4`, `c4`) or v4 (Broadwell: `r4`, `t2.medium`) | Xen | `legacy-bios` only | obs (t2.micro: Xen, BIOS only); CPU doc |
 | `t3`, `m5`, `c5`, `r5` | Intel Skylake or Cascade Lake Xeon (8259CL, 8275CL) | Nitro | both | obs (t3.micro, c5.large) |
-| `m6i`, `c6i`, `r6i` | Intel Ice Lake | Nitro | both | unc |
+| `m6i`, `c6i`, `r6i` | Intel Ice Lake | Nitro | both | doc |
 | `m7i`, `c7i`, `r7i` | Intel Sapphire Rapids (8488C) | Nitro | both | obs (c7i.large) |
 | `m8i`, `c8i`, `r8i` | Intel Granite Rapids (6975P-C) | Nitro | both | obs (m8i.large) |
-| `t3a`, `m5a`, `c5a` | AMD EPYC Zen 1 (7571); `c5a` Zen 2 (unc) | Nitro | both | obs (t3a.micro) |
+| `t3a`, `m5a`, `c5a` | AMD EPYC Zen 1 (7571); `c5a` second-generation EPYC (7R32; doc) | Nitro | both | obs (t3a.micro) |
 | `m6a`, `c6a`, `r6a` | AMD EPYC Zen 3 (7R13) | Nitro | both | obs (m6a.large) |
 | `m7a`, `c7a`, `r7a` | AMD EPYC Zen 4 (9R14) | Nitro | both | obs (m7a.medium) |
-| `m8a`, `c8a` | AMD EPYC Zen 5 | Nitro | both | unc |
-| `a1` | Graviton (1): 16 Cortex-A72 cores | Nitro | `uefi` | unc |
+| `m8a`, `c8a` | AMD EPYC, 5th generation (9R45) | Nitro | both | doc |
+| `a1` | Graviton (1): 16 Cortex-A72 cores | Nitro | `uefi` | doc |
 | `t4g`, `m6g`, `c6g`, `r6g` | Graviton2: Neoverse N1 | Nitro | `uefi` | obs (t4g.small) |
 | `m7g`, `c7g`, `r7g` | Graviton3: Neoverse V1, SVE 256-bit | Nitro | `uefi` | obs (c7g.medium) |
 | `m8g`, `c8g`, `r8g` | Graviton4: Neoverse V2, SVE 128-bit | Nitro | `uefi` | obs (c8g.medium) |
 | `m9g` | Graviton5, SVE | Nitro | `uefi` | obs (m9g.medium) |
 
 AWS documents that Graviton types default to UEFI and Intel and AMD
-types to legacy BIOS (first reference of [EC2](ec2.md)); the supported
+types to legacy BIOS (the boot modes page in References); the supported
 modes per type come from `describe-instance-types`. `.metal` exists for
 most `m`, `c`, `r` and `i` families from the 5th generation on, not for
-`t` types, and not for every AMD family (unchecked). The x86 metal types
+`t` types, and not for every AMD family (`m5a`, `c5a` and `r5a` have
+none). The x86 metal types
 tried (`c5n.metal`, `c7i.metal-24xl`) offered `legacy-bios` only
 (observed 2026).
 
@@ -133,8 +135,8 @@ and m9g.metal-48xl.) Metal ACPI tables are also much larger: the DSDT of
 c5n.metal is over 3 MiB.
 
 **Burstable `T` types.** A `t` instance earns CPU credits while idle and
-spends them when busy; with none left it is throttled, or billed extra
-in "unlimited" mode (unchecked). The hardware seen is that of the
+spends them when busy; with none left it is held to its baseline share
+of the CPU, or billed extra in "unlimited" mode. The hardware seen is that of the
 matching `m` generation (`t3` like `m5`, `t3a` like `m5a`, `t4g` like
 `m6g`). The practical effect on a kernel is noise: time taken from the
 vCPU during a calibration loop gives a wrong answer. A t3a.micro
@@ -167,12 +169,11 @@ look them up):
 ### Looking facts up
 
 `aws ec2 describe-instance-types --instance-types t3.micro` returns a
-record per type. The fields that answer a porter's questions (field
-names unchecked: from memory of the API reference):
+record per type. The fields that answer a porter's questions:
 
 | Field | Tells you |
 |---|---|
-| `Hypervisor` | `nitro` or `xen`; absent on metal |
+| `Hypervisor` | `nitro` or `xen` |
 | `BareMetal` | true for metal types |
 | `SupportedBootModes` | `legacy-bios`, `uefi` |
 | `ProcessorInfo` | `SupportedArchitectures`, `Manufacturer`, clock speed |
@@ -212,13 +213,13 @@ kernel configuration each needs.
 - **`g` is overloaded**: `m7g` is Graviton, but the `G` series (`g5`)
   is GPU, and `g5g` is a GPU type on Graviton.
 - **Two instances of one type can have different CPUs.** `t3` and `m5`
-  are either Skylake or Cascade Lake (unchecked); do not hard-code a
+  are either Skylake or Cascade Lake; do not hard-code a
   frequency for a type.
 - **Metal types of one family are not alike.** No two Graviton metal
   generations shared a memory layout or GIC version (observed 2026).
-- **vCPU limits are per account and per family group**, and new
-  accounts have small ones; a 96-vCPU metal type may need a quota
-  request first (unchecked).
+- **vCPU limits are per account, per region and per family group**,
+  and the default is small (5 vCPUs for the standard families); a
+  96-vCPU metal type needs a quota increase first.
 
 ## See also
 
@@ -226,6 +227,7 @@ kernel configuration each needs.
 - [Compute Engine machine types](gce-machine-types.md): Google's naming
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): telling virtual from metal at run time
 - [Timer calibration](timer-calibration.md): why Intel and AMD types differ
+- [x86 paging](x86-paging.md): PCID, which `t3a` lacks
 - [GICv3 and the ITS](gicv3-its.md): the Graviton interrupt controller
 
 ## References
@@ -238,9 +240,36 @@ kernel configuration each needs.
   that bare metal types are a documented category with exceptions.
   *Checked 2026-11-14.*
 - [AWS CLI reference, `describe-instance-types`](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instance-types.html):
-  the fields of the record. *Unchecked: not opened today.*
-- [Amazon EC2 instance types](https://aws.amazon.com/ec2/instance-types/):
-  the processor behind each family. *Unchecked: not opened today.*
+  the fields of the record and their values. *Checked 2026-11-14.*
+- EC2 instance types guide, specifications for
+  [general purpose](https://docs.aws.amazon.com/ec2/latest/instancetypes/gp.html),
+  [compute optimized](https://docs.aws.amazon.com/ec2/latest/instancetypes/co.html),
+  [memory optimized](https://docs.aws.amazon.com/ec2/latest/instancetypes/mo.html)
+  and [previous generation](https://docs.aws.amazon.com/ec2/latest/instancetypes/pg.html)
+  instances: the processor of each type, and which families have
+  `metal` sizes. *Checked 2026-11-14.*
+- Amazon EC2 instance type pages for
+  [T3](https://aws.amazon.com/ec2/instance-types/t3/),
+  [M5](https://aws.amazon.com/ec2/instance-types/m5/) and
+  [M8a](https://aws.amazon.com/ec2/instance-types/m8a/): Skylake or
+  Cascade Lake on `t3` and `m5`; 5th-generation EPYC on `m8a`.
+  *Checked 2026-11-14.*
+- [EC2 User Guide, "Supported CPU options for Amazon EC2 instance types"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/cpu-options-supported-instances-values.html):
+  threads per core of each type. *Checked 2026-11-14.*
+- [EC2 User Guide, "Amazon EC2 instance types"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html),
+  "Hypervisor type", and
+  ["Requirements to launch an EC2 instance in UEFI boot mode"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/launch-instance-boot-mode.html):
+  the Xen and Nitro families; both boot modes on Nitro types except
+  bare metal and a few others. *Checked 2026-11-14.*
+- EC2 User Guide, ["Key concepts for burstable performance instances"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-credits-baseline-concepts.html)
+  and ["Unlimited mode"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances-unlimited-mode.html):
+  CPU credits, the baseline, and the surplus charge.
+  *Checked 2026-11-14.*
+- [EC2 User Guide, "Purchasing On-Demand Instances for Amazon EC2"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html),
+  "On-Demand Instance quotas": vCPU quotas per account, region and
+  family group. *Checked 2026-11-14.*
+- [Wikipedia, "AWS Graviton"](https://en.wikipedia.org/wiki/AWS_Graviton):
+  the 16 Cortex-A72 cores of the first Graviton. *Checked 2026-11-14.*
 - [seL4 `src/arch/x86/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/x86/config.cmake):
   `KernelLAPICMode`, `KernelMaxNumIOAPIC`. *Checked 2026-11-14.*
 

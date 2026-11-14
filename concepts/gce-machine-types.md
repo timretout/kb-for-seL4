@@ -41,9 +41,9 @@ has three parts:
   the comparison table, which never defines them; no letter is Intel,
   except that E2 may be either Intel or AMD.
 - **Series** is the three together: `c4a`, `n2d`, `e2`.
-- **Shape**: `standard` (about 4 GiB per vCPU), `highmem` (about 8),
-  `highcpu` (about 2) (unchecked: ratios from memory, and they vary a
-  little by series); `micro`, `small` and `medium` are the shared-core
+- **Shape**: `standard` (typically 4 GB per vCPU), `highmem`
+  (typically 8), `highcpu` (typically 2), varying a little by series;
+  `micro`, `small` and `medium` are the shared-core
   shapes of E2 and N1's `f1-micro`/`g1-small`.
 - **Suffixes**: `-lssd` adds local SSDs; `-metal` is a bare-metal type
   with no hypervisor.
@@ -73,7 +73,7 @@ column is the interface of the boot disk.
 | C3D | x86 | AMD EPYC Genoa | gVNIC | NVMe | no | no |
 | N4 | x86 | Intel Emerald Rapids | gVNIC | NVMe | yes | no |
 | N4D | x86 | AMD EPYC Turin | gVNIC | NVMe | yes | no |
-| N4A | Arm | Google Axion (Neoverse N3, observed) | gVNIC | NVMe | (unchecked) | no |
+| N4A | Arm | Google Axion (Neoverse N3, observed) | gVNIC | NVMe | no | no |
 | C4 | x86 | Intel Emerald Rapids, Granite Rapids | gVNIC, IDPF | NVMe | yes | yes |
 | C4D | x86 | AMD EPYC Turin | gVNIC, IDPF | NVMe | no | yes |
 | C4A | Arm | Google Axion (Neoverse V2, observed) | gVNIC, IDPF | NVMe | no | yes |
@@ -125,10 +125,9 @@ aborts on N4A and not on C4A or T2A.
 
 ### E2 and shared cores
 
-E2 is the cheap series, and unusual in two ways. Google places an E2
-instance on whichever host platform has room, Intel or AMD, and may
-choose differently at each start, so a kernel cannot be built for one
-CPU vendor (unchecked: from Google's E2 description, not opened today).
+E2 is the cheap series, and unusual in two ways. Google chooses the
+processor of an E2 instance, Intel or AMD, when the instance is
+created, so a kernel cannot be built for one CPU vendor.
 Its `e2-micro`, `e2-small` and `e2-medium` shapes are *shared-core*:
 they show 2 vCPUs but are entitled to a fraction of that CPU time, with
 bursting, so timing measurements on them are noisy.
@@ -182,8 +181,7 @@ device tree and timer frequency that match the series. See
   1 GHz on the Axion types, so one Arm image with a fixed timer
   frequency cannot be right on both.
 - **vCPU usually means a hardware thread**, so 2 vCPUs are often one
-  core; T2D, T2A and the Axion types give a whole core per vCPU
-  (unchecked).
+  core; T2D, T2A and the Axion types give a whole core per vCPU.
 - **Availability is per zone**, and the newest series may need quota.
 
 ## See also
@@ -197,10 +195,14 @@ device tree and timer frequency that match the series. See
 
 - [Machine families resource and comparison guide](https://docs.cloud.google.com/compute/docs/machine-resource):
   the series table (CPU platform, network interfaces, disk interface,
-  nested virtualisation, bare metal) and the `-lssd` and `-metal`
-  suffixes. It does not define the family or vendor letters. *Checked 2026-11-14.*
+  nested virtualisation, bare metal), the `-lssd` and `-metal`
+  suffixes, the typical memory per vCPU of each shape, and a whole core
+  per vCPU on T2D, T2A, C4A and N4A. It does not define the family or
+  vendor letters. *Checked 2026-11-14.*
 - [General-purpose machine family](https://docs.cloud.google.com/compute/docs/general-purpose-machines):
-  E2's host placement and shared-core shapes, memory ratios. *Unchecked.* Not opened.
+  E2's processor chosen at creation and its shared-core shapes. *Checked 2026-11-14.*
+- [About nested virtualization](https://docs.cloud.google.com/compute/docs/instances/nested-virtualization/overview),
+  "Restrictions": not on Arm, E2, or AMD series other than N4D. *Checked 2026-11-14.*
 - [Create custom images](https://docs.cloud.google.com/compute/docs/images/create-custom):
   the `GVNIC` and `IDPF` image flags a series may need. *Checked 2026-11-14.*
 

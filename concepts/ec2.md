@@ -28,17 +28,17 @@ whose size is `metal` hand over the whole server.
 
 Instance types from before about 2017 (`t2`, `m4`, `c4`) run on the
 **Xen** hypervisor, with Xen's paravirtual disk and network devices.
-Everything since runs on the **Nitro system**, which has three parts
-(unchecked: this paragraph summarises AWS's description, the first
-reference):
+Everything since (the first was `c5`, in November 2017) runs on the
+**Nitro system**, which AWS describes as three parts:
 
-- **Nitro cards**: PCIe cards in the host, each with its own Arm
-  processor, that implement the instance's network interfaces and disks
-  in hardware and present them to the guest as PCI functions.
-- The **Nitro hypervisor**: a small hypervisor derived from Linux's KVM.
-  It divides the CPUs and memory and emulates the few legacy devices a PC
-  needs, and little else, because the I/O is on the cards.
-- A security chip that controls the host's firmware.
+- **Nitro cards**: PCIe cards in the host, each built around an
+  AWS-designed system-on-chip, that implement the instance's network
+  interfaces and disks in hardware and present them to the guest as PCI
+  functions.
+- The **Nitro hypervisor**: a small hypervisor built on Linux's KVM.
+  It divides the CPUs and memory and assigns the cards' PCI functions
+  to instances, and little else, because the I/O is on the cards.
+- A security chip that controls writes to the host's firmware.
 
 Linux identifies it as KVM, and it offers KVM's paravirtual interfaces
 (observed on t3, c5, c7i, m6a, 2026). A `metal` instance has no hypervisor
@@ -94,8 +94,9 @@ Gotchas and [EC2 instance types](ec2-instance-types.md)).
 An instance boots from an **AMI** (Amazon Machine Image): a registration
 record that points at one or more EBS **snapshots** (stored disk images)
 and carries attributes, of which a porter needs three: the architecture
-(`x86_64` or `arm64`), ENA support (must be declared for Nitro types;
-unchecked), and the **boot mode**. At launch each snapshot becomes a new
+(`x86_64` or `arm64`), ENA support (a flag set when the image is
+registered; an instance type's record says whether it requires ENA),
+and the **boot mode**. At launch each snapshot becomes a new
 EBS **volume** attached to the instance. Building one is covered in
 [Cloud boot images](cloud-boot-images.md).
 
@@ -143,7 +144,7 @@ afterwards for the start.
 The instance metadata service (IMDS) is an HTTP server at the link-local
 address `169.254.169.254`, reachable only from the instance, that
 returns its ID, addresses, user data and credentials. Version 2 requires
-a session token obtained with a `PUT` first (unchecked: from memory). A
+a session token obtained with a `PUT` first. A
 kernel port does not need it: the MAC address is in the ENA device and
 the IP address comes from DHCP. It matters only once a system wants its
 user data or AWS credentials.
@@ -221,8 +222,21 @@ Upstream has no EC2 platform. What exists, and what each side lacks:
 ## References
 
 - [AWS Nitro System](https://aws.amazon.com/ec2/nitro/): AWS's overview
-  of the cards, hypervisor and security chip. *Unchecked: not opened
-  today.*
+  of the cards, hypervisor and security chip. *Checked 2026-11-14.*
+- [The Security Design of the AWS Nitro System, "The components of the Nitro System"](https://docs.aws.amazon.com/whitepapers/latest/security-design-of-aws-nitro-system/the-components-of-the-nitro-system.html):
+  what the cards, the security chip and the hypervisor each do.
+  *Checked 2026-11-14.*
+- [Amazon EC2 FAQs](https://aws.amazon.com/ec2/faqs/), "Nitro
+  Hypervisor": introduced with C5, built on KVM, and detected as KVM by
+  guests. *Checked 2026-11-14.*
+- [AWS News Blog, "Now Available – Compute-Intensive C5 Instances for Amazon EC2"](https://aws.amazon.com/blogs/aws/now-available-compute-intensive-c5-instances-for-amazon-ec2/):
+  the C5 launch and its new hypervisor, 6 November 2017.
+  *Checked 2026-11-14.*
+- [EC2 User Guide, "Amazon EC2 instance types"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html),
+  "Hypervisor type": which families are Xen-based and which Nitro-based.
+  *Checked 2026-11-14.*
+- [EC2 User Guide, "Use the Instance Metadata Service to access instance metadata"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html):
+  the address and the IMDSv2 session token. *Checked 2026-11-14.*
 - [EC2 User Guide, "Instance launch behavior with Amazon EC2 boot modes"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-boot.html):
   the three AMI boot mode values and the defaults per processor.
   *Checked 2026-11-14.*
@@ -241,8 +255,12 @@ Upstream has no EC2 platform. What exists, and what each side lacks:
 - [seL4 `src/plat/pc99/machine/acpi.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/acpi.c):
   the kernel's ACPI parsing on x86. *Checked 2026-11-14.*
 - [AWS CLI reference, `get-console-output`](https://docs.aws.amazon.com/cli/latest/reference/ec2/get-console-output.html):
-  the `--latest` option and the size limit. *Unchecked: not opened
-  today; the 64 KiB limit is as observed.*
+  the `--latest` option. It states no size limit; the 64 KiB is as
+  observed. *Checked 2026-11-14.*
+- [AWS CLI reference, `register-image`](https://docs.aws.amazon.com/cli/latest/reference/ec2/register-image.html)
+  and [`describe-instance-types`](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instance-types.html):
+  `--ena-support` on the image; `NetworkInfo.EnaSupport` (`unsupported`,
+  `supported`, `required`) on the type. *Checked 2026-11-14.*
 
 ## My notes
 

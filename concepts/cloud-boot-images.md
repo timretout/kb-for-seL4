@@ -236,12 +236,23 @@ boot protocols.
 - [Shielded VM](https://docs.cloud.google.com/compute/shielded-vm/docs/shielded-vm):
   the Secure Boot failure message. *Checked 2026-11-14.*
 - [Compute Engine: manually import boot disks](https://docs.cloud.google.com/compute/docs/import/import-existing-image):
-  the `disk.raw` and `oldgnu` tar requirements. *Unchecked.* Not opened; the procedure is as observed.
-- [AWS: importing a disk as a snapshot](https://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-import-snapshot.html)
-  and [`register-image`](https://docs.aws.amazon.com/cli/latest/reference/ec2/register-image.html):
-  the EC2 route and its options. *Unchecked.* Not opened; the commands are as observed.
-- [GNU GRUB manual](https://www.gnu.org/software/grub/manual/grub/grub.html),
-  `grub-mkimage`, `multiboot2`, `module2`, `serial`. *Unchecked.* Not opened.
+  the `disk.raw` name, the size in whole GB and the gzipped `oldgnu` tar. *Checked 2026-11-14.*
+- [AWS VM Import/Export: importing a disk as a snapshot](https://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-import-snapshot.html),
+  [required permissions](https://docs.aws.amazon.com/vm-import/latest/userguide/required-permissions.html)
+  and [monitoring an import snapshot task](https://docs.aws.amazon.com/vm-import/latest/userguide/check-status-import-task.html):
+  raw images from S3 with `import-snapshot`, the `vmimport` role,
+  `describe-import-snapshot-tasks`. *Checked 2026-11-14.*
+- [AWS CLI reference, `register-image`](https://docs.aws.amazon.com/cli/latest/reference/ec2/register-image.html):
+  `--boot-mode`, `--ena-support`, `--virtualization-type` and the
+  device mapping options. *Checked 2026-11-14.*
+- [GNU GRUB manual](https://www.gnu.org/software/grub/manual/grub/grub.html) (2.16),
+  sections [6.6 "Embedding a configuration file into GRUB"](https://www.gnu.org/software/grub/manual/grub/html_node/Embedded-configuration.html)
+  (`grub-mkimage -c`),
+  [16.194 "multiboot2"](https://www.gnu.org/software/grub/manual/grub/html_node/multiboot2_005fmodule.html)
+  (the `multiboot2` and `module2` commands) and
+  [17.3.1 "serial"](https://www.gnu.org/software/grub/manual/grub/html_node/serial.html).
+  The manual has no chapter on invoking `grub-mkimage` or
+  `grub-mkstandalone`. *Checked 2026-11-14.*
 - [seL4 `src/arch/x86/kernel/cmdline.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/cmdline.c):
   `console_port` and `debug_port`, and the BIOS data area default;
   [`boot_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot_sys.c)
