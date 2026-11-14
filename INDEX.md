@@ -11,7 +11,7 @@ What seL4 is and how the project fits together. Read these first.
 
 - [seL4 overview](sel4/overview.md): seL4 is a small, fast, capability-based microkernel with a machine-checked proof that its C code implements its specification; it provides threads, address spaces, IPC and access control, and leaves drivers, file systems and all policy to user level.
 - [Ecosystem and repositories](sel4/ecosystem.md): seL4 is some thirty repositories in two GitHub organisations: the kernel and its proofs, an older user-level world of CMake libraries and CAmkES, and a newer one of Microkit, sDDF and LionsOS; this page maps them and how they depend on each other.
-- [History and key papers](sel4/history-and-papers.md): Stub: the L4 lineage, seL4's timeline, and a reading list of the papers and documents worth knowing.
+- [History and key papers](sel4/history-and-papers.md): seL4 is the third generation of the L4 microkernel family, designed from 2004 to be formally verified; this page gives the lineage, the timeline, and an annotated reading list in the order a new contributor should read it.
 
 ## Part 2: Processor fundamentals
 
