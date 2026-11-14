@@ -2,27 +2,29 @@
   <title>PIT mode 2 count over time</title>
   <desc>The PIT counter in mode 2 falls from N to 1 once per clock, reloads N and repeats, so its value is a sawtooth with a period of N clocks. seL4 loads N = 59 659 for a 50 ms period and finds the reload by reading the latched count until a read is higher than the one before.</desc>
   <style>
-    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
     .small { font-size: 12px; }
     .head { font-weight: 600; }
     .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
-    .dim { fill: #57606a; }
-    .hw { fill: #ddebff; stroke: #3b6bb5; }
-    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
     .hw, .data { stroke-width: 1.5; }
-    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
     .dash { stroke-dasharray: 5 4; }
-    .accent { stroke: #cf222e; }
-    .accent-fill { fill: #cf222e; }
-    .saw { stroke: #3b6bb5; stroke-width: 2.5; fill: none; }
-    .axis { stroke: #6e7781; stroke-width: 1; fill: none; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
+    .saw { stroke: var(--hw-stroke); stroke-width: 2.5; fill: none; }
+    .axis { stroke: var(--data-stroke); stroke-width: 1; fill: none; }
   </style>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
     </marker>
   </defs>
-  <rect width="760" height="310" fill="#ffffff"/>
+  <rect width="760" height="310" style="fill: var(--bg)"/>
 
   <!-- axes -->
   <path class="axis" d="M120,50 V235 H730" marker-end="url(#arrow)"/>
@@ -44,13 +46,13 @@
   <text x="338" y="150" class="small dim">reload N</text>
 
   <!-- latched reads -->
-  <circle cx="420" cy="141" r="4.5" fill="#1f2328"/>
-  <circle cx="455" cy="169" r="4.5" fill="#1f2328"/>
-  <circle cx="490" cy="196" r="4.5" fill="#1f2328"/>
+  <circle cx="420" cy="141" r="4.5" style="fill: var(--fg)"/>
+  <circle cx="455" cy="169" r="4.5" style="fill: var(--fg)"/>
+  <circle cx="490" cy="196" r="4.5" style="fill: var(--fg)"/>
   <circle cx="530" cy="78" r="5.5" class="accent-fill"/>
   <path class="line accent" d="M580,52 L538,73" marker-end="url(#arrow)"/>
   <text x="586" y="44" class="small">this read is higher than</text>
   <text x="586" y="60" class="small">the last: reload seen</text>
 
-  <text x="140" y="290" class="small dim">Dots are latched reads by <tspan class="mono" fill="#1f2328">pit_wait_wraparound()</tspan>: each is lower than the last until the reload.</text>
+  <text x="140" y="290" class="small dim">Dots are latched reads by <tspan class="mono" style="fill: var(--fg)">pit_wait_wraparound()</tspan>: each is lower than the last until the reload.</text>
 </svg>

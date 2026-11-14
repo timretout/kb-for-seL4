@@ -2,28 +2,30 @@
   <title>Capabilities and steps of interrupt delivery</title>
   <desc>The root task's IRQControl cap mints an IRQHandler cap for one interrupt. The driver's SetNotification call copies a notification cap into the kernel's slot for that interrupt. When the interrupt fires the kernel signals the notification, the driver wakes from seL4_Wait, services the device and calls Ack so the interrupt can be delivered again.</desc>
   <style>
-    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
     .small { font-size: 12px; }
     .head { font-weight: 600; }
     .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
-    .dim { fill: #57606a; }
-    .hw { fill: #ddebff; stroke: #3b6bb5; }
-    .fw { fill: #eee3fb; stroke: #7a52b3; }
-    .kernel { fill: #ffe8cc; stroke: #b86e14; }
-    .user { fill: #dcf3e1; stroke: #3d8a50; }
-    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .fw { fill: var(--fw-fill); stroke: var(--fw-stroke); }
+    .kernel { fill: var(--kernel-fill); stroke: var(--kernel-stroke); }
+    .user { fill: var(--user-fill); stroke: var(--user-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
     .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
-    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
     .dash { stroke-dasharray: 5 4; }
-    .accent { stroke: #cf222e; }
-    .accent-fill { fill: #cf222e; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
   </style>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
     </marker>
   </defs>
-  <rect width="760" height="478" fill="#ffffff"/>
+  <rect width="760" height="478" style="fill: var(--bg)"/>
   <rect x="30" y="30" width="200" height="50" rx="6" class="user"/>
   <text x="130" y="52" text-anchor="middle" class="head">Root task</text>
   <text x="130" y="70" text-anchor="middle" class="small dim">IRQControl cap</text>
@@ -40,23 +42,23 @@
   <rect x="250" y="270" width="230" height="44" rx="6" class="hw"/>
   <text x="365" y="297" text-anchor="middle">Interrupt controller</text>
   <path class="line" d="M230,55 H496" marker-end="url(#arrow)"/>
-  <circle cx="365" cy="55" r="10" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <circle cx="365" cy="55" r="10" stroke-width="1.5" style="fill: var(--bg); stroke: var(--fg)"/>
   <text x="365" y="59.5" text-anchor="middle" class="small head">1</text>
   <path class="line" d="M520,80 L420,156" marker-end="url(#arrow)"/>
-  <circle cx="470" cy="118" r="10" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <circle cx="470" cy="118" r="10" stroke-width="1.5" style="fill: var(--bg); stroke: var(--fg)"/>
   <text x="470" y="122.5" text-anchor="middle" class="small head">2</text>
   <path class="line" d="M180,292 H246" marker-end="url(#arrow)"/>
   <path class="line" d="M365,270 V214" marker-end="url(#arrow)"/>
-  <circle cx="365" cy="242" r="10" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <circle cx="365" cy="242" r="10" stroke-width="1.5" style="fill: var(--bg); stroke: var(--fg)"/>
   <text x="365" y="246.5" text-anchor="middle" class="small head">3</text>
   <path class="line" d="M480,185 H536" marker-end="url(#arrow)"/>
-  <circle cx="508" cy="185" r="10" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <circle cx="508" cy="185" r="10" stroke-width="1.5" style="fill: var(--bg); stroke: var(--fg)"/>
   <text x="508" y="189.5" text-anchor="middle" class="small head">4</text>
   <path class="line" d="M660,160 V84" marker-end="url(#arrow)"/>
-  <circle cx="660" cy="122" r="10" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <circle cx="660" cy="122" r="10" stroke-width="1.5" style="fill: var(--bg); stroke: var(--fg)"/>
   <text x="660" y="126.5" text-anchor="middle" class="small head">5</text>
   <path class="line dash" d="M570,80 L460,156" marker-end="url(#arrow)"/>
-  <circle cx="545" cy="97" r="10" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <circle cx="545" cy="97" r="10" stroke-width="1.5" style="fill: var(--bg); stroke: var(--fg)"/>
   <text x="545" y="101.5" text-anchor="middle" class="small head">6</text>
   <text x="30" y="350" text-anchor="start" class="small head">1</text>
   <text x="48" y="350" class="small"><tspan class="mono">seL4_IRQControl_Get</tspan>: mints an IRQHandler cap naming one interrupt</text>

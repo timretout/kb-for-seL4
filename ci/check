@@ -85,6 +85,8 @@ def main():
                 problem(svg, "no <title>")
         except ET.ParseError as e:
             problem(svg, f"not well-formed: {e}")
+        if "prefers-color-scheme: dark" not in svg.read_text():
+            problem(svg, "no dark palette (see images/README.md)")
         if f"(../images/{svg.name})" not in used:
             problem(svg, "not used by any page")
 

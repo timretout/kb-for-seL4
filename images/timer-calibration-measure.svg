@@ -2,30 +2,32 @@
   <title>Timing a clock over one PIT period</title>
   <desc>The PIT count is a sawtooth. A measurement waits untimed for one wraparound to line up with the start of a period, reads the clock being measured, waits for the next wraparound and reads it again; the rate is the difference divided by the interval.</desc>
   <style>
-    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
     .small { font-size: 12px; }
     .head { font-weight: 600; }
     .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
-    .dim { fill: #57606a; }
-    .hw { fill: #ddebff; stroke: #3b6bb5; }
-    .fw { fill: #eee3fb; stroke: #7a52b3; }
-    .kernel { fill: #ffe8cc; stroke: #b86e14; }
-    .user { fill: #dcf3e1; stroke: #3d8a50; }
-    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .fw { fill: var(--fw-fill); stroke: var(--fw-stroke); }
+    .kernel { fill: var(--kernel-fill); stroke: var(--kernel-stroke); }
+    .user { fill: var(--user-fill); stroke: var(--user-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
     .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
-    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
     .dash { stroke-dasharray: 5 4; }
-    .accent { stroke: #cf222e; }
-    .accent-fill { fill: #cf222e; }
-    .saw { stroke: #3b6bb5; stroke-width: 2.5; fill: none; }
-    .axis { stroke: #6e7781; stroke-width: 1; fill: none; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
+    .saw { stroke: var(--hw-stroke); stroke-width: 2.5; fill: none; }
+    .axis { stroke: var(--data-stroke); stroke-width: 1; fill: none; }
   </style>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
     </marker>
   </defs>
-  <rect width="760" height="330" fill="#ffffff"/>
+  <rect width="760" height="330" style="fill: var(--bg)"/>
   <path class="axis" d="M120,70 V235 H730" marker-end="url(#arrow)"/>
   <text x="725" y="258" text-anchor="end" class="small dim">time</text>
   <text x="108" y="150" text-anchor="end" class="small dim">PIT count</text>

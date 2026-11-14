@@ -2,31 +2,33 @@
   <title>The PC/AT's cascaded pair of 8259A interrupt controllers</title>
   <desc>The slave 8259A takes IRQ 8 to 15 and its INT output feeds input 2 of the master, which takes IRQ 0 to 7 and raises INT to the CPU. The master is at I/O ports 0x20 and 0x21, the slave at 0xA0 and 0xA1.</desc>
   <style>
-    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: #1f2328; }
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
     .small { font-size: 12px; }
     .head { font-weight: 600; }
     .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
-    .dim { fill: #57606a; }
-    .hw { fill: #ddebff; stroke: #3b6bb5; }
-    .fw { fill: #eee3fb; stroke: #7a52b3; }
-    .kernel { fill: #ffe8cc; stroke: #b86e14; }
-    .user { fill: #dcf3e1; stroke: #3d8a50; }
-    .data { fill: #f3f4f6; stroke: #6e7781; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .fw { fill: var(--fw-fill); stroke: var(--fw-stroke); }
+    .kernel { fill: var(--kernel-fill); stroke: var(--kernel-stroke); }
+    .user { fill: var(--user-fill); stroke: var(--user-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
     .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
-    .line { stroke: #1f2328; stroke-width: 1.5; fill: none; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
     .dash { stroke-dasharray: 5 4; }
-    .accent { stroke: #cf222e; }
-    .accent-fill { fill: #cf222e; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
   </style>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#1f2328"/>
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
     </marker>
     <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/>
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--accent)"/>
     </marker>
   </defs>
-  <rect width="760" height="410" fill="#ffffff"/>
+  <rect width="760" height="410" style="fill: var(--bg)"/>
   <rect x="230" y="150" width="120" height="240" rx="6" class="hw"/>
   <text x="290" y="262" text-anchor="middle" class="head">slave</text>
   <text x="290" y="284" text-anchor="middle" class="mono">0xA0 / 0xA1</text>
