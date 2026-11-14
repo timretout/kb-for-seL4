@@ -93,6 +93,19 @@ The hardware around the CPU: how it is described to software, how devices interr
 - [QEMU](concepts/qemu.md): Stub: the emulator most seL4 development runs on: machine types, the options that matter, KVM, and how seL4's simulate scripts drive it.
 - [Cloud virtual machines](concepts/cloud-vms.md): Stub: what hardware EC2, Compute Engine and Azure present to a guest kernel (firmware, interrupt controllers, timers, consoles, NICs) and how that differs from a PC or development board.
 
+### Cloud platforms
+
+The two clouds the porting work targets. Start with the cloud virtual machines page above.
+
+- [Amazon EC2 and the Nitro system](concepts/ec2.md): Stub: how EC2 runs a guest: the Nitro hypervisor and cards, AMIs and boot modes, EBS, the serial console and other ways to see a kernel boot, and the hardware a guest kernel finds.
+- [EC2 instance types](concepts/ec2-instance-types.md): Stub: how to read an EC2 instance type name, the families and generations (Intel, AMD, Graviton), virtualised against metal, and what differs between them for a kernel port.
+- [Google Compute Engine](concepts/gce.md): Stub: how Compute Engine runs a guest: its KVM-based hypervisor, images and UEFI boot, Shielded VM, disks, the serial console, and the hardware a guest kernel finds.
+- [Compute Engine machine types](concepts/gce-machine-types.md): Stub: how to read a Compute Engine machine type name, the families and generations (N1 to C4, AMD, Arm), and what differs between them for a kernel port.
+- [Booting a custom kernel on a cloud](concepts/cloud-boot-images.md): Stub: what it takes to get a kernel that is not Linux started on EC2 and Compute Engine: disk image layout, the EFI system partition and boot loader, registering or importing the image, and getting console output back.
+- [ENA](concepts/ena.md): Stub: the Elastic Network Adapter, EC2's network device: its PCI identity, admin and I/O queues, and what a driver must do.
+- [gVNIC](concepts/gvnic.md): Stub: Google's virtual NIC, required on newer Compute Engine machine types: its PCI identity, queue formats (GQI and DQO), and what a driver must do.
+- [NVMe](concepts/nvme.md): Stub: the storage interface both clouds present disks through: controller registers, admin and I/O queue pairs, namespaces, and how EBS and local disks appear.
+
 ## Part 4: The seL4 kernel
 
 The kernel's model and API, in the order the concepts build on each other.

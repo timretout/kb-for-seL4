@@ -1,0 +1,27 @@
+# gVNIC
+
+> Stub: Google's virtual NIC, required on newer Compute Engine machine types: its PCI identity, queue formats (GQI and DQO), and what a driver must do.
+
+## What it is
+
+To be written.
+
+## In seL4
+
+To be written.
+
+## Gotchas
+
+To be written.
+
+## See also
+
+- [Index](../INDEX.md): the reading order
+
+## References
+
+- None yet. *Unchecked.*
+
+## My notes
+
+<!-- Tim writes here. Sessions leave this section as it is. -->
