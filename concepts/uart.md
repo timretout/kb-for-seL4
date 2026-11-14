@@ -13,7 +13,7 @@ Read first: [I/O ports](io-ports.md), [IRQ](irq.md).
 | Reached through | 16550: [I/O ports](io-ports.md) on a PC, MMIO elsewhere; PL011: MMIO |
 | Found through | [Device tree](device-tree.md) `/chosen/stdout-path`; [ACPI](acpi-tables.md) SPCR; the BIOS data area at `0x400` |
 | Interrupt | [ISA](isa.md) IRQ 4 (COM1, COM3) and 3 (COM2, COM4) on a PC |
-| Key numbers | COM1 at `0x3F8`; 115200 baud at divisor 1 from a 1.8432 MHz clock (unchecked); QEMU `virt` PL011 at `0x09000000` |
+| Key numbers | COM1 at `0x3F8`; 115200 baud at divisor 1 from a 1.8432 MHz clock; QEMU `virt` PL011 at `0x09000000` |
 | seL4 config | `KernelPrinting`, `KernelDebugBuild`; x86 command line `console_port`, `debug_port` |
 | seL4 use | Polled output only, in debug builds: [`src/drivers/serial/`](https://github.com/seL4/seL4/tree/master/src/drivers/serial), [`io.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/io.c) on x86 |
 
@@ -78,13 +78,14 @@ added working FIFOs) has eight one-byte registers. On a PC they are
 
 While **DLAB** (divisor latch access bit) is set, offsets 0 and 1 are
 instead DLL and DLM, the low and high bytes of the divisor. The PC's
-input clock is 1.8432 MHz (unchecked), so divisor 1 gives 1843200 / 16 = 115200
+input clock is 1.8432 MHz, so divisor 1 gives 1843200 / 16 = 115200
 baud, the fastest standard rate and the usual console setting; divisor
 12 gives 9600.
 
 On a PC the UART's interrupt output reaches the interrupt controller only
-if MCR's OUT2 bit is set (unchecked: a board wiring convention, not in
-the chip).
+if MCR's OUT2 bit is set: a board wiring convention, not in the chip,
+which Linux's driver notes as "Most PC uarts need OUT2 raised to enable
+interrupts".
 
 **Memory-mapped 16550s** are common off the PC ("ns16550a",
 "snps,dw-apb-uart" in a [device tree](device-tree.md)). The eight
@@ -112,18 +113,17 @@ at 4-byte offsets:
 | `0x44` | UARTICR | interrupt clear (write 1 to clear) |
 
 The divisor is clock / (16 × baud) as a fixed-point number; a write to
-UARTIBRD or UARTFBRD takes effect only on the next write to UARTLCR_H
-(unchecked: from the PL011 manual, not opened today).
+UARTIBRD or UARTFBRD takes effect only on the next write to UARTLCR_H.
 
 The senses are the opposite of the 16550's and worth memorising: a 16550
 may be written when LSR **THRE is 1**; a PL011 may be written when UARTFR
 **TXFF is 0**.
 
 Arm's server specification (SBSA) defines a **generic UART**: the PL011
-subset UARTDR, UARTFR, UARTRIS/MIS/IMSC and UARTICR, with baud rate and
+subset UARTDR, UARTRSR/UARTECR (receive status and error clear), UARTFR,
+UARTRIS/MIS/IMSC and UARTICR, with baud rate and
 enabling done by firmware beforehand. A driver that only polls UARTFR and
-writes UARTDR, as seL4's does, works on either (unchecked: the subset's
-exact register list is from memory).
+writes UARTDR, as seL4's does, works on either.
 
 ### Polling and interrupts
 
@@ -228,8 +228,10 @@ user-level driver also owns; nothing arbitrates between them.
 - **`\n` alone staircases.** Terminals want `\r\n`; the kernel's
   `uart_console_putchar()` inserts the `\r`, user-level drivers may not.
 - **Interrupt-driven transmit needs a kick**: the 16550's THR-empty
-  interrupt fires on the transition to empty, so the first byte must be
-  written directly (unchecked: behaviour from memory).
+  interrupt is cleared by reading IIR or writing THR, and not every UART
+  raises it when it is enabled with THR already empty (Linux tests for
+  this at start-up and calls it `UART_BUG_TXEN`), so after enabling it a
+  driver checks LSR and writes the first byte directly.
 
 ## See also
 
@@ -260,17 +262,26 @@ user-level driver also owns; nothing arbitrates between them.
   `KernelPrinting`, `KernelDebugBuild`. *Checked 2026-11-14.*
 - [sDDF `drivers/serial/ns16550a/include/uart.h`](https://github.com/au-ts/sddf/blob/main/drivers/serial/ns16550a/include/uart.h):
   `REG_SHIFT`. *Checked 2026-11-14.*
-- Texas Instruments, "PC16550D Universal Asynchronous
-  Receiver/Transmitter with FIFOs" datasheet: the register reference.
-  *Unchecked (not opened; COM port addresses, the 1.8432 MHz clock and
-  FIFO depth are from memory).*
-- Arm, "PrimeCell UART (PL011) Technical Reference Manual" (DDI 0183),
-  chapter 3: registers. *Unchecked (developer.arm.com refuses scripted
-  fetches).*
-- Arm, "Server Base System Architecture", appendix on the generic UART.
-  *Unchecked (developer.arm.com).*
-- Microsoft, "Serial Port Console Redirection Table (SPCR)". *Unchecked
-  (not opened).*
+- [National Semiconductor, "PC16550D Universal Asynchronous
+  Receiver/Transmitter with FIFOs" datasheet](https://www.scs.stanford.edu/10wi-cs140/pintos/specs/pc16550d.pdf)
+  (a copy kept for Stanford's Pintos course; the part is now Texas
+  Instruments'), section 8 "Registers": the register reference, the
+  16-byte FIFOs, the 16× clock and the divisor table for a 1.8432 MHz
+  crystal, and what clears the THR-empty interrupt. *Checked 2026-11-14.*
+- [Linux `arch/x86/include/asm/serial.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/serial.h):
+  the PC's 1.8432 MHz UART clock and the four COM ports with their IRQs.
+  *Checked 2026-11-14.*
+- [Linux `drivers/tty/serial/8250/8250_port.c`](https://github.com/torvalds/linux/blob/master/drivers/tty/serial/8250/8250_port.c):
+  OUT2 in `serial8250_init_mctrl()`, and the `UART_BUG_TXEN` test in
+  `serial8250_iir_txen_test()`. *Checked 2026-11-14.*
+- [Arm, "PrimeCell UART (PL011) Technical Reference Manual" (DDI 0183G)](https://documentation-service.arm.com/static/5e8e36c2fd977155116a90b5),
+  chapter 3 "Programmers Model": registers; section 3.3.7 for the
+  UARTLCR_H write that latches the divisor. *Checked 2026-11-14.*
+- [Arm, "Server Base System Architecture 6.0" (DEN0029D)](https://documentation-service.arm.com/static/5fae534cca04df4095c1c993),
+  appendix B "Generic UART": the register subset. *Checked 2026-11-14.*
+- [Microsoft, "Serial Port Console Redirection Table (SPCR)"](https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/serial-port-console-redirection-table)
+  and ["Debug Port Table 2 (DBG2)"](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/acpi-debug-port-table),
+  which lists the interface types. *Checked 2026-11-14.*
 
 ## My notes
 

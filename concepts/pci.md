@@ -7,7 +7,7 @@
 | At a glance | |
 |---|---|
 | Kind | Device bus, with self-describing devices |
-| Introduced | PCI in the 1990s (unchecked); PCI Express in 2003 |
+| Introduced | PCI in 1992; PCI Express in 2003 |
 | Reached through | Configuration space: [I/O ports](io-ports.md) `0xcf8` and `0xcfc` (x86 only) or ECAM in memory; device registers through BARs |
 | Found through | ECAM window in the [ACPI](acpi-tables.md) MCFG table |
 | Interrupt | INTA to INTD wires, or [MSI and MSI-X](msi-msix.md) |
@@ -17,7 +17,7 @@
 
 ## What it is
 
-PCI replaced [ISA](isa.md) in the 1990s (unchecked: the year) and fixed
+PCI (first specified in 1992) replaced [ISA](isa.md) in the 1990s and fixed
 its main weakness: ISA devices sat at fixed addresses that software had
 to know in advance. A PCI device **describes itself**. Software can walk
 every possible address, ask "is anything here, and what?", and then tell
@@ -47,7 +47,7 @@ The **function** is the unit software deals with: one function, one
 configuration space, one driver. Most devices have only function 0. A
 **bridge** is itself a function that leads to another bus; its
 configuration space says which bus numbers lie behind it, and firmware
-numbers the buses as it walks the tree. On PCIe every link is a bus (unchecked), so a
+numbers the buses as it walks the tree. On PCIe every link is a bus, so a
 machine with a PCIe hierarchy has many bridges and bus numbers.
 
 Packed as `bus << 8 | device << 3 | function`, the address is the
@@ -70,15 +70,14 @@ PCIe. The first 64 bytes are a standard header:
 | `0x34` | Capabilities pointer | Start of a linked list of optional features |
 | `0x3c`, `0x3d` | Interrupt line and pin | Legacy INTx: which of INTA to INTD, and what firmware routed it to |
 
-A bridge's header (type 1) has only two BARs (unchecked) and puts the primary,
+A bridge's header (type 1) has only two BARs and puts the primary,
 secondary and subordinate bus numbers at `0x18`–`0x1a`.
 
 The **capabilities list** is how optional features are found: each
 entry has an ID and a pointer to the next. The ones seL4 work meets are
 MSI (ID `0x05`), PCI Express (`0x10`) and MSI-X (`0x11`); see
 [MSI and MSI-X](msi-msix.md). PCIe's extra space from offset `0x100`
-holds a second list, of **extended capabilities** such as SR-IOV
-(unchecked: the offset).
+holds a second list, of **extended capabilities** such as SR-IOV.
 
 ### Reaching configuration space
 
@@ -95,7 +94,7 @@ access mechanism.
   `base + (bus << 20 | device << 15 | function << 12) + offset`. 256 buses
   need 256 MiB. Firmware says where the window is: on ACPI machines in the
   MCFG table (see [ACPI tables](acpi-tables.md)), on device-tree machines
-  in the host bridge's node (unchecked). Arm has no I/O ports, so on Arm
+  in the host bridge's node (its `reg` property). Arm has no I/O ports, so on Arm
   ECAM is the only way.
 
 ![The bus, device and function numbers, of 8, 5 and 3 bits, packed three ways: as the 16-bit requester ID, in the address written to port 0xcf8, and in the ECAM offset.](../images/pci-address-layouts.svg)
@@ -118,8 +117,7 @@ The size is not stored anywhere. Software writes all ones to the BAR and
 reads it back: the device leaves the low address bits zero, and the
 lowest set bit gives the size. Then it writes the address it wants and
 restores the decode bits in the command register, which are best
-cleared while sizing so the device does not decode the all-ones address
-(unchecked).
+cleared while sizing so the device does not decode the all-ones address.
 
 **Firmware assigns the BARs** at boot, from a window of addresses it
 reserves for PCI, and sets the command register's decode bits. An OS can
@@ -131,7 +129,7 @@ BARs at run time: they are a property of this boot, not of the device.
 Classic PCI gives each function one of four shared, level-triggered wires,
 INTA to INTD, routed by the board (and by firmware tables) to interrupt
 controller pins; see [IRQ](irq.md). PCIe has no wires and carries INTx as
-messages, for the old software's sake (unchecked). Modern devices use
+`Assert_INTx` and `Deassert_INTx` messages. Modern devices use
 [MSI and MSI-X](msi-msix.md) instead: the interrupt is a memory write.
 
 ### DMA
@@ -182,8 +180,9 @@ and BAR 1 itself and sets memory decode and bus master
 Upstream sDDF fixes each device's bus:device.function and BAR addresses
 at build time.
 
-**util_libs** has `libpci`, a user-level PCI library used by the older
-CAmkES-era drivers (unchecked: what uses it).
+**util_libs** has [`libpci`](https://github.com/seL4/util_libs/tree/master/libpci),
+a user-level PCI library; the virtual machine monitor library
+`libsel4vmmplatsupport` in seL4_projects_libs links against it.
 
 ## Gotchas
 
@@ -248,18 +247,38 @@ CAmkES-era drivers (unchecked: what uses it).
   working code for both mechanisms, the ECAM layout
   `bus << 20 | dev << 15 | func << 12`, and the specification sections it
   follows. *Checked 2026-11-14.*
-- seL4 source, upstream `master` of 2026-11-09: `interrupt.c`, `pci.h`,
+- [seL4 source](https://github.com/seL4/seL4), upstream `master` of 2026-11-09: `interrupt.c`, `pci.h`,
   `iospace.c`, `object-api-arch.xml` as linked above; no `0xcf8` access
   anywhere in `src/` or `include/`. *Checked 2026-11-14.*
-- Microkit manual, sections "I/O Ports" and the `irq` element's MSI
+- [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md), sections "I/O Ports" and the `irq` element's MSI
   attributes, upstream `main` of 2026-11-02. *Checked 2026-11-14.*
-- PCI Local Bus Specification 3.0, section 3.2.2.3.2 (configuration
-  mechanism #1) and chapter 6 (configuration space); PCI Express Base
-  Specification, section 7.2.2 (ECAM). *Unchecked (PCI-SIG documents need a
-  membership; sections as cited in sDDF's NVMe driver).*
+- [PCI Local Bus Specification 3.0](https://lekensteyn.nl/files/docs/PCI_SPEV_V3_0.pdf)
+  (the copy sDDF's NVMe driver cites; PCI-SIG's own needs a membership):
+  revision history (1.0 issued 22 June 1992), section 3.2.2.3.2
+  (configuration mechanism #1), chapter 6 (configuration space) and the
+  implementation note in section 6.2.5.1 (disable decode before sizing a
+  BAR). *Checked 2026-11-14.*
+- [PCI Express Base Specification](https://pcisig.com/specifications),
+  section 7.2.2 (ECAM). *Unchecked (PCI-SIG documents need a membership
+  and the site refuses scripted fetches; section as cited in sDDF's NVMe
+  driver).*
+- [Wikipedia, "Peripheral Component Interconnect"](https://en.wikipedia.org/wiki/Peripheral_Component_Interconnect):
+  created 1992; each PCI Express slot appears as a separate bus behind a
+  PCI-to-PCI bridge. *Checked 2026-11-14.*
+- [Linux `drivers/pci/probe.c`](https://github.com/torvalds/linux/blob/master/drivers/pci/probe.c)
+  (`__pci_read_base()` callers clear the command register's decode bits
+  while sizing) and [`drivers/pci/pci.h`](https://github.com/torvalds/linux/blob/master/drivers/pci/pci.h)
+  (the INTx message codes, `PCIE_MSG_CODE_ASSERT_INTA` to
+  `PCIE_MSG_CODE_DEASSERT_INTD`). *Checked 2026-11-14.*
+- [Linux device tree binding `pci/host-generic-pci.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/pci/host-generic-pci.yaml):
+  the host bridge node's `reg` gives the ECAM base
+  (`pci-host-ecam-generic`). *Checked 2026-11-14.*
+- [seL4_projects_libs `libsel4vmmplatsupport/CMakeLists.txt`](https://github.com/seL4/seL4_projects_libs/blob/master/libsel4vmmplatsupport/CMakeLists.txt):
+  links `pci`. *Checked 2026-11-14.*
 - [OSDev wiki, "PCI"](https://wiki.osdev.org/PCI): a walkthrough of
-  enumeration and BARs, and sDDF's source for `conf_space.h`. *Unchecked
-  (the site refuses scripted fetches).*
+  enumeration and BARs, and sDDF's source for `conf_space.h`.
+  *Checked 2026-11-14 (through the Internet Archive's copy; the site
+  itself refuses scripted fetches).*
 
 ## My notes
 

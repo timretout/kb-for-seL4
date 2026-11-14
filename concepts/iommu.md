@@ -10,7 +10,7 @@ Read first: [Virtual memory](virtual-memory.md), [PCI and PCI Express](pci.md).
 |---|---|
 | Kind | Hardware that translates and restricts device DMA addresses |
 | Architecture | x86 (Intel VT-d), Arm (SMMU) |
-| Found through | [ACPI](acpi-tables.md) DMAR (VT-d), IVRS (AMD-Vi), IORT (SMMU); the device tree's `iommus` property (unchecked) |
+| Found through | [ACPI](acpi-tables.md) DMAR (VT-d), IVRS (AMD-Vi), IORT (SMMU); the device tree's `iommus` property |
 | Interrupt | A fault interrupt for blocked accesses |
 | seL4 code | [`intel-vtd.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/intel-vtd.c), [`iospace.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/iospace.c), [`smmuv2.c`](https://github.com/seL4/seL4/blob/master/src/drivers/smmu/smmuv2.c) |
 | seL4 config | `KernelIOMMU` (default on for `pc99`); `KernelArmSMMU` (Tegra X2 only) |
@@ -71,9 +71,6 @@ addresses.
 *With an IOMMU in the path, what the device can reach is decided by
 page tables the OS controls, whatever address the driver programs.*
 
-The descriptions of the hardware below are from memory of the
-specifications, none of which could be opened today (unchecked).
-
 ### Intel VT-d
 
 VT-d ("Virtualization Technology for Directed I/O") is found through the
@@ -94,7 +91,7 @@ device (5), function (3). Translation walks:
 root table (register RTADDR)        256 entries, indexed by bus
   -> context table                  256 entries, indexed by device:function
        context entry: domain ID, address width, pointer to
-  -> second-level page tables       3 or 4 levels of 512 entries,
+  -> second-level page tables       3, 4 or 5 levels of 512 entries,
        -> 4 KiB page                same shape as x86-64 paging
 ```
 
@@ -102,7 +99,8 @@ The **domain ID** in the context entry tags IOTLB (translation cache)
 entries, as a [PCID or ASID](x86-paging.md) does for the CPU: devices
 sharing page tables share a domain ID. After changing tables software
 must invalidate the context cache and the IOTLB through registers.
-"Second-level" distinguishes these tables from the first-level ones
+"Second-level" ("second-stage" since revision 3.3 of the
+specification) distinguishes these tables from the first-level ones
 used when a device shares a process's address space (scalable mode),
 which seL4 does not use.
 
@@ -130,7 +128,7 @@ system the **IORT** table describes SMMUs and how requester IDs map to
 stream IDs and to [ITS](gicv3-its.md) device IDs; on others the device
 tree's `iommus` property does.
 
-The **RISC-V IOMMU** specification (ratified 2023) follows the SMMUv3
+The **RISC-V IOMMU** specification (version 1.0 released in 2023) follows the SMMUv3
 pattern: a device directory table indexed by device ID, pointing at
 first- and second-stage tables.
 
@@ -186,8 +184,11 @@ then sets `num_drhu` to 0).
 - A frame cap can be mapped either in a [VSpace](../sel4/vspace.md) or
   in an IOSpace, not both: a driver copies the cap and maps one copy
   each way.
-- No interrupt remapping (unchecked: no remapping-table code found in
-  `intel-vtd.c` by a quick search).
+- No interrupt remapping: `intel-vtd.c` has no remapping-table code, and
+  the MSI path in
+  [`interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/interrupt.c)
+  says "until we support msi interrupt remapping through vt-d we ignore
+  the vector and trust the user".
 
 ### Arm: SMMUv2
 
@@ -301,17 +302,48 @@ trusted, or are driven by components the system trusts completely. See
   the SID, CB and IOPageTable invocations. *Checked 2026-11-14.*
 - [seL4 `libsel4/include/sel4/bootinfo_types.h`](https://github.com/seL4/seL4/blob/master/libsel4/include/sel4/bootinfo_types.h):
   `seL4_CapIOSpace`. *Checked 2026-11-14.*
-- Intel, "Virtualization Technology for Directed I/O Architecture
-  Specification", chapters 3 (DMA remapping), 5 (interrupt remapping)
-  and 8 (DMAR table). *Unchecked (intel.com refuses scripted fetches).*
+- [Intel, "Virtualization Technology for Directed I/O Architecture
+  Specification", revision 4.0](https://cdrdv2-public.intel.com/671081/vt-directed-io-spec.pdf),
+  chapters 3 (DMA remapping: source-id, root and context tables, domain
+  IDs, legacy and scalable mode), 5 (interrupt remapping), 8 (the DMAR
+  table: DRHD in 8.3, RMRR in 8.4) and section 9.3 (context entry
+  address widths: 3, 4 or 5 levels). *Checked 2026-11-14.*
+- [seL4 `src/arch/x86/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/interrupt.c):
+  the comment on MSI interrupt remapping in the `GetMSI` path.
+  *Checked 2026-11-14.*
 - Arm, "System Memory Management Unit Architecture Specification"
-  versions 2 (IHI 0062) and 3 (IHI 0070). *Unchecked
-  (developer.arm.com).*
+  versions 2 ([IHI 0062](https://developer.arm.com/documentation/ihi0062/latest/))
+  and 3 ([IHI 0070](https://developer.arm.com/documentation/ihi0070/latest/)).
+  *Unchecked (developer.arm.com refuses scripted fetches; the Linux
+  sources below were read instead).*
+- Linux [`drivers/iommu/arm/arm-smmu/arm-smmu.h`](https://github.com/torvalds/linux/blob/master/drivers/iommu/arm/arm-smmu/arm-smmu.h)
+  (SMMUv2: stream match registers, context banks and their types) and
+  [`drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h`](https://github.com/torvalds/linux/blob/master/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h)
+  (SMMUv3: stream table and STE, context descriptors, command and event
+  queues, stage 1, stage 2 and nested configurations), with the bindings
+  [`arm,smmu.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/iommu/arm,smmu.yaml)
+  and [`arm,smmu-v3.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml).
+  *Checked 2026-11-14.*
+- Linux [`Documentation/devicetree/bindings/iommu/iommu.txt`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/iommu/iommu.txt)
+  (the `iommus` property),
+  [`Documentation/arch/arm64/acpi_object_usage.rst`](https://github.com/torvalds/linux/blob/master/Documentation/arch/arm64/acpi_object_usage.rst)
+  and [`drivers/acpi/arm64/iort.c`](https://github.com/torvalds/linux/blob/master/drivers/acpi/arm64/iort.c)
+  (IORT: SMMUs, ITSs and the mapping of requester IDs to stream IDs).
+  *Checked 2026-11-14.*
+- Linux [`drivers/iommu/amd/amd_iommu_types.h`](https://github.com/torvalds/linux/blob/master/drivers/iommu/amd/amd_iommu_types.h)
+  and [`init.c`](https://github.com/torvalds/linux/blob/master/drivers/iommu/amd/init.c):
+  AMD-Vi's IVRS table and device table. *Checked 2026-11-14.*
 - [Microkit `docs/manual.md`](https://github.com/seL4/microkit/blob/main/docs/manual.md),
   "IO Address Spaces" and the `io_address_space` element.
   *Checked 2026-11-14.*
-- [RISC-V IOMMU Architecture Specification](https://github.com/riscv-non-isa/riscv-iommu).
-  *Unchecked (not opened).*
+- [QEMU `docs/bypass-iommu.txt`](https://github.com/qemu/qemu/blob/master/docs/bypass-iommu.txt),
+  [`docs/system/arm/virt.rst`](https://github.com/qemu/qemu/blob/master/docs/system/arm/virt.rst)
+  and [`hw/virtio/virtio-iommu-pci.c`](https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-iommu-pci.c):
+  `-device intel-iommu`, `-machine virt,iommu=smmuv3` and virtio-iommu.
+  *Checked 2026-11-14.*
+- [RISC-V IOMMU Architecture Specification](https://github.com/riscv-non-isa/riscv-iommu)
+  (`src/iommu_data_structures.adoc`: the device directory table and the
+  two stages; release 1.0.0 is dated July 2023). *Checked 2026-11-14.*
 
 ## My notes
 

@@ -211,8 +211,9 @@ build runs `objcopy -O elf32-i386` on `kernel.elf`
 ([`rootserver.cmake`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/helpers/rootserver.cmake)
 in `seL4_tools`): the same bytes with 32-bit headers, in which the high
 virtual addresses are truncated but the load addresses, which are what
-the loader uses, are intact (unchecked: the truncation is from memory,
-not from inspecting a converted file today). Disassemble the 64-bit `kernel.elf`, boot
+the loader uses, are intact (a test file linked at
+`0xffffffff80100000` with a load address of `0x100000` converts to
+`VirtAddr` `0x80100000`, `PhysAddr` `0x00100000`). Disassemble the 64-bit `kernel.elf`, boot
 the converted one.
 
 ### Who loads what
@@ -241,7 +242,8 @@ overwrites the bytes of that variable in the segment data. That is how
 `setvar` values in a system description, such as the virtual address a
 region was mapped at, reach a program that was compiled before the
 system was laid out. Consequently Microkit programs **must not be
-stripped** (unchecked: inferred from the symbol lookup). See [Microkit internals](../sel4/microkit-internals.md).
+stripped**: the reader rejects an ELF with no `.symtab` ("unable to
+find symbol table section"). See [Microkit internals](../sel4/microkit-internals.md).
 
 ## Gotchas
 
@@ -293,11 +295,13 @@ stripped** (unchecked: inferred from the symbol lookup). See [Microkit internals
 - glibc `/usr/include/elf.h` ([source](https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h)):
   header structures, `PT_*`, `PF_*`, `ET_*`, `EM_*`, `SHT_NOBITS`.
   *Checked 2026-11-14 (the installed copy).*
-- [System V Application Binary Interface, chapter 4 "Object Files" and chapter 5 "Program Loading"](https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html):
-  the specification of the format. *Unchecked (not opened today).*
+- [System V Application Binary Interface, chapter 4 "Object Files" and chapter 5 "Program Loading and Dynamic Linking"](https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html):
+  the specification of the format. *Checked 2026-11-14 (the contents
+  page and the "Program Header" page of chapter 5).*
 - [GNU ld manual, "Linker Scripts"](https://sourceware.org/binutils/docs/ld/Scripts.html):
-  `SECTIONS`, `AT`, `PHDRS`, `KEEP`, `PROVIDE`. *Unchecked (not opened
-  today; the script semantics above are from memory).*
+  `ENTRY`, the location counter, `AT` (the load address), `:phdr` and
+  `PHDRS`, `KEEP`, `NOLOAD`, `PROVIDE`. *Checked 2026-11-14 (the
+  single-page manual, [`ld.html`](https://sourceware.org/binutils/docs/ld.html)).*
 - [seL4 `src/plat/pc99/linker.lds`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/linker.lds)
   and [`src/arch/arm/common_arm.lds`](https://github.com/seL4/seL4/blob/master/src/arch/arm/common_arm.lds):
   the kernel's layout. *Checked 2026-11-14.*
@@ -308,7 +312,8 @@ stripped** (unchecked: inferred from the symbol lookup). See [Microkit internals
 - [seL4_tools `cmake-tool/helpers/rootserver.cmake`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/helpers/rootserver.cmake):
   the `objcopy -O elf32-i386` step. *Checked 2026-11-14.*
 - [Microkit `tool/microkit/src/elf.rs`](https://github.com/seL4/microkit/blob/main/tool/microkit/src/elf.rs):
-  `find_symbol()`, `write_symbol()`. *Checked 2026-11-14.*
+  `find_symbol()`, `write_symbol()`, and the error when the symbol
+  table section is missing. *Checked 2026-11-14.*
 
 ## My notes
 

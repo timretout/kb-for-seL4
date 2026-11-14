@@ -32,18 +32,18 @@ discovery, and every PC since has kept them there:
 | ISA IRQ | Device | I/O ports |
 |---|---|---|
 | 0 | [PIT](pit.md), the system timer | `0x40`–`0x43` |
-| 1 | Keyboard controller | `0x60`, `0x64` (unchecked) |
+| 1 | Keyboard controller | `0x60`, `0x64` |
 | 2 | Cascade from the second 8259 PIC | — |
-| 3 | COM2 (and COM4) | `0x2f8` (unchecked) |
+| 3 | COM2 (and COM4) | `0x2f8` |
 | 4 | COM1 (and COM3) | `0x3f8` |
-| 8 | Real-time clock | `0x70`, `0x71` (unchecked) |
+| 8 | Real-time clock | `0x70`, `0x71` |
 | 12 | PS/2 mouse | — |
 | 14, 15 | Primary and secondary ATA disk channels | — |
 
 The **ISA IRQ numbers** come from the two 8259 PICs: the first takes
 IRQs 0 to 7 and signals the CPU; the second takes 8 to 15 and signals
 the first on its IRQ 2, which leaves 15 usable lines. ISA interrupts are
-edge-triggered and active high (unchecked); see [IRQ](irq.md).
+edge-triggered and active high; see [IRQ](irq.md).
 
 On a modern machine:
 
@@ -58,8 +58,9 @@ On a modern machine:
   another GSI, polarity or trigger mode.
 
 The usual override is ISA IRQ 0 to GSI 2: the 8259's output takes I/O
-APIC pin 0, so the PIT is moved to pin 2 (unchecked: the reason; QEMU's
-code states the mapping).
+APIC pin 0, so the PIT is moved to pin 2. That wiring comes from Intel's
+MultiProcessor Specification, whose default configurations put the
+8259's INTR output on pin 0 and the timer's IRQ 0 on pin 2.
 
 ## In seL4
 
@@ -76,7 +77,7 @@ code states the mapping).
   ([`interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/object/interrupt.c)),
   so it has to know which pin the ISA IRQ is on.
 - **I/O ports.** ISA devices are reached through x86 I/O ports, which
-  seL4 controls with I/O port capabilities (unchecked: the details), and
+  seL4 controls with [I/O port](io-ports.md) capabilities, and
   Microkit with the `ioport` element.
 - The kernel's own uses of ISA devices: the [PIT](pit.md) for
   [timer calibration](timer-calibration.md) at boot, and COM1 for its
@@ -144,7 +145,22 @@ code states the mapping).
   `acpi_build_madt()`'s overrides (IRQ 0 to GSI 2; level-triggered PCI
   IRQs) and `ioapic_set_irq()` routing IRQ 0 to pin 2.
   *Checked 2026-11-14.*
-- ACPI Specification, section 5.2.12 "Multiple APIC Description Table",
+- [Linux `arch/x86/kernel/setup.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/setup.c)
+  (`standard_io_resources`),
+  [`arch/x86/include/asm/serial.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/serial.h)
+  and
+  [`arch/x86/include/asm/mc146818rtc.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/mc146818rtc.h):
+  the keyboard, COM and real-time clock ports. *Checked 2026-11-14.*
+- [Linux `arch/x86/kernel/apic/io_apic.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/apic/io_apic.c),
+  `irq_active_low()` and `irq_is_level()`: ISA interrupts default to edge
+  and active high, PCI to level and active low. *Checked 2026-11-14.*
+- [Intel MultiProcessor Specification 1.4](https://pdos.csail.mit.edu/6.828/2018/readings/ia32/MPspec.pdf)
+  (a copy kept for MIT's 6.828 course), section 5.3 and table 5-2: the
+  8259's INTR on I/O APIC pin 0 and IRQ 0 on pin 2. *Checked 2026-11-14.*
+- [Microkit `docs/manual.md`](https://github.com/seL4/microkit/blob/main/docs/manual.md),
+  section "I/O Ports": the `ioport` element. *Checked 2026-11-14.*
+- [ACPI Specification 6.5](https://uefi.org/specs/ACPI/6.5/05_ACPI_Software_Programming_Model.html),
+  section 5.2.12 "Multiple APIC Description Table",
   interrupt source overrides and the ISA defaults. *Unchecked (uefi.org
   refuses scripted fetches; section number from memory).*
 - [OSDev wiki, "8259 PIC"](https://wiki.osdev.org/8259_PIC) and

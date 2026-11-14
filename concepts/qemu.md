@@ -10,7 +10,7 @@ Read first: [x86 boot](x86-boot.md), [Arm boot](arm-boot.md), [Device trees](dev
 |---|---|
 | Kind | Full-system emulator |
 | Architectures | x86, Arm and RISC-V guests, one program each (`qemu-system-x86_64`, `qemu-system-aarch64`, `qemu-system-riscv64`) |
-| Accelerators | TCG (translation, the default) or KVM (unchecked) |
+| Accelerators | TCG (translation, the default) or KVM |
 | seL4 platforms | `pc99`, `qemu-arm-virt`, `qemu-riscv-virt`, `spike`; Microkit boards `qemu_virt_aarch64`, `qemu_virt_riscv64`, `x86_64_generic` |
 | seL4 code | [`simulate.py`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/simulate_scripts/simulate.py), [`simulation.cmake`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/helpers/simulation.cmake), [`qemu-arm-virt/config.cmake`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/config.cmake) |
 | seL4 config | `ARM_CPU`, `QEMU_MEMORY` (MiB, default 1024), `QEMU_GIC_VERSION` |
@@ -27,17 +27,13 @@ executes guest code in one of two ways:
 
 | Accelerator | How | Use |
 |---|---|---|
-| **TCG** (tiny code generator), the default | Translates guest instructions to host instructions, block by block. Any guest on any host. Slow (tens of times), and time is elastic | Cross-architecture work; exact control of CPU features |
+| **TCG** (tiny code generator), the default | Translates guest instructions to host instructions, block by block. Any guest on any host. Slow, and time is elastic | Cross-architecture work; exact control of CPU features |
 | **KVM** (`-accel kvm` or `-enable-kvm`) | The Linux host's hardware virtualisation runs guest code directly; QEMU only emulates devices. Guest and host architecture must match | Speed; real CPU behaviour. The same split clouds use, with their own device models in QEMU's place |
 
 ![Under TCG, QEMU translates guest instructions to host instructions and models the devices, for any guest on any host; under KVM the host runs guest code directly and QEMU only emulates devices, so the architectures must match.](../images/qemu-accelerators.svg)
 
 *Where guest code runs under each accelerator. Under KVM, QEMU is left
 with the devices alone.*
-
-The description of QEMU's own options in this section is from memory
-and the commands seL4's tools issue; QEMU's documentation was not opened
-today (unchecked).
 
 ### Machines
 
@@ -58,11 +54,11 @@ Machine properties follow the name after commas. For Arm `virt`:
 
 | Property | Effect |
 |---|---|
-| `virtualization=on` | Emulate EL2, so the guest starts in EL2 and a hypervisor-mode seL4 can run ([Arm virtualisation](arm-virtualisation.md)). TCG only |
+| `virtualization=on` | Emulate EL2, so the guest starts in EL2 and a hypervisor-mode seL4 can run ([Arm virtualisation](arm-virtualisation.md)). Under KVM it needs a host kernel that supports nested virtualisation |
 | `secure=on/off` | Emulate EL3 and the secure world |
 | `gic-version=2`, `3`, `max` | Which GIC; version 2 limits the machine to 8 cores |
 | `highmem=off` | Keep RAM and devices below 4 GiB (no high PCIe window or high redistributor region) |
-| `its=on/off` | With GICv3, provide an [ITS](gicv3-its.md) |
+| `its=on/off` | With GICv3, provide an [ITS](gicv3-its.md); deprecated in current QEMU in favour of `msi=` |
 | `dumpdtb=file` | Write the generated device tree to `file` and exit without running |
 
 ### CPU, memory, cores
@@ -204,9 +200,6 @@ manual's `2G`; on x86 it can be chosen at run time with `-m`.
 
 ## Gotchas
 
-Statements here about QEMU's own behaviour are from experience and
-memory, not from QEMU's documentation (unchecked).
-
 - **TCG time is not real time.** Guest instructions take varying host
   time and virtual clocks can run ahead or behind, so anything that
   measures one clock against another ([Timer calibration](timer-calibration.md))
@@ -223,8 +216,9 @@ memory, not from QEMU's documentation (unchecked).
   whatever the build machine has; a named model fails or is trimmed if
   the host lacks a feature. Results differ between developers' machines
   and CI. Nested virtualisation (seL4 with VT-x under KVM) needs it
-  enabled in the host's KVM module. Arm's `virtualization=on` is not
-  available with KVM.
+  enabled in the host's KVM module. Arm's `virtualization=on` works
+  with KVM only if the host kernel supports nested virtualisation;
+  otherwise QEMU refuses to start.
 - **The default x86 CPU is too old for seL4's defaults.** `qemu64`
   lacks features a default x86-64 seL4 build requires (which is why
   both the `simulate` script and Microkit's command add flags); a
@@ -241,16 +235,17 @@ memory, not from QEMU's documentation (unchecked).
   these and add devices QEMU has no model of (ENA, gVNIC). Code that
   works on `q35` has been tested against QEMU's idea of a PC. See
   [Cloud virtual machines](cloud-vms.md).
-- **Emulated devices are forgiving.** QEMU's UART never overruns, its
-  disks never time out, memory starts zeroed, and caches and TLBs are
-  mostly not modelled, so missing cache flushes, missing TLB
-  invalidations and uninitialised-memory bugs pass unnoticed.
+- **Emulated devices are forgiving.** Memory starts zeroed and TCG does
+  not model CPU caches, so missing cache flushes and
+  uninitialised-memory bugs pass unnoticed (unchecked).
 - **`virt` changes between QEMU versions.** Addresses of newer devices
   and details of the generated device tree move; a `qemu-arm-virt`
   kernel built against one QEMU's tree can misbehave on another. The
   kernel's `config.cmake` only insists on QEMU 3.1.0 or later.
-- **`-m` above about 3 GiB on x86 splits RAM** around the 32-bit PCI
-  hole, and on Arm `virt` with `highmem=off` RAM is capped near 3 GiB (unchecked).
+- **A large `-m` on x86 splits RAM** around the 32-bit PCI hole: from
+  3.5 GiB on `pc`, 3 GiB stays below 4 GiB and the rest starts at 4 GiB;
+  from 2.75 GiB on `q35`, 2 GiB stays below. On Arm `virt` with
+  `highmem=off` RAM, which starts at 1 GiB, is capped at 3 GiB.
 
 ## See also
 
@@ -285,11 +280,42 @@ memory, not from QEMU's documentation (unchecked).
   the board sections "QEMU virt (AArch64)", "QEMU virt (RISC-V 64-bit)"
   and "x86-64 generic": run commands. *Checked 2026-11-14.*
 - [QEMU documentation, "Invocation"](https://www.qemu.org/docs/master/system/invocation.html):
-  every option. *Unchecked (not opened today).*
+  the options, including `-accel` ("By default, tcg is used"), `-m`,
+  `-nographic`, `-serial`, `-s`, `-S`, `-d`, `-D`, `-no-reboot` and
+  `-device intel-iommu`. *Checked 2026-11-14.*
 - [QEMU documentation, "'virt' generic virtual platform"](https://www.qemu.org/docs/master/system/arm/virt.html):
-  machine properties and memory map. *Unchecked (not opened today).*
+  devices, CPU models and machine properties, including the deprecation
+  of `its`. *Checked 2026-11-14.*
 - [QEMU documentation, "GDB usage"](https://www.qemu.org/docs/master/system/gdb.html).
-  *Unchecked (not opened today).*
+  *Checked 2026-11-14.*
+- QEMU documentation,
+  ["'virt' Generic Virtual Platform" (RISC-V)](https://www.qemu.org/docs/master/system/riscv/virt.html),
+  ["microvm"](https://www.qemu.org/docs/master/system/i386/microvm.html),
+  ["Generic Loader"](https://www.qemu.org/docs/master/system/generic-loader.html),
+  ["Keys in the character backend multiplexer"](https://www.qemu.org/docs/master/system/mux-chardev.html)
+  and ["QEMU Monitor"](https://www.qemu.org/docs/master/system/monitor.html):
+  the RISC-V machine and its default OpenSBI, the loader's `addr` and
+  `cpu-num`, the `Ctrl-a` keys and the `info` commands.
+  *Checked 2026-11-14.*
+- [Linux KVM documentation, "Running nested guests with KVM"](https://docs.kernel.org/virt/kvm/x86/running-nested-guests.html):
+  the `nested` parameter of the host's `kvm_intel` module.
+  *Checked 2026-11-14.*
+- QEMU source:
+  [`hw/arm/virt.c`](https://github.com/qemu/qemu/blob/master/hw/arm/virt.c)
+  (memory map; `virtualization` under KVM; the 32-bit limit with
+  `highmem=off`),
+  [`hw/riscv/virt.c`](https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c)
+  (memory map),
+  [`hw/arm/boot.c`](https://github.com/qemu/qemu/blob/master/hw/arm/boot.c)
+  (ELF against Linux image; the exception level entered),
+  [`hw/i386/pc_piix.c`](https://github.com/qemu/qemu/blob/master/hw/i386/pc_piix.c)
+  and [`hw/i386/pc_q35.c`](https://github.com/qemu/qemu/blob/master/hw/i386/pc_q35.c)
+  (machine descriptions with their years; the RAM split),
+  [`hw/core/machine.c`](https://github.com/qemu/qemu/blob/master/hw/core/machine.c)
+  (`dumpdtb`), [`util/log.c`](https://github.com/qemu/qemu/blob/master/util/log.c)
+  (the `-d` items) and
+  [`target/i386/cpu.c`](https://github.com/qemu/qemu/blob/master/target/i386/cpu.c)
+  (`enforce`; VMX missing from TCG's features). *Checked 2026-11-14.*
 
 ## My notes
 

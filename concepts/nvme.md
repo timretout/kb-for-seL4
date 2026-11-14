@@ -121,7 +121,7 @@ registers touched per command are the two doorbells.*
 | `0x02` | Get Log Page | error and health logs |
 
 (Opcodes `0x01`, `0x02`, `0x05`, `0x06` checked against sDDF's driver;
-`0x09` and feature `0x07` unchecked, from memory of the specification.)
+`0x09` and feature `0x07` against the specification, section 5.1.25.)
 
 | I/O opcode | Command | Key fields |
 |---|---|---|
@@ -132,10 +132,10 @@ registers touched per command are the two doorbells.*
 Many NVMe counts are "zero-based": the field holds n-1. It is the most
 common source of off-by-one bugs.
 
-**Identify** data a driver needs (byte offsets unchecked, from memory of
-the specification): in the controller structure, the serial number
+**Identify** data a driver needs: in the controller structure, the serial number
 (bytes 4 to 23), model number (24 to 63), `MDTS` (byte 77: maximum
-transfer size as a power of two of pages; 0 = no limit), the required
+transfer size as a power of two of the minimum page size, `CAP.MPSMIN`;
+0 = no limit), the required
 and maximum entry sizes `SQES` and `CQES`, and the number of
 namespaces. In the namespace structure, `NSZE` (bytes 0 to 7: size in
 logical blocks) and `FLBAS`, whose low bits select one entry of the
@@ -174,8 +174,7 @@ unique among outstanding commands on a queue.
 Every disk of a Nitro instance is its own NVMe controller with one
 namespace: there is one PCI function per EBS volume (`1d0f:8061`,
 observed on t3, c5, c7i, 2026) and one per instance store disk, which
-is a different device (unchecked: `1d0f:cd00`, model "Amazon EC2 NVMe
-Instance Storage"). See [EC2](ec2.md).
+is a different device (model "Amazon EC2 NVMe Instance Storage"). See [EC2](ec2.md).
 
 - Linux names them `nvme0n1`, `nvme1n1`, ... in the order they answer,
   which is not the order of the block device mapping and can change
@@ -201,8 +200,8 @@ and third-generation series such as M3 present Persistent Disk and
 Hyperdisk as NVMe, and all other series as SCSI, which there means
 virtio-scsi. Booted instances agreed: NVMe on C4, C4A, N4A and T2A,
 virtio-scsi on N1, N2, N2D and E2 (observed 2026).
-Confidential VMs use NVMe. Local SSDs can be attached as NVMe or SCSI on
-older series (unchecked). See [Compute Engine](gce.md). A port to both
+Confidential VMs use NVMe. Local SSDs can be attached as NVMe or
+SCSI. See [Compute Engine](gce.md). A port to both
 generations therefore needs both an NVMe and a virtio-scsi (or
 virtio-blk, where offered) driver.
 
@@ -255,16 +254,17 @@ number, and MSI-X. On x86 the vector comes from
 - **`CAP.TO` can be long.** Cloud controllers may take seconds to
   become ready; honour the timeout instead of a fixed loop count.
 - **A 4 KiB transfer unit on a 512-byte namespace.** EBS volumes
-  report 512-byte logical blocks (unchecked), so sDDF's 4096-byte unit
+  present 512-byte sectors, so sDDF's 4096-byte unit
   is 8 LBAs; the driver must convert, using `LBADS`.
 - **`MDTS` limits one command.** A request larger than
-  2^`MDTS` pages must be split.
+  2^`MDTS` pages (of the `CAP.MPSMIN` size) must be split.
 - **Device order is not stable on EC2**; identify volumes by serial
   number.
 - **EBS latency is not failure**: see the timeout above.
-- **Detach is hot-unplug.** Detaching an EBS volume removes a PCI
-  function from a running instance (unchecked); a static system simply
-  must not have its volumes detached.
+- **Attach and detach are hot-plug.** AWS describes attaching an EBS
+  volume as a hot-plug event that presents a new NVMe device to the
+  running instance; a static system simply must not have its volumes
+  attached or detached while it runs.
 
 ## See also
 
@@ -277,11 +277,15 @@ number, and MSI-X. On x86 the vector comes from
 
 ## References
 
-- [NVM Express Base Specification](https://nvmexpress.org/specifications/),
-  sections 3.1 (controller properties), 3.3 (queues), 4.1 and 4.2
-  (command and completion formats), 4.3 (PRP), 5 (admin commands):
-  the definition. *Unchecked: PDF not opened today; section numbers
-  from revision 2.1 as cited in sDDF's driver.*
+- [NVM Express Base Specification, revision 2.1](https://nvmexpress.org/wp-content/uploads/NVM-Express-Base-Specification-Revision-2.1-2024.08.05-Ratified.pdf),
+  sections 3.1 (controller architecture; 3.1.4 controller properties),
+  3.3 (queue models), 4.1 and 4.2 (submission and completion queue
+  entries), 4.3 (data pointer layouts: PRPs and SGLs), 5 (admin command
+  set; 5.1.13 Identify with the controller data structure's byte
+  offsets, 5.1.25 Set Features): the definition. *Checked 2026-11-14.*
+- [NVM Command Set Specification, revision 1.1](https://nvmexpress.org/wp-content/uploads/NVM-Express-NVM-Command-Set-Specification-Revision-1.1-2024.08.05-Ratified.pdf):
+  the Identify Namespace data structure (`NSZE`, `FLBAS`, the LBA format
+  entries and `LBADS`). *Checked 2026-11-14.*
 - [sDDF `drivers/blk/nvme/nvme.h`](https://github.com/au-ts/sddf/blob/main/drivers/blk/nvme/nvme.h):
   register layout, `CAP`/`CC`/`AQA` fields, doorbell formula, opcodes,
   entry formats, each with a specification citation.
@@ -297,8 +301,19 @@ number, and MSI-X. On x86 the vector comes from
   the 30 s default and the recommended maximum. *Checked 2026-11-14.*
 - [Compute Engine documentation, "About Persistent Disk"](https://docs.cloud.google.com/compute/docs/disks/persistent-disks):
   which machine series use NVMe and which SCSI. *Checked 2026-11-14.*
+- [EBS User Guide, "Amazon EBS volume constraints"](https://docs.aws.amazon.com/ebs/latest/userguide/volume_constraints.html):
+  an attached volume appears as a disk with 512-byte sectors.
+  *Checked 2026-11-14.*
+- [amazon-ec2-utils `70-ec2-nvme-devices.rules`](https://github.com/amazonlinux/amazon-ec2-utils/blob/main/70-ec2-nvme-devices.rules):
+  the model strings "Amazon Elastic Block Store" and "Amazon EC2 NVMe
+  Instance Storage". *Checked 2026-11-14.*
+- [The Security Design of the AWS Nitro System, "Putting the pieces together: EBS volume attachment"](https://docs.aws.amazon.com/whitepapers/latest/security-design-of-aws-nitro-system/putting-the-pieces-together-ebs-volume-attachment.html):
+  attachment as a hot-plug event of an NVMe device. *Checked 2026-11-14.*
+- [Compute Engine documentation, "About Local SSD disks"](https://docs.cloud.google.com/compute/docs/disks/local-ssd):
+  Local SSD by the NVMe or SCSI interface. *Checked 2026-11-14.*
 - [OSDev wiki, "NVMe"](https://wiki.osdev.org/NVMe): a short driver
-  writer's summary. *Unchecked: the site refuses scripted fetches.*
+  writer's summary. *Checked 2026-11-14 (through the Internet Archive's
+  copy; the site itself refuses scripted fetches).*
 
 ## My notes
 

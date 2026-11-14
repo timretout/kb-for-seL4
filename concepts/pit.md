@@ -19,7 +19,7 @@
 
 The Intel 8253, and its superset the 8254, has three independent 16-bit
 counters fed by one clock. On a PC that clock is 1 193 182 Hz (a twelfth
-of the original PC's 14.318 18 MHz crystal (unchecked)), and that rate is
+of the original PC's 14.318 18 MHz crystal), and that rate is
 fixed by convention, which is the PIT's whole value today: it is the one
 x86 timer whose frequency software can assume.
 
@@ -70,10 +70,11 @@ The kernel uses the PIT only at boot, to measure how fast the
   [boot code](../sel4/boot-code.md)).
 
 At user level, util_libs' `libplatsupport` has a PIT driver for the pc99
-ltimer, used when there is no usable [HPET](hpet.md), and sDDF has a PIT
-timer driver. Both need the kernel to grant I/O port access through a
-capability for ports `0x40` to `0x43` (unchecked: the capability's name
-and call).
+ltimer, used when there is no usable [HPET](hpet.md). It needs the
+kernel to grant I/O port access through an IOPort capability for ports
+`0x40` to `0x43`, made with `seL4_X86_IOPortControl_Issue` (see
+[I/O ports](io-ports.md)). sDDF has no PIT driver: its x86 timer driver,
+`drivers/timer/tsc_hpet`, uses the TSC and the HPET.
 
 ## Gotchas
 
@@ -116,6 +117,17 @@ and call).
   diagram. *Checked 2026-11-14.*
 - [seL4 `pit.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/pit.c):
   the kernel's whole PIT driver, 40 lines. *Checked 2026-11-14.*
+- [Wikipedia, "Intel 8253"](https://en.wikipedia.org/wiki/Intel_8253),
+  section "IBM PC programming": 1.193 18 MHz as the
+  14.318 18 MHz system clock divided by 12. *Checked 2026-11-14.*
+- [util_libs `libplatsupport/src/plat/pc99/pit.c`](https://github.com/seL4/util_libs/blob/master/libplatsupport/src/plat/pc99/pit.c)
+  and [`ltimer.c`](https://github.com/seL4/util_libs/blob/master/libplatsupport/src/plat/pc99/ltimer.c):
+  the user-level PIT driver and the HPET-then-PIT choice.
+  *Checked 2026-11-14.*
+- [sDDF `drivers/timer/tsc_hpet/timer.c`](https://github.com/au-ts/sddf/blob/main/drivers/timer/tsc_hpet/timer.c):
+  sDDF's x86 timer driver. *Checked 2026-11-14.*
+- [seL4 `libsel4/arch_include/x86/interfaces/object-api-arch.xml`](https://github.com/seL4/seL4/blob/master/libsel4/arch_include/x86/interfaces/object-api-arch.xml):
+  `seL4_X86_IOPortControl_Issue`. *Checked 2026-11-14.*
 - [OSDev wiki, "Programmable Interval Timer"](https://wiki.osdev.org/Programmable_Interval_Timer):
   a practical guide with the command byte laid out. *Unchecked (the site
   refuses scripted fetches).*

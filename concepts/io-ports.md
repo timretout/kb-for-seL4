@@ -30,9 +30,6 @@ CPU to reach them:
   dates from the 8080 and survives because the PC's original devices
   live there.
 
-The architecture facts here are from the Intel manual, not opened
-today (unchecked); port numbers quoted from seL4 are checked.
-
 ### The instructions
 
 `in` reads 1, 2 or 4 bytes from a port into `al`, `ax` or `eax`; `out`
@@ -47,8 +44,9 @@ writes them. The port number is an 8-bit immediate or the value of
 
 There are string forms (`ins`, `outs`) for block transfers. Ports are
 not paged, not cached, and each access is a serialising, slow
-operation, on the order of a microsecond on real hardware and a VM
-exit under a hypervisor (unchecked).
+operation: the processor never buffers a port write and waits for it
+to complete before executing the next instruction, and under a
+hypervisor an access to an emulated port is a VM exit.
 
 ### Who may use them
 
@@ -139,11 +137,11 @@ uses them for:
   (`src/plat/pc99/machine/pit.c`, ports `0x40` and `0x43`);
 - masking the legacy PICs.
 
-The kernel does not reserve those ports in the bitmap for itself in
-any way I confirmed (unchecked), so the root task can issue a
+The kernel does not reserve those ports in the bitmap for itself
+(`Issue` and `freeIOPortRange()` are its only writers), so the root task can issue a
 capability for `0x3f8` and share the UART with kernel debug output.
 [Microkit](../sel4/microkit.md) system descriptions declare I/O port
-ranges for a protection domain on x86 (unchecked).
+ranges for a protection domain on x86 with the `ioport` element.
 
 **Other architectures.** There is no IOPort object on Arm or RISC-V.
 All device access is MMIO: device memory is handed to the root task
@@ -205,13 +203,25 @@ devices work the same way.
 - [seL4 `src/arch/x86/kernel/cmdline.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/cmdline.c)
   and [`src/plat/pc99/machine/pit.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/pit.c):
   console and debug port selection; PIT ports. *Checked 2026-11-14.*
-- [Intel 64 and IA-32 Architectures Software Developer's Manual](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html),
-  volume 1 chapter 19 "Input/Output" (I/O address space, IOPL, the I/O
-  permission bitmap). *Unchecked (intel.com refuses scripted fetches;
-  chapter number from memory).*
-- [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
-  the x86 I/O port sections of the API reference. *Unchecked (not
-  opened today).*
+- [Intel 64 and IA-32 Architectures Software Developer's Manual, volume 1](https://cdrdv2.intel.com/v1/dl/getContent/671436),
+  chapter 20 "Input/Output": the I/O
+  address space, the instructions, IOPL, the I/O permission bitmap and,
+  in section 20.6, the ordering of port accesses. *Checked 2026-11-14.*
+- [Wikipedia, "Intel 8080"](https://en.wikipedia.org/wiki/Intel_8080),
+  section "Input/output scheme": the 8080's 256 ports and dedicated I/O
+  instructions. *Checked 2026-11-14.*
+- [Linux KVM API documentation](https://docs.kernel.org/virt/kvm/api.html),
+  `KVM_EXIT_IO`: a guest's port access exiting to the hypervisor.
+  *Checked 2026-11-14.*
+- [Linux `arch/x86/kernel/setup.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/setup.c),
+  `standard_io_resources`: the PIC, PIT and keyboard ports.
+  *Checked 2026-11-14.*
+- [Microkit `docs/manual.md`](https://github.com/seL4/microkit/blob/main/docs/manual.md),
+  section "I/O Ports": the `ioport` element. *Checked 2026-11-14.*
+- [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf)
+  (version 17.0.0), section 8.2.2 "I/O Ports" and the API reference
+  sections 10.4.9 `seL4_X86_IOPort` and 10.4.10
+  `seL4_X86_IOPortControl`. *Checked 2026-11-14.*
 - [OSDev wiki, "I/O Ports"](https://wiki.osdev.org/I/O_Ports): a list
   of the standard PC port assignments. *Unchecked (the site refuses
   scripted fetches).*

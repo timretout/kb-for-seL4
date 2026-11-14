@@ -83,11 +83,12 @@ designed around MSI-X, one vector per queue.
 - [Linux kernel documentation, "The MSI Driver Guide HOWTO"](https://docs.kernel.org/PCI/msi-howto.html):
   what MSI and MSI-X are and their limits (32 against 2048 vectors).
   *Checked 2026-11-14.*
-- PCI Local Bus Specification 3.0, section 6.8 "Message Signaled
-  Interrupts". *Unchecked (PCI-SIG documents need a membership; section
-  from memory).*
-- [OSDev wiki, "PCI"](https://wiki.osdev.org/PCI), the section on message
-  signalled interrupts. *Unchecked (the site refuses scripted fetches).*
+- [PCI Local Bus Specification 3.0](https://lekensteyn.nl/files/docs/PCI_SPEV_V3_0.pdf),
+  section 6.8 "Message Signaled Interrupts" (a public copy; PCI-SIG's
+  own needs a membership). *Checked 2026-11-14.*
+- [OSDev wiki, "PCI"](https://wiki.osdev.org/PCI), the section "Message
+  Signaled Interrupts". *Checked 2026-11-14 (through the Internet
+  Archive's copy; the site itself refuses scripted fetches).*
 
 ## My notes
 

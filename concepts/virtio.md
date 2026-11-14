@@ -155,8 +155,7 @@ was fixed registers in BAR 0, normally an [I/O port](io-ports.md) BAR:
 The three ring parts must then be contiguous in one allocation at an
 address below 16 TiB, laid out by a fixed formula; structures are in
 guest-native byte order; there is no FEATURES_OK step and no feature
-bit above 31 (unchecked: this sentence is from memory of the
-specification's legacy-interface notes). A **transitional** device offers both interfaces and
+bit above 31. A **transitional** device offers both interfaces and
 carries a device ID in `0x1000` to `0x103F` (`0x1000` net, `0x1001`
 block, `0x1002` balloon, `0x1003` console, `0x1004` SCSI, `0x1005`
 entropy); the PCI subsystem ID tells the type. A **legacy-only** device
@@ -190,15 +189,12 @@ GuestPageSize and QueueAlign) like legacy PCI; version 2 has separate
 | 4 | rng (entropy) | one queue; the device fills buffers with random bytes |
 | 8 | scsi host | control, event and request queues carrying SCSI commands |
 
-(The type IDs, the net header's size and the blk request layout are
-unchecked today: from memory of specification section 5.)
-
 ### Who offers what
 
 | Platform | virtio |
 |---|---|
-| [QEMU](qemu.md) `virt` (Arm, RISC-V) | 32 virtio-mmio slots (Arm) in the generated device tree, version 1 unless `-global virtio-mmio.force-legacy=false`; PCI devices too if asked (`-device virtio-net-pci`) (unchecked: counts and default from memory) |
-| QEMU `q35`, `pc` | PCI: `-device virtio-net-pci`; transitional by default on a conventional PCI bus, tunable with `disable-legacy=on` (unchecked) |
+| [QEMU](qemu.md) `virt` (Arm, RISC-V) | 32 virtio-mmio slots (Arm) in the generated device tree, version 1 unless `-global virtio-mmio.force-legacy=false`; PCI devices too if asked (`-device virtio-net-pci`) |
+| QEMU `q35`, `pc` | PCI: `-device virtio-net-pci`; transitional by default on a conventional PCI bus, tunable with `disable-legacy=on` |
 | [Compute Engine](gce.md) | PCI with transitional IDs on older machine families: net, SCSI, rng, balloon; newer families use gVNIC and NVMe |
 | [EC2](ec2.md) | none: ENA and NVMe |
 
@@ -231,10 +227,9 @@ which is why the driver's ring memory (`hw_ring_buffer` in `config.json`)
 and the data regions need physical addresses known to the driver.
 
 **libvmm**, the virtual machine monitor used with Microkit, is on the
-other side: it *emulates* virtio-mmio devices (console, net, blk, sound)
-for a Linux guest, backing them with sDDF clients, so a guest's virtio
-driver ends up talking to a native sDDF driver (unchecked: libvmm is not
-in the local clones). See [Virtualisation support](../sel4/hypervisor.md).
+other side: it *emulates* virtio devices (console, net, blk, sound; MMIO
+and PCI transports) for a Linux guest, backing them with sDDF clients,
+so a guest's virtio driver ends up talking to a native sDDF driver. See [Virtualisation support](../sel4/hypervisor.md).
 
 **Interrupts** reach a driver as notifications on an IRQ handler
 capability ([Interrupt delivery](../sel4/irq-handling.md)). For MMIO it
@@ -251,12 +246,10 @@ designer must allocate and the driver must program into the device.
   device before assuming.
 - **QEMU's virtio-mmio defaults to legacy** (version 1) on `virt`
   machines, and a version 2 driver must refuse it. sDDF's documented
-  QEMU commands add `-global virtio-mmio.force-legacy=false`
-  (unchecked).
+  QEMU commands add `-global virtio-mmio.force-legacy=false`.
 - **Empty MMIO slots exist.** QEMU's `virt` device tree lists every
   slot; those without a device read DeviceID 0. Which slot a `-device`
-  lands in is not obvious (QEMU fills from the highest address down)
-  (unchecked).
+  lands in is not obvious (QEMU fills from the highest address down).
 - **Memory ordering matters.** The ring is shared with another thread of
   execution (the hypervisor): write the ring entry before `idx`, with a
   barrier between, and re-check for new used entries after re-enabling
@@ -293,8 +286,11 @@ designer must allocate and the driver must program into the device.
 - [Virtual I/O Device (VIRTIO) Version 1.2, OASIS](https://docs.oasis-open.org/virtio/virtio/v1.2/virtio-v1.2.html):
   sections 2.1 (status), 2.7 (split virtqueues), 3.1.1 (initialisation),
   4.1.2 and 4.1.4 (PCI IDs, capabilities, ISR, MSI-X, legacy header),
-  4.2.2 and 4.2.4 (MMIO registers). *Checked 2026-11-14.* Section 2.8
-  (packed virtqueues) and section 5 (device types) were not read today.
+  4.2.2 and 4.2.4 (MMIO registers), the legacy-interface notes 2.7.2,
+  4.1.4.10 and 4.1.5.1.3.1, and in section 5 the device IDs, virtqueues,
+  `struct virtio_net_hdr` and `struct virtio_blk_req`.
+  *Checked 2026-11-14.* Section 2.8 (packed virtqueues) was not read
+  today.
 - [sDDF `include/sddf/virtio/transport/pci.h`](https://github.com/au-ts/sddf/blob/main/include/sddf/virtio/transport/pci.h),
   [`transport/mmio.h`](https://github.com/au-ts/sddf/blob/main/include/sddf/virtio/transport/mmio.h),
   [`transport/common.h`](https://github.com/au-ts/sddf/blob/main/include/sddf/virtio/transport/common.h)
@@ -303,10 +299,24 @@ designer must allocate and the driver must program into the device.
   *Checked 2026-11-14.*
 - [sDDF `drivers/network/virtio/common/ethernet.c`](https://github.com/au-ts/sddf/blob/main/drivers/network/virtio/common/ethernet.c):
   the features the net driver negotiates. *Checked 2026-11-14.*
-- [libvmm](https://github.com/au-ts/libvmm), `src/virtio/`: device
-  emulation for guests. *Unchecked (not opened today).*
+- [libvmm](https://github.com/au-ts/libvmm), `README.md` and
+  [`src/virtio/`](https://github.com/au-ts/libvmm/tree/main/src/virtio)
+  (`block.c`, `console.c`, `net.c`, `sound.c`, `mmio.c`, `pci.c`; the
+  device files include sDDF's queue headers): device emulation for
+  guests. *Checked 2026-11-14.*
 - [QEMU documentation, "virt generic virtual platform"](https://www.qemu.org/docs/master/system/arm/virt.html):
-  the virtio-mmio slots. *Unchecked (not opened today).*
+  the 32 virtio-mmio transports. *Checked 2026-11-14.*
+- QEMU source: [`hw/virtio/virtio-mmio.c`](https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-mmio.c)
+  (`force-legacy` defaults to true),
+  [`hw/arm/virt.c`](https://github.com/qemu/qemu/blob/master/hw/arm/virt.c)
+  (`create_virtio_devices()`: later `-device` options get lower
+  addresses), [`hw/virtio/virtio-pci.c`](https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-pci.c)
+  and [`docs/pcie.txt`](https://github.com/qemu/qemu/blob/master/docs/pcie.txt)
+  (`disable-legacy` is on by default only in a PCI Express port).
+  *Checked 2026-11-14.*
+- sDDF [`examples/echo_server/echo.mk`](https://github.com/au-ts/sddf/blob/main/examples/echo_server/echo.mk):
+  the QEMU command with `-global virtio-mmio.force-legacy=false`.
+  *Checked 2026-11-14.*
 
 ## My notes
 

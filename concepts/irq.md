@@ -44,12 +44,12 @@ A wired interrupt is either:
 - **Edge-triggered:** the device makes a transition (low to high, say),
   and the controller latches that one event. A second edge while the
   first is still pending is lost: the two merge. ISA devices such as the
-  [PIT](pit.md) and the 16550 UART are edge-triggered (unchecked).
+  [PIT](pit.md) and the 16550 UART are edge-triggered.
 - **Level-triggered:** the device holds the line asserted until software
   has dealt with the cause, usually by reading or writing a device
   register. Several devices can share one line, since it stays asserted
   while any of them wants service. Legacy PCI `INTx` is level-triggered
-  and active low (unchecked).
+  and active low.
 
 Each also has a **polarity**: whether asserted means high or low.
 Programming the controller with the wrong trigger mode or polarity gives
@@ -183,6 +183,9 @@ notes that the kernel keeps the interrupt masked until then.
 - [Linux kernel documentation, "IO-APIC"](https://docs.kernel.org/arch/x86/i386/IO-APIC.html):
   how PCI `INTA` to `INTD` are wired to slots and shared, and edge against
   level in `/proc/interrupts`. *Checked 2026-11-14.*
+- [Linux `arch/x86/kernel/apic/io_apic.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/apic/io_apic.c),
+  `irq_active_low()` and `irq_is_level()`: ISA interrupts default to edge
+  and active high, PCI to level and active low. *Checked 2026-11-14.*
 - [OSDev wiki, "Interrupts"](https://wiki.osdev.org/Interrupts): a
   general introduction, including edge and level. *Unchecked (the site
   refuses scripted fetches).*

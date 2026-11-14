@@ -9,7 +9,7 @@
 | Kind | Firmware tables describing the machine |
 | Architecture | PCs and Arm servers |
 | Found through | The RSDP root pointer: in the BIOS area (`0xe0000` to `0xfffff`), or handed over by [UEFI](uefi.md) or the bootloader |
-| seL4 use | x86 kernel parses the MADT and DMAR at boot (unchecked: which tables exactly) and passes the RSDP to the root task in bootinfo |
+| seL4 use | x86 kernel parses the MADT, FADT and DMAR at boot and passes the RSDP to the root task in bootinfo |
 | On the clouds | EC2 Nitro and Compute Engine x86: overrides for IRQs 5, 9, 10 and 11 only, none for IRQ 0 |
 
 ## What it is
@@ -38,8 +38,8 @@ it is not the identity mapping, and with which polarity and trigger mode.
 ## In seL4
 
 - The x86 kernel reads the RSDP and parses only what it needs at boot
-  (the MADT for APICs, DMAR for the IOMMU) and passes the RSDP to the root
-  task in bootinfo (unchecked: which tables exactly).
+  (the MADT for APICs, the FADT for its flags, DMAR for the IOMMU when
+  `KernelIOMMU` is set) and passes the RSDP to the root task in bootinfo.
 - util_libs' `libplatsupport` has an ACPI table walker used by
   user-level drivers, for example to find the [HPET](hpet.md) and the
   [PIT](pit.md)'s interrupt pin.
@@ -79,10 +79,19 @@ it is not the identity mapping, and with which polarity and trigger mode.
 
 - [ACPI Specification 6.5](https://uefi.org/specs/ACPI/6.5/), chapter 5
   "ACPI Software Programming Model": the system description tables.
-  *Unchecked (uefi.org refuses scripted fetches; chapter from memory).*
+  *Checked 2026-11-14 (sections 5.2.5 to 5.2.12, through the Internet
+  Archive's copy; uefi.org itself refuses scripted fetches).*
+- seL4 [`src/arch/x86/kernel/boot_sys.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot_sys.c)
+  (calls `acpi_validate_rsdp`, `acpi_fadt_scan`, `acpi_dmar_scan` and
+  `acpi_madt_scan`),
+  [`src/plat/pc99/machine/acpi.c`](https://github.com/seL4/seL4/blob/master/src/plat/pc99/machine/acpi.c)
+  and [`src/arch/x86/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/kernel/boot.c)
+  (the RSDP copied into the extra bootinfo as
+  `SEL4_BOOTINFO_HEADER_X86_ACPI_RSDP`). *Checked 2026-11-14.*
 - [OSDev wiki, "RSDP"](https://wiki.osdev.org/RSDP) and
   ["ACPI"](https://wiki.osdev.org/ACPI): finding and walking the tables.
-  *Unchecked (the site refuses scripted fetches).*
+  *Checked 2026-11-14 (through the Internet Archive's copies; the site
+  itself refuses scripted fetches).*
 
 ## My notes
 

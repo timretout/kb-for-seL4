@@ -10,12 +10,12 @@ Read first: [x86 boot](x86-boot.md), [ACPI tables](acpi-tables.md).
 |---|---|
 | Kind | Firmware interface specification |
 | Architecture | x86-64 and AArch64 |
-| Introduced | Began as Intel's EFI for Itanium (unchecked) |
-| Key numbers | Fallback loader paths `\EFI\BOOT\BOOTX64.EFI` and `\EFI\BOOT\BOOTAA64.EFI` (unchecked) |
+| Introduced | Began as Intel's EFI for Itanium |
+| Key numbers | Fallback loader paths `\EFI\BOOT\BOOTX64.EFI` and `\EFI\BOOT\BOOTAA64.EFI` |
 | seL4 code | Arm elfloader: [`efi_init.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/binaries/efi/efi_init.c); x86 kernel: none |
 | seL4 config | `ElfloaderImageEFI` (Arm only) |
 | seL4 use | x86: hidden behind GRUB, with [Multiboot 2](x86-boot.md) carrying the ACPI RSDP; Arm: the [elfloader](../sel4/elfloader.md) built as a UEFI application |
-| On the clouds | Arm instances boot `BOOTAA64.EFI` and use ACPI; x86 clouds offer UEFI on current instance types (unchecked) |
+| On the clouds | Arm instances boot `BOOTAA64.EFI` and use ACPI; x86 clouds offer UEFI on current instance types |
 
 ## What it is
 
@@ -24,9 +24,7 @@ operating system: how to find and start a loader, what the CPU state is
 when it starts, which functions it may call, and which tables describe
 the machine. It began as Intel's EFI for Itanium, and is now the normal
 firmware on PCs and on Arm servers; EDK II (TianoCore) is the open-source
-implementation most firmware derives from. This page is from memory of
-the specification, which cannot be fetched by script: treat everything
-outside "In seL4" as unchecked unless a checked reference is named.
+reference implementation.
 
 ### How it differs from BIOS
 
@@ -97,8 +95,8 @@ loader signed by Microsoft that verifies GRUB against the distribution's
 key. An unsigned loader runs only with Secure Boot off.
 
 The **CSM** (compatibility support module) lets UEFI firmware emulate a
-BIOS and boot an MBR. It is disappearing from PCs and never existed on
-Arm.
+BIOS and boot an MBR. It is a feature of PC firmware only, and is
+disappearing there.
 
 ### Arm servers and clouds
 
@@ -179,8 +177,7 @@ so.
   case, not a stale map key.
 - With Secure Boot on, an unsigned GRUB or elfloader is refused before
   it prints anything. Clouds call this "Shielded VM" (Compute Engine) or
-  UEFI Secure Boot (EC2); it is off unless the image asks for it
-  (unchecked).
+  UEFI Secure Boot (EC2); it is off by default on both.
 - UEFI x86 firmware leaves the BIOS data area and the VGA text buffer
   meaningless: see the `console_port` gotcha in [x86 boot](x86-boot.md).
 - Firmware leaves interrupt controllers, timers and sometimes
@@ -204,8 +201,11 @@ so.
   4 "EFI System Table", 7 "Services: Boot Services" (7.2 memory
   allocation and map, 7.4.6 `ExitBootServices`), 8 "Runtime Services",
   12.9 Graphics Output Protocol, 13.3 file system format and ESP, 32
-  "Secure Boot". *Unchecked: uefi.org refuses scripted fetches; section
-  numbers from memory.*
+  "Secure Boot and Driver Signing"; also sections 2.1.1 (PE images and
+  subsystem 10), 2.3.4 and 2.3.6 (x64 and AArch64 hand-off state), 3.5.1.1
+  (removable media boot and the `BOOTX64.EFI`, `BOOTAA64.EFI` names) and
+  4.6 (configuration table GUIDs). *Checked 2026-11-14 (through the
+  Internet Archive's copy; uefi.org itself refuses scripted fetches).*
 - seL4_tools [`elfloader-tool/src/binaries/efi/efi_init.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/binaries/efi/efi_init.c),
   [`elfloader-tool/src/arch-arm/sys_boot.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/sys_boot.c),
   [`elfloader-tool/src/common.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/common.c),
@@ -218,9 +218,26 @@ so.
 - [Multiboot2 Specification](https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html),
   section 3.6: ACPI RSDP, EFI system table and EFI memory map tags.
   *Checked 2026-11-14.*
-- Arm Base Boot Requirements (BBR), DEN0044: UEFI and ACPI requirements
-  for Arm servers. *Unchecked: developer.arm.com refuses scripted
-  fetches.*
+- [Arm Base Boot Requirements (BBR), DEN0044](https://developer.arm.com/documentation/den0044/latest):
+  UEFI and ACPI requirements for Arm servers. *Unchecked:
+  developer.arm.com refuses scripted fetches.*
+- [Linux kernel documentation, "ACPI on Arm systems"](https://docs.kernel.org/arch/arm64/arm-acpi.html):
+  Arm servers follow the BSA and BBR, and ACPI is supported only on
+  platforms that boot through UEFI. *Checked 2026-11-14.*
+- [Wikipedia, "UEFI"](https://en.wikipedia.org/wiki/UEFI): EFI's origin
+  on Itanium, TianoCore EDK II as the reference implementation, the CSM
+  and its removal. *Checked 2026-11-14.*
+- [GRUB `grub-core/mmap/efi/mmap.c`](https://github.com/rhboot/grub2/blob/master/grub-core/mmap/efi/mmap.c):
+  the translation of EFI memory types to GRUB's. *Checked 2026-11-14.*
+- [shim-review `README.md`](https://github.com/rhboot/shim-review/blob/main/README.md):
+  shims are submitted for signing by Microsoft's UEFI CA.
+  *Checked 2026-11-14.*
+- [EC2 User Guide, "Instance launch behavior with Amazon EC2 boot modes"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-boot.html)
+  and ["How UEFI Secure Boot works with Amazon EC2 instances"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/how-uefi-secure-boot-works.html):
+  UEFI and legacy BIOS boot modes; Secure Boot disabled by default.
+  *Checked 2026-11-14.*
+- [Compute Engine documentation, "Modifying Shielded VM options on a VM instance"](https://docs.cloud.google.com/compute/shielded-vm/docs/modifying-shielded-vm):
+  Secure Boot is not enabled by default. *Checked 2026-11-14.*
 
 ## My notes
 

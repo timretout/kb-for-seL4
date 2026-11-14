@@ -23,8 +23,7 @@ memory-mapped registers per system:
 
 - a **main counter** that counts up at a fixed rate, 32 or 64 bits wide;
 - a **capabilities register** giving the counter's period in
-  femtoseconds, its width and the number of comparators (unchecked:
-  register layout from memory);
+  femtoseconds, its width and the number of comparators;
 - at least three **comparators** ("timers"), each raising an interrupt
   when the main counter reaches its value, one-shot or periodic.
 
@@ -76,6 +75,11 @@ util_libs are not exercised there.
 
 - [Linux KVM documentation, "Timekeeping Virtualization for X86-Based Architectures"](https://docs.kernel.org/virt/kvm/x86/timekeeping.html),
   section 2.4 "HPET": what it is for and why its specification is loose.
+  *Checked 2026-11-14.*
+- [Linux `arch/x86/include/asm/hpet.h`](https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/hpet.h)
+  and [`arch/x86/kernel/hpet.c`](https://github.com/torvalds/linux/blob/master/arch/x86/kernel/hpet.c)
+  (`hpet_enable()`): the capabilities register's fields, with the period
+  in femtoseconds, the 64-bit flag and the comparator count.
   *Checked 2026-11-14.*
 - [IA-PC HPET Specification 1.0a](https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/software-developers-hpet-spec-1-0a.pdf),
   Intel, 2004: the register map. *Unchecked (intel.com refuses scripted

@@ -34,7 +34,7 @@
   <text x="438" y="54" class="mono">0xfed00000</text>
   <rect x="256" y="70" width="298" height="56" rx="6" class="hw"/>
   <text x="405" y="94" text-anchor="middle">capabilities register</text>
-  <text x="405" y="112" text-anchor="middle" class="small dim">period in fs, width, comparators (unchecked)</text>
+  <text x="405" y="112" text-anchor="middle" class="small dim">period in fs, width, comparators</text>
   <rect x="256" y="150" width="130" height="134" rx="6" class="hw"/>
   <text x="321" y="195" text-anchor="middle">main counter</text>
   <text x="321" y="213" text-anchor="middle" class="small dim">counts up at a</text>
