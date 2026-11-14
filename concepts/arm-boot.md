@@ -69,9 +69,7 @@ for storage and network, a command shell, and commands that load an
 image into RAM and jump to it: `bootm` for its own **uImage** format (a
 64-byte header giving load address, entry point and checksum, made by
 `mkimage`), `booti` for a Linux arm64 `Image`, `bootelf` for an ELF file,
-`go` for a raw jump, and `bootefi` for a UEFI application (unchecked:
-command names from memory, apart from `bootelf`, which the elfloader's
-README names).
+`go` for a raw jump, and `bootefi` for a UEFI application.
 
 **UEFI** ([UEFI](uefi.md)) is the standard on Arm servers and cloud
 instances; the implementation is usually EDK2. It loads a PE/COFF
@@ -93,8 +91,7 @@ over a description:
 
 Arm cloud instances (EC2 Graviton, Compute Engine's Arm types, Azure) boot
 through UEFI and describe themselves with ACPI, not a device tree
-(unchecked here; [Cloud virtual machines](cloud-vms.md) has what each
-cloud presents).
+([Cloud virtual machines](cloud-vms.md) has what each cloud presents).
 
 ### The Linux arm64 boot protocol
 
@@ -191,7 +188,7 @@ at build time.
 | EL2 | Yes | Stays at EL2, builds EL2 page tables (`init_hyp_boot_vspace`, `arm_enable_hyp_mmu`) |
 | EL2 | No | `leave_hyp`: drops to EL1, then builds EL1 page tables |
 | EL1 | No | Builds EL1 page tables (`init_boot_vspace`, `arm_enable_mmu`) |
-| EL1 | Yes | Nothing special; the kernel then touches EL2 registers from EL1, which is undefined there, and dies (unchecked: not tried) |
+| EL1 | Yes | Nothing special: it builds EL1 page tables. The kernel cannot run: its entry code (`_start` in `head.S`) begins by reading `sctlr_el2`, and an EL2 register is undefined at EL1 |
 
 `leave_hyp`
 ([`mmu-hyp.S`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/armv/armv8-a/64/mmu-hyp.S))
@@ -250,8 +247,8 @@ built into the image, because UEFI there offers no DTB to fall back on.
   write it, and reads of the virtual counter are offset by it. This is
   why Microkit's loader zeroes it before leaving EL2.
 - **A uImage has its load and entry addresses baked into the header.**
-  Loading it at another address with `bootm` makes U-Boot copy it
-  (unchecked).
+  Loading it at another address with `bootm` makes U-Boot copy it to
+  the header's load address.
 
 ## See also
 
@@ -295,8 +292,25 @@ built into the image, because UEFI there offers no DTB to fall back on.
   the kernel's entry point and what it assumes. *Checked 2026-11-14.*
 - [Microkit `loader/src/aarch64/el.c`](https://github.com/seL4/microkit/blob/main/loader/src/aarch64/el.c):
   `ensure_correct_el`. *Checked 2026-11-14.*
-- [U-Boot documentation](https://docs.u-boot.org/en/latest/): `bootm`,
-  `booti`, `bootefi`, the uImage format. *Unchecked: not opened.*
+- U-Boot documentation, the [`bootm`](https://docs.u-boot.org/en/latest/usage/cmd/bootm.html),
+  [`booti`](https://docs.u-boot.org/en/latest/usage/cmd/booti.html),
+  [`bootelf`](https://docs.u-boot.org/en/latest/usage/cmd/bootelf.html) and
+  [`bootefi`](https://docs.u-boot.org/en/latest/usage/cmd/bootefi.html)
+  command pages; `bootm`'s "Legacy boot" section for the uImage format.
+  *Checked 2026-11-14.*
+- U-Boot source: [`include/image.h`](https://github.com/u-boot/u-boot/blob/master/include/image.h)
+  (`struct legacy_img_hdr`, the 64-byte uImage header),
+  [`boot/image.c`](https://github.com/u-boot/u-boot/blob/master/boot/image.c)
+  (`image_decomp` moves an uncompressed image to its load address) and
+  [`cmd/boot.c`](https://github.com/u-boot/u-boot/blob/master/cmd/boot.c)
+  (the `go` command); [`doc/mkimage.1`](https://github.com/u-boot/u-boot/blob/master/doc/mkimage.1)
+  for `mkimage` and the legacy image. *Checked 2026-11-14.*
+- [Arm Architecture Reference Manual for A-profile, DDI 0487](https://developer.arm.com/documentation/ddi0487/latest),
+  the accessibility pseudocode in the description of `SCTLR_EL2`: a read
+  at EL1 is undefined unless nested virtualisation traps it to EL2.
+  *Checked 2026-11-14, issue M.d, read from a
+  [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  because developer.arm.com refuses scripted fetches.*
 
 ## My notes
 

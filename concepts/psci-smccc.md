@@ -11,7 +11,7 @@ Read first: [AArch64 exceptions](aarch64-exceptions.md), [Arm boot flow](arm-boo
 | Kind | Firmware interface (a calling convention and a power management service) |
 | Architecture | Arm |
 | Reached through | `SMC` (to EL3) or `HVC` (to EL2), with a function identifier in `w0` |
-| Found through | [Device tree](device-tree.md) `psci` node and its `method`; with ACPI, FADT flags (unchecked) |
+| Found through | [Device tree](device-tree.md) `psci` node and its `method`; with ACPI, FADT flags |
 | Key numbers | `CPU_ON` is `0x84000003` (SMC32) or `0xC4000003` (SMC64); PSCI is owner 4; results in `x0` to `x3` |
 | seL4 code | [`src/arch-arm/psci.c`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/src/arch-arm/psci.c) (elfloader), [`src/arch/arm/object/smc.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/object/smc.c) |
 | seL4 config | `KernelAllowSMCCalls` (AArch64 only, default off) |
@@ -53,9 +53,10 @@ discoverable by trying: `SMC` is undefined where there is no EL3, so the
 platform description states it (below).
 
 Results come back in `x0` to `x3`. Later versions of the convention let
-a call use `x1` to `x17` for arguments and results; registers not used
-for results are preserved (unchecked: the exact preserved set changed
-between SMCCC 1.0 and 1.1). Code that passes calls through blindly, as
+an SMC64 call use `x1` to `x17` for arguments and `x0` to `x17` for
+results; `x4` to `x17` are preserved unless the function returns results
+in them (SMCCC 1.0 left them unpredictable). Code that passes calls
+through blindly, as
 seL4 does, treats `x0` to `x7` as in and out and `x8` to `x17` as
 clobbered.
 
@@ -66,7 +67,7 @@ The function identifier is a bit field:
 | 31 | Type | 1 = **fast call**: short, atomic, runs with interrupts masked. 0 = **yielding call**: may be pre-empted and resumed (used by trusted OSes) |
 | 30 | Convention | 0 = SMC32 (32-bit arguments), 1 = SMC64 (64-bit arguments) |
 | 29:24 | Owner | Which service: see below |
-| 23:16 | | Zero for fast calls |
+| 23:16 | | Zero for fast calls (from SMCCC 1.3, bit 16 is a hint that the caller has no live SVE state) |
 | 15:0 | Function number | Within the owner's range |
 
 | Owner | Service |
@@ -97,7 +98,7 @@ SMC64; a 64-bit kernel uses the SMC64 one.
 | `CPU_SUSPEND` | `0x84000001` | `0xC4000001` | power state, entry point, context ID | Calling core enters a low-power state; may return, or resume at the entry point |
 | `CPU_OFF` | `0x84000002` | | none | Calling core powers off; does not return on success |
 | `CPU_ON` | `0x84000003` | `0xC4000003` | target core, entry point, context ID | Starts another core |
-| `AFFINITY_INFO` | `0x84000004` | `0xC4000004` | target, level | Is that core on (0), off (1) or coming on (2)? (unchecked: values from memory) |
+| `AFFINITY_INFO` | `0x84000004` | `0xC4000004` | target, level | Is that core on (0), off (1) or coming on (2)? |
 | `SYSTEM_OFF` | `0x84000008` | | none | Power the machine off |
 | `SYSTEM_RESET` | `0x84000009` | | none | Cold reset |
 | `PSCI_FEATURES` | `0x8400000A` | | function ID | Is that function implemented? (PSCI 1.0) |
@@ -108,9 +109,12 @@ the affinity fields of its `MPIDR_EL1` (the core's hardware identifier:
 see [AArch64 basics](aarch64-basics.md)), not by a 0-based index; on a
 simple four-core chip they happen to be 0 to 3, on others `0x100`,
 `0x200` and so on. The entry point is a **physical** address. The new
-core arrives there at the same exception level the caller was at, with
-the MMU off, interrupts masked, and the context ID in `x0` (unchecked:
-PSCI DEN 0022 section 6.4 "Core state on entry"). It has no stack, so
+core arrives there at the highest non-secure exception level the
+firmware has enabled (EL2 where EL3 permits `HVC`, otherwise EL1),
+normally the level the calling loader was itself entered at, with
+the MMU and caches off, interrupts masked, and the context ID in `x0`
+(PSCI DEN 0022 section 6.4, "Initial state after CPU_ON,
+CPU_SUSPEND"). It has no stack, so
 the entry code must find one itself.
 
 Return codes, as a signed value in `x0`:
@@ -146,8 +150,7 @@ above are fixed and those properties are ignored.
 
 With [ACPI](acpi-tables.md), by two bits of the FADT's "ARM Boot
 Architecture Flags" field: bit 0 `PSCI_COMPLIANT` and bit 1
-`PSCI_USE_HVC` (unchecked: ACPI specification, FADT; uefi.org refuses
-scripted fetches).
+`PSCI_USE_HVC`.
 
 The alternative to PSCI for bring-up, on boards without it, is the
 **spin table**: secondary cores sit in a firmware loop polling a memory
@@ -238,7 +241,7 @@ A guest's `HVC` takes a different path: the vector code in
 [`traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/traps.S)
 sends exception class `HVC64` to the same system-call entry as `SVC`,
 so VMMs on seL4 usually advertise `method = "smc"` to their guests
-(unchecked: the VMMs' device trees were not read).
+(libvmm's example guest device trees do).
 The VMM emulates PSCI itself: `CPU_ON` becomes "resume the thread behind
 that virtual CPU at this entry point", `PSCI_VERSION` returns a
 constant, and anything it wants the real firmware to do it forwards
@@ -261,12 +264,11 @@ names the conduit the VMM expects.
   `CPU_ON` returns -4 and the cores are still executing old code.
 - **The elfloader supports only the `SMC` conduit.** A virtual machine
   that advertises `method = "hvc"`, which is what a guest under KVM
-  normally sees (unchecked), cannot start secondary cores with it as it
+  normally sees, cannot start secondary cores with it as it
   stands.
 - **Wrong conduit, wrong exception.** `SMC` with no EL3, or with EL3
   refusing it (`SCR_EL3.SMD`), is an undefined-instruction exception in
-  the caller, not an error code (unchecked: Arm ARM, `SMC`
-  instruction).
+  the caller, not an error code.
 - **A secondary core's entry state is the caller's level.** A loader
   that calls `CPU_ON` from EL2 and then drops the boot core to EL1 must
   drop each secondary too; both loaders run their exception-level code on
@@ -290,12 +292,32 @@ names the conduit the VMM expects.
 ## References
 
 - [Arm Power State Coordination Interface, DEN 0022](https://developer.arm.com/documentation/den0022/latest):
-  chapter 5 for each function, section 5.2.2 for return codes, 6.4 for
-  core state on entry. *Unchecked: developer.arm.com refuses scripted
-  fetches; section numbers from memory.*
+  chapter 5 for each function (5.1.5 and 5.7 for `AFFINITY_INFO`),
+  section 5.2.2 for return codes, 6.4 "Initial state after CPU_ON,
+  CPU_SUSPEND" for core state on entry. *Checked 2026-11-14, issue E,
+  read as the [PDF](https://documentation-service.arm.com/static/640f584656ea36189d4e94a4)
+  because developer.arm.com refuses scripted fetches.*
 - [Arm SMC Calling Convention, DEN 0028](https://developer.arm.com/documentation/den0028/latest):
-  function identifier layout, owner ranges, register use. *Unchecked:
-  same site.*
+  section 2.5 for the function identifier layout and conduits, 2.6 and
+  2.7 for register use, 5.2 for the unknown-function result, chapter 6
+  for owner ranges, 7.1 for return codes. *Checked 2026-11-14, version
+  1.5 (issue F), read as the [PDF](https://documentation-service.arm.com/static/662766ae2f51dc4fe7262123)
+  for the same reason.*
+- [Arm Architecture Reference Manual for A-profile, DDI 0487](https://developer.arm.com/documentation/ddi0487/latest),
+  the `SMC` instruction description and the rule on when `SMC` is
+  undefined in section D1.4 (no EL3, or `SCR_EL3.SMD` set, and not
+  trapped by `HCR_EL2.TSC`). *Checked 2026-11-14, issue M.d, read from a
+  [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  because developer.arm.com refuses scripted fetches.*
+- [Linux `include/acpi/actbl.h`](https://github.com/torvalds/linux/blob/master/include/acpi/actbl.h):
+  the FADT's `arm_boot_flags` field and its `ACPI_FADT_PSCI_COMPLIANT`
+  and `ACPI_FADT_PSCI_USE_HVC` bits. *Checked 2026-11-14.*
+- [QEMU `hw/arm/virt.c`](https://github.com/qemu/qemu/blob/master/hw/arm/virt.c):
+  the `virt` machine's PSCI conduit is `HVC` unless the guest has EL2,
+  and must be `HVC` under KVM. *Checked 2026-11-14.*
+- [libvmm `examples/simple/board/qemu_virt_aarch64/linux.dts`](https://github.com/au-ts/libvmm/blob/main/examples/simple/board/qemu_virt_aarch64/linux.dts)
+  (and the `odroidc4`, `maaxboard` and `zcu102` ones beside it): guest
+  device trees with `method = "smc"`. *Checked 2026-11-14.*
 - [Linux `include/uapi/linux/psci.h`](https://github.com/torvalds/linux/blob/master/include/uapi/linux/psci.h):
   function numbers, which have 64-bit variants, return codes, version
   encoding. *Checked 2026-11-14.*

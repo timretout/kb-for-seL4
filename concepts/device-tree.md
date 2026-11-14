@@ -280,9 +280,14 @@ Above the kernel:
   *Checked 2026-11-14.*
 - [Devicetree Specification, chapter 5 "Flattened Devicetree (DTB) Format"](https://devicetree-specification.readthedocs.io/en/stable/flattened-format.html):
   header, memory reservation block, tokens. *Checked 2026-11-14.*
-- Devicetree Specification, chapter 3 "Device Node Requirements":
-  `/chosen`, `/memory`, `/reserved-memory`, `/cpus`. *Unchecked (not
-  opened today; the node descriptions above are from memory).*
+- [Devicetree Specification, chapter 3 "Device Node Requirements"](https://devicetree-specification.readthedocs.io/en/latest/chapter3-devicenodes.html):
+  sections 3.3 `/aliases`, 3.4 `/memory`, 3.5 `/reserved-memory`, 3.6
+  `/chosen` (`bootargs`, `stdout-path`), 3.7 and 3.8 `/cpus` and its
+  `cpu` nodes (`reg`, `enable-method`). The "latest" build is linked
+  because the "stable" one predates `/reserved-memory`.
+  *Checked 2026-11-14.*
+- [Linux `Documentation/devicetree/usage-model.rst`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/usage-model.rst):
+  the initrd addresses in `/chosen`. *Checked 2026-11-14.*
 - [seL4 `config.cmake`](https://github.com/seL4/seL4/blob/master/config.cmake):
   `KernelCustomDTS`, `KernelCustomDTSOverlay`, the `dtc` step.
   *Checked 2026-11-14.*
@@ -294,8 +299,8 @@ Above the kernel:
 - [sDDF `drivers/network/virtio/mmio/config.json`](https://github.com/au-ts/sddf/blob/main/drivers/network/virtio/mmio/config.json):
   a driver's `compatible` list and `dt_index` resources.
   *Checked 2026-11-14.*
-- Linux kernel documentation, `Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml`:
-  the three-cell GIC specifier. *Unchecked (from memory).*
+- [Linux device tree binding `interrupt-controller/arm,gic.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml):
+  the three-cell GIC specifier. *Checked 2026-11-14.*
 
 ## My notes
 

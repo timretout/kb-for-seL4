@@ -95,11 +95,17 @@ needs kernel table memory too.
 ## References
 
 - [Arm GICv3 and GICv4 Architecture Specification (IHI 0069)](https://developer.arm.com/documentation/ihi0069/latest/):
-  the LPI and ITS chapters. *Unchecked (developer.arm.com refuses
-  scripted fetches).*
-- [Arm, "Learn the architecture: Arm Generic Interrupt Controller v3 and v4"](https://developer.arm.com/documentation/198123/latest/):
-  a readable overview, including LPIs and the ITS. *Unchecked
-  (developer.arm.com refuses scripted fetches).*
+  chapter 5, "Locality-specific Peripheral Interrupts and the ITS", and
+  the INTID ranges in chapter 2. *Checked 2026-11-14, issue G, read as
+  the [PDF](https://documentation-service.arm.com/static/601412d54ccc190e5e681269)
+  because developer.arm.com refuses scripted fetches.*
+- [Arm, "Learn the architecture: Generic Interrupt Controller v3 and v4, Overview"](https://developer.arm.com/documentation/198123/latest/):
+  a readable overview of the parts and the INTID ranges.
+  *Checked 2026-11-14, version 3.2, read as the
+  [PDF](https://documentation-service.arm.com/static/678108763f2a9a07789e1d9e).*
+- [Arm, "Learn the architecture: Generic Interrupt Controller v3 and v4, LPIs"](https://documentation-service.arm.com/static/65ba2901c2052a35156cc629)
+  (document 102923): the LPI configuration and pending tables, the
+  ITS's tables, `GITS_TRANSLATER` and the commands. *Checked 2026-11-14.*
 - [seL4 pull request #1098](https://github.com/seL4/seL4/issues/1098),
   "VT-d: add remappable MSI and IOAPIC support": interrupt remapping on
   x86, open. *Checked 2026-11-14 (description only, not the discussion).*

@@ -138,7 +138,7 @@ The **Virtualization Host Extensions** (Armv8.1, `HCR_EL2.E2H`) let an
 unmodified EL1 kernel run at EL2 by redirecting its EL1 register
 accesses to the EL2 registers and giving EL2 a second translation table
 base register. Linux/KVM uses it to run the host kernel at EL2
-(unchecked: Arm ARM, section D8 on VHE). seL4 does not use VHE; it is
+(Arm ARM, section D8.13). seL4 does not use VHE; it is
 mentioned because `E2H` changes the layout of several EL2 registers,
 which matters when reading other hypervisors' code.
 
@@ -227,8 +227,9 @@ VCPU is not running (`struct vTimer`, `last_pcount`).
 - **A hypervisor kernel needs EL2 at entry, and clouds mostly do not
   give it.** A guest of a cloud hypervisor starts at EL1. EL2 is
   available on bare-metal instance types and where the provider offers
-  nested virtualisation on Arm; which Arm instance types on EC2, Compute
-  Engine and Azure do so is unverified (unchecked). A non-hypervisor
+  nested virtualisation on Arm, which EC2 and Compute Engine do not:
+  EC2 lists only Intel instance types for it, and Compute Engine
+  excludes VMs with Arm processors. A non-hypervisor
   seL4 build is the safe choice there; see
   [Cloud virtual machines](cloud-vms.md).
 - **Hypervisor builds change native behaviour too.** Address spaces
@@ -274,12 +275,27 @@ VCPU is not running (`struct vTimer`, `last_pcount`).
 
 - [Arm Architecture Reference Manual for A-profile, DDI 0487](https://developer.arm.com/documentation/ddi0487/latest):
   `HCR_EL2`, `VTTBR_EL2`, `VTCR_EL2`, `ESR_EL2`, `HPFAR_EL2` register
-  descriptions (chapter D on AArch64 system registers); stage 2
-  translation in the VMSA chapter. *Unchecked: developer.arm.com refuses
-  scripted fetches.*
+  descriptions (chapter D24, "AArch64 System Register Descriptions");
+  stage 2 translation in chapter D8, "The AArch64 Virtual Memory System
+  Architecture", and VHE in its section D8.13, "Virtualization Host
+  Extensions". Only D8.13 and the feature description of `FEAT_VHE` were
+  read; the register descriptions were located, not re-read.
+  *Checked 2026-11-14, issue M.d, read from a
+  [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  because developer.arm.com refuses scripted fetches.*
 - [Learn the architecture: AArch64 virtualization](https://developer.arm.com/documentation/102142/latest):
-  Arm's tutorial on stage 2, trapping, virtual interrupts and VHE.
-  *Unchecked: same site.*
+  Arm's tutorial on stage 2, trapping, virtual interrupts and VHE
+  (chapter 8, with KVM as its example of a hosted hypervisor whose host
+  kernel VHE moves to EL2). *Checked 2026-11-14, version 1.0 issue 03,
+  read from a [university copy](https://www.scs.stanford.edu/~zyedidia/docs/arm/virtualization.pdf)
+  for the same reason.*
+- [Linux `arch/arm64/include/asm/virt.h`](https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/virt.h):
+  `is_kernel_in_hyp_mode` and `has_vhe`, the kernel running at EL2.
+  *Checked 2026-11-14.*
+- [Amazon EC2, "Use nested virtualization"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html):
+  the supported instance types, all Intel. *Checked 2026-11-14.*
+- [Compute Engine, "About nested virtualization"](https://docs.cloud.google.com/compute/docs/instances/nested-virtualization/overview):
+  restrictions, which exclude VMs with Arm processors. *Checked 2026-11-14.*
 - [seL4 `include/arch/arm/armv/armv8-a/64/armv/vcpu.h`](https://github.com/seL4/seL4/blob/master/include/arch/arm/armv/armv8-a/64/armv/vcpu.h):
   `HCR_COMMON`, `HCR_NATIVE`, `HCR_VCPU` and the register accessors.
   *Checked 2026-11-14.*

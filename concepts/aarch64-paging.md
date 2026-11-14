@@ -260,11 +260,16 @@ for EL2, and `dc cvau`/`ic ivau` behind the `seL4_ARM_Page_*` and
 
 ## References
 
-- Arm Architecture Reference Manual for A-profile (DDI 0487), chapter
-  "The AArch64 Virtual Memory System Architecture": translation regimes,
-  descriptor formats, "TLB maintenance requirements and the TLB
-  maintenance instructions" and break-before-make. *Unchecked
-  (developer.arm.com refuses scripted fetches).*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
+  chapter D8 "The AArch64 Virtual Memory System Architecture": D8.1
+  "Address translation" for translation regimes, D8.3 "Translation table
+  descriptor formats", and D8.17 "TLB maintenance", which holds "Using
+  break-before-make when updating translation table entries" and "TLB
+  maintenance instructions". The sections were located by title; the
+  figures on this page were not each re-read against them.
+  *Checked 2026-11-14, issue M.d, read from a
+  [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  because developer.arm.com refuses scripted fetches.*
 - [seL4 `hardware.h` for AArch64](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/64/mode/hardware.h):
   the kernel address map at EL1 and EL2.
   *Checked 2026-11-14.*

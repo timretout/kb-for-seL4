@@ -204,8 +204,7 @@ comes from decides who answers.*
 
 **Platforms** (directories of
 [`src/plat/`](https://github.com/seL4/seL4/tree/master/src/plat) whose
-`config.cmake` declares a RISC-V platform; the machine descriptions
-are from memory, unchecked):
+`config.cmake` declares a RISC-V platform):
 
 | `KernelPlatform` | Directory | Machine |
 |---|---|---|
@@ -261,7 +260,8 @@ so code there may do things the verified subset of C forbids.
   firmware, which is how RISC-V paravirtualises timers and IPIs.
 - seL4 depends on the legacy SBI extensions, which the SBI
   specification deprecates. Firmware built without them (they are a
-  build option in OpenSBI, unchecked) cannot run upstream seL4.
+  build option in OpenSBI, `SBI_ECALL_LEGACY`, on by default) cannot
+  run upstream seL4.
 - The legacy `send IPI` call takes a *pointer* to a hart mask, as a
   virtual address that M-mode firmware then reads through the
   caller's page tables. `sbi_send_ipi` hides this by taking the mask
@@ -319,7 +319,14 @@ so code there may do things the verified subset of C forbids.
 - [seL4_tools `elfloader-tool/src/arch-riscv/`](https://github.com/seL4/seL4_tools/tree/master/elfloader-tool/src/arch-riscv):
   `boot.c` calls `sbi_hart_start` for secondary harts. Seen by grep only. *Checked 2026-11-14.*
 - [OpenSBI](https://github.com/riscv-software-src/opensbi): the
-  reference M-mode firmware. *Unchecked: not opened today.*
+  reference M-mode firmware (its README), and
+  [`lib/sbi/Kconfig`](https://github.com/riscv-software-src/opensbi/blob/master/lib/sbi/Kconfig)
+  for `SBI_ECALL_LEGACY`. *Checked 2026-11-14.*
+- [seL4 documentation, hardware pages](https://github.com/seL4/docs/tree/master/Hardware)
+  (`polarfire.md`, `bananapi-f3.md`, `ariane.md`, `cheshire.md`,
+  `rocketchip.md`, `spike.md`, `qemu-riscv-virt.md`) and the `model`
+  strings in seL4's [`tools/dts/`](https://github.com/seL4/seL4/tree/master/tools/dts):
+  what machine each platform is. *Checked 2026-11-14.*
 
 ## My notes
 

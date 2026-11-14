@@ -137,7 +137,8 @@ with banked copies of some registers in place of exception levels, a
 `CPSR` flags register, and system control through "coprocessor 15"
 instructions (`MRC`/`MCR`). An Armv8 core may support AArch32 at some or
 all levels; a lower level can be AArch32 under an AArch64 higher level,
-never the reverse. Many recent server cores are AArch64-only (unchecked).
+never the reverse. Recent server cores (Arm's Neoverse N2, V2 and their
+successors) have no AArch32 at EL1 or above.
 
 ## In seL4
 
@@ -210,14 +211,24 @@ and headers under `include/arch/arm/arch/64/mode/`.
 
 ## References
 
-- Arm Architecture Reference Manual for A-profile (DDI 0487), chapters
-  "The AArch64 Application Level Programmers' Model", "The AArch64
-  System Level Programmers' Model" and "AArch64 System Register
-  Descriptions". *Unchecked (developer.arm.com refuses scripted
-  fetches).*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
+  chapters B1 "The AArch64 Application Level Programmers' Model", D1
+  "The AArch64 System Level Programmers' Model" (D1.1 "Exception
+  levels": a level using AArch32 has only AArch32 below it) and D24
+  "AArch64 System Register Descriptions". The chapter titles and D1.1
+  were read, not every register field on this page. *Checked 2026-11-14,
+  issue M.d, read from a
+  [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  because developer.arm.com refuses scripted fetches.*
 - [Procedure Call Standard for the Arm 64-bit Architecture (AAPCS64)](https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst),
-  section "The Base Procedure Call Standard": register roles and stack
-  alignment. *Unchecked (written from memory).*
+  section "The Base Procedure Call Standard": register roles
+  ("General-purpose Registers", "SIMD and Floating-Point registers") and
+  stack alignment ("The Stack"). *Checked 2026-11-14.*
+- Trusted Firmware-A, [`lib/cpus/aarch64/neoverse_v2.S`](https://github.com/ARM-software/arm-trusted-firmware/blob/master/lib/cpus/aarch64/neoverse_v2.S)
+  (likewise `neoverse_n2.S`, `neoverse_v3.S`, `neoverse_n3.S`) and the
+  [`CTX_INCLUDE_AARCH32_REGS` build option](https://trustedfirmware-a.readthedocs.io/en/latest/getting_started/build-options.html):
+  cores it treats as 64-bit only, meaning no AArch32 at EL1 and above.
+  *Checked 2026-11-14.*
 - [seL4 `registerset.h` for AArch64](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/64/mode/machine/registerset.h):
   `enum _register`, `PSTATE_USER`, `struct user_context`. 
   *Checked 2026-11-14.*

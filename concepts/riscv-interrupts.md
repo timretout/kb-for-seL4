@@ -54,8 +54,7 @@ sections below take the CLINT, the SBI timer call and the PLIC in turn.*
 ### CLINT: timer and software interrupts for M-mode
 
 The classic platform has a *CLINT* (core-local interruptor), a small
-memory-mapped block giving each hart (unchecked: SiFive's CLINT
-documentation and the ACLINT specification were not opened):
+memory-mapped block giving each hart:
 
 - `msip`, a one-bit register per hart: writing 1 raises that hart's
   *machine* software interrupt;
@@ -131,8 +130,7 @@ contexts interrupts all of them and the first to claim wins.
 ### AIA
 
 The *Advanced Interrupt Architecture* (AIA) replaces the PLIC on
-newer and larger systems (unchecked: the AIA specification was not
-opened today; this is an outline from memory). It has two parts:
+newer and larger systems. It has two parts:
 
 - **IMSIC** (incoming message-signalled interrupt controller): one per
   hart, receiving [MSIs](msi-msix.md) as memory writes and presenting them
@@ -266,7 +264,7 @@ a one-hart mask; the target sees `SSIP`. TLB shootdown uses
   under a comment that says 1) with threshold 0, so the PLIC's
   priority scheme is unused: the order in which simultaneous
   interrupts are claimed is by source number (the specification says
-  identifiers break ties; lowest first is from memory, unchecked).
+  identifiers break ties, lowest first).
 - `isIRQPending` ignores `SSIP`, so a pending IPI alone does not
   trigger a preemption point.
 
@@ -286,7 +284,8 @@ a one-hart mask; the target sees `SSIP`. TLB shootdown uses
 - [RISC-V Platform-Level Interrupt Controller Specification](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc),
   "Memory Map", "Interrupt Priorities", "Interrupt Enables",
   "Interrupt Targets and Hart Contexts": the register offsets, source
-  0 and priority 0. The claim and completion sections were not
+  0 and priority 0, and that ties in priority go to the lowest
+  interrupt ID. The claim and completion sections were not
   re-read. *Checked 2026-11-14.*
 - [The RISC-V Instruction Set Manual, Volume II: supervisor-level ISA](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc),
   "Supervisor Interrupt (`sip` and `sie`) Registers" and "Supervisor
@@ -312,11 +311,13 @@ a one-hart mask; the target sees `SSIP`. TLB shootdown uses
   *Checked 2026-11-14.*
 - [seL4 `src/arch/riscv/smp/ipi.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/smp/ipi.c):
   `ipi_send_target`. *Checked 2026-11-14.*
-- [RISC-V Advanced Interrupt Architecture](https://github.com/riscv/riscv-aia):
-  IMSIC and APLIC. *Unchecked: not opened today.*
-- [RISC-V ACLINT specification](https://github.com/riscv/riscv-aclint):
+- [RISC-V Advanced Interrupt Architecture, introduction](https://github.com/riscv/riscv-aia/blob/main/src/intro.adoc):
+  IMSIC and APLIC, interrupt files and guest interrupt files. Only the
+  introduction was read. *Checked 2026-11-14.*
+- [RISC-V ACLINT specification](https://github.com/riscv/riscv-aclint/blob/main/riscv-aclint.adoc):
   the CLINT's successor, with the `mtime`, `mtimecmp` and `msip`
-  register definitions. *Unchecked: not opened today.*
+  register definitions, the supervisor software-interrupt device and
+  its compatibility with the SiFive CLINT. *Checked 2026-11-14.*
 
 ## My notes
 

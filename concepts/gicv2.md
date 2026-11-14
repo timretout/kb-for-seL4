@@ -66,8 +66,7 @@ SGIs and PPIs are per core, so their distributor state (the first word
 of each register array) is banked too. A device tree names an interrupt
 as three cells `<type number flags>`, with type 0 for SPI and 1 for PPI
 and the number relative to that kind: `<0 5 4>` is SPI 5, which is INTID
-37; `<1 11 8>` is PPI 11, INTID 27 (unchecked: Linux binding
-`arm,gic.yaml`). Kernel code and seL4's API use INTIDs.
+37; `<1 11 8>` is PPI 11, INTID 27. Kernel code and seL4's API use INTIDs.
 
 ### Distributor registers
 
@@ -97,7 +96,7 @@ Most are arrays with a fixed number of bits per interrupt, so interrupt
 | `0x00C` | `GICC_IAR` | Interrupt acknowledge: read to get the INTID |
 | `0x010` | `GICC_EOIR` | End of interrupt: write the value read from IAR |
 | `0x018` | `GICC_HPPIR` | Highest priority pending INTID, without acknowledging |
-| `0x1000` | `GICC_DIR` | Deactivate, when priority drop and deactivation are split (unchecked: GICv2 specification) |
+| `0x1000` | `GICC_DIR` | Deactivate, when priority drop and deactivation are split |
 
 ### Life of an interrupt
 
@@ -139,7 +138,7 @@ is non-secure and signalled as IRQ; a non-secure kernel sees and
 controls only group 1 interrupts, and secure firmware decides which are
 which before the kernel starts ([Arm boot flow](arm-boot.md)). Priority
 values are also split: the non-secure view has half the range
-(unchecked: GICv2 specification, section 4.3 register descriptions).
+(GICv2 specification, section 3.5.1).
 
 ### The virtual interface
 
@@ -261,8 +260,7 @@ accessors `get_gic_vcpu_ctrl_*` used by the VCPU code; see
 - **1023 is normal.** A level interrupt withdrawn between the IRQ
   exception and the `IAR` read gives a spurious 1023; it must not be
   written to `EOIR`. 1022 can appear when group 1 interrupts are read
-  through the group 0 view (unchecked: GICv2 specification, section 3.2
-  on special interrupt numbers).
+  through the group 0 view (GICv2 specification, section 3.4.2).
 - **Reading `IAR` is destructive.** It activates the interrupt, so
   peeking must use `HPPIR` (`isIRQPending`), and a debugger dumping the
   GICC block can swallow an interrupt.
@@ -278,7 +276,7 @@ accessors `get_gic_vcpu_ctrl_*` used by the VCPU code; see
   level device gives one interrupt and then silence, or a storm; SPIs
   default to level in `dist_init`.
 - **Under emulation the eight-core limit is real.** QEMU's `virt` machine
-  with `gic-version=2` refuses more than eight cores (unchecked).
+  with `gic-version=2` refuses more than eight cores.
 
 ## See also
 
@@ -294,10 +292,13 @@ accessors `get_gic_vcpu_ctrl_*` used by the VCPU code; see
 ## References
 
 - [ARM Generic Interrupt Controller Architecture Specification, version 2.0, IHI 0048B](https://developer.arm.com/documentation/ihi0048/latest):
-  chapter 3 for interrupt handling and states, chapter 4 for the
-  distributor and CPU interface registers, chapter 5 for the virtual
-  interface. *Unchecked: developer.arm.com refuses scripted fetches;
-  chapter numbers from memory.*
+  chapter 3 for interrupt handling and states (3.4.2 for interrupt IDs
+  1022 and 1023, 3.5.1 for the non-secure view of priorities), chapter
+  4 for the distributor and CPU interface registers (table 4-2 has
+  `GICC_DIR` at `0x1000`), chapter 5 for the virtual interface.
+  *Checked 2026-11-14, issue B.b, read as the
+  [PDF](https://documentation-service.arm.com/static/5f8ff196f86e16515cdbf969)
+  because developer.arm.com refuses scripted fetches.*
 - [seL4 `include/arch/arm/arch/machine/gic_v2.h`](https://github.com/seL4/seL4/blob/master/include/arch/arm/arch/machine/gic_v2.h):
   register offsets (in the struct comments), `getActiveIRQ`,
   `maskInterrupt`, `ackInterrupt`, the GICH layout.
@@ -316,7 +317,11 @@ accessors `get_gic_vcpu_ctrl_*` used by the VCPU code; see
   the `compatible` strings and region indices for GICv2.
   *Checked 2026-11-14.*
 - [Linux device tree binding `interrupt-controller/arm,gic.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml):
-  the three interrupt cells. *Unchecked: not opened today.*
+  the three interrupt cells. *Checked 2026-11-14.*
+- [QEMU `hw/arm/virt.c`](https://github.com/qemu/qemu/blob/master/hw/arm/virt.c)
+  and [`include/hw/intc/arm_gic_common.h`](https://github.com/qemu/qemu/blob/master/include/hw/intc/arm_gic_common.h):
+  with GIC version 2 the `virt` machine's CPU limit is `GIC_NCPU`, 8,
+  and asking for more is an error. *Checked 2026-11-14.*
 
 ## My notes
 

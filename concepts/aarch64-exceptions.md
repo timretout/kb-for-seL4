@@ -222,8 +222,8 @@ taken from the kernel itself: in a debug build it prints
   call entry** along with `SVC` from EL0 native threads; both reach
   `lel_syscall`.
 - **System call numbers are negative** in seL4 (`seL4_SysCall` is -1 and
-  the rest count down) (unchecked: values are generated at build time
-  from `libsel4/include/api/syscall.xml`).
+  the rest count down): the values are generated at build time from
+  `libsel4/include/api/syscall.xml`.
 
 ## See also
 
@@ -240,11 +240,19 @@ taken from the kernel itself: in a debug build it prints
 
 ## References
 
-- Arm Architecture Reference Manual for A-profile (DDI 0487), chapter
-  "The AArch64 System Level Programmers' Model", sections "Exception
-  entry", "Exception return" and "Exception vectors", and the register
-  description of `ESR_EL1`. *Unchecked (developer.arm.com refuses
-  scripted fetches).*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
+  chapter D1 "The AArch64 System Level Programmers' Model", section D1.4
+  "Exceptions" with its parts "Exception vectors", "Exception entry" and
+  "Exception return", and the register description of `ESR_EL1` in
+  chapter D24. The sections were located and "Exception vectors" read;
+  the figures on this page were not each re-read against them.
+  *Checked 2026-11-14, issue M.d, read from a
+  [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  because developer.arm.com refuses scripted fetches.*
+- [seL4 `tools/syscall_header_gen.py`](https://github.com/seL4/seL4/blob/master/tools/syscall_header_gen.py)
+  (`map_syscalls_neg` numbers the calls from -1 downwards) and
+  [`libsel4/include/api/syscall.xml`](https://github.com/seL4/seL4/blob/master/libsel4/include/api/syscall.xml)
+  (`Call` is first). *Checked 2026-11-14.*
 - [seL4 `traps.S` for AArch64](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/traps.S):
   the vector table, `kernel_enter`, `lsp_i` and the dispatch on `ESR`.
   *Checked 2026-11-14.*

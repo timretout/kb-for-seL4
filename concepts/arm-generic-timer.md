@@ -34,15 +34,17 @@ usual PPIs are 30 (non-secure physical), 27 (virtual), 26 (hypervisor) and
 per timer.*
 
 Unlike x86, no calibration is needed: `CNTFRQ_EL0` gives the rate. From
-Armv8.6 the rate is fixed at 1 GHz (unchecked); older cores use whatever
+Armv8.6 the rate is fixed at 1 GHz; older cores use whatever
 the system designer chose.
 
 ## In seL4
 
 The kernel's Arm timer driver uses the generic timer. Each platform's
-`config.cmake` sets `TIMER_FREQUENCY` at build time, and the kernel warns
-at boot if `CNTFRQ_EL0` disagrees (`gpt_cntfrq ... expected ...`)
-(unchecked: file and message location in the source). User-level code
+`config.cmake` sets `TIMER_FREQUENCY` at build time, and a debug build of
+the kernel warns at boot if a non-zero `CNTFRQ_EL0` disagrees
+(`Warning:  gpt_cntfrq ... expected ...`, printed by `initGenericTimer` in
+[`src/drivers/timer/generic_timer.c`](https://github.com/seL4/seL4/blob/master/src/drivers/timer/generic_timer.c)).
+User-level code
 generally reads `CNTFRQ_EL0` itself.
 
 ## Gotchas
@@ -68,10 +70,21 @@ generally reads `CNTFRQ_EL0` itself.
 ## References
 
 - [Arm, "Learn the architecture: Generic Timer"](https://developer.arm.com/documentation/102379/latest/):
-  the counter, the timers and their registers. *Unchecked
-  (developer.arm.com refuses scripted fetches).*
-- Arm Architecture Reference Manual for A-profile (DDI 0487), chapter
-  "The Generic Timer in AArch64 state". *Unchecked.*
+  the counter, the timers and their registers; chapter 3 for the 1 GHz
+  rate from Armv8.6, section 4.5 for the PPI numbers.
+  *Checked 2026-11-14, version 1.3, read as the
+  [PDF](https://documentation-service.arm.com/static/65fac6957bcc0c1c661b36c0)
+  because developer.arm.com refuses scripted fetches.*
+- [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
+  chapter D12 "The Generic Timer in AArch64 state"; D12.1.2 "The system
+  counter" for the fixed 1 GHz rate. *Checked 2026-11-14, issue M.d,
+  read from a [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
+  for the same reason.*
+- [seL4 `src/drivers/timer/generic_timer.c`](https://github.com/seL4/seL4/blob/master/src/drivers/timer/generic_timer.c):
+  `initGenericTimer` and its `CNTFRQ` warning, under
+  `CONFIG_DEBUG_BUILD`. *Checked 2026-11-14.*
+- [seL4 `src/plat/qemu-arm-virt/config.cmake`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/config.cmake):
+  `TIMER_FREQUENCY 62500000`. *Checked 2026-11-14.*
 
 ## My notes
 
