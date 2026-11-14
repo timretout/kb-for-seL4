@@ -7,7 +7,7 @@ The knowledge base is `sel4-kb` (at `~/src/sel4/sel4-kb`). Its
 `CLAUDE.md` holds the rules for pages and references; read it first.
 
 Argument: a concept ("HPET", "MSI-X"), a page path, or "check". With
-none, take the first item under "Wanted" in `INDEX.md`.
+none, take the first page marked "Stub" in `INDEX.md`.
 
 ## Writing or refreshing a page
 
@@ -24,9 +24,9 @@ none, take the first item under "Wanted" in `INDEX.md`.
    *Unchecked* by the rules in `CLAUDE.md`, and put "(unchecked)" after
    any claim no checked reference supports.
 4. Link it: relative links to related pages, in both directions; its
-   summary line in `INDEX.md` under the right group; remove it from
-   "Wanted" if it was there. Add to "Wanted" any concept the page leans
-   on that has no page.
+   summary line in `INDEX.md` under the right group (`ci/sync-index`
+   refreshes summaries); its terms in `GLOSSARY.md`. For a concept the
+   page leans on that has no page, add a stub and its index line.
 5. `ci/check` passes. Commit in `sel4-kb` alone ("kb: <page>: <what>").
 
 Done when the page passes `ci/check`, every reference carries a mark,

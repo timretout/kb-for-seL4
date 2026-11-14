@@ -13,7 +13,24 @@ wrong page teaches the wrong thing to both.
 - Follow `TEMPLATE.md`: a title, a one-sentence summary in a `>` line,
   then the sections in its order. `ci/check` enforces this.
 - Every page has a line in `INDEX.md` under the right group, carrying the
-  page's summary sentence.
+  page's summary sentence. `INDEX.md` is arranged as a course, in reading
+  order; `ci/sync-index` copies every page's summary into it.
+- A page whose summary starts "Stub:" is planned and unwritten. Writing
+  it means replacing the whole stub, summary included.
+- Under the summary a page may carry one line, "Read first:" and relative links,
+  naming the pages it builds on.
+- In `sel4/` pages, "What it is" explains the concept and its API as a
+  user of the kernel sees it, and "In seL4" says where it lives in the
+  source (files, functions, configuration options) and how it is
+  implemented.
+- The reader knows C and operating systems as a long-time Linux user
+  does, and has followed seL4 from a distance, but has not studied x86,
+  Arm or RISC-V. Define each term of art on first use or link the page
+  that does. Aim for the depth a new contributor needs to read the
+  relevant kernel code and review a patch to it: typically 800 to 2000
+  words, with the numbers, register and function names that matter.
+- `GLOSSARY.md` lists terms and abbreviations, each with a link to the
+  page that explains it. Add a page's new terms to it.
 - Link related pages to each other with relative links, in both
   directions. A page that mentions a concept with its own page links to it
   the first time.

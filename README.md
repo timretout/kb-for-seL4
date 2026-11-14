@@ -12,12 +12,14 @@ Start at [INDEX.md](INDEX.md).
 
 ## Layout
 
-    INDEX.md      every page, one line each, grouped
+    INDEX.md      every page, one line each, in reading order
+    GLOSSARY.md   terms and abbreviations, with the page for each
     TEMPLATE.md   the shape of a page
     concepts/     hardware and generic OS ideas
     sel4/         seL4, Microkit, sDDF and rust-sel4 ideas
     claude/       the /kb skill
     ci/check      link and structure check
+    ci/sync-index copy page summaries into INDEX.md
 
 ## What belongs here
 

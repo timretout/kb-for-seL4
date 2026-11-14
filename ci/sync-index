@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+"""Copy each page's '> summary' line into its INDEX.md entry.
+
+Usage: ci/sync-index   (rewrites INDEX.md in place; titles and order stay)
+"""
+
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+ENTRY = re.compile(r"^- \[([^\]]+)\]\(((?:concepts|sel4)/[^)]+\.md)\): .*$")
+
+
+def summary(path):
+    lines = path.read_text().splitlines()
+    out = []
+    for line in lines[1:]:
+        if line.startswith(">"):
+            out.append(line[1:].strip())
+        elif out:
+            break
+    return " ".join(out)
+
+
+def main():
+    index = ROOT / "INDEX.md"
+    new = []
+    for line in index.read_text().splitlines():
+        m = ENTRY.match(line)
+        if m and (ROOT / m.group(2)).exists():
+            line = f"- [{m.group(1)}]({m.group(2)}): {summary(ROOT / m.group(2))}"
+        new.append(line)
+    index.write_text("\n".join(new) + "\n")
+
+
+if __name__ == "__main__":
+    main()

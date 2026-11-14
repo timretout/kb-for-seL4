@@ -3,6 +3,8 @@
 > One sentence: what it is and why seL4 work meets it. This line is copied
 > into INDEX.md.
 
+Read first: [Prerequisite page](../concepts/other.md). (Optional line.)
+
 ## What it is
 
 The explanation, for someone who knows C and operating systems in general
