@@ -9,7 +9,7 @@ CPU's own bus with interrupt and DMA lines added. The PC/AT (1984)
 widened it to 16 bits for the 80286. IBM called it the I/O Channel; others
 called it the PC or AT bus. "Industry Standard Architecture" is a
 retronym coined by the clone makers in the late 1980s, after IBM tried to
-replace it with its proprietary Micro Channel. PCI pushed ISA slots off
+replace it with its proprietary Micro Channel. [PCI](pci.md) pushed ISA slots off
 motherboards during the 1990s.
 
 What survives is not the bus but what was on it. The PC's motherboard
@@ -93,6 +93,7 @@ code states the mapping).
 - [Local APIC and I/O APIC](apic.md): what receives ISA interrupts now
 - [ACPI tables](acpi-tables.md): the MADT's interrupt source overrides
 - [PIT](pit.md): ISA IRQ 0, and the device seL4 still needs at boot
+- [PCI and PCI Express](pci.md): the bus that replaced ISA
 - [MSI and MSI-X](msi-msix.md): how PCI devices interrupt instead
 
 ## References

@@ -29,6 +29,7 @@ to bottom for a sensible order.
 ## PCI and devices
 
 - [ISA](concepts/isa.md): the IBM PC's original expansion bus; long gone as a slot, it lives on as the fixed set of legacy PC devices (PIT, 8259 PICs, COM ports, RTC, keyboard) at their old I/O ports and IRQ numbers 0 to 15, which every x86 machine and hypervisor still provides.
+- [PCI and PCI Express](concepts/pci.md): the bus by which almost every device in a PC, server or cloud virtual machine is found and reached: each function at a bus:device.function address has a configuration space that names it and holds its BARs, the windows through which its registers appear; PCI Express keeps that software model on point-to-point serial links and reaches the larger configuration space through ECAM.
 - [MSI and MSI-X](concepts/msi-msix.md): a PCI device interrupts by writing a value to an address instead of asserting a wire; MSI allows up to 32 vectors set in configuration space, MSI-X up to 2048 from a table in a BAR.
 
 ## seL4
@@ -44,7 +45,6 @@ from here when writing a new page.
 - I/O ports and port I/O against MMIO
 - 8259 PIC (the original PC interrupt controller)
 - 16550 UART
-- PCI configuration space, BARs and ECAM
 - Device trees
 - PSCI and the SMC calling convention
 - virtio (legacy and modern transports)

@@ -4,7 +4,7 @@
 
 ## What it is
 
-Legacy PCI interrupts are four shared wires (INTA to INTD) routed through
+Legacy [PCI](pci.md) interrupts are four shared wires (INTA to INTD) routed through
 an interrupt controller. Message signalled interrupts replace the wire
 with a memory write: the OS gives the device an **address** and a
 **data** value, and to interrupt, the device writes the data to the
@@ -50,6 +50,7 @@ designed around MSI-X, one vector per queue.
 - [IRQ](irq.md): what an interrupt is, and how seL4 hands one to user level
 - [Local APIC and I/O APIC](apic.md): where an x86 MSI is delivered
 - [GICv3 and the ITS](gicv3-its.md): how Arm turns the write into an interrupt
+- [PCI and PCI Express](pci.md): configuration space, capabilities and BARs
 - [ACPI tables](acpi-tables.md): MCFG says where PCI configuration space is
 
 ## References

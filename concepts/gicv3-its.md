@@ -27,7 +27,7 @@ Interrupt IDs (INTIDs) come in ranges:
 rather than registers: a configuration table (priority, enable) shared by
 all cores and a pending table per core. A device does not raise an LPI
 directly. It writes an **EventID** to the ITS's `GITS_TRANSLATER`
-register, and the ITS identifies the device by its **DeviceID** (for PCI,
+register, and the ITS identifies the device by its **DeviceID** (for [PCI](pci.md),
 derived from the requester ID). The ITS then looks up:
 
     DeviceID ── device table ──▶ that device's interrupt translation table
@@ -65,6 +65,7 @@ needs kernel table memory too.
 - [IRQ](irq.md): interrupts in general, and seL4's IRQ handler capabilities
 - [Local APIC and I/O APIC](apic.md): the x86 counterpart
 - [MSI and MSI-X](msi-msix.md): what the device writes
+- [PCI and PCI Express](pci.md): the requester ID that becomes a DeviceID
 - [Arm generic timer](arm-generic-timer.md): the PPIs
 
 ## References

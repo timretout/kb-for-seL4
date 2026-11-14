@@ -145,7 +145,7 @@ Microkit's `<irq>` element takes the same fields.
   `c5n.metal`'s firmware switches them to x2APIC, so it needs
   `KernelLAPICMode=X2APIC`.
 - **Without an IOMMU, MSI details are recorded but unused.** seL4 keeps
-  the PCI address and `handle` of an MSI, but uses neither, and cannot
+  the [PCI](pci.md) address and `handle` of an MSI, but uses neither, and cannot
   mask an MSI.
 - **ISA IRQ 0 is not always pin 2.** See [PIT](pit.md): read the MADT's
   overrides.
@@ -156,6 +156,7 @@ Microkit's `<irq>` element takes the same fields.
 - [IRQ](irq.md): edge and level, and how seL4 hands interrupts to user level
 - [Local APIC timer and TSC deadline mode](lapic-timer.md): the timer inside the local APIC
 - [MSI and MSI-X](msi-msix.md): interrupts written straight to a local APIC
+- [PCI and PCI Express](pci.md): the bus:device.function an MSI handler is registered against
 - [ACPI tables](acpi-tables.md): the MADT lists local APICs, I/O APICs and overrides
 - [PIT](pit.md): an ISA interrupt whose I/O APIC pin varies by machine
 - [GICv3 and the ITS](gicv3-its.md): Arm's equivalent

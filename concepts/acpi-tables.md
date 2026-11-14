@@ -46,7 +46,7 @@ it is not the identity mapping, and with which polarity and trigger mode.
   where most PCs and QEMU route it to pin 2.
 - **Large tables.** A walker that copies every table into a fixed heap
   can run out on machines with big tables.
-- Newer EC2 types add an MCFG table and a PCIe hierarchy of bridges.
+- Newer EC2 types add an MCFG table and a [PCIe](pci.md) hierarchy of bridges.
 
 ## See also
 
@@ -54,6 +54,7 @@ it is not the identity mapping, and with which polarity and trigger mode.
 - [Local APIC and I/O APIC](apic.md): the interrupt controllers the MADT describes
 - [HPET](hpet.md): found through its table
 - [PIT](pit.md): its interrupt pin comes from the MADT
+- [PCI and PCI Express](pci.md): ECAM, the configuration space MCFG locates
 - [MSI and MSI-X](msi-msix.md): PCI devices found through MCFG
 
 ## References

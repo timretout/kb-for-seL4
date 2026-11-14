@@ -17,7 +17,7 @@ comes from mixing them up:
 
 | Meaning | Example |
 |---|---|
-| The **line or pin** a device drives | I/O APIC pin 0; PCI `INTA` |
+| The **line or pin** a device drives | I/O APIC pin 0; [PCI](pci.md) `INTA` |
 | The **source number** in a numbering scheme | [ISA](isa.md) IRQ 4 (COM1); Arm INTID 37 |
 | The **vector** the CPU is interrupted with | x86 vector `0x30` |
 
@@ -128,6 +128,7 @@ notes that the kernel keeps the interrupt masked until then.
 - [Local APIC and I/O APIC](apic.md): x86's interrupt controllers
 - [GICv3 and the ITS](gicv3-its.md): Arm's interrupt controller
 - [MSI and MSI-X](msi-msix.md): interrupts as memory writes instead of wires
+- [PCI and PCI Express](pci.md): where INTx pins and MSI-capable devices come from
 - [ACPI tables](acpi-tables.md): the MADT maps ISA IRQs to I/O APIC pins
 - [PIT](pit.md): the classic edge-triggered ISA interrupt, IRQ 0
 - [Local APIC timer](lapic-timer.md): the interrupt seL4's own scheduler runs on
