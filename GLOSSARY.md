@@ -2,6 +2,8 @@
 
 Terms and abbreviations used in the knowledge base, each with a short definition and a link to the page that explains it.
 
+[0-9](#0-9) · [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [Q](#q) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [V](#v) · [W](#w) · [X](#x) · [Y](#y) · [Z](#z)
+
 ## 0-9
 
 - **16550**: The UART of PCs and many RISC-V and Arm boards, including EC2 Graviton instances. See [UARTs: 16550 and PL011](concepts/uart.md).

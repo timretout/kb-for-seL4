@@ -5,6 +5,17 @@ or jump to what you need. Pages marked "Stub" are planned and not yet
 written. [GLOSSARY.md](GLOSSARY.md) lists terms and abbreviations with
 the page that explains each.
 
+1. [Orientation](#part-1-orientation)
+2. [Processor fundamentals](#part-2-processor-fundamentals)
+3. [Platform and devices](#part-3-platform-and-devices)
+4. [The seL4 kernel](#part-4-the-sel4-kernel)
+5. [Verification](#part-5-verification)
+6. [User level](#part-6-user-level)
+7. [Contributing](#part-7-contributing)
+
+Looking for one architecture's version of an idea? See
+[By architecture](#by-architecture) at the end.
+
 ## Part 1: Orientation
 
 What seL4 is and how the project fits together. Read these first.
@@ -172,3 +183,24 @@ How changes get into seL4.
 - [Contributing a patch](sel4/contributing.md): The path of a change into upstream seL4: a pull request from a fork on GitHub, signed-off commits in a fixed message format, astyle-formatted C with SPDX headers, review by committers, and, for the kernel, a proof that still holds.
 - [Upstream CI](sel4/ci.md): The GitHub Actions checks a seL4 pull request meets (lint, style, licences, compile matrix, sel4test in simulation, the preprocess check) and the ones only a maintainer's label or a merge starts (hardware runs, proofs, manifest deployment).
 - [Governance and RFCs](sel4/governance.md): Who decides what goes into seL4: the seL4 Foundation's Technical Steering Committee sets process and grants the reviewer and committer roles, and substantial changes pass through a public RFC before any pull request is accepted.
+
+## By architecture
+
+The same ideas, side by side. Each cell links the page that covers that
+idea for that architecture; a page in the first column covers all three.
+
+| Idea | All | x86-64 | AArch64 | RISC-V |
+|---|---|---|---|---|
+| Registers and modes | [Privilege levels](concepts/privilege-levels.md) | [x86-64 basics](concepts/x86-64-basics.md), [CPUID and MSRs](concepts/cpuid-and-msrs.md) | [AArch64 basics](concepts/aarch64-basics.md) | [RISC-V basics](concepts/riscv-basics.md) |
+| Entering the kernel | [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md) | [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md) | [AArch64 exceptions](concepts/aarch64-exceptions.md) | [RISC-V paging and traps](concepts/riscv-paging-and-traps.md) |
+| Page tables | [Virtual memory](concepts/virtual-memory.md) | [x86-64 paging](concepts/x86-paging.md) | [AArch64 paging](concepts/aarch64-paging.md) | [RISC-V paging and traps](concepts/riscv-paging-and-traps.md) |
+| Interrupt controller | [IRQ](concepts/irq.md) | [Local APIC and I/O APIC](concepts/apic.md), [8259 PIC](concepts/pic-8259.md) | [GICv2](concepts/gicv2.md), [GICv3 and the ITS](concepts/gicv3-its.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
+| Timers | [Timer calibration](concepts/timer-calibration.md) | [PIT](concepts/pit.md), [TSC](concepts/tsc.md), [Local APIC timer](concepts/lapic-timer.md), [HPET](concepts/hpet.md) | [Arm generic timer](concepts/arm-generic-timer.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
+| Boot chain | [ELF and linking](concepts/elf.md), [UEFI](concepts/uefi.md) | [x86 boot](concepts/x86-boot.md) | [Arm boot flow](concepts/arm-boot.md), [Elfloader](sel4/elfloader.md) | [RISC-V basics](concepts/riscv-basics.md), [Elfloader](sel4/elfloader.md) |
+| Calling firmware | | | [PSCI and SMCCC](concepts/psci-smccc.md) | [RISC-V basics](concepts/riscv-basics.md) (SBI) |
+| Starting other cores | [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md) | | [PSCI and SMCCC](concepts/psci-smccc.md) | |
+| Describing the machine | | [ACPI tables](concepts/acpi-tables.md) | [Device trees](concepts/device-tree.md), [ACPI tables](concepts/acpi-tables.md) | [Device trees](concepts/device-tree.md) |
+| Hosting guests | [Virtualisation support](sel4/hypervisor.md) | [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md) | [Arm virtualisation (EL2)](concepts/arm-virtualisation.md) | |
+| Device memory protection | [IOMMUs: VT-d and SMMU](concepts/iommu.md) | | | |
+| Serial console | [UARTs: 16550 and PL011](concepts/uart.md) | | | |
+| Floating point state | [FPU and SIMD state](concepts/fpu-state.md) | | | |
