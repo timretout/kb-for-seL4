@@ -12,7 +12,7 @@ x86 timer whose frequency software can assume.
 
 | Channel | Wired to | Use today |
 |---|---|---|
-| 0 | IRQ 0 | System tick, or a reference clock |
+| 0 | [IRQ](irq.md) 0 | System tick, or a reference clock |
 | 1 | DRAM refresh on the original PC | Nothing |
 | 2 | PC speaker; its gate is bit 0 of port `0x61` | Occasionally calibration |
 
@@ -59,7 +59,7 @@ and call).
 
 ## Gotchas
 
-- **IRQ 0 is not always I/O APIC pin 2.** On most PCs, and in QEMU, the
+- **IRQ 0 is not always [I/O APIC](apic.md) pin 2.** On most PCs, and in QEMU, the
   [ACPI](acpi-tables.md) MADT has an interrupt source override sending ISA
   IRQ 0 to pin 2. EC2's Nitro types and Compute Engine's x86 types have
   no override for IRQ 0, so the PIT is on pin 0. Read the MADT; never
@@ -76,6 +76,7 @@ and call).
 
 ## See also
 
+- [Local APIC and I/O APIC](apic.md): the I/O APIC pin its interrupt arrives on
 - [Timer calibration](timer-calibration.md): what the PIT is used for in seL4
 - [HPET](hpet.md): the timer meant to replace it
 - [TSC](tsc.md) and [local APIC timer](lapic-timer.md): the clocks it calibrates

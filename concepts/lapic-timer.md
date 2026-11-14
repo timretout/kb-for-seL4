@@ -4,7 +4,7 @@
 
 ## What it is
 
-Each x86 core has a local APIC (Advanced Programmable Interrupt
+Each x86 core has a [local APIC](apic.md) (Advanced Programmable Interrupt
 Controller), which receives interrupts for that core and sends
 inter-processor interrupts. It also has a timer, configured through the
 timer entry of the local vector table (LVT) and a divide register. It has
@@ -59,6 +59,7 @@ budget and period. The non-MCS kernel uses a periodic tick.
 
 ## See also
 
+- [Local APIC and I/O APIC](apic.md): the interrupt controller the timer is part of
 - [TSC](tsc.md): the clock deadlines are expressed in
 - [Timer calibration](timer-calibration.md): how the APIC timer's rate is measured
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): EBX of `0x40000010` gives the APIC timer's rate

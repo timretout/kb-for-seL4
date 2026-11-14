@@ -20,7 +20,7 @@ address. The interrupt controller recognises writes to that address.
 What the address and data mean depends on the architecture:
 
 - **x86:** the address is in the `0xfee00000` range and names a target
-  local APIC; the data holds the vector.
+  [local APIC](apic.md); the data holds the vector.
 - **Arm GICv3:** the address is the ITS's `GITS_TRANSLATER` register and
   the data is an EventID, which the ITS translates to an LPI (see
   [GICv3 and the ITS](gicv3-its.md)).
@@ -30,7 +30,7 @@ designed around MSI-X, one vector per queue.
 
 ## In seL4
 
-- **x86:** seL4 gives user level an IRQ handler capability for an MSI
+- **x86:** seL4 gives user level an [IRQ](irq.md) handler capability for an MSI
   vector, and the user-level driver programs the device (unchecked: the
   invocation name).
 - **Arm:** upstream seL4 has no ITS support, so no MSI on Arm. A
@@ -47,6 +47,8 @@ designed around MSI-X, one vector per queue.
 
 ## See also
 
+- [IRQ](irq.md): what an interrupt is, and how seL4 hands one to user level
+- [Local APIC and I/O APIC](apic.md): where an x86 MSI is delivered
 - [GICv3 and the ITS](gicv3-its.md): how Arm turns the write into an interrupt
 - [ACPI tables](acpi-tables.md): MCFG says where PCI configuration space is
 

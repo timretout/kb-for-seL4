@@ -22,8 +22,8 @@ Every table starts with the same header (signature, length, checksum), so
 a walker can skip signatures it does not know.
 
 **Interrupt source overrides** in the MADT matter for legacy devices: they
-say which I/O APIC pin each ISA IRQ arrives on when it is not the
-identity mapping, and with which polarity and trigger mode.
+say which [I/O APIC](apic.md) pin each ISA [IRQ](irq.md) arrives on when
+it is not the identity mapping, and with which polarity and trigger mode.
 
 ## In seL4
 
@@ -50,6 +50,7 @@ identity mapping, and with which polarity and trigger mode.
 
 ## See also
 
+- [Local APIC and I/O APIC](apic.md): the interrupt controllers the MADT describes
 - [HPET](hpet.md): found through its table
 - [PIT](pit.md): its interrupt pin comes from the MADT
 - [MSI and MSI-X](msi-msix.md): PCI devices found through MCFG

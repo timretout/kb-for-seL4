@@ -62,6 +62,8 @@ needs kernel table memory too.
 
 ## See also
 
+- [IRQ](irq.md): interrupts in general, and seL4's IRQ handler capabilities
+- [Local APIC and I/O APIC](apic.md): the x86 counterpart
 - [MSI and MSI-X](msi-msix.md): what the device writes
 - [Arm generic timer](arm-generic-timer.md): the PPIs
 
