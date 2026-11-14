@@ -280,28 +280,24 @@ so code there may do things the verified subset of C forbids.
   harts, extension names (`G` = `IMAFDZicsr_Zifencei`), the CSR
   instructions and their `csrr`/`csrw` shorthands. *Checked 2026-11-14.*
 - [The RISC-V Instruction Set Manual, Volume II: supervisor-level ISA](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc),
-  "Supervisor CSRs": one section per register in the table. *Checked
-  2026-11-14 for the list of registers; bit positions are from seL4's
-  headers and memory.*
+  "Supervisor CSRs": one section per register in the table. Bit positions are from seL4's
+  headers and memory. *Checked 2026-11-14.*
 - [RISC-V ELF psABI, calling convention](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc),
-  "Integer Register Convention": the ABI names table. *Checked
-  2026-11-14.*
+  "Integer Register Convention": the ABI names table. *Checked 2026-11-14.*
 - [RISC-V SBI specification](https://github.com/riscv-non-isa/riscv-sbi-doc/tree/master/src):
   `binary-encoding.adoc` (the calling convention), `ext-legacy.adoc`
   (EIDs 0 to 8), `ext-time.adoc`, `ext-ipi.adoc`, `ext-rfence.adoc`,
   `ext-hsm.adoc` (hart start state), `ext-debug-console.adoc`.
   *Checked 2026-11-14.*
 - [seL4 `include/arch/riscv/arch/sbi.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/sbi.h):
-  the legacy call numbers and the hart mask comment. *Checked
-  2026-11-14.*
+  the legacy call numbers and the hart mask comment. *Checked 2026-11-14.*
 - [seL4 `include/arch/riscv/arch/machine/registerset.h`](https://github.com/seL4/seL4/blob/master/include/arch/riscv/arch/machine/registerset.h),
   [`src/arch/riscv/head.S`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/head.S),
   [`src/arch/riscv/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/config.cmake)
   and the `src/plat/*/config.cmake` files: the context layout, entry,
   options and platform list. *Checked 2026-11-14.*
 - [seL4_tools `elfloader-tool/src/arch-riscv/`](https://github.com/seL4/seL4_tools/tree/master/elfloader-tool/src/arch-riscv):
-  `boot.c` calls `sbi_hart_start` for secondary harts. *Checked
-  2026-11-14 (grep only).*
+  `boot.c` calls `sbi_hart_start` for secondary harts. Seen by grep only. *Checked 2026-11-14.*
 - [OpenSBI](https://github.com/riscv-software-src/opensbi): the
   reference M-mode firmware. *Unchecked: not opened today.*
 
