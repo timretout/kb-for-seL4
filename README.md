@@ -18,8 +18,10 @@ Start at [INDEX.md](INDEX.md).
     concepts/     hardware and generic OS ideas
     sel4/         seL4, Microkit, sDDF and rust-sel4 ideas
     claude/       the /kb skill
+    images/       SVG diagrams, and their style guide
     ci/check      link and structure check
-    ci/sync-index copy page summaries into INDEX.md
+    ci/sync-index copy page summaries into INDEX.md, and each page's
+                  breadcrumb line (part, group, previous, next) into it
 
 ## What belongs here
 
@@ -28,6 +30,17 @@ behaves, where seL4 touches it, what goes wrong with it, and where to read
 more. Findings from particular projects (boot logs, patch dossiers, notes
 on a machine) live in those projects and link here. Nothing here links
 back to them, so this repository stands on its own and could be published.
+
+## Shape of a page
+
+Every page opens the same way: a one-sentence summary, a breadcrumb line
+(where the page sits in the course, with the pages before and after), the
+pages to read first, and an "At a glance" table of the facts someone
+returning to the page wants (what kind of thing it is, how it is reached,
+the numbers, where seL4's code for it lives). Then: What it is, In seL4,
+Gotchas, See also, References, My notes. Diagrams are SVG, in one style
+with one colour code (blue hardware, purple firmware and hypervisors,
+orange the seL4 kernel, green user level, grey data).
 
 ## Reading it
 
@@ -48,5 +61,6 @@ the commit means a broken link or a page off the template.
     ci/check
 
 reports broken relative links, pages missing from the index, pages that
-do not follow the template, and references with no checked or unchecked
-mark.
+do not follow the template or lack an infobox, stale breadcrumb lines,
+references with no checked or unchecked mark, and diagrams that are
+malformed or unused.

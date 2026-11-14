@@ -17,8 +17,15 @@ wrong page teaches the wrong thing to both.
   order; `ci/sync-index` copies every page's summary into it.
 - A page whose summary starts "Stub:" is planned and unwritten. Writing
   it means replacing the whole stub, summary included.
-- Under the summary a page may carry one line, "Read first:" and relative links,
+- Under the summary comes the breadcrumb line, which starts with a link
+  to the index: the page's part and group in `INDEX.md` and the pages before and after
+  it in the course. `ci/sync-index` writes it; never edit it by hand. To
+  move a page, move its line in `INDEX.md` and run `ci/sync-index`.
+- Under that a page may carry one line, "Read first:" and relative links,
   naming the pages it builds on.
+- Then the infobox: a two-column table headed `| At a glance | |`, of at
+  most eight rows, for the reader who wants the facts without the
+  explanation. See "Infobox" below.
 - In `sel4/` pages, "What it is" explains the concept and its API as a
   user of the kernel sees it, and "In seL4" says where it lives in the
   source (files, functions, configuration options) and how it is
@@ -39,6 +46,36 @@ wrong page teaches the wrong thing to both.
   here; a page may state a finding as a fact about a machine ("Compute
   Engine's x86 types have no HPET") without pointing at the project.
 - `## My notes` belongs to Tim. Leave it and everything under it as it is.
+
+## Infobox
+
+The "At a glance" table restates facts from the page's own text; it never
+holds a fact the text lacks, and a fact marked "(unchecked)" in the text
+is left out or keeps its mark. Leave a row out when the page does not say.
+Values are a few words, with code names in backticks and links where a
+page exists. The first row is always **Kind**. Choose the rest from these,
+in this order, so that pages of a kind can be compared:
+
+- `concepts/` pages: Kind, Architecture, Introduced, Reached through
+  (I/O ports, MMIO, system registers, an instruction, a PCI BAR), Found
+  through (an ACPI table, a device tree node, a CPUID bit, fixed by
+  convention), Interrupt, Key numbers, seL4 code, seL4 config, seL4 use,
+  On the clouds.
+- `sel4/` pages: Kind (kernel object, kernel mechanism, build option,
+  tool, library, framework, process), Repository, Key source, Config
+  options, API (the main system calls or invocations), Object size, Built
+  on, Used by, Verified (what the proofs cover of it).
+
+A page that fits neither list (a survey, a history) takes Kind and
+whatever three or four rows a reader would look up.
+
+## Diagrams
+
+SVG files in `images/`, one house style, rules in
+[images/README.md](images/README.md). The rule that matters most: a
+diagram shows only what the page's text states. Give each a sentence of
+alt text and a caption in italics below it. Render a diagram and look at
+it before committing.
 
 ## References
 

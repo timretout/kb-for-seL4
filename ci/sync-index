@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
-"""Copy each page's '> summary' line into its INDEX.md entry.
+"""Keep INDEX.md and the pages in step.
 
-Usage: ci/sync-index   (rewrites INDEX.md in place; titles and order stay)
+Copies each page's '> summary' line into its INDEX.md entry, and writes
+each page's breadcrumb line (its part and group in INDEX.md, and the pages
+before and after it in the course) under its summary.
+
+Usage: ci/sync-index           rewrite INDEX.md and the pages in place
+       ci/sync-index --check   change nothing; exit 1 if anything is stale
 """
 
+import os
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ENTRY = re.compile(r"^- \[([^\]]+)\]\(((?:concepts|sel4)/[^)]+\.md)\): .*$")
+NAV = "[Index](../INDEX.md) › "
 
 
 def summary(path):
@@ -22,16 +30,77 @@ def summary(path):
     return " ".join(out)
 
 
+def anchor(heading):
+    """GitHub's anchor for a heading."""
+    return re.sub(r"[^a-z0-9 -]", "", heading.lower()).replace(" ", "-")
+
+
+def with_nav(text, nav):
+    """Return the page text with its breadcrumb line set to nav."""
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("## "):
+            break
+        if line.startswith(NAV):
+            lines[i] = nav
+            return "\n".join(lines) + "\n"
+    end = None  # last line of the summary block
+    for i, line in enumerate(lines[1:], 1):
+        if line.startswith(">"):
+            end = i
+        elif end is not None:
+            break
+    if end is None:
+        return text
+    lines[end + 1:end + 1] = ["", nav]
+    return "\n".join(lines) + "\n"
+
+
 def main():
+    check = "--check" in sys.argv[1:]
+    stale = []
+
+    def write(path, new):
+        if path.read_text() != new:
+            stale.append(path.relative_to(ROOT))
+            if not check:
+                path.write_text(new)
+
     index = ROOT / "INDEX.md"
-    new = []
+    new, course = [], []  # course: (title, path, part, group)
+    part = group = None
     for line in index.read_text().splitlines():
+        if line.startswith("## "):
+            part, group = line[3:].strip(), None
+        elif line.startswith("### "):
+            group = line[4:].strip()
         m = ENTRY.match(line)
         if m and (ROOT / m.group(2)).exists():
             line = f"- [{m.group(1)}]({m.group(2)}): {summary(ROOT / m.group(2))}"
+            course.append((m.group(1), m.group(2), part, group))
         new.append(line)
-    index.write_text("\n".join(new) + "\n")
+    write(index, "\n".join(new) + "\n")
+
+    for i, (title, rel, part, group) in enumerate(course):
+        path = ROOT / rel
+
+        def link(j):
+            return f"[{course[j][0]}]({os.path.relpath(ROOT / course[j][1], path.parent)})"
+
+        nav = NAV + " › ".join(
+            f"[{h}](../INDEX.md#{anchor(h)})" for h in (part, group) if h)
+        if i > 0:
+            nav += f" · ← {link(i - 1)}"
+        if i + 1 < len(course):
+            nav += f" · {link(i + 1)} →"
+        write(path, with_nav(path.read_text(), nav))
+
+    if check and stale:
+        for p in stale:
+            print(f"{p}: stale; run ci/sync-index")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

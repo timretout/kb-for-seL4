@@ -23,9 +23,12 @@ none, take the first page marked "Stub" in `INDEX.md`.
    before the register detail. Mark every reference *Checked* or
    *Unchecked* by the rules in `CLAUDE.md`, and put "(unchecked)" after
    any claim no checked reference supports.
+   Fill the "At a glance" infobox from the finished text (rows and rules
+   in `CLAUDE.md`), and draw a diagram where a picture shows what prose
+   cannot, in the style of `images/README.md`; render it and look.
 4. Link it: relative links to related pages, in both directions; its
    summary line in `INDEX.md` under the right group (`ci/sync-index`
-   refreshes summaries); its terms in `GLOSSARY.md`. For a concept the
+   refreshes summaries and writes the page's breadcrumb line); its terms in `GLOSSARY.md`. For a concept the
    page leans on that has no page, add a stub and its index line.
 5. `ci/check` passes. Commit in `sel4-kb` alone ("kb: <page>: <what>").
 

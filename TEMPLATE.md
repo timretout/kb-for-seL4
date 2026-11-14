@@ -3,13 +3,25 @@
 > One sentence: what it is and why seL4 work meets it. This line is copied
 > into INDEX.md.
 
+[Index](../INDEX.md) › Part › Group (This line is written by `ci/sync-index`; leave it out of a new page.)
+
 Read first: [Prerequisite page](../concepts/other.md). (Optional line.)
+
+| At a glance | |
+|---|---|
+| Kind | Timer device, interrupt controller, kernel object, tool, ... |
+| Row | Up to eight rows of short facts taken from the page below; see `CLAUDE.md` for the rows to choose from. |
 
 ## What it is
 
 The explanation, for someone who knows C and operating systems in general
 but not this device or idea. Why it exists, how it works, the numbers that
-matter. Short paragraphs; a table or a small diagram where it helps.
+matter. Short paragraphs; a table where it helps, and a diagram where a
+picture shows what prose cannot (see `images/README.md`):
+
+![What the diagram shows, in a sentence.](../images/name-what.svg)
+
+*A caption saying what to notice.*
 
 ## In seL4
 
