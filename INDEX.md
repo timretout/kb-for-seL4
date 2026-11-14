@@ -28,6 +28,7 @@ to bottom for a sensible order.
 
 ## PCI and devices
 
+- [ISA](concepts/isa.md): the IBM PC's original expansion bus; long gone as a slot, it lives on as the fixed set of legacy PC devices (PIT, 8259 PICs, COM ports, RTC, keyboard) at their old I/O ports and IRQ numbers 0 to 15, which every x86 machine and hypervisor still provides.
 - [MSI and MSI-X](concepts/msi-msix.md): a PCI device interrupts by writing a value to an address instead of asserting a wire; MSI allows up to 32 vectors set in configuration space, MSI-X up to 2048 from a table in a BAR.
 
 ## seL4
