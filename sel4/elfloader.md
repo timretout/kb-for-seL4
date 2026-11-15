@@ -323,7 +323,3 @@ behaviour may therefore be needed in two loaders.
   and [`loader/src/aarch64/`](https://github.com/seL4/microkit/tree/main/loader/src/aarch64)
   (`init.c`, `el.c`, `mmu.c`): region copy, secondary cores, exception
   level, MMU and the jump to the kernel. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

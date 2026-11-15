@@ -264,7 +264,3 @@ bases are set (`inst`, `msr`).
 - [Linux kernel documentation, "Kernel Entries"](https://docs.kernel.org/arch/x86/entry_64.html):
   the `swapgs` rules and IST use, from Linux's point of view.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

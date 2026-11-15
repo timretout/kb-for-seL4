@@ -275,7 +275,3 @@ The code is
 - [AMD64 Architecture Programmer's Manual, volume 2](https://www.amd.com/en/search/documentation/hub.html),
   chapter 15 "Secure Virtual Machine". *Unchecked (amd.com's document
   pages need a browser; chapter number from memory).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

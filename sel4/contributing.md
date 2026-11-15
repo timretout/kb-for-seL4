@@ -219,7 +219,3 @@ pull requests in other repositories, and a statement of proof impact.
   enforced. *Checked 2026-11-14.*
 - [seL4 `CHANGES.md`](https://github.com/seL4/seL4/blob/master/CHANGES.md),
   the comment at the top: when to add an entry. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

@@ -190,7 +190,3 @@ in the interface XML
 - [libsel4 Arm `object-api-arch.xml`](https://github.com/seL4/seL4/blob/master/libsel4/arch_include/arm/interfaces/object-api-arch.xml)
   and [seL4 `src/arch/arm/object/interrupt.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/object/interrupt.c):
   `IssueSGISignal` on `IRQControl`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

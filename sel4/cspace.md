@@ -236,7 +236,3 @@ Points worth knowing when reading it:
   (version 17.0.0; section numbers and titles).*
 - [seL4 `include/fastpath/fastpath.h`](https://github.com/seL4/seL4/blob/master/include/fastpath/fastpath.h):
   `lookup_fp`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

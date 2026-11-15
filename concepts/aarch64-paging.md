@@ -285,7 +285,3 @@ for EL2, and `dc cvau`/`ic ivau` behind the `seL4_ARM_Page_*` and
 - [seL4 `src/arch/arm/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/arm/config.cmake):
   `KernelArmPASizeBits40` and `44` by core type.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

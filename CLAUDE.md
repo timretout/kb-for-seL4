@@ -45,7 +45,6 @@ wrong page teaches the wrong thing to both.
   findings (boot logs, dossiers, notes) live in their projects and link
   here; a page may state a finding as a fact about a machine ("Compute
   Engine's x86 types have no HPET") without pointing at the project.
-- `## My notes` belongs to Tim. Leave it and everything under it as it is.
 
 ## Infobox
 

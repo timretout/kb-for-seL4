@@ -316,7 +316,3 @@ thread state must also ask whether the fastpath has to check it.
 - [Verified configurations](https://docs.sel4.systems/projects/sel4/verified-configurations.html):
   which architectures' proofs include the fastpath.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

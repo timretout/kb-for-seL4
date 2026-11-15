@@ -225,7 +225,3 @@ devices work the same way.
 - [OSDev wiki, "I/O Ports"](https://wiki.osdev.org/I/O_Ports): a list
   of the standard PC port assignments. *Unchecked (the site refuses
   scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

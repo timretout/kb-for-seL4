@@ -218,7 +218,3 @@ code, and what does not:
 - [Operating system details](https://docs.cloud.google.com/compute/docs/images/os-details):
   Google's images have a GPT, an EFI partition and an MBR boot block
   for BIOS. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

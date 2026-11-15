@@ -316,7 +316,3 @@ manual's `2G`; on x86 it can be chosen at run time with `-m`.
   (the `-d` items) and
   [`target/i386/cpu.c`](https://github.com/qemu/qemu/blob/master/target/i386/cpu.c)
   (`enforce`; VMX missing from TCG's features). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

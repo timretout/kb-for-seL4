@@ -87,7 +87,3 @@ util_libs are not exercised there.
   fetches).*
 - [OSDev wiki, "HPET"](https://wiki.osdev.org/HPET): a practical driver
   guide. *Unchecked (the site refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

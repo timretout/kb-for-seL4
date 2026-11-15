@@ -259,7 +259,3 @@ boot protocols.
   for the Multiboot2 entry. *Checked 2026-11-14.*
 - [seL4_tools `elfloader-tool/CMakeLists.txt`](https://github.com/seL4/seL4_tools/blob/master/elfloader-tool/CMakeLists.txt):
   the `efi` value of `ElfloaderImage`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

@@ -268,7 +268,3 @@ than seL4's 16 bits.
   chapter 7 "Address Spaces and Virtual Memory": the model in prose.
   *Checked 2026-11-14 (version 17.0.0; chapter introduction and
   sections 7.3 and 7.4 read).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

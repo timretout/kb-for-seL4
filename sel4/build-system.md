@@ -333,7 +333,3 @@ then `cmake --install`s each into the SDK as
 - [Microkit `build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py):
   the per-board option dictionaries and the `cmake`, `cmake --build`,
   `cmake --install` sequence. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

@@ -289,7 +289,3 @@ A CAmkES project is fetched with `repo` from `seL4/camkes-manifest`
 - camkes-tool [`.github/workflows/`](https://github.com/seL4/camkes-tool/tree/master/.github/workflows)
   and the [CAmkES manifest](https://github.com/seL4/camkes-manifest/blob/master/master.xml):
   the test workflows, and the kernel revision they build. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

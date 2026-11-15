@@ -344,7 +344,3 @@ breaks the correspondence the proofs rely on: see
 - [seL4 `src/arch/x86/model/statedata.c`](https://github.com/seL4/seL4/blob/master/src/arch/x86/model/statedata.c)
   (and the `arm/32`, `arm/64`, `riscv`, `x86/32`, `x86/64` siblings):
   the architecture state and its name prefixes. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

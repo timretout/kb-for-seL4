@@ -360,7 +360,3 @@ below placed where the output stops.*
 - [seL4 reference manual](https://sel4.systems/Info/Docs/seL4-manual-latest.pdf),
   version 17.0.0: sections 10.2.3 "Debugging System Calls" and 6.2.4
   to 6.2.5 (the hardware debug API's faults). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

@@ -132,7 +132,3 @@ kernel to grant I/O port access through an IOPort capability for ports
 - [OSDev wiki, "Programmable Interval Timer"](https://wiki.osdev.org/Programmable_Interval_Timer):
   a practical guide with the command byte laid out. *Unchecked (the site
   refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

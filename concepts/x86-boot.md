@@ -260,7 +260,3 @@ For images that boot on cloud machines, see
   (the RSDP scan of low memory). *Checked 2026-11-14.*
 - QEMU [`hw/i386/multiboot.c`](https://github.com/qemu/qemu/blob/master/hw/i386/multiboot.c):
   `-kernel` recognises only the Multiboot 1 magic. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

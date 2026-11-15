@@ -210,7 +210,3 @@ The verified configurations say which level was proved; see
   [the hypervisor extension chapter](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/hypervisor.adoc)
   (HS, VS and VU modes) and [`satp` in the supervisor chapter](https://github.com/riscv/riscv-isa-manual/blob/main/src/priv/supervisor.adoc)
   (active only in S and U mode). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

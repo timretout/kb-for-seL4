@@ -290,7 +290,3 @@ x86 does more itself, because nothing like the elfloader runs first.
 - [seL4 `config.cmake`](https://github.com/seL4/seL4/blob/master/config.cmake):
   `KernelMaxNumBootinfoUntypedCaps` (default 230), `KernelRootCNodeSizeBits`.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

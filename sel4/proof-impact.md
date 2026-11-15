@@ -220,7 +220,3 @@ What to write in the pull request description, by case:
   configurations. *Checked 2026-11-14.*
 - [l4v `spec/machine/RISCV64/MachineOps.thy`](https://github.com/seL4/l4v/blob/master/spec/machine/RISCV64/MachineOps.thy):
   machine operations declared as constants. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

@@ -237,7 +237,3 @@ The remote calls, from the per-architecture `IpiRemoteCall_t`:
 - [LWN, "Paravirtualized ticket spinlocks"](https://lwn.net/Articles/556141/):
   why a strict-order spinlock collapses when virtual CPUs are
   descheduled. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

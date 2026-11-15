@@ -70,7 +70,3 @@ covered by assumptions about the state it leaves, not by proof.
   [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c),
   `get_p_reg_kernel_img_boot` and `create_untypeds`: the recycled boot
   memory. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

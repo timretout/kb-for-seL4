@@ -238,7 +238,3 @@ so.
   *Checked 2026-11-14.*
 - [Compute Engine documentation, "Modifying Shielded VM options on a VM instance"](https://docs.cloud.google.com/compute/shielded-vm/docs/modifying-shielded-vm):
   Secure Boot is not enabled by default. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

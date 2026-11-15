@@ -38,7 +38,7 @@ Every page opens the same way: a one-sentence summary, a breadcrumb line
 pages to read first, and an "At a glance" table of the facts someone
 returning to the page wants (what kind of thing it is, how it is reached,
 the numbers, where seL4's code for it lives). Then: What it is, In seL4,
-Gotchas, See also, References, My notes. Diagrams are SVG, in one style
+Gotchas, See also, References. Diagrams are SVG, in one style
 with one colour code (blue hardware, purple firmware and hypervisors,
 orange the seL4 kernel, green user level, grey data).
 

@@ -315,7 +315,3 @@ and the driver's interrupt arrives as a
 - [`docs/network/network.md`](https://github.com/au-ts/sddf/blob/main/docs/network/network.md): architecture, safety properties, copiers and availability, lwIP, Acacia usage. *Checked 2026-11-14.*
 - [`acacia_sddf/net.py`](https://github.com/au-ts/sddf/blob/main/acacia_sddf/net.py): the power-of-two checks on buffer counts. *Checked 2026-11-14.*
 - [`examples/echo_server/README.md`](https://github.com/au-ts/sddf/blob/main/examples/echo_server/README.md): supported boards (including `x86_64_generic` on QEMU), build command, benchmarking with ipbench. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

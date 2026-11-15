@@ -279,7 +279,3 @@ a user-level PCI library; the virtual machine monitor library
   enumeration and BARs, and sDDF's source for `conf_space.h`.
   *Checked 2026-11-14 (through the Internet Archive's copy; the site
   itself refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

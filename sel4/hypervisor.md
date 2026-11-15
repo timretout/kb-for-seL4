@@ -305,7 +305,3 @@ guest side looks like.
 - [Amazon EC2, "Use nested virtualization"](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/amazon-ec2-nested-virtualization.html)
   and [Compute Engine, "About nested virtualization"](https://docs.cloud.google.com/compute/docs/instances/nested-virtualization/overview):
   which instance and machine types offer it. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

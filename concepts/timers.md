@@ -211,7 +211,3 @@ the devices fit together.
 - The device pages listed under See also carry the references for each
   device's own facts (datasheets, architecture manuals), which this page
   restates. *Unchecked here: see each page's marks.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

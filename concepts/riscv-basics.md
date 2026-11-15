@@ -327,7 +327,3 @@ so code there may do things the verified subset of C forbids.
   `rocketchip.md`, `spike.md`, `qemu-riscv-virt.md`) and the `model`
   strings in seL4's [`tools/dts/`](https://github.com/seL4/seL4/tree/master/tools/dts):
   what machine each platform is. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

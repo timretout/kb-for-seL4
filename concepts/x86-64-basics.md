@@ -263,7 +263,3 @@ siblings), so `#include <mode/machine.h>` resolves per build.
   section 3.2 "Function Calling Sequence": argument registers,
   callee-saved registers, `DF`, stack alignment, red zone.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

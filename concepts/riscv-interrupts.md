@@ -320,7 +320,3 @@ a one-hart mask; the target sees `SSIP`. TLB shootdown uses
   the CLINT's successor, with the `mtime`, `mtimecmp` and `msip`
   register definitions, the supervisor software-interrupt device and
   its compatibility with the SiFive CLINT. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

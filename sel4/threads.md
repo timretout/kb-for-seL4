@@ -248,7 +248,3 @@ it ([syscalls and invocations](syscalls-and-invocations.md)).
 - [`src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c),
   `create_initial_thread`: priority and MCP set to `seL4_MaxPrio`.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

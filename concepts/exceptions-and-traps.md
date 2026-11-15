@@ -277,7 +277,3 @@ Two properties make this simple and are part of what the
 - [Linux `arch/arm64/kernel/entry.S`](https://github.com/torvalds/linux/blob/master/arch/arm64/kernel/entry.S):
   the AArch64 vector table, one entry for each of synchronous, IRQ, FIQ
   and SError from each of four origins. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

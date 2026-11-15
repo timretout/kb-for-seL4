@@ -344,7 +344,3 @@ trusted, or are driven by components the system trusts completely. See
 - [RISC-V IOMMU Architecture Specification](https://github.com/riscv-non-isa/riscv-iommu)
   (`src/iommu_data_structures.adoc`: the device directory table and the
   two stages; release 1.0.0 is dated July 2023). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

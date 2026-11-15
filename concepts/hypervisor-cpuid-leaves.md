@@ -92,7 +92,3 @@ describe the host.
   leaf `0x40000010` filled with the TSC rate in kHz in EAX and the APIC
   bus rate in kHz in EBX, and the maximum leaf raised to match.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

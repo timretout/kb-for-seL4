@@ -278,7 +278,3 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
 - [Acacia](https://github.com/au-ts/microkit_acacia): the system-generation tooling; its README says it succeeds `sdf_gen`. *Checked 2026-11-14.*
 - [`drivers/timer/imx/timer.c`](https://github.com/au-ts/sddf/blob/main/drivers/timer/imx/timer.c): a timer driver, with its one timeout slot per client channel. *Checked 2026-11-14.*
 - [`serial/components/virt_rx.c`](https://github.com/au-ts/sddf/blob/main/serial/components/virt_rx.c) and [`acacia_sddf/serial.py`](https://github.com/au-ts/sddf/blob/main/acacia_sddf/serial.py): the input-switching state machine and its default characters. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

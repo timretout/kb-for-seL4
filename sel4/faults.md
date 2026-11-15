@@ -281,7 +281,3 @@ The fault types and the user-side layouts are defined in
   and [`src/arch/riscv/traps.S`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/traps.S):
   `FaultIP` on a system call is the address of the trap instruction.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

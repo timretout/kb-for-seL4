@@ -308,7 +308,3 @@ definitions and proofs for the same `.bf` files ([l4v](l4v.md)).
   *Checked 2026-11-14.*
 - [seL4 `src/plat/qemu-arm-virt/overlay-qemu-arm-virt.dts`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/overlay-qemu-arm-virt.dts):
   `seL4,kernel-devices` and `seL4,elfloader-devices`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

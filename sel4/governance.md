@@ -231,7 +231,3 @@ conduct and the Contributor Covenant 1.4.0.
   Foundation. *Checked 2026-11-14.*
 - [Development roadmap](https://sel4.systems/roadmap.html): who is
   named for each item. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

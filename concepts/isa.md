@@ -167,7 +167,3 @@ MultiProcessor Specification, whose default configurations put the
   ["I/O Ports"](https://wiki.osdev.org/I/O_Ports): the PIC and the
   standard port assignments. *Unchecked (the site refuses scripted
   fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

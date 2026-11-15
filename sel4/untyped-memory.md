@@ -250,7 +250,3 @@ The preemption check does not actually happen every 256 bytes:
 - [seL4 `src/kernel/boot.c`](https://github.com/seL4/seL4/blob/master/src/kernel/boot.c):
   `create_untypeds`, `provide_untyped_cap`: the order of creation and
   the full-list case. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

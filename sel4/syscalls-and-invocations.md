@@ -303,7 +303,3 @@ and user level.
   `msgInfoRegister`, `msgRegisters[]`. *Checked 2026-11-14.*
 - [seL4 `tools/syscall_header_gen.py`](https://github.com/seL4/seL4/blob/master/tools/syscall_header_gen.py):
   system call numbers count down from -1. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

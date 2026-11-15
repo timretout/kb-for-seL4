@@ -205,7 +205,3 @@ group in order; each page there assumes the ones before it.
 - [seL4 `CAVEATS.md`](https://github.com/seL4/seL4/blob/master/CAVEATS.md),
   "MCS": the RISC-V MCS proof complete, AArch64 in progress.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

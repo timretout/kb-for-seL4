@@ -95,7 +95,3 @@ budget and period. The non-MCS kernel uses a periodic tick.
 - [OSDev wiki, "APIC Timer"](https://wiki.osdev.org/APIC_Timer): a
   practical guide, including calibrating it against the PIT. *Unchecked
   (the site refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

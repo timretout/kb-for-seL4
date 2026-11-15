@@ -270,7 +270,3 @@ Microkit.
 - [`build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py): boards, configurations, kernel options. *Checked 2026-11-14.*
 - [`CHANGES.md`](https://github.com/seL4/microkit/blob/main/CHANGES.md): x86-64 in 2.1.0, IOMMU and polarity changes in 2.3.0. *Checked 2026-11-14.*
 - [Microkit tutorial](https://trustworthy.systems/projects/microkit/tutorial/welcome.html): a guided first system. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

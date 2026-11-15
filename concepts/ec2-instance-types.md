@@ -272,7 +272,3 @@ kernel configuration each needs.
   the 16 Cortex-A72 cores of the first Graviton. *Checked 2026-11-14.*
 - [seL4 `src/arch/x86/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/x86/config.cmake):
   `KernelLAPICMode`, `KernelMaxNumIOAPIC`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

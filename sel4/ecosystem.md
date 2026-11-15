@@ -309,7 +309,3 @@ and `libmicrokit` for each combination.
   the musl version and the system call table. *Checked 2026-11-14.*
 - [seL4 Summit](https://sel4.systems/Summit/): annual, summits listed
   from 2022. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

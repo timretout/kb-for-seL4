@@ -271,7 +271,3 @@ taken from the kernel itself: in a debug build it prints
 - [libsel4 AArch64 `syscalls.h`](https://github.com/seL4/seL4/blob/master/libsel4/sel4_arch_include/aarch64/sel4/sel4_arch/syscalls.h):
   the system call number in `x7`.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

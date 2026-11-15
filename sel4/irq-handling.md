@@ -284,7 +284,3 @@ protection domain's notification with a badge bit for its channel, and
 - [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md):
   the "Interrupts" section, the `irq` element and `microkit_irq_ack`.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

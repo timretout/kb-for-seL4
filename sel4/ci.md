@@ -200,7 +200,3 @@ versions.
   and the [seL4Test page](https://docs.sel4.systems/projects/sel4test/):
   the success line; `init-build.sh`, `ninja`, `./simulate`.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

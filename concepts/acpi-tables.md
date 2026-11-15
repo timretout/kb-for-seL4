@@ -92,7 +92,3 @@ it is not the identity mapping, and with which polarity and trigger mode.
   ["ACPI"](https://wiki.osdev.org/ACPI): finding and walking the tables.
   *Checked 2026-11-14 (through the Internet Archive's copies; the site
   itself refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

@@ -288,7 +288,3 @@ Configuration options (in `config.cmake`): `KernelNumPriorities`,
   IEEE S&P 2013: why the domain scheduler exists (a static schedule
   between partitions, so that scheduling leaks nothing between them).
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

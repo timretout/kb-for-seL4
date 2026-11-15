@@ -205,7 +205,3 @@ device tree and timer frequency that match the series. See
   "Restrictions": not on Arm, E2, or AMD series other than N4D. *Checked 2026-11-14.*
 - [Create custom images](https://docs.cloud.google.com/compute/docs/images/create-custom):
   the `GVNIC` and `IDPF` image flags a series may need. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

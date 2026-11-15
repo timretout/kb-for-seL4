@@ -237,7 +237,3 @@ and headers under `include/arch/arm/arch/64/mode/`.
   *Checked 2026-11-14.*
 - [seL4 `armv/machine.h` for Armv8 AArch64](https://github.com/seL4/seL4/blob/master/include/arch/arm/armv/armv8-a/64/armv/machine.h):
   the `MRS` and `MSR` macros. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

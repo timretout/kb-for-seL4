@@ -185,7 +185,3 @@ where guests' interrupts go through list registers today.
 - [seL4 pull request #1098](https://github.com/seL4/seL4/issues/1098),
   "VT-d: add remappable MSI and IOAPIC support": interrupt remapping on
   x86, open. *Checked 2026-11-14 (description only, not the discussion).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

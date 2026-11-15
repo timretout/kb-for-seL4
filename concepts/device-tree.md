@@ -301,7 +301,3 @@ Above the kernel:
   *Checked 2026-11-14.*
 - [Linux device tree binding `interrupt-controller/arm,gic.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml):
   the three-cell GIC specifier. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

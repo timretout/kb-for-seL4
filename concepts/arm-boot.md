@@ -311,7 +311,3 @@ built into the image, because UEFI there offers no DTB to fall back on.
   *Checked 2026-11-14, issue M.d, read from a
   [mirror copy](https://kib.kiev.ua/x86docs/ARM/ARMARMv8/DDI0487M_d_a-profile_architecture_reference_manual.pdf)
   because developer.arm.com refuses scripted fetches.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

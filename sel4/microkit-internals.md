@@ -303,7 +303,3 @@ libmicrokit.
 - [`build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py): kernel options per board and configuration. *Checked 2026-11-14.*
 - [`sel4-capdl-initializer`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4-capdl-initializer): the crate the initialiser wraps (its README). *Checked 2026-11-14.*
 - [`DEVELOPER.md`](https://github.com/seL4/microkit/blob/main/DEVELOPER.md), "Getting the Code", and [microkit-manifest `default.xml`](https://github.com/seL4/microkit-manifest/blob/main/default.xml): the supported and CI-tested seL4 revision. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

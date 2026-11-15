@@ -334,7 +334,3 @@ The history is visible in the source.
   and [l4v `spec/haskell`](https://github.com/seL4/l4v/tree/master/spec/haskell):
   the Haskell comments, `mdb_node`, the prototype's location.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

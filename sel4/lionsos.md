@@ -156,7 +156,3 @@ Not kernel code. Where a kernel or platform contributor meets these:
 - [LionsOS documentation](https://lionsos.org/docs/): examples, components, status and roadmap. *Checked 2026-11-14.*
 - [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md), "Virtual Machines" and "x86-64 generic (with VT-x)": one VM per PD, one vCPU per x86 VM, Intel only. *Checked 2026-11-14.*
 - Heiser and others, ["Fast, Secure, Adaptable: LionsOS Design, Implementation and Performance"](https://arxiv.org/abs/2501.06234): the design paper (arXiv abstract page). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

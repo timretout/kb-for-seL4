@@ -282,7 +282,3 @@ user-level driver also owns; nothing arbitrates between them.
 - [Microsoft, "Serial Port Console Redirection Table (SPCR)"](https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/serial-port-console-redirection-table)
   and ["Debug Port Table 2 (DBG2)"](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/acpi-debug-port-table),
   which lists the interface types. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

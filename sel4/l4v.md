@@ -199,7 +199,3 @@ for the C parser.
 - [`seL4/verification-manifest`](https://github.com/seL4/verification-manifest):
   the manifest files and the README's account of each kind.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

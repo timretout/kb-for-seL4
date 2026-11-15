@@ -198,7 +198,3 @@ Two checks ([CI](ci.md)):
   automatic generation", VERIFY 2008](https://trustworthy.systems/publications/nictaabstracts/Cock_08.abstract):
   the bitfield generator, cited by the parser manual for unions
   (publication page and abstract read). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

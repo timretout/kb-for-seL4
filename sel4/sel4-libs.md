@@ -263,7 +263,3 @@ library is a CMake target (`sel4vka`, `platsupport`, ...) with
 - [seL4 tutorials, "seL4 Libraries: Initialisation & Threading"](https://docs.sel4.systems/Tutorials/libraries-1.html):
   a walk through simple, allocman and vka, then starting a thread.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

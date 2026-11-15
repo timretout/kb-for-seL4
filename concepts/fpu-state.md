@@ -257,7 +257,3 @@ owner.
   *Checked 2026-11-14.*
 - [Arm Architecture Reference Manual for A-profile (DDI 0487)](https://developer.arm.com/documentation/ddi0487/latest),
   `CPACR_EL1`. *Unchecked (developer.arm.com refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

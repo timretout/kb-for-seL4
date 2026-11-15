@@ -289,7 +289,3 @@ the kernel as a physical region and entry point.
 - [seL4 at its first public release, `src/arch/arm/kernel/boot.c`](https://github.com/seL4/seL4/blob/91b7da8625d28ad533d5bd801be5f89ad1b50d80/src/arch/arm/kernel/boot.c)
   and [`src/arch/ia32/kernel/boot.c`](https://github.com/seL4/seL4/blob/91b7da8625d28ad533d5bd801be5f89ad1b50d80/src/arch/ia32/kernel/boot.c):
   the shared-frame caps of the multikernel. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

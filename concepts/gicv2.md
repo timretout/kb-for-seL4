@@ -323,7 +323,3 @@ accessors `get_gic_vcpu_ctrl_*` used by the VCPU code; see
   and [`include/hw/intc/arm_gic_common.h`](https://github.com/qemu/qemu/blob/master/include/hw/intc/arm_gic_common.h):
   with GIC version 2 the `virt` machine's CPU limit is `GIC_NCPU`, 8,
   and asking for more is an error. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

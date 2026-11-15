@@ -341,7 +341,3 @@ and deleting an ASID calls `hwASIDFlush`. The functions are in
   object types. *Checked 2026-11-14.*
 - [seL4 `src/arch/riscv/config.cmake`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/config.cmake):
   `KernelPTLevels`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

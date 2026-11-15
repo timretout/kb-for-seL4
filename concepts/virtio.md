@@ -317,7 +317,3 @@ designer must allocate and the driver must program into the device.
 - sDDF [`examples/echo_server/echo.mk`](https://github.com/au-ts/sddf/blob/main/examples/echo_server/echo.mk):
   the QEMU command with `-global virtio-mmio.force-legacy=false`.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

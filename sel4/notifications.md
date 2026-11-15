@@ -238,7 +238,3 @@ otherwise. AArch64 MCS has an optional signal fastpath
   domain"), and
   [`tool/microkit/src/sdf/consts.rs`](https://github.com/seL4/microkit/blob/main/tool/microkit/src/sdf/consts.rs)
   (`PD_MAX_ID` 61). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

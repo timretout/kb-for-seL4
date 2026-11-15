@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PAGE_DIRS = ["concepts", "sel4"]
-SECTIONS = ["What it is", "In seL4", "Gotchas", "See also", "References", "My notes"]
+SECTIONS = ["What it is", "In seL4", "Gotchas", "See also", "References"]
 LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 IMAGE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)\)")
 MARK = re.compile(r"\*(Checked \d{4}-\d{2}-\d{2}|Unchecked)[^*]*\*")

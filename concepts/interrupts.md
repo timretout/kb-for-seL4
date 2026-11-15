@@ -267,7 +267,3 @@ Each controller's page has its own; these come from comparing them.
   each controller's own facts (datasheets, architecture manuals,
   specifications), which this page restates. *Unchecked here: see each
   page's marks.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

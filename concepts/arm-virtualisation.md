@@ -315,7 +315,3 @@ VCPU is not running (`struct vTimer`, `last_pcount`).
 - [seL4 `src/arch/arm/64/kernel/vspace.c`](https://github.com/seL4/seL4/blob/master/src/arch/arm/64/kernel/vspace.c):
   VMIDs stored per ASID, and `addressTranslateS1` in the fault path.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

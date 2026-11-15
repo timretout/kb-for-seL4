@@ -112,7 +112,3 @@ util_libs measures the TSC again at user level for its ltimer, in
 - [FreeBSD `sys/x86/x86/tsc.c`](https://github.com/freebsd/freebsd-src/blob/main/sys/x86/x86/tsc.c):
   another kernel's order of preference (hypervisor leaf, CPUID `0x15`,
   then measurement). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

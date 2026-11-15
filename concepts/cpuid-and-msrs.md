@@ -245,7 +245,3 @@ not mean "this VM has it", for both features and MSRs.
 - [AMD64 Architecture Programmer's Manual, volume 3](https://www.amd.com/en/search/documentation/hub.html),
   appendix E "Obtaining Processor Information Via the CPUID
   Instruction". *Unchecked (amd.com's document pages need a browser).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

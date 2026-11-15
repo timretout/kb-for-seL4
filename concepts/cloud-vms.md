@@ -223,7 +223,3 @@ is why it is the first thing to boot.
 - Azure: [Dpsv5 size series](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/general-purpose/dpsv5-series)
   and [Cobalt processor-based virtual machines](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/cobalt-overview):
   the Ampere Altra and Cobalt 100 Arm sizes. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

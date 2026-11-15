@@ -241,7 +241,3 @@ definition per architecture.
   kernel: source lines of the verified configurations (10,000 for
   64-bit RISC-V, 12,100 for AArch32, 12,600 for AArch64 with hypervisor
   support, 16,000 for x64). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

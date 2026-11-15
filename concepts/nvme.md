@@ -314,7 +314,3 @@ number, and MSI-X. On x86 the vector comes from
 - [OSDev wiki, "NVMe"](https://wiki.osdev.org/NVMe): a short driver
   writer's summary. *Checked 2026-11-14 (through the Internet Archive's
   copy; the site itself refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

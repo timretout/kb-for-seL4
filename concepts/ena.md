@@ -329,7 +329,3 @@ from `amzn-drivers`, so reading `ena_com.c` once covers three of them.
   `seL4_IRQControl_GetMSI`. *Checked 2026-11-14.*
 - [sDDF `drivers/network/`](https://github.com/au-ts/sddf/tree/main/drivers/network):
   no ENA driver. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

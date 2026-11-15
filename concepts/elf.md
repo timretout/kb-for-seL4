@@ -314,7 +314,3 @@ find symbol table section"). See [Microkit internals](../sel4/microkit-internals
 - [Microkit `tool/microkit/src/elf.rs`](https://github.com/seL4/microkit/blob/main/tool/microkit/src/elf.rs):
   `find_symbol()`, `write_symbol()`, and the error when the symbol
   table section is missing. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

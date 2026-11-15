@@ -266,7 +266,3 @@ Reference implementations: Linux
   device options. *Checked 2026-11-14.*
 - [sDDF `drivers/network`](https://github.com/au-ts/sddf/tree/main/drivers/network):
   no gVNIC driver upstream. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

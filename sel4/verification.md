@@ -186,7 +186,3 @@ assumes:
   the refinement stack, security proofs, binary verification and WCET
   analysis in one paper (publication page and abstract read).
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

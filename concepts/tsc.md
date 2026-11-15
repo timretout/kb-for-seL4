@@ -91,7 +91,3 @@ non-MCS kernel needs the rate only to set its periodic tick.
   "Invariant TSC", and volume 1, chapter 21, `CPUID` leaves `15H` and
   `80000007H` (in volume 2's `CPUID` entry in older revisions).
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

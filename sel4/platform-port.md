@@ -304,7 +304,3 @@ has no [proof impact](proof-impact.md).
   the `BoardInfo` list. *Checked 2026-11-14.*
 - [util_libs `libplatsupport`](https://github.com/seL4/util_libs/tree/master/libplatsupport):
   per-platform directories. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

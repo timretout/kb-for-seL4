@@ -256,7 +256,3 @@ what it sends is ([proof impact](proof-impact.md)).
   (the `<condition>` elements on methods) and
   [`src/object/tcb.c`](https://github.com/seL4/seL4/blob/master/src/object/tcb.c)
   (`decodeTCBInvocation`'s default case). *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

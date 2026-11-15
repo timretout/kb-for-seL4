@@ -90,7 +90,3 @@ designed around MSI-X, one vector per queue.
 - [OSDev wiki, "PCI"](https://wiki.osdev.org/PCI), the section "Message
   Signaled Interrupts". *Checked 2026-11-14 (through the Internet
   Archive's copy; the site itself refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

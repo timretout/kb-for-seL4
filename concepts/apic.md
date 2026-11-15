@@ -231,7 +231,3 @@ argument is an offset, not the CPU vector (see Gotchas).*
 - [OSDev wiki, "APIC"](https://wiki.osdev.org/APIC) and
   ["IOAPIC"](https://wiki.osdev.org/IOAPIC): practical guides.
   *Unchecked (the site refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

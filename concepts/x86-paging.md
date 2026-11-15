@@ -261,7 +261,3 @@ on a vulnerable CPU.
 - [Meltdown: Reading Kernel Memory from User Space](https://meltdownattack.com/meltdown.pdf)
   (Lipp et al., 2018): the attack the SKIM window answers.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

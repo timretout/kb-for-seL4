@@ -190,7 +190,3 @@ notes that the kernel keeps the interrupt masked until then.
 - [OSDev wiki, "Interrupts"](https://wiki.osdev.org/Interrupts): a
   general introduction, including edge and level. *Unchecked (the site
   refuses scripted fetches).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

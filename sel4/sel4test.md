@@ -341,7 +341,3 @@ workflows and the matrix.
 - [Using the seL4 build system](https://docs.sel4.systems/projects/buildsystem/using.html):
   the cross-compiler cannot be changed after the build directory is
   initialised. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

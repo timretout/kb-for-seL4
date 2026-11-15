@@ -86,7 +86,3 @@ generally reads `CNTFRQ_EL0` itself.
   `CONFIG_DEBUG_BUILD`. *Checked 2026-11-14.*
 - [seL4 `src/plat/qemu-arm-virt/config.cmake`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/config.cmake):
   `TIMER_FREQUENCY 62500000`. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

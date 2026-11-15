@@ -376,7 +376,3 @@ absorb it, so [proof impact](proof-impact.md) still has to be stated.
   principled, light-weight operating-system mechanism for managing
   time", EuroSys 2018](https://trustworthy.systems/publications/full_text/Lyons_MAH_18.pdf):
   the design and its rationale. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

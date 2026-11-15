@@ -267,7 +267,3 @@ described in [CSpaces](cspace.md).
   and [`src/arch/riscv/object/objecttype.c`](https://github.com/seL4/seL4/blob/master/src/arch/riscv/object/objecttype.c),
   `Arch_deriveCap`: a derived frame capability has its mapping
   cleared. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

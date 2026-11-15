@@ -261,7 +261,3 @@ Upstream has no EC2 platform. What exists, and what each side lacks:
   and [`describe-instance-types`](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instance-types.html):
   `--ena-support` on the image; `NetworkInfo.EnaSupport` (`unsupported`,
   `supported`, `required`) on the type. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

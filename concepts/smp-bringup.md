@@ -255,7 +255,3 @@ the `IpiRemoteCall_t` enum in each architecture's
   ["Hart State Management Extension (EID #0x48534D "HSM")"](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-hsm.adoc),
   "Hart start": the register state a started hart sees.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

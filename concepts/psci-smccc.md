@@ -342,7 +342,3 @@ names the conduit the VMM expects.
   `seL4_ARM_SMC_Call`. *Checked 2026-11-14.*
 - [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md):
   `microkit_arm_smc_call` and the `smc` attribute. *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

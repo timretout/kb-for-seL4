@@ -291,7 +291,3 @@ refuses to map user frames at or above it.
   developer.arm.com refuses scripted fetches; the Arm facts in "What it
   is" are covered, with their own references, on
   [AArch64 paging](aarch64-paging.md).*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->

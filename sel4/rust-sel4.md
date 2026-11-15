@@ -315,7 +315,3 @@ branch `main`):
 - [seL4 RFCs](https://github.com/seL4/rfcs/tree/main/src): the
   implemented and active RFC lists, which hold no Rust RFC.
   *Checked 2026-11-14.*
-
-## My notes
-
-<!-- Tim writes here. Sessions leave this section as it is. -->
