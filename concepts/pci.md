@@ -201,6 +201,19 @@ a user-level PCI library; the virtual machine monitor library
   but then answers nothing at the new address, while the emulated
   virtio-scsi adapter's moved MSI-X BAR works. Keeping firmware's
   assignments is safer than reassigning.
+- **A BAR behind a bridge must stay inside the bridge's window.** A
+  bridge passes a memory access down only if the address falls in the
+  memory window set in the bridge's own header (base and limit at offset
+  `0x20`, prefetchable at `0x24`) (unchecked). Seen in QEMU (q35 with
+  SeaBIOS): a virtio-scsi adapter behind two bridges, its MSI-X BAR moved
+  out of their window `0xfe600000`–`0xfe7fffff` to `0xfe800000`, kept the
+  new value in configuration space and then raised no interrupts; moved
+  to `0xfe600000` it worked.
+- **A bridge has decode and bus master bits of its own.** They govern
+  what the bridge forwards down and up, DMA and MSI writes included
+  (unchecked). SeaBIOS leaves bus master clear on the bridges it sets up;
+  QEMU forwards regardless, so a system that works there may still fail
+  on hardware that enforces the bit.
 - **Absent functions read as all ones**, so a vendor ID of `0xffff`
   means "nothing here". Probe functions 1 to 7 only if function 0's
   header type has bit 7 set.
