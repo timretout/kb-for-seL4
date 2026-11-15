@@ -61,7 +61,7 @@ kernel and test configuration ([build system](build-system.md)):
 |---|---|
 | `PLATFORM` | any kernel platform name or alias: `x86_64`, `qemu-arm-virt`, `spike`, `odroidc4`, ... |
 | `KernelSel4Arch` | `aarch32`, `aarch64`, `arm_hyp`, `ia32`, `x86_64`, `riscv32`, `riscv64`, where the platform supports more than one |
-| `SIMULATION` | sets `Sel4testSimulation` (drops tests unsuitable for an emulator) and turns `Sel4testHaveCache` off; on x86 also forces `KernelIOMMU` on. Forced on for `qemu-arm-virt`, `qemu-riscv-virt` and `spike`. Generates the `./simulate` script that starts [QEMU](../concepts/qemu.md). |
+| `SIMULATION` | sets `Sel4testSimulation` (drops tests unsuitable for an emulator) and turns `Sel4testHaveCache` off; the common simulation settings it applies force `KernelIOMMU` off, and it is an x86 build without `SIMULATION` that forces `KernelIOMMU` on. Forced on for `qemu-arm-virt`, `qemu-riscv-virt` and `spike`. Generates the `./simulate` script that starts [QEMU](../concepts/qemu.md). |
 | `MCS` | `KernelIsMCS` ([MCS](mcs.md)) |
 | `SMP`, `NUM_NODES` | `KernelMaxNumNodes` = `NUM_NODES`, default 4 ([SMP](smp.md)) |
 | `ARM_HYP` | `KernelArmHypervisorSupport` |

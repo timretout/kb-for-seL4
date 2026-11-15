@@ -21,8 +21,11 @@ Read first: [Source layout](source-layout.md), [Verification](verification.md).
 
 All seL4 Foundation code lives in the GitHub organisation
 [`seL4`](https://github.com/seL4): the kernel (`seL4/seL4`), the proofs
-(`seL4/l4v`), `sel4test`, `seL4_tools`, `microkit`, `sddf` and the rest.
-A change reaches any of them the same way.
+(`seL4/l4v`), `sel4test`, `seL4_tools`, `microkit` and the rest.
+A change reaches any of them the same way. sDDF and LionsOS are not
+among them: they live in Trustworthy Systems' organisation,
+[`au-ts`](https://github.com/au-ts), outside the Foundation's process
+([Ecosystem and repositories](ecosystem.md)).
 
 1. **Talk first if it is large.** Bugs and small changes go straight to an
    issue or pull request on the repository. A new kernel feature, an API

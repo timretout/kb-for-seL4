@@ -233,8 +233,9 @@ guest side looks like.
   the option on, native threads also live under stage 2 tables with a
   smaller virtual address space, and the kernel must be entered at EL2;
   a board or cloud whose firmware starts the kernel at EL1 cannot run
-  that build at all. The elfloader checks and drops or refuses
-  accordingly ([Elfloader](elfloader.md)).
+  that build at all. The elfloader drops from EL2 to EL1 for a kernel built
+  without the option, but it cannot climb and does not report the
+  mismatch ([Elfloader](elfloader.md)).
 - **One VCPU per TCB, one TCB per VCPU.** A multi-core guest is several
   threads; starting secondary virtual CPUs is the VMM's job, by
   emulating PSCI `CPU_ON` on Arm.
