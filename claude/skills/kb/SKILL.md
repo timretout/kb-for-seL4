@@ -1,10 +1,11 @@
 ---
 name: kb
-description: Write, refresh or check a page of the seL4 knowledge base (sel4-kb). Use when asked to add a concept to the knowledge base, explain a hardware or seL4 concept for keeps, or when work turns up a concept or gotcha the knowledge base lacks.
+description: Write, refresh or check a page of the seL4 knowledge base (kb-for-seL4, checked out as sel4-kb in some workspaces). Use when asked to add a concept to the knowledge base, explain a hardware or seL4 concept for keeps, or when work turns up a concept or gotcha the knowledge base lacks.
 ---
 
-The knowledge base is the `sel4-kb` repository (this one, or a checkout
-beside the project being worked on). It is public. Its
+The knowledge base is the `kb-for-seL4` repository (this one, or a
+checkout beside the project being worked on, where the directory may
+still be called `sel4-kb`). It is public. Its
 `CLAUDE.md` holds the rules for pages and references; read it first.
 
 Argument: a concept ("HPET", "MSI-X"), a page path, or "check". With
@@ -12,7 +13,7 @@ none, take the first page marked "Stub" in `INDEX.md`.
 
 ## Writing or refreshing a page
 
-1. Search first: `grep -ril <term> sel4-kb` and `INDEX.md`. If a page
+1. Search first: `grep -ril <term>` over the repository and `INDEX.md`. If a page
    covers it, refresh that page; if the concept is part of a broader
    page, add a section there instead of a new page.
 2. Gather from primary sources: the datasheet or specification, then the
@@ -32,7 +33,7 @@ none, take the first page marked "Stub" in `INDEX.md`.
    summary line in `INDEX.md` under the right group (`ci/sync-index`
    refreshes summaries and writes the page's breadcrumb line); its terms in `GLOSSARY.md`. For a concept the
    page leans on that has no page, add a stub and its index line.
-5. `ci/check` passes. Commit in `sel4-kb` alone ("kb: <page>: <what>").
+5. `ci/check` passes. Commit in the knowledge base's repository alone ("kb: <page>: <what>").
 
 Done when the page passes `ci/check`, every reference carries a mark,
 and every related page links to it.

@@ -1,11 +1,11 @@
-# seL4 Knowledge Base
+# Knowledge Base for seL4
 
 A knowledge base for seL4 work: one page per concept, linked to each other
 and out to primary sources. It covers the hardware and OS ideas that seL4
 work keeps running into (the PIT, the HPET, the TSC, the GIC, ACPI, MSI-X)
 and seL4's own (MCS, capabilities, Microkit, sDDF).
 
-Read it at **<https://timretout.github.io/sel4-kb/>**, or start at
+Read it at **<https://timretout.github.io/kb-for-seL4/>**, or start at
 [INDEX.md](INDEX.md) here.
 
 It is written to explain things, and to be read by Claude Code sessions as
@@ -62,7 +62,7 @@ orange the seL4 kernel, green user level, grey data).
 
 ## Reading it
 
-On the web: <https://timretout.github.io/sel4-kb/>, laid out for phones
+On the web: <https://timretout.github.io/kb-for-seL4/>, laid out for phones
 as well as desktops, with a search box over the index and the glossary.
 GitHub Pages builds it with Jekyll from `main` on every push; the pages
 themselves stay plain Markdown with no front matter. To preview it

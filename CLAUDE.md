@@ -1,7 +1,10 @@
-# sel4-kb
+# kb-for-seL4
+
+The repository is `timretout/kb-for-seL4` ("for seL4", not "seL4 ...", to
+follow the seL4 trademark rules; keep that form in any name or title).
 
 A knowledge base of concepts met in seL4 work, one page each, published
-at <https://timretout.github.io/sel4-kb/>. Its readers are people learning
+at <https://timretout.github.io/kb-for-seL4/>. Its readers are people learning
 the material well enough to write and defend patches to seL4, and Claude
 sessions looking a concept up. Accuracy beats coverage: a confident wrong
 page teaches the wrong thing to both.
@@ -102,7 +105,7 @@ after it in the text.
 ## Changes
 
 Pages are also edited in GitHub's web editor, so `origin`
-(`timretout/sel4-kb`) can be ahead of this checkout. A push to `main`
+(`timretout/kb-for-seL4`) can be ahead of this checkout. A push to `main`
 publishes: GitHub Pages rebuilds the site from it.
 
 - Run `git pull --rebase` before editing.

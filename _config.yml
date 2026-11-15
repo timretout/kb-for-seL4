@@ -2,14 +2,14 @@
 # Pages have no front matter: the plugins below (all on by default on
 # GitHub Pages) give each one a title from its first heading, the default
 # layout, and rewrite relative .md links to the built pages.
-title: seL4 Knowledge Base
+title: Knowledge Base for seL4
 tagline: seL4 and the hardware under it, one concept per page
 description: >-
   An unofficial reference to the seL4 microkernel and the hardware it runs
   on: one page per concept, in reading order, with primary sources.
 url: https://timretout.github.io
-baseurl: /sel4-kb
-repository: timretout/sel4-kb
+baseurl: /kb-for-seL4
+repository: timretout/kb-for-seL4
 branch: main
 lang: en-GB
 

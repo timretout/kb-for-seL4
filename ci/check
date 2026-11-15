@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check sel4-kb's pages: structure, infobox, index, breadcrumbs, relative
+"""Check the knowledge base's pages: structure, infobox, index, breadcrumbs, relative
 links, reference marks and diagrams.
 
 Usage: ci/check   (from anywhere; exits non-zero on any problem)

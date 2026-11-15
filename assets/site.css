@@ -40,8 +40,8 @@ a:hover { text-decoration-thickness: 2px; }
 .bar-links { display: flex; gap: 0.25rem; font-size: 0.95rem; }
 .bar-links a { color: var(--fg); text-decoration: none; padding: 0.6rem 0.55rem; border-radius: 6px; }
 .bar-links a:hover { background: var(--soft); }
-.wide-only, .brand-kb { display: none; }
-@media (min-width: 30rem) { .wide-only, .brand-kb { display: inline; } }
+.wide-only { display: none; }
+@media (min-width: 30rem) { .wide-only { display: inline; } }
 
 /* Home hero and the search box */
 .hero { padding: 1.75rem 0 0.25rem; }
