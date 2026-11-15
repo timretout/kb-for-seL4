@@ -56,7 +56,7 @@ budget and period. The non-MCS kernel uses a periodic tick.
 
 ## Gotchas
 
-- **The ratio is an integer upstream.** On EC2's AMD Nitro types the APIC
+- **The ratio is an integer.** On EC2's AMD Nitro types the APIC
   timer runs at 1 GHz, so a 2.65 GHz TSC gives a ratio of 2 rather than
   2.65, and every MCS budget lasts 32.5% too long. On Compute Engine's N1
   the true ratio is 2.0, and a measurement a hair over 1 GHz truncates it

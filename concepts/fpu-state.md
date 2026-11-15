@@ -196,8 +196,8 @@ owner.
   and on x86-64 compilers emit SSE for plain `memcpy` and struct copies
   unless told `-mgeneral-regs-only` or similar.
 - The verified configurations' treatment of FPU state is its own topic:
-  check the dossier and [proof impact](../sel4/proof-impact.md) before
-  touching this code.
+  see [proof impact](../sel4/proof-impact.md) for what a change to this
+  code means for the proofs.
 
 ## See also
 

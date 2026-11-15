@@ -12,7 +12,7 @@
 | Reached through | MMIO, usually at `0xfed00000` |
 | Found through | The ACPI `HPET` table (see [ACPI tables](acpi-tables.md)) |
 | Key numbers | One main counter, 32 or 64 bits wide; at least three comparators |
-| seL4 use | None in the kernel; util_libs' pc99 ltimer prefers it and falls back to the [PIT](pit.md) |
+| seL4 use | None in the kernel; util_libs' pc99 ltimer prefers it, and uses the [PIT](pit.md) when there is no HPET table |
 | On the clouds | EC2 Nitro: 32-bit counter at 62.5 MHz at `0xfed00000`. Compute Engine x86: none |
 
 ## What it is
@@ -45,12 +45,10 @@ trap to the hypervisor when emulated.
 ## In seL4
 
 The kernel does not use it. At user level, util_libs' pc99 ltimer
-(`libplatsupport`) prefers the HPET and falls back to the PIT. Its HPET
-driver needs a 64-bit comparator, so a 32-bit HPET has to make it choose
-the PIT before committing to the HPET.
-
-Upstream seL4's x86 CI machines have a 64-bit HPET, so the PIT paths of
-util_libs are not exercised there.
+(`libplatsupport`) prefers the HPET, and uses the PIT when the machine
+has no HPET table. Its HPET driver needs a 64-bit comparator, so on a
+32-bit HPET the choice of the PIT has to be made before the ltimer
+commits to the HPET.
 
 ## Gotchas
 

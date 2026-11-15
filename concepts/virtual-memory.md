@@ -231,7 +231,7 @@ refuses to map user frames at or above it.
   kernel image (a global variable, the idle thread's stack) is not in
   the window; passing it to `pptr_to_paddr` gives a wrong physical
   address without any diagnostic. Use `kpptr_to_paddr`.
-- The window is not the whole of RAM on a large machine. An instance
+- The window is not the whole of RAM on a large machine. A machine
   with more memory than the window, or with RAM placed high in the
   physical address space, boots but offers the excess only as device
   untyped memory.

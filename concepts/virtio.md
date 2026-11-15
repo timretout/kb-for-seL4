@@ -1,6 +1,6 @@
 # virtio
 
-> virtio is the standard family of paravirtual devices (network, block, console and more) that hypervisors offer in place of emulated hardware: one queue mechanism, three transports, and the easiest real I/O for an seL4 system on QEMU or Compute Engine.
+> virtio is the standard family of paravirtual devices (network, block, console and more) that hypervisors offer in place of emulated hardware: one queue mechanism, three transports, and the easiest real I/O for an seL4 system in a virtual machine.
 
 [Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Buses and devices](../INDEX.md#buses-and-devices) · ← [UARTs: 16550 and PL011](uart.md) · [IOMMUs: VT-d and SMMU](iommu.md) →
 
@@ -240,9 +240,9 @@ designer must allocate and the driver must program into the device.
 ## Gotchas
 
 - **Compute Engine's virtio is not what sDDF's PCI transport expects.**
-  The devices carry transitional IDs and are driven through the legacy
-  I/O-port interface; a modern-only driver finds no usable common
-  configuration capability. Check the capability list of the actual
+  The devices of its older series carry transitional IDs and have to be
+  driven through the legacy I/O-port interface; a modern-only driver
+  finds no usable common configuration capability. Check the capability list of the actual
   device before assuming.
 - **QEMU's virtio-mmio defaults to legacy** (version 1) on `virt`
   machines, and a version 2 driver must refuse it. sDDF's documented

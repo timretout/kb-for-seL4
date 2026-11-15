@@ -118,9 +118,9 @@ Not kernel code. Where a kernel or platform contributor meets these:
   and virtual interrupt invocations, SMC forwarding on Arm, VT-x and
   I/O ports on x86, the IOMMU. A change to those is tested downstream
   by these projects' CI, not only by [sel4test](sel4test.md).
-- **x86 cloud work** meets libvmm's ACPI and APIC emulation only when
-  running guests; native components need PCI, MSI-X and NIC drivers in
-  sDDF first.
+- **On x86**, libvmm's ACPI and APIC emulation matters only when
+  running guests; native components on a machine with only PCI devices
+  need PCI discovery, MSI-X and a NIC driver in sDDF first.
 
 ## Gotchas
 

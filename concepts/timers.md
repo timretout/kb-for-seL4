@@ -25,8 +25,8 @@ different devices:
 
 To use either it needs a third thing, the **rate**: how many counts make
 a second. Where the rate comes from is the main difference between the
-architectures, and the source of most of the timer bugs met on the
-clouds. Each device below has its own page; this one shows how they fit
+architectures, and a common source of timer bugs in virtual
+machines. Each device below has its own page; this one shows how they fit
 together.
 
 ### x86
@@ -50,8 +50,8 @@ their rates are found from something else:
   PIT period each: see [timer calibration](timer-calibration.md).
 - **Being told.** A hypervisor may offer CPUID leaf `0x40000010`, which
   gives the TSC's and the local APIC timer's rates in kHz: see
-  [hypervisor CPUID leaves](hypervisor-cpuid-leaves.md). Upstream seL4
-  does not read it.
+  [hypervisor CPUID leaves](hypervisor-cpuid-leaves.md). seL4 does
+  not read it.
 
 ![On x86 the PIT, a hypervisor CPUID leaf and the HPET have known rates; the per-core local APIC timer and TSC do not, so seL4 times both against the PIT at boot; the kernel takes its interrupt from the local APIC timer and the time from the TSC, and user-level drivers use the TSC, the HPET and the PIT.](../images/timers-x86.svg)
 

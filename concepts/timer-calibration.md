@@ -78,9 +78,9 @@ util_libs measures the TSC again at user level for its ltimer, in
 ## Gotchas
 
 - **A failed calibration rarely fails loudly.** A TSC measured at 1 MHz
-  instead of 2000 MHz made the APIC ratio 0, which the kernel reads as
-  "TSC deadline mode", and the machine hung at its first deadline. Check
-  results for plausibility and fail with a message.
+  instead of 2000 MHz makes the APIC ratio 0, which the kernel reads as
+  "TSC deadline mode", and the machine hangs at its first deadline. The
+  kernel does not check the result for plausibility.
 - **Integer arithmetic.** Rates in whole MHz and an integer ratio throw
   away up to half the precision when the ratio is near 1 or 2.
 - **The cloud's PIT may be quirky.** Compute Engine's N1 PIT count can

@@ -80,8 +80,9 @@ Directories under `drivers/` on `main`:
 
 `include/sddf/` also has `sound`, `pci`, `virtio` and `benchmark`
 headers. `docs/drivers.md` lists the device-tree compatible strings
-each driver is known to work with. There is no driver for
-[ENA](../concepts/ena.md) or [gVNIC](../concepts/gvnic.md).
+each driver is known to work with. There are no drivers for the cloud
+providers' own NICs ([ENA](../concepts/ena.md) on EC2,
+[gVNIC](../concepts/gvnic.md) on Compute Engine).
 
 ### The queue pattern
 
@@ -229,9 +230,10 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
   network driver, when built for x86-64, assumes the device at PCI
   address 00:02.0, interrupt channel 16 and fixed ring-buffer addresses
   (`0x70000000` virtual, `0x7a000000` physical), under comments asking
-  for a fix. A cloud port needs real PCI discovery
+  for a fix. A machine whose devices are elsewhere (most real PCs and
+  every cloud instance) needs real PCI discovery
   ([ACPI](../concepts/acpi-tables.md), ECAM) and MSI-X; branches such
-  as `billn/acpi_pcie` show work in progress, not upstream state.
+  as `billn/acpi_pcie` show work in progress, not the state of `main`.
 - **Arm and RISC-V drivers find devices by device tree only.** A board
   needs its `.dts` in `dts/` and an entry in `acacia_sddf/board.py`.
 - **The tooling moves.** Hand-written SDFs, then `sdfgen`, now Acacia;

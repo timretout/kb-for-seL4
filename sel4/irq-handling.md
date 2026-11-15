@@ -138,7 +138,7 @@ masking is used) left masked until someone binds and acks.
   used as IPIs), 16 to 31 PPIs (private to one core, such as the
   [generic timer](../concepts/arm-generic-timer.md)), 32 upwards SPIs
   (shared, the device interrupts). LPIs, the message-based interrupts
-  of the GICv3 ITS, are not supported upstream.
+  of the GICv3 ITS, are not supported.
 - **RISC-V**: the PLIC source number, plus kernel-defined numbers for
   the timer and IPI.
 

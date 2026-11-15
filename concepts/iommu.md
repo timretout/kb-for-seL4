@@ -254,7 +254,7 @@ trusted, or are driven by components the system trusts completely. See
   silently with it on: the kernel prints a fault only in debug builds.
 - **A cloud guest has no IOMMU to enable.** On ordinary EC2 and Compute
   Engine instances `seL4_CapIOSpace` is a null cap and DMA isolation
-  between user-level components is not available at all; the design has
+  between user-level components is not available at all; a system there has
   to treat each driver as trusted with the whole instance's memory, or
   bounce through copying components that at least limit what a
   *client* can do.

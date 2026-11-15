@@ -171,7 +171,8 @@ libraries is verified.
 
 ## In seL4
 
-Where a fix lands when sel4test misbehaves on a new x86 machine:
+As a worked example, where a fix lands when sel4test misbehaves on an
+x86 machine it has not run on before:
 
 | Symptom | Look in |
 |---|---|

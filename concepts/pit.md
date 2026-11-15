@@ -90,8 +90,9 @@ kernel to grant I/O port access through an IOPort capability for ports
 - **Each access is slow under a hypervisor.** An emulated PIT's port
   accesses trap to the hypervisor, and a vCPU can be descheduled between
   two reads, so short PIT measurements are noisy in VMs.
-- **Count once per period.** util_libs' TSC calibration once counted one
-  PIT period twice and came out 2.5% low.
+- **Count once per period.** A calibration loop that counts one PIT
+  period twice comes out low: util_libs' TSC calibration has measured
+  2.5% low that way.
 
 ## See also
 

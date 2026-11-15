@@ -229,7 +229,7 @@ manual's `2G`; on x86 it can be chosen at run time with `-m`.
   RSDP handed over by a boot loader, no EFI memory map, no boot-loader
   frame buffer. Clouds boot from a disk through UEFI
   ([Cloud boot images](cloud-boot-images.md)); test that path with OVMF
-  and a disk image before spending money on instances.
+  and a disk image before trying a cloud instance.
 - **QEMU's devices are not a cloud's.** `q35` has a PIT, an HPET, a PIC
   and COM1; [EC2](ec2.md) and [Compute Engine](gce.md) each lack some of
   these and add devices QEMU has no model of (ENA, gVNIC). Code that

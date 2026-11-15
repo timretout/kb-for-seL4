@@ -270,8 +270,9 @@ workflows and the matrix.
 - **Simulation skips tests.** Anything gated on
   `!config_set(CONFIG_SIMULATION)` (`SCHED0021`, preemption among
   equal priorities, is one) and the cache tests do not run under
-  `-DSIMULATION=TRUE`. A cloud VM is not QEMU-on-a-laptop: decide
-  deliberately which setting a virtual machine port is tested with.
+  `-DSIMULATION=TRUE`. A hardware-virtualised machine (KVM, a cloud
+  instance) is not an emulator: decide deliberately which setting to
+  test such a machine with.
 - **"Tests disabled" is not "tests passed".** The count of disabled
   tests is in the summary line; a configuration change that silently
   disables a group still prints the success line.

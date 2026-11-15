@@ -2,7 +2,7 @@
 
 Every page, with its summary, arranged as a course: read top to bottom,
 or jump to what you need. Pages marked "Stub" are planned and not yet
-written. [GLOSSARY.md](GLOSSARY.md) lists terms and abbreviations with
+written. The [glossary](GLOSSARY.md) lists terms and abbreviations with
 the page that explains each.
 
 1. [Orientation](#part-1-orientation)
@@ -47,7 +47,7 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 - [x86 boot: BIOS, GRUB and Multiboot](concepts/x86-boot.md): How a PC gets from reset to a kernel: BIOS or UEFI firmware, a boot loader (usually GRUB), and the Multiboot 1 and 2 protocols that hand seL4 its memory map, root task image and ACPI pointer in 32-bit protected mode.
 - [UEFI](concepts/uefi.md): The firmware interface that replaced the PC BIOS and is standard on Arm servers and cloud instances: it loads a PE executable from a FAT partition and offers it services and tables; x86 seL4 hides it behind GRUB, and the Arm elfloader can be built as a UEFI application.
 - [8259 PIC](concepts/pic-8259.md): The PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports; every x86 kernel, seL4 included, still has to remap and mask it at boot even when it uses the APICs instead.
-- [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md): Intel's hardware support for running guest operating systems (VMX root and non-root operation, the VMCS, EPT) and AMD's equivalent: it is what seL4's x86 hypervisor mode drives, and what every cloud instance seL4 boots on is running under.
+- [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md): Intel's hardware support for running guest operating systems (VMX root and non-root operation, the VMCS, EPT) and AMD's equivalent: it is what seL4's x86 hypervisor mode drives, and what every x86 virtual machine, cloud instances included, runs under.
 
 ### AArch64
 
@@ -98,7 +98,7 @@ The hardware around the CPU: how it is described to software, how devices interr
 - [PCI and PCI Express](concepts/pci.md): The bus by which almost every device in a PC, server or cloud virtual machine is found and reached: each function at a bus:device.function address has a configuration space that names it and holds its BARs, the windows through which its registers appear; PCI Express keeps that software model on point-to-point serial links and reaches the larger configuration space through ECAM.
 - [MSI and MSI-X](concepts/msi-msix.md): A PCI device interrupts by writing a value to an address instead of asserting a wire; MSI allows up to 32 vectors set in configuration space, MSI-X up to 2048 from a table in a BAR.
 - [UARTs: 16550 and PL011](concepts/uart.md): A UART is the serial port: the 16550 on x86 and many RISC-V and Arm boards and the PL011 on Arm are the two seL4 work meets most, and a serial port is the only console a debug kernel or a cloud instance has.
-- [virtio](concepts/virtio.md): virtio is the standard family of paravirtual devices (network, block, console and more) that hypervisors offer in place of emulated hardware: one queue mechanism, three transports, and the easiest real I/O for an seL4 system on QEMU or Compute Engine.
+- [virtio](concepts/virtio.md): virtio is the standard family of paravirtual devices (network, block, console and more) that hypervisors offer in place of emulated hardware: one queue mechanism, three transports, and the easiest real I/O for an seL4 system in a virtual machine.
 - [IOMMUs: VT-d and SMMU](concepts/iommu.md): An IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a user-level driver from reading or writing all of memory through its device; seL4 has unverified support for Intel VT-d and Arm SMMUv2.
 
 ### Virtual and cloud machines
@@ -108,7 +108,7 @@ The hardware around the CPU: how it is described to software, how devices interr
 
 ### Cloud platforms
 
-The two clouds the porting work targets. Start with the cloud virtual machines page above.
+Amazon EC2 and Google Compute Engine in detail: their machines, boot images and devices. Start with the cloud virtual machines page above.
 
 - [Amazon EC2 and the Nitro system](concepts/ec2.md): How EC2 runs a guest: the Nitro hypervisor and cards, AMIs and boot modes, EBS, the serial console and other ways to see a kernel boot, and the hardware (PCI devices, interrupt controllers, timers) a guest kernel finds.
 - [EC2 instance types](concepts/ec2-instance-types.md): How to read an EC2 instance type name (`m7g.large`, `c5n.metal`) and what it implies for a kernel: CPU vendor and generation, hypervisor, boot modes, and whether it is bare metal.

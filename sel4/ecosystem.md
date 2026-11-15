@@ -156,7 +156,7 @@ system) from the user. sDDF and LionsOS build on its abstractions.
 It is much easier to learn and to reason about, and is where the
 Foundation's and Trustworthy Systems' new development goes.
 
-For new systems work, including cloud drivers, prefer generation 2:
+For new systems work, device drivers included, prefer generation 2:
 Microkit with sDDF, in C or with rust-sel4. Generation 1 remains
 necessary for kernel work, because sel4test and sel4bench are how a
 kernel change is tested and what upstream CI runs, and CAmkES systems

@@ -10,7 +10,7 @@
 | Architecture | x86 and Arm GICv3 |
 | Reached through | MSI: a capability in configuration space; MSI-X: a table in a BAR |
 | Key numbers | MSI 1 to 32 vectors, a power of two; MSI-X 1 to 2048 |
-| seL4 use | x86: an IRQ handler capability for an MSI vector, device programmed by user level; Arm: none upstream |
+| seL4 use | x86: an IRQ handler capability for an MSI vector, device programmed by user level; Arm: none |
 | On the clouds | NVMe, ENA and gVNIC are designed around MSI-X, one vector per queue |
 
 ## What it is
@@ -49,15 +49,16 @@ designed around MSI-X, one vector per queue.
 - **x86:** seL4 gives user level an [IRQ](irq.md) handler capability for an MSI
   vector with `seL4_IRQControl_GetMSI` (see [PCI](pci.md)), and the
   user-level driver programs the device.
-- **Arm:** upstream seL4 has no ITS support, so no MSI on Arm. A
-  prototype Arm version of `seL4_IRQControl_GetMSI` maps one event of one
-  device to an LPI.
+- **Arm:** seL4 has no ITS support, so no MSI on Arm: there is no Arm
+  version of `seL4_IRQControl_GetMSI` to map an event of a device to an
+  LPI.
 
 ## Gotchas
 
 - **Some devices need MSI-X.** A device that polls fine can still need
-  MSI-X for interrupt-driven operation; on Compute Engine, gVNIC round
-  trips fell from about 1 ms polled to 0.07 ms with MSI-X.
+  MSI-X for interrupt-driven operation; with one gVNIC driver on Compute
+  Engine, round trips fell from about 1 ms polled to 0.07 ms with MSI-X
+  (observed 2026).
 - The MSI-X table lives in a BAR, so the driver needs that BAR mapped as
   well as configuration space.
 

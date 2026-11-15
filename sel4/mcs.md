@@ -287,9 +287,11 @@ absorb it, so [proof impact](proof-impact.md) still has to be stated.
 
 ## Gotchas
 
-- **Clock errors become scheduling errors.** On x86 an integer TSC to
-  APIC ratio made budgets last 32.5% too long on EC2's AMD types and
-  twice as long on most boots of Compute Engine's N1. The non-MCS kernel,
+- **Clock errors become scheduling errors.** On x86 without TSC-deadline
+  mode the kernel scales deadlines by a whole-number TSC to APIC timer
+  ratio (`x86KSapicRatio`); where the true ratio is not whole, budgets
+  ran 32.5% too long on EC2's AMD types and twice as long on most boots
+  of Compute Engine's N1 (observed 2026). The non-MCS kernel,
   with only a periodic tick, hides such errors.
 - **Hangs can look like scheduler bugs.** A timer that never fires stops
   everything at the first deadline, which in Microkit is just after

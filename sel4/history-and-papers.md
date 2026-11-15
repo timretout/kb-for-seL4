@@ -144,7 +144,7 @@ In order of usefulness to someone about to write kernel patches.
    [Publication page](https://trustworthy.systems/publications/abstracts/Lyons_MAH_18.abstract).
    The MCS design: time as a capability-controlled resource, budgets,
    passive servers, timeout faults. Needed for any work on timers or
-   scheduling, which a cloud port involves at once.
+   scheduling, which a port to a new machine soon involves.
 7. **Heiser et al., "sDDF design: design, implementation and
    evaluation of the seL4 device driver framework", 2024.**
    [Publication page](https://trustworthy.systems/publications/papers/Heiser_CBDP_24.abstract).
@@ -157,9 +157,8 @@ In order of usefulness to someone about to write kernel patches.
    Linux ([LionsOS and libvmm](lionsos.md)).
 9. **RFC-5, "The seL4 Microkit".**
    [RFC text](https://sel4.github.io/rfcs/implemented/0050-microkit.html).
-   The rationale for a small static framework and its abstractions. A
-   Rust RFC was asked for in the brief for this page, but no
-   Rust-language RFC was found in `seL4/rfcs` on 2026-11-14; the
+   The rationale for a small static framework and its abstractions. There
+   is no RFC for Rust support in `seL4/rfcs` (as of 2026-11-14); the
    rust-sel4 repository's own documentation is the reference
    ([rust-sel4](rust-sel4.md)).
 10. **Murray et al., "seL4: From General Purpose to a Proof of

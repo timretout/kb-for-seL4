@@ -62,7 +62,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 ## C
 
 - **C Parser**: The Isabelle tool (StrictC) that translates the preprocessed kernel into a formal language; also a CI check. See [The verified C subset](sel4/verified-c-subset.md).
-- **CAmkES**: The older component framework, generating glue code and a capDL specification; parked in this work. See [CAmkES and capDL](sel4/camkes-capdl.md).
+- **CAmkES**: The older component framework, generating glue code and a capDL specification; new work mostly uses Microkit instead. See [CAmkES and capDL](sel4/camkes-capdl.md).
 - **canonical address**: An x86-64 address whose unused upper bits copy the top implemented bit; splits the space into low and high halves. See [x86-64 basics](concepts/x86-64-basics.md).
 - **cap fault**: Fault raised when a thread uses a capability address that cannot be looked up. See [Faults and fault handlers](sel4/faults.md).
 - **capability**: An unforgeable, kernel-held token naming one kernel object plus the rights its holder has. See [Capabilities](sel4/capabilities.md).
@@ -324,7 +324,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 ## N
 
 - **namespace**: A disk behind an NVMe controller, numbered from 1. See [NVMe](concepts/nvme.md).
-- **nested virtualisation**: Running a hypervisor inside a virtual machine, as seL4's hypervisor mode would need on a cloud instance. See [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md), also [Compute Engine machine types](concepts/gce-machine-types.md).
+- **nested virtualisation**: Running a hypervisor inside a virtual machine, as seL4's hypervisor mode needs when the kernel itself runs in a virtual machine. See [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md), also [Compute Engine machine types](concepts/gce-machine-types.md).
 - **Ninja**: The build tool CMake generates files for. See [Build system and configuration](sel4/build-system.md).
 - **Nitro**: The system EC2 runs on: a hypervisor plus cards that provide network and storage devices. See [Amazon EC2 and the Nitro system](concepts/ec2.md).
 - **NMI** (non-maskable interrupt): An x86 interrupt that the interrupt flag does not mask. See [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md).
@@ -426,7 +426,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **sDDF** (seL4 Device Driver Framework): Trustworthy Systems' framework of drivers, virtualisers and clients joined by shared-memory queues. See [sDDF](sel4/sddf.md).
 - **SDF** (system description file): The XML file describing a Microkit system's protection domains, channels, memory regions and interrupts. See [Microkit](sel4/microkit.md).
 - **SDK**: How Microkit ships: prebuilt kernels, library and tool, matched to each other. See [Microkit](sel4/microkit.md).
-- **Secure Boot**: UEFI's refusal to run unsigned loaders; it must be off for a custom kernel. See [UEFI](concepts/uefi.md), also [Booting a custom kernel on a cloud](concepts/cloud-boot-images.md).
+- **Secure Boot**: UEFI's refusal to run unsigned loaders; it must be off, or the loader signed, to boot a kernel of your own. See [UEFI](concepts/uefi.md), also [Booting a custom kernel on a cloud](concepts/cloud-boot-images.md).
 - **segment (ELF)**: A part of an ELF file described by a program header; `PT_LOAD` segments are loaded. See [ELF and linking](concepts/elf.md).
 - **segment (x86)**: A region described by a GDT descriptor; mostly vestigial in 64-bit mode except the FS and GS bases. See [x86-64 basics](concepts/x86-64-basics.md).
 - **seL4 Foundation**: The body whose Technical Steering Committee sets process and grants reviewer and committer roles. See [Governance and RFCs](sel4/governance.md).
@@ -503,7 +503,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 
 - **U-Boot**: The usual boot loader on Arm development boards. See [Arm boot flow](concepts/arm-boot.md).
 - **U-mode**: RISC-V's user mode. See [Privilege levels](concepts/privilege-levels.md).
-- **UART**: The serial port: the only console a debug kernel or a cloud instance has. See [UARTs: 16550 and PL011](concepts/uart.md).
+- **UART**: The serial port: where a debug kernel prints, and often the only console a board or virtual machine has. See [UARTs: 16550 and PL011](concepts/uart.md).
 - **UEFI** (Unified Extensible Firmware Interface): The firmware interface that replaced the BIOS; it loads a PE executable from a FAT partition. See [UEFI](concepts/uefi.md).
 - **uImage**: U-Boot's own image format, with a header giving load address, entry point and checksum. See [Arm boot flow](concepts/arm-boot.md).
 - **untyped**: A capability to a block of physical memory that is not yet any kernel object. See [Untyped memory and retyping](sel4/untyped-memory.md).

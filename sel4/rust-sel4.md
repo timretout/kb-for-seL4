@@ -143,8 +143,8 @@ of a kernel build (`cmake --install`), using
   change under you).
 - Drivers, `crates/drivers/`: PL011 and BCM2835 auxiliary UARTs, the
   PL031 real-time clock, the SP804 timer, and virtio (block, net)
-  wrappers. These are Arm and QEMU devices; there are no x86 or cloud
-  NIC drivers here.
+  wrappers. These are Arm and QEMU devices; there are no drivers
+  for PC or cloud NICs here.
 - `crates/experimental/sel4-async` and friends: an async executor and
   adapters (network with smoltcp, block I/O, timers) used by the
   Microkit HTTP server demo.
@@ -204,8 +204,9 @@ only the Microkit ABI (channels, shared memory).
 
 rust-sel4 lives in the `seL4` GitHub organisation as the Foundation's
 Rust support. No Rust RFC appears among the implemented or active RFCs
-in `seL4/rfcs` (looked 2026-11-14), so do not cite one.
-It is actively developed: the pinned nightly is two weeks old. Its
+in `seL4/rfcs` (as of November 2026).
+It is actively developed: in November 2026 the pinned nightly was two
+weeks old. Its
 weightiest user is Microkit itself, through the capDL initialiser,
 which makes rust-sel4 part of the boot path of every Microkit system,
 C or Rust. [sDDF](sddf.md) and [LionsOS](lionsos.md) are C, with no

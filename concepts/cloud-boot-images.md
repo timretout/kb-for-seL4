@@ -152,7 +152,7 @@ One round is build, pack, upload, register, start, wait, fetch the
 log, delete. On Compute Engine a sel4test boot took about two minutes
 from instance creation to a complete log (observed, 2026); EC2's
 snapshot import adds minutes more. Against a few seconds under
-[QEMU](qemu.md), that is the cost that shapes the work:
+[QEMU](qemu.md), that cost shapes how to work:
 
 - Boot the *same disk image* under QEMU with OVMF (the EDK II build
   for QEMU) first: `qemu-system-x86_64 -bios OVMF.fd -drive

@@ -177,7 +177,7 @@ Microkit I/O ports on x86-64, ECAM elsewhere, where it also programs BAR 0
 and BAR 1 itself and sets memory decode and bus master
 ([`nvme.h`](https://github.com/au-ts/sddf/blob/main/drivers/blk/nvme/nvme.h),
 [`nvme.c`](https://github.com/au-ts/sddf/blob/main/drivers/blk/nvme/nvme.c)).
-Upstream sDDF fixes each device's bus:device.function and BAR addresses
+sDDF fixes each device's bus:device.function and BAR addresses
 at build time.
 
 **util_libs** has [`libpci`](https://github.com/seL4/util_libs/tree/master/libpci),

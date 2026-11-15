@@ -1,6 +1,6 @@
 # x86 virtualisation: VT-x, the VMCS and EPT
 
-> Intel's hardware support for running guest operating systems (VMX root and non-root operation, the VMCS, EPT) and AMD's equivalent: it is what seL4's x86 hypervisor mode drives, and what every cloud instance seL4 boots on is running under.
+> Intel's hardware support for running guest operating systems (VMX root and non-root operation, the VMCS, EPT) and AMD's equivalent: it is what seL4's x86 hypervisor mode drives, and what every x86 virtual machine, cloud instances included, runs under.
 
 [Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [x86-64](../INDEX.md#x86-64) · ← [8259 PIC](pic-8259.md) · [AArch64 basics](aarch64-basics.md) →
 

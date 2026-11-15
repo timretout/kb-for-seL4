@@ -227,9 +227,9 @@ regions.
 Other NIC drivers upstream: `imx` (i.MX8 FEC), `meson`, `dwmac-5.10a`
 (Synopsys DWMAC, several SoCs), `genet` (Raspberry Pi 4) and
 `zynqmp-gem`. An Intel `ixgbe` driver exists only on branches. Nothing
-exists for [ENA](../concepts/ena.md) or
-[gVNIC](../concepts/gvnic.md): a cloud port must write those, and both
-need PCI and MSI-X, admin queues and multi-buffer or larger-MTU
+exists for the cloud providers' own NICs, [ENA](../concepts/ena.md)
+(EC2) and [gVNIC](../concepts/gvnic.md) (Compute Engine): a driver for
+either needs PCI and MSI-X, admin queues and multi-buffer or larger-MTU
 handling the virtio driver never meets.
 
 ### Clients, the echo server and benchmarking
@@ -299,7 +299,7 @@ and the driver's interrupt arrives as a
 
 - [sDDF](sddf.md): principles, tooling and the other classes
 - [virtio](../concepts/virtio.md): the device model of the worked example
-- [ENA](../concepts/ena.md) and [gVNIC](../concepts/gvnic.md): the cloud NICs with no sDDF driver yet
+- [ENA](../concepts/ena.md) and [gVNIC](../concepts/gvnic.md): the EC2 and Compute Engine NICs, which have no sDDF driver
 - [PCI](../concepts/pci.md) and [MSI and MSI-X](../concepts/msi-msix.md): what an x86 NIC driver needs first
 - [LionsOS and libvmm](lionsos.md): systems built on this subsystem
 - [Index](../INDEX.md): the reading order

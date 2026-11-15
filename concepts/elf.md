@@ -211,7 +211,7 @@ build runs `objcopy -O elf32-i386` on `kernel.elf`
 ([`rootserver.cmake`](https://github.com/seL4/seL4_tools/blob/master/cmake-tool/helpers/rootserver.cmake)
 in `seL4_tools`): the same bytes with 32-bit headers, in which the high
 virtual addresses are truncated but the load addresses, which are what
-the loader uses, are intact (a test file linked at
+the loader uses, are intact (for example, a file linked at
 `0xffffffff80100000` with a load address of `0x100000` converts to
 `VirtAddr` `0x80100000`, `PhysAddr` `0x00100000`). Disassemble the 64-bit `kernel.elf`, boot
 the converted one.
@@ -294,7 +294,7 @@ find symbol table section"). See [Microkit internals](../sel4/microkit-internals
 
 - glibc `/usr/include/elf.h` ([source](https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h)):
   header structures, `PT_*`, `PF_*`, `ET_*`, `EM_*`, `SHT_NOBITS`.
-  *Checked 2026-11-14 (the installed copy).*
+  *Checked 2026-11-14 (the copy glibc installs).*
 - [System V Application Binary Interface, chapter 4 "Object Files" and chapter 5 "Program Loading and Dynamic Linking"](https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html):
   the specification of the format. *Checked 2026-11-14 (the contents
   page and the "Program Header" page of chapter 5).*

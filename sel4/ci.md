@@ -95,9 +95,10 @@ Reproducing the main checks before sending a pull request:
   should show only what you meant. Needs `astyle`, and Python's `guardonce`, `autopep8` and
   `cmake-format` (version 0.6.13 exactly) for the other file types.
 - **Gitlint.**
-  `gitlint --config <seL4_tools>/misc/.gitlint --commits upstream/master..HEAD lint`,
-  the command the action runs.
-- **Whitespace.** `git diff --check upstream/master..HEAD`.
+  `gitlint --config <seL4_tools>/misc/.gitlint --commits <base>..HEAD lint`,
+  the command the action runs, where `<base>` is the branch the pull
+  request targets (`origin/master`, say).
+- **Whitespace.** `git diff --check <base>..HEAD`.
 - **Licences.** `reuse lint` at the top of the repository (the action
   installs REUSE 5.0.2 and runs exactly that).
 - **Compile matrix.** Build the kernel alone from a verified

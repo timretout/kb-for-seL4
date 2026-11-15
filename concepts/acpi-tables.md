@@ -41,8 +41,7 @@ it is not the identity mapping, and with which polarity and trigger mode.
   (the MADT for APICs, the FADT for its flags, DMAR for the IOMMU when
   `KernelIOMMU` is set) and passes the RSDP to the root task in bootinfo.
 - util_libs' `libplatsupport` has an ACPI table walker used by
-  user-level drivers, for example to find the [HPET](hpet.md) and the
-  [PIT](pit.md)'s interrupt pin.
+  user-level drivers, for example to find the [HPET](hpet.md).
 - On Arm, seL4 platforms describe hardware with a device tree at build
   time instead.
 
@@ -54,8 +53,9 @@ it is not the identity mapping, and with which polarity and trigger mode.
 - **The PIT's pin.** EC2 Nitro and Compute Engine x86 have overrides for
   IRQs 5, 9, 10 and 11 only, none for IRQ 0, so the PIT arrives on pin 0,
   where most PCs and QEMU route it to pin 2.
-- **Large tables.** A walker that copies every table into a fixed heap
-  can run out on machines with big tables.
+- **Large tables.** A walker that copies every table into a fixed-size
+  heap can run out on machines with big tables, such as many-core
+  servers.
 - Newer EC2 types add an MCFG table and a [PCIe](pci.md) hierarchy of bridges.
 
 ## See also

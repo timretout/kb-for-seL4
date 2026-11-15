@@ -141,10 +141,8 @@ threads; on x86 they are one.*
 **RISC-V.** Upstream `master` has no support for the RISC-V hypervisor
 (H) extension: there is no VCPU object, no option, and nothing under
 `src/arch/riscv` for it. A pull request with hypervisor changes
-(seL4/seL4#971) was closed unmerged. Out-of-tree work exists: that
-pull request came from a branch of a contributor's fork
-(`ivanv/riscv_hypervisor_extension`) and was opened against upstream
-by mistake.
+(seL4/seL4#971) was closed unmerged; work on it exists only outside
+the main repository.
 
 ### Verification
 

@@ -10,9 +10,8 @@
 | Architecture | Arm |
 | Reached through | `GICD_*` and `GICR_*` registers; system registers `ICC_*_EL1` for the CPU interface; the ITS's command queue in memory |
 | Key numbers | INTIDs: SGIs 0 to 15, PPIs 16 to 31, SPIs 32 to 1019, LPIs 8192 and up |
-| seL4 config | `KernelArmGicV3ITS` (a prototype, not upstream) |
 | seL4 use | Upstream handles SPIs, PPIs and SGIs; no LPIs or ITS |
-| On the clouds | Every Arm VM seen has a GICv3; bare-metal types from Graviton3 on have a GICv4.1. EC2: 128 LPIs on t4g, 256 on m9g. Compute Engine's bare-metal types have six ITSes |
+| On the clouds | Every Arm VM type listed below has a GICv3; bare-metal types from Graviton3 on have a GICv4.1. EC2: 128 LPIs on t4g, 256 on m9g. Compute Engine's bare-metal types have six ITSes |
 
 ## What it is
 
@@ -89,7 +88,7 @@ the clouds present (from Linux boot logs, November 2026):
 | Compute Engine c4a-highmem-96-metal | GICv4.1 | six |
 | Azure D2ps v5 (Ampere Altra) | GICv3 | none |
 
-Azure's Cobalt types have not been looked at.
+Azure's Cobalt types are not covered here.
 
 Linux reports a GICv4 with the line `GICv4 features:` and an ITS with
 `Using GICv4.1 mode`. Its KVM leaves direct injection off unless booted
@@ -106,10 +105,10 @@ one. None of the cloud machines in the table has a GICv5.
 ## In seL4
 
 Upstream seL4 supports GICv3 SPIs, PPIs and SGIs but not LPIs or the
-ITS, so there are no message signalled interrupts on Arm. A prototype
-(behind `KernelArmGicV3ITS`) keeps all the tables in static kernel memory
-and adds `seL4_IRQControl_GetMSI(irq, device_id, event_id, ...)`; an
-upstream API would need an RFC. One question it must answer is where the
+ITS, so there are no message signalled interrupts on Arm. Adding them
+would need an invocation that names a DeviceID and an EventID, as
+`seL4_IRQControl_GetMSI` names a PCI device on x86, and a new API of
+that kind would need an RFC. One question it must answer is where the
 kernel gets memory for the tables; the x86 pull request for VT-d
 interrupt remapping ([#1098](https://github.com/seL4/seL4/issues/1098))
 needs kernel table memory too.
