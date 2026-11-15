@@ -71,6 +71,7 @@ non-MCS kernel needs the rate only to set its periodic tick.
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [Timer calibration](timer-calibration.md): how the kernel measures it
 - [Local APIC timer](lapic-timer.md): TSC deadline mode programs the timer in TSC ticks
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): the rate without measuring

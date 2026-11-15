@@ -88,6 +88,7 @@ util_libs measures the TSC again at user level for its ltimer, in
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [PIT](pit.md): the reference
 - [TSC](tsc.md) and [local APIC timer](lapic-timer.md): what is measured
 - [Hypervisor CPUID leaves](hypervisor-cpuid-leaves.md): how to avoid measuring

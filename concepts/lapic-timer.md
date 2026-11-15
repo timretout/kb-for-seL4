@@ -72,6 +72,7 @@ budget and period. The non-MCS kernel uses a periodic tick.
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [Local APIC and I/O APIC](apic.md): the interrupt controller the timer is part of
 - [TSC](tsc.md): the clock deadlines are expressed in
 - [Timer calibration](timer-calibration.md): how the APIC timer's rate is measured

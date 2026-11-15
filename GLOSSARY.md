@@ -482,6 +482,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **THRE** (transmit holding register empty): The 16550 line status bit a driver polls before sending a byte. See [UARTs: 16550 and PL011](concepts/uart.md).
 - **timeout endpoint**: On MCS, the endpoint that receives a timeout fault when a thread's budget runs out. See [MCS kernel](sel4/mcs.md), also [Faults and fault handlers](sel4/faults.md).
 - **timer calibration**: Finding a clock's rate by timing it against another whose rate is known. See [Timer calibration](concepts/timer-calibration.md).
+- **timers** (the map): Every clock and timer seL4 work meets, by architecture, and how they fit together. See [Timers: a map](concepts/timers.md).
 - **timeslice**: On non-MCS kernels, the ticks a thread may run before going to the back of its priority's queue. See [Scheduling](sel4/scheduling.md).
 - **TLB** (translation lookaside buffer): The MMU's cache of translations, which a kernel must flush after editing page tables. See [Virtual memory](concepts/virtual-memory.md).
 - **TLB shootdown**: Telling other cores to flush a translation after a page table changes. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md).

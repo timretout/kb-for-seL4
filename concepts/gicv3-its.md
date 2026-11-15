@@ -2,7 +2,7 @@
 
 > Arm's interrupt controller (distributor, per-core redistributors, CPU interface) and its ITS, which turns devices' MSI writes into LPIs using tables in memory.
 
-[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [Local APIC and I/O APIC](apic.md) · [PIT](pit.md) →
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [Local APIC and I/O APIC](apic.md) · [Timers: a map](timers.md) →
 
 | At a glance | |
 |---|---|

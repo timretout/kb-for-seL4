@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 390" width="760" height="390" role="img">
+  <title>The RISC-V timer as an S-mode kernel uses it</title>
+  <desc>The kernel reads the platform counter mtime with rdtime. The compare register mtimecmp belongs to M-mode firmware: the kernel calls sbi_set_timer, firmware programs mtimecmp, takes the machine timer interrupt and sets STIP for the kernel. The kernel's rate is TIMER_FREQUENCY, fixed at build time.</desc>
+  <style>
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .fw { fill: var(--fw-fill); stroke: var(--fw-stroke); }
+    .kernel { fill: var(--kernel-fill); stroke: var(--kernel-stroke); }
+    .user { fill: var(--user-fill); stroke: var(--user-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--accent)"/>
+    </marker>
+  </defs>
+  <rect width="760" height="390" style="fill: var(--bg)"/>
+  <text x="16" y="28" class="head">RISC-V: the kernel reads the counter itself, but firmware owns the compare register</text>
+  <rect class="hw" x="40" y="60" width="220" height="64" rx="6"/>
+  <text x="150" y="86" text-anchor="middle" class="mono">mtime</text>
+  <text x="150" y="108" text-anchor="middle" class="small">64-bit counter, one per platform</text>
+  <rect class="hw" x="500" y="60" width="244" height="64" rx="6"/>
+  <text x="622" y="86" text-anchor="middle" class="mono">mtimecmp</text>
+  <text x="622" y="108" text-anchor="middle" class="small">compare register, one per hart</text>
+  <path class="line" d="M260,92 H500" marker-end="url(#arrow)"/>
+  <text x="380" y="82" text-anchor="middle" class="small">compared with</text>
+
+  <rect class="fw" x="500" y="186" width="244" height="64" rx="6"/>
+  <text x="622" y="212" text-anchor="middle" class="head">M-mode firmware</text>
+  <text x="622" y="234" text-anchor="middle" class="small">answers SBI calls</text>
+  <path class="line" d="M560,186 V124" marker-end="url(#arrow)"/>
+  <text x="552" y="160" text-anchor="end" class="small">programs</text>
+  <path class="line" d="M660,124 V186" marker-end="url(#arrow)"/>
+  <text x="668" y="152" class="small">machine</text>
+  <text x="668" y="168" class="small">timer irq</text>
+
+  <rect class="data" x="200" y="186" width="250" height="64" rx="6"/>
+  <text x="325" y="212" text-anchor="middle" class="mono">TIMER_FREQUENCY</text>
+  <text x="325" y="234" text-anchor="middle" class="small">per platform, at build</text>
+  <path class="line accent" d="M325,250 V310" marker-end="url(#arrow-accent)"/>
+  <text x="315" y="285" text-anchor="end" class="small">rate</text>
+
+  <rect class="kernel" x="40" y="310" width="704" height="64" rx="6"/>
+  <text x="392" y="336" text-anchor="middle" class="head">seL4 kernel (S-mode)</text>
+  <text x="392" y="358" text-anchor="middle" class="small">rate fixed at build time; the device tree's timebase-frequency is not read at boot</text>
+  <path class="line" d="M100,124 V310" marker-end="url(#arrow)"/>
+  <text x="110" y="285" class="mono">rdtime</text>
+  <path class="line" d="M560,310 V250" marker-end="url(#arrow)"/>
+  <text x="552" y="285" text-anchor="end" class="mono">sbi_set_timer(t)</text>
+  <path class="line" d="M660,250 V310" marker-end="url(#arrow)"/>
+  <text x="668" y="285" class="small">sets STIP</text>
+</svg>

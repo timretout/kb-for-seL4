@@ -2,7 +2,7 @@
 
 > The original PC's timer chip, a 16-bit down-counter at 1 193 182 Hz behind I/O ports 0x40 to 0x43; every x86 hypervisor still emulates it, and seL4 times its other clocks against it at boot.
 
-[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [GICv3 and the ITS](gicv3-its.md) · [TSC](tsc.md) →
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Timers](../INDEX.md#timers) · ← [Timers: a map](timers.md) · [TSC](tsc.md) →
 
 | At a glance | |
 |---|---|
@@ -95,6 +95,7 @@ kernel to grant I/O port access through an IOPort capability for ports
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [ISA](isa.md): the legacy device family the PIT belongs to
 - [Local APIC and I/O APIC](apic.md): the I/O APIC pin its interrupt arrives on
 - [Timer calibration](timer-calibration.md): what the PIT is used for in seL4

@@ -270,6 +270,7 @@ a one-hart mask; the target sees `SSIP`. TLB shootdown uses
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [IRQ](irq.md): interrupts in general, level and edge
 - [Interrupt delivery](../sel4/irq-handling.md): IRQControl, IRQHandler and notifications
 - [RISC-V paging and traps](riscv-paging-and-traps.md): how the interrupt enters the kernel once pending

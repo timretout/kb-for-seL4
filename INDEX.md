@@ -82,6 +82,7 @@ The hardware around the CPU: how it is described to software, how devices interr
 
 ### Timers
 
+- [Timers: a map](concepts/timers.md): A map of every clock and timer seL4 work meets, by architecture: which device counts time, which raises the interrupt, where each one's rate comes from, and whether the kernel or user level uses it.
 - [PIT](concepts/pit.md): The original PC's timer chip, a 16-bit down-counter at 1 193 182 Hz behind I/O ports 0x40 to 0x43; every x86 hypervisor still emulates it, and seL4 times its other clocks against it at boot.
 - [TSC](concepts/tsc.md): A 64-bit per-core x86 counter read with `RDTSC`; cheap to read and, on modern CPUs, constant-rate, but nothing architectural tells the kernel its frequency.
 - [Local APIC timer and TSC deadline mode](concepts/lapic-timer.md): The per-core x86 timer built into each local APIC, programmed either as a countdown at an unknown bus-derived rate or, in TSC deadline mode, as an absolute TSC value.
@@ -195,7 +196,7 @@ idea for that architecture; a page in the first column covers all three.
 | Entering the kernel | [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md) | [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md) | [AArch64 exceptions](concepts/aarch64-exceptions.md) | [RISC-V paging and traps](concepts/riscv-paging-and-traps.md) |
 | Page tables | [Virtual memory](concepts/virtual-memory.md) | [x86-64 paging](concepts/x86-paging.md) | [AArch64 paging](concepts/aarch64-paging.md) | [RISC-V paging and traps](concepts/riscv-paging-and-traps.md) |
 | Interrupt controller | [IRQ](concepts/irq.md) | [Local APIC and I/O APIC](concepts/apic.md), [8259 PIC](concepts/pic-8259.md) | [GICv2](concepts/gicv2.md), [GICv3 and the ITS](concepts/gicv3-its.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
-| Timers | [Timer calibration](concepts/timer-calibration.md) | [PIT](concepts/pit.md), [TSC](concepts/tsc.md), [Local APIC timer](concepts/lapic-timer.md), [HPET](concepts/hpet.md) | [Arm generic timer](concepts/arm-generic-timer.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
+| Timers | [Timers: a map](concepts/timers.md), [Timer calibration](concepts/timer-calibration.md) | [PIT](concepts/pit.md), [TSC](concepts/tsc.md), [Local APIC timer](concepts/lapic-timer.md), [HPET](concepts/hpet.md) | [Arm generic timer](concepts/arm-generic-timer.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
 | Boot chain | [ELF and linking](concepts/elf.md), [UEFI](concepts/uefi.md) | [x86 boot](concepts/x86-boot.md) | [Arm boot flow](concepts/arm-boot.md), [Elfloader](sel4/elfloader.md) | [RISC-V basics](concepts/riscv-basics.md), [Elfloader](sel4/elfloader.md) |
 | Calling firmware | | | [PSCI and SMCCC](concepts/psci-smccc.md) | [RISC-V basics](concepts/riscv-basics.md) (SBI) |
 | Starting other cores | [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md) | | [PSCI and SMCCC](concepts/psci-smccc.md) | |

@@ -66,6 +66,7 @@ util_libs are not exercised there.
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [PIT](pit.md): what it was meant to replace, and the usual fallback
 - [ACPI tables](acpi-tables.md): how it is found
 - [TSC](tsc.md): what Linux prefers on modern machines

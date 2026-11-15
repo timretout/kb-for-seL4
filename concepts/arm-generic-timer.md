@@ -61,6 +61,7 @@ generally reads `CNTFRQ_EL0` itself.
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [GICv3 and the ITS](gicv3-its.md): where the timer's PPIs go
 - [Timer calibration](timer-calibration.md): what x86 has to do instead
 - [AArch64 basics](aarch64-basics.md): the 64-bit Arm execution state

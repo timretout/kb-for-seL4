@@ -61,6 +61,7 @@ describe the host.
 
 ## See also
 
+- [Timers: a map](timers.md): every timer on each architecture in one diagram, and how this one fits in
 - [TSC](tsc.md) and [local APIC timer](lapic-timer.md): the rates it gives
 - [Timer calibration](timer-calibration.md): what it lets a guest skip
 - [PIT](pit.md): the reference it replaces
