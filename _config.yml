@@ -51,6 +51,7 @@ defaults:
 
 exclude:
   - README.md
+  - LICENSE
   - CLAUDE.md
   - TEMPLATE.md
   - images/README.md

@@ -18,6 +18,14 @@ pull requests.
 This is an unofficial reference, not affiliated with or endorsed by the
 seL4 Foundation. seL4 is a trademark of LF Projects, LLC.
 
+## Licence
+
+To the extent possible under law, Tim Retout has waived all copyright and
+related rights to this knowledge base: its text, diagrams, website and
+scripts are dedicated to the public domain under
+[CC0 1.0 Universal](LICENSE). Copy and reuse them freely, with or without
+credit. Linked sources and quoted names remain their owners'.
+
 ## Layout
 
     INDEX.md      every page, one line each, in reading order
