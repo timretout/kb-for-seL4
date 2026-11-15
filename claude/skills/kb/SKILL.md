@@ -1,11 +1,10 @@
 ---
 name: kb
-description: Write, refresh or check a page of the seL4 knowledge base (kb-for-seL4, checked out as sel4-kb in some workspaces). Use when asked to add a concept to the knowledge base, explain a hardware or seL4 concept for keeps, or when work turns up a concept or gotcha the knowledge base lacks.
+description: Write, refresh or check a page of the seL4 knowledge base (kb-for-seL4). Use when asked to add a concept to the knowledge base, explain a hardware or seL4 concept for keeps, or when work turns up a concept or gotcha the knowledge base lacks.
 ---
 
 The knowledge base is the `kb-for-seL4` repository (this one, or a
-checkout beside the project being worked on, where the directory may
-still be called `sel4-kb`). It is public. Its
+checkout beside the project being worked on). It is public. Its
 `CLAUDE.md` holds the rules for pages and references; read it first.
 
 Argument: a concept ("HPET", "MSI-X"), a page path, or "check". With
