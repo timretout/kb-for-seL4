@@ -195,8 +195,7 @@ The section attributes are in
 `BOOT_RODATA` and `BOOT_BSS` do the same for data. The script gathers
 them into a `.boot` output section ending at `ki_boot_end`, so that all
 initialisation-only code is contiguous and can be given back after boot;
-it is also the line the proofs draw. See [Boot code and the proof
-boundary](../sel4/boot-code.md).
+it is also the line the proofs draw. See [Boot code and the proof boundary](../sel4/boot-code.md).
 
 **x86 has a third region.** The pc99 script declares three segments
 (`PHDRS { phys; boot; virt }`). `.phys` holds the Multiboot headers

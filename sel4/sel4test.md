@@ -218,7 +218,7 @@ include `../helpers.h`, end with a `DEFINE_TEST` using the next free
 number for the prefix, and gate it on the configuration it needs. A
 kernel pull request that needs a new test has a companion pull
 request in `seL4/sel4test`
-([Upstream CI](ci.md), [contributing](contributing.md)).
+([Upstream CI](ci.md), [contributing](contributing-a-patch.md)).
 
 ### sel4bench
 

@@ -122,4 +122,7 @@ the site; pages need no front matter and must not gain any. Markdown is
 rendered by kramdown there and by GitHub in the repository view, so keep
 to what both render alike: a blank line before a list or table, no `|`
 inside a table cell's code span, no `{{` or `{%` outside a code block
-without `{% raw %}`.
+without `{% raw %}`. Keep the text of a relative link on one line (the
+site leaves a link split across lines pointing at the `.md` file), and do
+not name a page `contributing.md`, `readme.md` or `license.md`, which the
+site skips. `ci/check` reports both.

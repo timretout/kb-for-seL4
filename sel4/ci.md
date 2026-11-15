@@ -2,9 +2,9 @@
 
 > The GitHub Actions checks a seL4 pull request meets (lint, style, licences, compile matrix, sel4test in simulation, the preprocess check) and the ones only a maintainer's label or a merge starts (hardware runs, proofs, manifest deployment).
 
-[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [Contributing a patch](contributing.md) · [Governance and RFCs](governance.md) →
+[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [Contributing a patch](contributing-a-patch.md) · [Governance and RFCs](governance.md) →
 
-Read first: [Contributing a patch](contributing.md).
+Read first: [Contributing a patch](contributing-a-patch.md).
 
 | At a glance | |
 |---|---|
@@ -152,7 +152,7 @@ versions.
 
 ## See also
 
-- [Contributing a patch](contributing.md): the rules these checks enforce
+- [Contributing a patch](contributing-a-patch.md): the rules these checks enforce
 - [Proof impact](proof-impact.md): reading the preprocess result
 - [sel4test](sel4test.md): the test suite the simulation and hardware jobs run
 - [l4v](l4v.md): the proofs and the verification manifest

@@ -57,8 +57,7 @@ memory and does for devices what the MMU does for the CPU:
   the buffers the driver is meant to use.
 - **Fault reporting.** A blocked access is recorded in registers and
   raises an interrupt to the OS. The device itself is usually not told.
-- **Interrupt remapping.** A [message signalled
-  interrupt](msi-msix.md) is a DMA write to a special address, so a
+- **Interrupt remapping.** A [message signalled interrupt](msi-msix.md) is a DMA write to a special address, so a
   device that can do DMA can forge any interrupt. With remapping the
   message carries only an index into a table the OS controls.
 
@@ -120,8 +119,7 @@ Arm's **System MMU** comes in two incompatible architectures:
 | Found on | Older SoCs: Tegra X2, ZynqMP | Servers and newer SoCs |
 
 Both support **stage 1** (the format an OS uses for its own processes'
-tables), **stage 2** (the format a hypervisor uses for guests; see [Arm
-virtualisation](arm-virtualisation.md)), or both nested. The page table
+tables), **stage 2** (the format a hypervisor uses for guests; see [Arm virtualisation](arm-virtualisation.md)), or both nested. The page table
 formats are the CPU's own ([AArch64 paging](aarch64-paging.md)), so an
 SMMU can share a set of tables with a CPU address space. On an ACPI
 system the **IORT** table describes SMMUs and how requester IDs map to

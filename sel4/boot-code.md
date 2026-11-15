@@ -51,7 +51,7 @@ covered by assumptions about the state it leaves, not by proof.
 - [PIT](../concepts/pit.md): its kernel driver is entirely boot code
 - [ELF and linking](../concepts/elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
 - [BootInfo and the root task](bootinfo-and-root-task.md): at the end of boot the kernel creates one user thread, the root task, hands it a capability to everything...
-- [Contributing a patch](contributing.md): the path of a change into upstream seL4
+- [Contributing a patch](contributing-a-patch.md): the path of a change into upstream seL4
 - [Kernel boot sequence](kernel-boot.md): the path from the kernel's entry point to the first user thread
 - [Proof impact of a change](proof-impact.md): A procedure for deciding, before sending a kernel patch, whether it changes code the proofs cover
 - [The seL4 proofs](verification.md): seL4's proofs show, for a few exact kernel configurations, that the C code behaves as an abstract...

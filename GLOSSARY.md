@@ -33,7 +33,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **Arm generic timer**: The architectural timer of every Armv8 core: a system counter and per-core comparators that raise PPIs. See [Arm generic timer](concepts/arm-generic-timer.md).
 - **ASID** (address space identifier): A tag on TLB entries naming an address space; in seL4 it also names a VSpace root. See [Virtual memory](concepts/virtual-memory.md), also [Address spaces (VSpace)](sel4/vspace.md).
 - **ASID pool**: Kernel object, made through ASIDControl, from which VSpace roots are assigned ASIDs. See [Address spaces (VSpace)](sel4/vspace.md).
-- **astyle**: The formatter upstream requires for kernel C code. See [Contributing a patch](sel4/contributing.md).
+- **astyle**: The formatter upstream requires for kernel C code. See [Contributing a patch](sel4/contributing-a-patch.md).
 - **authority**: The second TCB capability passed when setting a priority; the new value must not exceed that thread's MCP. See [Threads and TCBs](sel4/threads.md).
 - **availability zone**: One of the separate locations within an EC2 region. See [Amazon EC2 and the Nitro system](concepts/ec2.md).
 
@@ -79,7 +79,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **CLINT**: The RISC-V block that supplies timer and software interrupts, reaching an S-mode kernel through firmware. See [RISC-V interrupts and timers](concepts/riscv-interrupts.md).
 - **CMake**: The build system that turns `config.cmake` options into `CONFIG_*` macros and builds kernel and projects with Ninja. See [Build system and configuration](sel4/build-system.md).
 - **CNode**: A kernel object that is a table of capability slots; CNodes form a CSpace. See [CSpaces and capability addressing](sel4/cspace.md).
-- **committer**: A role granted by the Technical Steering Committee; only committers can merge. See [Contributing a patch](sel4/contributing.md), also [Governance and RFCs](sel4/governance.md).
+- **committer**: A role granted by the Technical Steering Committee; only committers can merge. See [Contributing a patch](sel4/contributing-a-patch.md), also [Governance and RFCs](sel4/governance.md).
 - **`compatible`**: The device tree property that names what a node is, on which drivers and seL4's `hardware.yml` match. See [Device trees](concepts/device-tree.md).
 - **compile matrix**: The CI job that compiles the kernel for a small set of configurations. See [Upstream CI](sel4/ci.md).
 - **completion queue**: Ring on which an NVMe or ENA device reports finished commands, marked new by a phase bit. See [NVMe](concepts/nvme.md).
@@ -106,7 +106,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 
 - **dataport**: A CAmkES interface kind: memory shared between components. See [CAmkES and capDL](sel4/camkes-capdl.md).
 - **DBG2**: ACPI table listing debug ports, in the same manner as the SPCR. See [UARTs: 16550 and PL011](concepts/uart.md).
-- **DCO** (Developer Certificate of Origin): What a `Signed-off-by` line asserts: the right to submit the change under the file's licence. See [Contributing a patch](sel4/contributing.md).
+- **DCO** (Developer Certificate of Origin): What a `Signed-off-by` line asserts: the right to submit the change under the file's licence. See [Contributing a patch](sel4/contributing-a-patch.md).
 - **decode**: The first half of handling an invocation, where all checks belong; invoke then performs it. See [System calls and invocations](sel4/syscalls-and-invocations.md).
 - **depth**: How many CPtr bits a CNode invocation resolves when naming a slot. See [CSpaces and capability addressing](sel4/cspace.md).
 - **descriptor (AArch64)**: An entry in an AArch64 translation table. See [AArch64 paging](concepts/aarch64-paging.md).
@@ -453,7 +453,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **SMP** (symmetric multiprocessing): seL4 on several cores: one kernel image under one big lock; not verified. See [SMP](sel4/smp.md).
 - **snapshot**: A stored disk image; an AMI points at one or more. See [Amazon EC2 and the Nitro system](concepts/ec2.md).
 - **SPCR** (serial port console redirection): The ACPI table giving the console UART's type, address, interrupt and baud rate. See [UARTs: 16550 and PL011](concepts/uart.md).
-- **SPDX**: The licence header format every upstream file must carry. See [Contributing a patch](sel4/contributing.md).
+- **SPDX**: The licence header format every upstream file must carry. See [Contributing a patch](sel4/contributing-a-patch.md).
 - **SPI** (Shared Peripheral Interrupt): GIC interrupts 32 to 1019: ordinary device interrupts, routable to any core. See [GICv2](concepts/gicv2.md).
 - **spin table**: The older Arm way to start cores: secondaries poll a memory word for an address to jump to. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md), also [PSCI and SMCCC](concepts/psci-smccc.md).
 - **split virtqueue**: The original virtqueue layout: descriptor table, available ring and used ring. See [virtio](concepts/virtio.md).

@@ -170,8 +170,7 @@ be a great deal of code to verify. Instead the build does the reading:
    [`tools/hardware.yml`](https://github.com/seL4/seL4/blob/master/tools/hardware.yml),
    which says, per `compatible` string, what the kernel does with such a
    device (which driver, which register region to map at which kernel
-   address, which interrupt), and writes C headers. [Generated
-   code](../sel4/generated-code.md) walks through the outputs.
+   address, which interrupt), and writes C headers. [Generated code](../sel4/generated-code.md) walks through the outputs.
 
 ![The build joins the board's DTS and the overlay into kernel.dts, dtc makes kernel.dtb, and hardware_gen.py with hardware.yml turns it into C headers compiled into the kernel; at boot the elfloader passes a DTB to the kernel, which copies it to the root task's BootInfo.](../images/device-tree-sel4-build.svg)
 
@@ -190,8 +189,7 @@ The consequences:
 
 - **Memory is fixed at build time.** The `/memory` nodes become the
   kernel's table of physical memory regions, and every device region not
-  claimed by the kernel becomes device untyped memory (see [Untyped
-  memory](../sel4/untyped-memory.md)). A kernel built for a board with
+  claimed by the kernel becomes device untyped memory (see [Untyped memory](../sel4/untyped-memory.md)). A kernel built for a board with
   2 GiB sees 2 GiB on the 8 GiB model, and one built for 8 GiB will fault
   on the 2 GiB model. Boards that vary need a build per variant;
   `KernelCustomDTSOverlay` adds an overlay from the command line and

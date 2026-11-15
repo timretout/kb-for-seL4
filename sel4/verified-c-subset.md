@@ -174,7 +174,7 @@ Two checks ([CI](ci.md)):
 - [l4v](l4v.md): where the parser lives and how its output is used
 - [Proof impact](proof-impact.md): working out whether a change is seen by the parser
 - [Boot code](boot-code.md): parsed but unverified
-- [Contributing a patch](contributing.md): the rest of the code conventions
+- [Contributing a patch](contributing-a-patch.md): the rest of the code conventions
 - [Kernel design and execution model](kernel-design.md): the rules every line of seL4 follows
 - [rust-sel4](rust-sel4.md): `seL4/rust-sel4` is the Rust support for seL4 user level
 

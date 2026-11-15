@@ -197,7 +197,7 @@ What to write in the pull request description, by case:
 - [Boot code](boot-code.md): the assumed part a platform change most often touches
 - [l4v](l4v.md): where a proof update would go
 - [CI](ci.md): the preprocess and proof workflows
-- [Contributing a patch](contributing.md): the rest of the pull request
+- [Contributing a patch](contributing-a-patch.md): the rest of the pull request
 - [Kernel design and execution model](kernel-design.md): the rules every line of seL4 follows
 
 ## References

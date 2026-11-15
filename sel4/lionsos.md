@@ -99,7 +99,7 @@ clients.
 
 | Project | Home | Governance |
 |---|---|---|
-| seL4 kernel, proofs, Microkit, rust-sel4, CAmkES | GitHub `seL4` | seL4 Foundation: technical steering committee, RFCs, [contribution rules](contributing.md) |
+| seL4 kernel, proofs, Microkit, rust-sel4, CAmkES | GitHub `seL4` | seL4 Foundation: technical steering committee, RFCs, [contribution rules](contributing-a-patch.md) |
 | sDDF, libvmm, LionsOS, Acacia tooling | GitHub `au-ts` | Trustworthy Systems, UNSW Sydney; maintainers listed in each repository's `MAINTAINERS.md` |
 
 The `au-ts` projects track Microkit releases closely (sDDF `main`

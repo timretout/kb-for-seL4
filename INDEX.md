@@ -182,7 +182,7 @@ Everything above the kernel: libraries, tests and the frameworks systems are bui
 
 How changes get into seL4.
 
-- [Contributing a patch](sel4/contributing.md): The path of a change into upstream seL4: a pull request from a fork on GitHub, signed-off commits in a fixed message format, astyle-formatted C with SPDX headers, review by committers, and, for the kernel, a proof that still holds.
+- [Contributing a patch](sel4/contributing-a-patch.md): The path of a change into upstream seL4: a pull request from a fork on GitHub, signed-off commits in a fixed message format, astyle-formatted C with SPDX headers, review by committers, and, for the kernel, a proof that still holds.
 - [Upstream CI](sel4/ci.md): The GitHub Actions checks a seL4 pull request meets (lint, style, licences, compile matrix, sel4test in simulation, the preprocess check) and the ones only a maintainer's label or a merge starts (hardware runs, proofs, manifest deployment).
 - [Governance and RFCs](sel4/governance.md): Who decides what goes into seL4: the seL4 Foundation's Technical Steering Committee sets process and grants the reviewer and committer roles, and substantial changes pass through a public RFC before any pull request is accepted.
 

@@ -4,7 +4,7 @@
 
 [Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [Upstream CI](ci.md)
 
-Read first: [Contributing a patch](contributing.md).
+Read first: [Contributing a patch](contributing-a-patch.md).
 
 | At a glance | |
 |---|---|
@@ -194,7 +194,7 @@ conduct and the Contributor Covenant 1.4.0.
 
 ## See also
 
-- [Contributing a patch](contributing.md): the day-to-day path of a change
+- [Contributing a patch](contributing-a-patch.md): the day-to-day path of a change
 - [Platform port](platform-port.md): platform maintainers and their duties
 - [Verification](verification.md): what the verification statements attached to a release cover
 - [History and papers](history-and-papers.md): NICTA, Data61 and how the Foundation came about

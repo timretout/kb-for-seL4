@@ -145,7 +145,7 @@ assembly are assumed correct, not proved
 | 4. The seL4 kernel | The model and API, starting at [capabilities](capabilities.md); then the inside: [design](kernel-design.md), [boot](kernel-boot.md), [platform ports](platform-port.md) |
 | 5. Verification | [What is proved](verification.md) and [what a patch does to the proofs](proof-impact.md) |
 | 6. User level | [libsel4](libsel4.md), [sel4test](sel4test.md), [Microkit](microkit.md), [sDDF](sddf.md), [rust-sel4](rust-sel4.md) |
-| 7. Contributing | [Sending a patch](contributing.md), [CI](ci.md), [governance](governance.md) |
+| 7. Contributing | [Sending a patch](contributing-a-patch.md), [CI](ci.md), [governance](governance.md) |
 
 A reader in a hurry to understand the API reads Part 4's "Model and API"
 group in order; each page there assumes the ones before it.

@@ -156,7 +156,7 @@ The seL4 Foundation's
 page sets the terms. A port on a supported architecture needs no
 [RFC](governance.md); pull requests to the kernel, sel4test, sel4bench
 and the documentation site usually suffice. It must follow the kernel's
-[contribution rules](contributing.md), pass sel4test and sel4bench, and
+[contribution rules](contributing-a-patch.md), pass sel4test and sel4bench, and
 come with a documentation page and an entry in the list of supported
 platforms. Hardware the Foundation can put in its CI rig
 ([Upstream CI](ci.md)) is "ideally" supplied but not mandatory. Each
@@ -258,7 +258,7 @@ has no [proof impact](proof-impact.md).
 - [Kernel boot sequence](kernel-boot.md): where platform code runs
 - [Cloud virtual machines](../concepts/cloud-vms.md): what an x86 or Arm cloud port has to change
 - [Debugging](debugging.md): first-boot failure signatures
-- [Contributing a patch](contributing.md) and [Governance and RFCs](governance.md): the process around a port
+- [Contributing a patch](contributing-a-patch.md) and [Governance and RFCs](governance.md): the process around a port
 - [The seL4 proofs](verification.md): what "verified configuration" means
 - [Microkit internals](microkit-internals.md): how the `microkit` tool turns a system description into a boot image
 - [Source layout](source-layout.md): A tour of the `seL4/seL4` repository

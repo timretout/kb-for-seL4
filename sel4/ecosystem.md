@@ -201,7 +201,7 @@ the Mattermost chat at
 [mattermost.trustworthy.systems/sel4-external](https://mattermost.trustworthy.systems/sel4-external/),
 and a fortnightly open video hangout. Bugs and patches go to the
 repository concerned as GitHub issues and pull requests
-([Contributing a patch](contributing.md)). The **seL4 Summit** is the
+([Contributing a patch](contributing-a-patch.md)). The **seL4 Summit** is the
 annual conference (the Foundation's summit page lists those from 2022
 on); talks are published and are a good
 way to see who works on what.

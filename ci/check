@@ -25,7 +25,17 @@ def problem(path, msg):
     problems.append(f"{path.relative_to(ROOT)}: {msg}")
 
 
+SPLIT_LINK = re.compile(r"\[[^\]\[\n]*\n[^\]\[]*?\]\(([^)\s]+)\)")
+# File names the website's Jekyll plugins refuse to treat as pages.
+RESERVED = {"readme", "license", "licence", "copying", "code_of_conduct",
+            "contributing", "issue_template", "pull_request_template"}
+
+
 def check_links(path, text):
+    for target in SPLIT_LINK.findall(text):
+        if not re.match(r"[a-z]+:", target):
+            problem(path, f"link to {target} has its text split over two "
+                          "lines; the website leaves such a link unconverted")
     for target in LINK.findall(text):
         if re.match(r"[a-z]+:", target) or target.startswith("#"):
             continue
@@ -37,6 +47,8 @@ def check_links(path, text):
 def check_page(path):
     text = path.read_text()
     lines = text.splitlines()
+    if path.stem.lower() in RESERVED:
+        problem(path, "file name is reserved on the website; choose another")
     if not lines or not lines[0].startswith("# "):
         problem(path, "first line is not a '# Title'")
     if not any(l.startswith("> ") for l in lines[1:4]):
