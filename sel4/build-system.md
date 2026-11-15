@@ -90,8 +90,8 @@ ninja
 
 `init-build.sh` is a thin wrapper. With no `CMakeLists.txt` at the top
 level, as here, it follows the `easy-settings.cmake` link to the
-project's directory and runs `cmake -G Ninja "$@" -C
-<project>/settings.cmake <project>`; where a top-level `CMakeLists.txt`
+project's directory and runs
+`cmake -G Ninja "$@" -C <project>/settings.cmake <project>`; where a top-level `CMakeLists.txt`
 exists it runs `cmake -DCMAKE_TOOLCHAIN_FILE=kernel/gcc.cmake -G Ninja
 "$@" -C settings.cmake` on the top level instead. The project's `settings.cmake` is where friendly variables
 are turned into kernel options, using helpers from
@@ -249,8 +249,8 @@ script, and links `kernel.elf` ([source layout](source-layout.md),
 and per configuration (`debug`, `release`, `benchmark`...), passing a
 Python dictionary of `Kernel*` options as `-D` arguments (always
 `KernelIsMCS`; `KernelDebugBuild` and `KernelPrinting` on for `debug`),
-then `cmake --install`s each into the SDK as
-`board/<board>/<config>/elf/sel4.elf` with its libsel4 headers and
+then `cmake --install`s each into the SDK
+as `board/<board>/<config>/elf/sel4.elf` with its libsel4 headers and
 `gen_config.json`. A Microkit user never builds the kernel: the
 `microkit` tool picks a prebuilt one from the SDK
 ([Microkit internals](microkit-internals.md)).

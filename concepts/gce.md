@@ -98,8 +98,8 @@ registers are I/O ports behind BAR 0. See [virtio](virtio.md).
 
 ### What an Arm guest sees
 
-Observed on `t2a-standard-1`, `c4a-standard-1` and `n4a-standard-1` in
-2026. The three are one machine, laid out like QEMU's `virt` board:
+Observed on `t2a-standard-1`, `c4a-standard-1` and `n4a-standard-1`
+in 2026. The three are one machine, laid out like QEMU's `virt` board:
 
 - UEFI 2.7 (EDK II) with ACPI and no device tree; entry at EL1; PSCI
   1.0 called with `hvc` to start other cores.

@@ -153,8 +153,8 @@ notifications").
 |---|---|
 | `microkit_notify(ch)` | `seL4_Signal` on a notification capability to the *other* PD's notification, badged `1 << id-at-the-other-end` |
 | IRQ on channel `id` | the IRQ handler's notification is the PD's own, badged `1 << id`; `microkit_irq_ack` is `seL4_IRQHandler_Ack` |
-| `microkit_ppcall(ch)` | `seL4_Call` on a capability to the callee's endpoint, badged `1<<63 \| id-at-the-callee` |
-| child fault | the child's fault endpoint is the parent's endpoint, badged `1<<62 \| child id` |
+| `microkit_ppcall(ch)` | `seL4_Call` on a capability to the callee's endpoint, badged `1<<63` ORed with the id at the callee |
+| child fault | the child's fault endpoint is the parent's endpoint, badged `1<<62` ORed with the child id |
 | `protected` returning | `seL4_ReplyRecv` through the PD's one reply object |
 
 ![A protection domain has one endpoint and one notification bound to its TCB; calls and child faults arrive on the endpoint, notifies and interrupts on the notification, each with a badge.](../images/microkit-internals-pd-objects.svg)
