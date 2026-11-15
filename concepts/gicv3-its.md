@@ -12,7 +12,7 @@
 | Key numbers | INTIDs: SGIs 0 to 15, PPIs 16 to 31, SPIs 32 to 1019, LPIs 8192 and up |
 | seL4 config | `KernelArmGicV3ITS` (a prototype, not upstream) |
 | seL4 use | Upstream handles SPIs, PPIs and SGIs; no LPIs or ITS |
-| On the clouds | EC2: 128 LPIs on t4g, 256 on m9g. Compute Engine's bare-metal types have six ITSes |
+| On the clouds | Every Arm VM seen has a GICv3; bare-metal types from Graviton3 on have a GICv4.1. EC2: 128 LPIs on t4g, 256 on m9g. Compute Engine's bare-metal types have six ITSes |
 
 ## What it is
 
@@ -56,6 +56,53 @@ Software fills these tables by writing commands (`MAPD`, `MAPTI`,
 
 LPIs are edge-triggered and have no active state.
 
+### Later revisions: GICv4 and GICv5
+
+GICv3 is not the newest GIC, but it is the one a guest kernel meets.
+
+**GICv3.1 and GICv3.2** are small additions: longer SPI and PPI ranges,
+memory partitioning and monitoring, Secure EL2, and Armv8-R.
+
+**GICv4** adds one thing for hypervisors: direct injection. On a GICv3
+a hypervisor takes every device interrupt itself and then hands the
+guest a virtual one through a list register (see
+[Arm virtualisation](arm-virtualisation.md)). On a GICv4 the ITS can
+deliver a **virtual LPI** (vLPI) straight to a running guest, with no
+trap to the hypervisor. It needs an ITS, because only LPIs are injected
+this way. **GICv4.1** does the same for virtual SGIs, the guest's
+inter-processor interrupts, and changes some of GICv4's tables. Both
+are described in the GICv3 specification and extend GICv3: everything
+on this page holds on a GICv4, and a driver that ignores the additions
+works unchanged.
+
+So GICv4 changes what a host can do, not what a guest sees. A machine
+whose hardware is a GICv4.1 still presents a GICv3 to its guests. What
+the clouds present (from Linux boot logs, November 2026):
+
+| Machine | GIC seen | ITS |
+|---|---|---|
+| EC2 VMs: t4g (Graviton2), c7g (Graviton3), c8g (Graviton4), m9g (Graviton5) | GICv3 | one, with a restricted LPI range |
+| EC2 m6g.metal (Graviton2) | GICv3 | four |
+| EC2 m7g.metal (Graviton3), m8g.metal-24xl (Graviton4) | GICv4.1 | one |
+| EC2 m9g.metal-48xl (Graviton5) | GICv4.1 | six |
+| Compute Engine VMs: t2a, c4a, n4a | GICv3 | one |
+| Compute Engine c4a-highmem-96-metal | GICv4.1 | six |
+| Azure D2ps v5 (Ampere Altra) | GICv3 | none |
+
+Azure's Cobalt types have not been looked at.
+
+Linux reports a GICv4 with the line `GICv4 features:` and an ITS with
+`Using GICv4.1 mode`. Its KVM leaves direct injection off unless booted
+with `kvm-arm.vgic_v4_enable=1`, and logs `GICv4 support disabled`.
+
+**GICv5**, announced in April 2025, is a new design and not an
+extension. An **Interrupt Routing Service** (IRS) replaces the
+distributor and the redistributors, the ITS is simplified, and an
+**Interrupt Wire Bridge** (IWB) turns wired signals into interrupts. Its
+interrupts are PPIs, SPIs and LPIs. Its programming model is not
+backward compatible with GICv3, so it needs its own driver; Linux has
+one. None of the cloud machines in the table has a GICv5.
+
 ## In seL4
 
 Upstream seL4 supports GICv3 SPIs, PPIs and SGIs but not LPIs or the
@@ -67,6 +114,12 @@ kernel gets memory for the tables; the x86 pull request for VT-d
 interrupt remapping ([#1098](https://github.com/seL4/seL4/issues/1098))
 needs kernel table memory too.
 
+Upstream has no GICv4 or GICv5 code (a search of `src`, `include` and
+`libsel4` at commit `c98d70adf`, November 2026, finds neither name). On
+a GICv4 machine the GICv3 driver runs as on a GICv3. Direct injection
+would matter only to seL4 as a hypervisor on a bare-metal instance,
+where guests' interrupts go through list registers today.
+
 ## Gotchas
 
 - **EC2 limits LPIs.** Its hypervisor reports a "restricted LPI range":
@@ -76,6 +129,12 @@ needs kernel table memory too.
 - **Several ITSes.** Compute Engine's bare-metal types have six; a driver
   handling one sees only the devices behind it.
 - Compute Engine's Arm VMs put the ITS at `0x08080000`, QEMU's address.
+- **Azure has no ITS.** A D2ps v5 VM has a GICv3 with 960 SPIs and no
+  ITS, so no LPIs; Linux logs "No ITS available, not enabling LPIs".
+- **Bare metal is not uniform.** EC2's Graviton2 metal type is a plain
+  GICv3 with four ITSes; from Graviton3 on, and on Compute Engine's
+  bare-metal type, the hardware is a GICv4.1. See the table under
+  "Later revisions".
 
 ## See also
 
@@ -107,6 +166,22 @@ needs kernel table memory too.
 - [Arm, "Learn the architecture: Generic Interrupt Controller v3 and v4, LPIs"](https://documentation-service.arm.com/static/65ba2901c2052a35156cc629)
   (document 102923): the LPI configuration and pending tables, the
   ITS's tables, `GITS_TRANSLATER` and the commands. *Checked 2026-11-14.*
+- The same specification, section 1.1 "About the Generic Interrupt
+  Controller (GIC)", "Changes specific to" GICv3.1, GICv3.2, GICv4 and
+  GICv4.1: what each revision adds. *Checked 2026-11-15, issue G, same
+  PDF.*
+- [Arm, "Introducing GICv5"](https://developer.arm.com/community/arm-community-blogs/b/architectures-and-processors-blog/posts/introducing-gicv5),
+  28 April 2025: the IRS, the simplified ITS, the IWB, and that the
+  programming model is not backward compatible. *Checked 2026-11-15.*
+- [Linux, `Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml`](https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml):
+  GICv5's components and its three kinds of interrupt; its presence
+  shows Linux has a driver. *Checked 2026-11-15.*
+- [Linux, `drivers/irqchip/irq-gic-v3.c`](https://github.com/torvalds/linux/blob/master/drivers/irqchip/irq-gic-v3.c),
+  `gic_update_rdist_properties()`: prints `GICv4 features:` when the
+  redistributors support vLPIs. *Checked 2026-11-15.*
+- [Linux, `arch/arm64/kvm/vgic/vgic-v3.c`](https://github.com/torvalds/linux/blob/master/arch/arm64/kvm/vgic/vgic-v3.c),
+  `vgic_v3_probe()` and the `kvm-arm.vgic_v4_enable` parameter: direct
+  injection is off by default. *Checked 2026-11-15.*
 - [seL4 pull request #1098](https://github.com/seL4/seL4/issues/1098),
   "VT-d: add remappable MSI and IOAPIC support": interrupt remapping on
   x86, open. *Checked 2026-11-14 (description only, not the discussion).*

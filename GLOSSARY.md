@@ -179,13 +179,15 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **gate**: An IDT entry naming a handler address, code segment and the privilege allowed to invoke it. See [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md).
 - **GCE** (Google Compute Engine): Google Cloud's virtual machine service, a KVM-based hypervisor with Google's own device model. See [Google Compute Engine](concepts/gce.md).
 - **GDT** (global descriptor table): The x86 table of segment descriptors, chosen by selectors. See [x86-64 basics](concepts/x86-64-basics.md).
-- **GIC** (Generic Interrupt Controller): Arm's standard interrupt controller, in versions GICv2 and GICv3. See [GICv2](concepts/gicv2.md), also [GICv3 and the ITS](concepts/gicv3-its.md).
+- **GIC** (Generic Interrupt Controller): Arm's standard interrupt controller, in versions GICv2 and GICv3; GICv4 and GICv5 are later revisions. See [GICv2](concepts/gicv2.md), also [GICv3 and the ITS](concepts/gicv3-its.md).
 - **GICC**: The memory-mapped per-core CPU interface of a GICv2. See [GICv2](concepts/gicv2.md).
 - **GICD**: The GIC distributor's registers. See [GICv2](concepts/gicv2.md).
 - **GICH**: The GICv2 hypervisor interface, holding the list registers. See [GICv2](concepts/gicv2.md).
 - **GICR**: The registers of a GICv3 redistributor. See [GICv3 and the ITS](concepts/gicv3-its.md).
 - **GICv2**: Arm's older interrupt controller: at most eight cores, every register memory-mapped. See [GICv2](concepts/gicv2.md).
 - **GICv3**: Arm's interrupt controller with a distributor, per-core redistributors, a CPU interface and optionally an ITS. See [GICv3 and the ITS](concepts/gicv3-its.md).
+- **GICv4**: GICv3 plus direct injection of virtual interrupts into guests; GICv4.1 adds virtual SGIs. See [GICv3 and the ITS](concepts/gicv3-its.md).
+- **GICv5**: Arm's redesigned interrupt controller of 2025, not backward compatible with GICv3. See [GICv3 and the ITS](concepts/gicv3-its.md).
 - **Gitlint**: The CI check on commit message format. See [Upstream CI](sel4/ci.md).
 - **global page**: An x86 mapping (G bit) that stays in the TLB across `CR3` writes; used for kernel mappings. See [x86-64 paging](concepts/x86-paging.md).
 - **GPT** (GUID Partition Table): The disk partitioning scheme a cloud boot image uses. See [Booting a custom kernel on a cloud](concepts/cloud-boot-images.md).
@@ -520,6 +522,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **virtqueue**: The virtio mechanism carrying buffers from driver to device and back. See [virtio](concepts/virtio.md).
 - **virtualiser**: The sDDF component that shares one device among several clients. See [sDDF](sel4/sddf.md).
 - **`vka`**: The seL4_libs interface for allocating kernel objects, implemented by allocman. See [seL4_libs and util_libs](sel4/sel4-libs.md).
+- **vLPI** (virtual LPI): An LPI a GICv4 delivers straight to a guest, without a trap to the hypervisor. See [GICv3 and the ITS](concepts/gicv3-its.md).
 - **VM attributes**: The architecture-specific flags (such as caching) passed when mapping a frame. See [Address spaces (VSpace)](sel4/vspace.md).
 - **VM exit**: The transition from a guest back to the hypervisor in VMX root operation. See [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md).
 - **VM fault**: The fault message sent when a thread touches an address with no valid mapping or permission. See [Faults and fault handlers](sel4/faults.md).
