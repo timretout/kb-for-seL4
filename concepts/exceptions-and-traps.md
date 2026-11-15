@@ -243,6 +243,7 @@ Two properties make this simple and are part of what the
 - [Faults and fault handlers](../sel4/faults.md): what user level sees of an exception
 - [Virtual memory](virtual-memory.md): the source of the most common exception
 - [RISC-V basics](riscv-basics.md): the RISC-V architecture as a kernel sees it
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

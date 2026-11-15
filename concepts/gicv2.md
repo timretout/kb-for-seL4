@@ -288,6 +288,7 @@ accessors `get_gic_vcpu_ctrl_*` used by the VCPU code; see
 - [Arm virtualisation](arm-virtualisation.md): GICH, GICV and list registers in use
 - [Multiprocessor bring-up and IPIs](smp-bringup.md): SGIs as IPIs
 - [Device trees](device-tree.md): where the addresses and interrupt cells come from
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

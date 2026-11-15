@@ -76,6 +76,7 @@ The hardware around the CPU: how it is described to software, how devices interr
 
 ### Interrupts
 
+- [Interrupts: a map](concepts/interrupts.md): A map of how an interrupt reaches the kernel on x86, Arm and RISC-V: which controller sits in each core, which one routes device interrupts, how message signalled interrupts and IPIs travel, and what number seL4 knows each interrupt by.
 - [IRQ](concepts/irq.md): A device's signal that it needs the CPU, carried on a wire or as a message to an interrupt controller, which turns it into a numbered interrupt; seL4 hands each IRQ to user level as a capability that signals a notification.
 - [Local APIC and I/O APIC](concepts/apic.md): x86's interrupt controllers: a local APIC in each core takes interrupts, sends IPIs and holds a timer, while I/O APICs route device interrupt pins to vectors on chosen cores; seL4 drives both and lets user level pick the vector for each pin or MSI.
 - [GICv3 and the ITS](concepts/gicv3-its.md): Arm's interrupt controller (distributor, per-core redistributors, CPU interface) and its ITS, which turns devices' MSI writes into LPIs using tables in memory.
@@ -195,7 +196,7 @@ idea for that architecture; a page in the first column covers all three.
 | Registers and modes | [Privilege levels](concepts/privilege-levels.md) | [x86-64 basics](concepts/x86-64-basics.md), [CPUID and MSRs](concepts/cpuid-and-msrs.md) | [AArch64 basics](concepts/aarch64-basics.md) | [RISC-V basics](concepts/riscv-basics.md) |
 | Entering the kernel | [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md) | [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md) | [AArch64 exceptions](concepts/aarch64-exceptions.md) | [RISC-V paging and traps](concepts/riscv-paging-and-traps.md) |
 | Page tables | [Virtual memory](concepts/virtual-memory.md) | [x86-64 paging](concepts/x86-paging.md) | [AArch64 paging](concepts/aarch64-paging.md) | [RISC-V paging and traps](concepts/riscv-paging-and-traps.md) |
-| Interrupt controller | [IRQ](concepts/irq.md) | [Local APIC and I/O APIC](concepts/apic.md), [8259 PIC](concepts/pic-8259.md) | [GICv2](concepts/gicv2.md), [GICv3 and the ITS](concepts/gicv3-its.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
+| Interrupt controller | [Interrupts: a map](concepts/interrupts.md), [IRQ](concepts/irq.md) | [Local APIC and I/O APIC](concepts/apic.md), [8259 PIC](concepts/pic-8259.md) | [GICv2](concepts/gicv2.md), [GICv3 and the ITS](concepts/gicv3-its.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
 | Timers | [Timers: a map](concepts/timers.md), [Timer calibration](concepts/timer-calibration.md) | [PIT](concepts/pit.md), [TSC](concepts/tsc.md), [Local APIC timer](concepts/lapic-timer.md), [HPET](concepts/hpet.md) | [Arm generic timer](concepts/arm-generic-timer.md) | [RISC-V interrupts and timers](concepts/riscv-interrupts.md) |
 | Boot chain | [ELF and linking](concepts/elf.md), [UEFI](concepts/uefi.md) | [x86 boot](concepts/x86-boot.md) | [Arm boot flow](concepts/arm-boot.md), [Elfloader](sel4/elfloader.md) | [RISC-V basics](concepts/riscv-basics.md), [Elfloader](sel4/elfloader.md) |
 | Calling firmware | | | [PSCI and SMCCC](concepts/psci-smccc.md) | [RISC-V basics](concepts/riscv-basics.md) (SBI) |

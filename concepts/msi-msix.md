@@ -77,6 +77,7 @@ designed around MSI-X, one vector per queue.
 - [virtio](virtio.md): virtio is the standard family of paravirtual devices
 - [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
 - [sDDF networking](../sel4/sddf-net.md): the network class of sDDF in detail
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

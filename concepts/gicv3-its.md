@@ -91,6 +91,7 @@ needs kernel table memory too.
 - [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
 - [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
 - [SMP](../sel4/smp.md): seL4 built for more than one core runs a single kernel image under one big lock, with per-core scheduler...
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

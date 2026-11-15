@@ -253,6 +253,7 @@ protection domain's notification with a badge bit for its channel, and
 - [virtio](../concepts/virtio.md): virtio is the standard family of paravirtual devices
 - [Kernel objects](kernel-objects.md): the fixed set of object types the seL4 kernel implements
 - [sDDF](sddf.md): trustworthy Systems' framework for user-level device drivers on Microkit
+- [Interrupts: a map](../concepts/interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

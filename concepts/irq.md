@@ -2,7 +2,7 @@
 
 > A device's signal that it needs the CPU, carried on a wire or as a message to an interrupt controller, which turns it into a numbered interrupt; seL4 hands each IRQ to user level as a capability that signals a notification.
 
-[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [Device trees](device-tree.md) · [Local APIC and I/O APIC](apic.md) →
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Interrupts](../INDEX.md#interrupts) · ← [Interrupts: a map](interrupts.md) · [Local APIC and I/O APIC](apic.md) →
 
 | At a glance | |
 |---|---|
@@ -153,6 +153,7 @@ notes that the kernel keeps the interrupt masked until then.
 - [8259 PIC](pic-8259.md): the PC's original interrupt controller, a pair of 8259A chips giving 15 IRQ lines through I/O ports
 - [RISC-V interrupts and timers](riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
 - [Interrupt delivery](../sel4/irq-handling.md): seL4 turns each device interrupt into a signal on a notification
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

@@ -279,6 +279,7 @@ a one-hart mask; the target sees `SSIP`. TLB shootdown uses
 - [SMP](../sel4/smp.md): seL4's use of IPIs
 - [MSI and MSI-X](msi-msix.md): the mechanism AIA's IMSIC is built around
 - [Device trees](device-tree.md): where the PLIC address, source numbers and timer frequency are described
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

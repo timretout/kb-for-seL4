@@ -185,6 +185,7 @@ the devices fit together.
 - [Scheduling](../sel4/scheduling.md): the periodic tick of the non-MCS kernel
 - [seL4_libs and util_libs](../sel4/sel4-libs.md): the `ltimer` and its x86 choice between HPET and PIT
 - [sDDF](../sel4/sddf.md): its timer drivers
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

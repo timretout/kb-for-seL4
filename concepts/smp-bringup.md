@@ -216,6 +216,7 @@ the `IpiRemoteCall_t` enum in each architecture's
 - [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
 - [RISC-V interrupts and timers](riscv-interrupts.md): how interrupts reach an S-mode kernel on RISC-V
 - [Kernel boot sequence](../sel4/kernel-boot.md): the path from the kernel's entry point to the first user thread
+- [Interrupts: a map](interrupts.md): every interrupt controller on x86, Arm and RISC-V side by side, and how this one fits in
 
 ## References
 

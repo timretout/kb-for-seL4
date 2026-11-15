@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 372" width="760" height="372" role="img">
+  <title>Interrupt paths on x86, Arm and RISC-V</title>
+  <desc>Three columns. On x86 wired devices go through the I/O APIC, and PCI MSIs go directly, to the local APIC of each core. On Arm with GICv3 wired devices go through the distributor and PCI MSIs through the ITS to each core's redistributor and CPU interface. On RISC-V wired devices go through the PLIC to the SEIP bit of sip, and the timer and IPIs go through M-mode firmware to STIP and SSIP.</desc>
+  <style>
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .fw { fill: var(--fw-fill); stroke: var(--fw-stroke); }
+    .kernel { fill: var(--kernel-fill); stroke: var(--kernel-stroke); }
+    .user { fill: var(--user-fill); stroke: var(--user-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
+    .hw, .fw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
+    </marker>
+  </defs>
+  <rect width="760" height="372" style="fill: var(--bg)"/>
+  <text x="131" y="30" text-anchor="middle" class="head">x86</text>
+  <text x="71" y="58" text-anchor="middle" class="small">wired devices</text>
+  <line x1="71" y1="66" x2="71" y2="98" class="line" marker-end="url(#arrow)"/>
+  <rect x="16" y="190" width="230" height="72" rx="6" class="hw"/>
+  <line x1="71" y1="150" x2="71" y2="188" class="line" marker-end="url(#arrow)"/>
+  <line x1="131" y1="262" x2="131" y2="296" class="line" marker-end="url(#arrow)"/>
+  <rect x="71" y="298" width="120" height="34" rx="6" class="hw"/>
+  <text x="380" y="30" text-anchor="middle" class="head">Arm (GICv3)</text>
+  <text x="320" y="58" text-anchor="middle" class="small">wired devices</text>
+  <line x1="320" y1="66" x2="320" y2="98" class="line" marker-end="url(#arrow)"/>
+  <rect x="265" y="190" width="230" height="72" rx="6" class="hw"/>
+  <line x1="320" y1="150" x2="320" y2="188" class="line" marker-end="url(#arrow)"/>
+  <line x1="380" y1="262" x2="380" y2="296" class="line" marker-end="url(#arrow)"/>
+  <rect x="320" y="298" width="120" height="34" rx="6" class="hw"/>
+  <text x="629" y="30" text-anchor="middle" class="head">RISC-V (PLIC)</text>
+  <text x="569" y="58" text-anchor="middle" class="small">wired devices</text>
+  <line x1="569" y1="66" x2="569" y2="98" class="line" marker-end="url(#arrow)"/>
+  <rect x="514" y="190" width="230" height="72" rx="6" class="hw"/>
+  <line x1="569" y1="150" x2="569" y2="188" class="line" marker-end="url(#arrow)"/>
+  <line x1="629" y1="262" x2="629" y2="296" class="line" marker-end="url(#arrow)"/>
+  <rect x="569" y="298" width="120" height="34" rx="6" class="hw"/>
+  <rect x="16" y="100" width="110" height="50" rx="6" class="hw"/>
+  <text x="71" y="130" text-anchor="middle">I/O APIC</text>
+  <text x="191" y="58" text-anchor="middle" class="small">PCI MSI</text>
+  <line x1="191" y1="66" x2="191" y2="188" class="line" marker-end="url(#arrow)"/>
+  <text x="131" y="214" text-anchor="middle" class="head">Local APIC</text>
+  <text x="131" y="234" text-anchor="middle" class="small">one per core</text>
+  <text x="131" y="251" text-anchor="middle" class="small">timer, IPIs, EOI</text>
+  <text x="139" y="284" text-anchor="start" class="small">vector</text>
+  <text x="131" y="320" text-anchor="middle">core</text>
+  <text x="131" y="354" text-anchor="middle" class="small dim">the vector says which interrupt</text>
+  <rect x="265" y="100" width="110" height="50" rx="6" class="hw"/>
+  <text x="320" y="121" text-anchor="middle">GIC</text>
+  <text x="320" y="139" text-anchor="middle">distributor</text>
+  <text x="440" y="58" text-anchor="middle" class="small">PCI MSI</text>
+  <line x1="440" y1="66" x2="440" y2="98" class="line" marker-end="url(#arrow)"/>
+  <rect x="385" y="100" width="110" height="50" rx="6" class="hw"/>
+  <text x="440" y="130" text-anchor="middle">ITS</text>
+  <line x1="440" y1="150" x2="440" y2="188" class="line" marker-end="url(#arrow)"/>
+  <text x="328" y="173" text-anchor="start" class="small">SPI</text>
+  <text x="448" y="173" text-anchor="start" class="small">LPI</text>
+  <text x="380" y="214" text-anchor="middle" class="head small">Redistributor, CPU interface</text>
+  <text x="380" y="234" text-anchor="middle" class="small">one of each per core</text>
+  <text x="380" y="251" text-anchor="middle" class="small">PPIs (timer), SGIs (IPIs)</text>
+  <text x="388" y="284" text-anchor="start" class="small">IRQ</text>
+  <text x="380" y="320" text-anchor="middle">core</text>
+  <text x="380" y="354" text-anchor="middle" class="small dim">the handler reads the INTID</text>
+  <rect x="514" y="100" width="110" height="50" rx="6" class="hw"/>
+  <text x="569" y="130" text-anchor="middle">PLIC</text>
+  <text x="689" y="58" text-anchor="middle" class="small">timer, IPIs</text>
+  <line x1="689" y1="66" x2="689" y2="98" class="line" marker-end="url(#arrow)"/>
+  <rect x="634" y="100" width="110" height="50" rx="6" class="fw"/>
+  <text x="689" y="121" text-anchor="middle">M-mode</text>
+  <text x="689" y="139" text-anchor="middle">firmware</text>
+  <line x1="689" y1="150" x2="689" y2="188" class="line" marker-end="url(#arrow)"/>
+  <text x="629" y="214" text-anchor="middle"><tspan class="mono">sip</tspan><tspan class="head"> bits, per hart</tspan></text>
+  <text x="569" y="244" text-anchor="middle" class="mono">SEIP</text>
+  <text x="689" y="244" text-anchor="middle" class="mono">STIP  SSIP</text>
+  <text x="637" y="284" text-anchor="start" class="small">no vector</text>
+  <text x="629" y="320" text-anchor="middle">hart</text>
+  <text x="629" y="354" text-anchor="middle" class="small dim">the handler claims from the PLIC</text>
+</svg>

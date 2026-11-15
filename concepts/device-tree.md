@@ -2,7 +2,7 @@
 
 > A device tree is a data structure describing hardware that cannot be discovered by probing; on Arm and RISC-V seL4's build compiles one into the kernel, and Microkit and sDDF generate system descriptions from it.
 
-[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Firmware and platform description](../INDEX.md#firmware-and-platform-description) · ← [ACPI tables](acpi-tables.md) · [IRQ](irq.md) →
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Firmware and platform description](../INDEX.md#firmware-and-platform-description) · ← [ACPI tables](acpi-tables.md) · [Interrupts: a map](interrupts.md) →
 
 Read first: [IRQ](irq.md), [Arm boot](arm-boot.md).
 
