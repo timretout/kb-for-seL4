@@ -1,9 +1,15 @@
 # sel4-kb
 
-A knowledge base of concepts met in seL4 work, one page each. Its readers
-are Tim, learning the material well enough to defend patches upstream, and
-Claude sessions looking a concept up. Accuracy beats coverage: a confident
-wrong page teaches the wrong thing to both.
+A knowledge base of concepts met in seL4 work, one page each, published
+at <https://timretout.github.io/sel4-kb/>. Its readers are people learning
+the material well enough to write and defend patches to seL4, and Claude
+sessions looking a concept up. Accuracy beats coverage: a confident wrong
+page teaches the wrong thing to both.
+
+Everything here is public. Write for a reader who knows nothing of the
+project a finding came from: no names of people, private repositories,
+branches, notes or work in progress, and nothing that describes an
+unmerged change as if it were in seL4.
 
 ## Pages
 
@@ -95,15 +101,25 @@ after it in the text.
 
 ## Changes
 
-Tim also edits pages in GitHub's web editor, so `origin` (the private
-repository `timretout/sel4-kb`) can be ahead of this checkout.
+Pages are also edited in GitHub's web editor, so `origin`
+(`timretout/sel4-kb`) can be ahead of this checkout. A push to `main`
+publishes: GitHub Pages rebuilds the site from it.
 
 - Run `git pull --rebase` before editing.
 - Run `ci/check` before committing; it must pass.
 - Commit small, one topic per commit, with a plain message ("kb: HPET
   page", "kb: PIT: emulated counts can rise after a reload"). Never add
   `Signed-off-by`, and never bypass the pre-commit secret scan.
-- Pushing needs Tim's say-so. End by saying how many commits are
-  unpushed, so the web view is not silently behind.
+- Pushing needs the maintainer's say-so. End by saying how many commits
+  are unpushed, so the website is not silently behind.
 
 Use the `/kb` skill to write or refresh a page.
+
+## Website
+
+`_config.yml`, `_layouts/default.html` and `assets/` turn the pages into
+the site; pages need no front matter and must not gain any. Markdown is
+rendered by kramdown there and by GitHub in the repository view, so keep
+to what both render alike: a blank line before a list or table, no `|`
+inside a table cell's code span, no `{{` or `{%` outside a code block
+without `{% raw %}`.

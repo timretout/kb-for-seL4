@@ -3,7 +3,8 @@ name: kb
 description: Write, refresh or check a page of the seL4 knowledge base (sel4-kb). Use when asked to add a concept to the knowledge base, explain a hardware or seL4 concept for keeps, or when work turns up a concept or gotcha the knowledge base lacks.
 ---
 
-The knowledge base is `sel4-kb` (at `~/src/sel4/sel4-kb`). Its
+The knowledge base is the `sel4-kb` repository (this one, or a checkout
+beside the project being worked on). It is public. Its
 `CLAUDE.md` holds the rules for pages and references; read it first.
 
 Argument: a concept ("HPET", "MSI-X"), a page path, or "check". With
@@ -16,8 +17,9 @@ none, take the first page marked "Stub" in `INDEX.md`.
    page, add a section there instead of a new page.
 2. Gather from primary sources: the datasheet or specification, then the
    seL4 source on GitHub (upstream `master`, not a local branch). Open
-   each one you cite. Project findings in the session's workspace (notes,
-   boot logs) may supply Gotchas, stated as facts about the machine.
+   each one you cite. Findings from the project being worked on (notes,
+   boot logs) may supply Gotchas, stated as dated facts about the
+   machine, never as an account of the project or its unmerged changes.
 3. Write from `TEMPLATE.md`. Explain for someone who knows C and
    operating systems but not this device: the reason it exists comes
    before the register detail. Mark every reference *Checked* or

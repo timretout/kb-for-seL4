@@ -1,14 +1,22 @@
-# sel4-kb
+# seL4 Knowledge Base
 
 A knowledge base for seL4 work: one page per concept, linked to each other
 and out to primary sources. It covers the hardware and OS ideas that seL4
 work keeps running into (the PIT, the HPET, the TSC, the GIC, ACPI, MSI-X)
 and seL4's own (MCS, capabilities, Microkit, sDDF).
 
-It is written to explain things, and to be read by Claude Code sessions as
-well as by people. Sessions add pages as they work; see `CLAUDE.md`.
+Read it at **<https://timretout.github.io/sel4-kb/>**, or start at
+[INDEX.md](INDEX.md) here.
 
-Start at [INDEX.md](INDEX.md).
+It is written to explain things, and to be read by Claude Code sessions as
+well as by people. Pages are written with Claude Code, which also adds to
+them as work turns up new concepts; see `CLAUDE.md`. Every reference says
+whether it was checked against its source, and a claim no checked source
+supports is marked "(unchecked)". Corrections are welcome as issues or
+pull requests.
+
+This is an unofficial reference, not affiliated with or endorsed by the
+seL4 Foundation. seL4 is a trademark of LF Projects, LLC.
 
 ## Layout
 
@@ -22,6 +30,8 @@ Start at [INDEX.md](INDEX.md).
     ci/check      link and structure check
     ci/sync-index copy page summaries into INDEX.md, and each page's
                   breadcrumb line (part, group, previous, next) into it
+    _config.yml, _layouts/, assets/
+                  the website: layout, stylesheet and script
 
 ## What belongs here
 
@@ -29,7 +39,7 @@ Things that are true whatever project you are in: what a device is, how it
 behaves, where seL4 touches it, what goes wrong with it, and where to read
 more. Findings from particular projects (boot logs, patch dossiers, notes
 on a machine) live in those projects and link here. Nothing here links
-back to them, so this repository stands on its own and could be published.
+back to them, so this repository stands on its own.
 
 ## Shape of a page
 
@@ -44,10 +54,16 @@ orange the seL4 kernel, green user level, grey data).
 
 ## Reading it
 
-On the web: <https://github.com/timretout/sel4-kb> (private). Pages
-render with working links. To edit, open a page and use the pencil
-button, or press `.` anywhere in the repository for the browser editor
-(github.dev), which can change several files in one commit.
+On the web: <https://timretout.github.io/sel4-kb/>, laid out for phones
+as well as desktops, with a search box over the index and the glossary.
+GitHub Pages builds it with Jekyll from `main` on every push; the pages
+themselves stay plain Markdown with no front matter. To preview it
+locally, `bundle install` then `bundle exec jekyll serve`.
+
+The pages also render on GitHub itself with working links. To edit, open
+a page there and use the pencil button, or press `.` anywhere in the
+repository for the browser editor (github.dev), which can change several
+files in one commit.
 
 Locally, any Markdown viewer works: VS Code, or Obsidian opened on this
 directory (its graph view shows how the pages connect). Links are plain

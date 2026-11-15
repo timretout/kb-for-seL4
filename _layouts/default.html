@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{%- assign summary = site.description -%}
+{%- if content contains "<blockquote>" -%}
+  {%- assign summary = content | split: "<blockquote>" | slice: 1 | first | split: "</blockquote>" | first | strip_html | normalize_whitespace | strip -%}
+{%- endif -%}
+{%- if page.home -%}
+  {%- assign full_title = site.title -%}
+{%- else -%}
+  {%- assign full_title = page.title | append: " · " | append: site.title -%}
+{%- endif %}
+<title>{{ full_title | escape }}</title>
+<meta name="description" content="{{ summary | truncate: 300 | escape }}">
+<meta property="og:title" content="{{ full_title | escape }}">
+<meta property="og:description" content="{{ summary | truncate: 300 | escape }}">
+<meta property="og:type" content="{% if page.home %}website{% else %}article{% endif %}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="{{ '/assets/icon.svg' | relative_url }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body{% if page.home %} class="home"{% endif %}>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <nav class="bar-in" aria-label="Site">
+    <a class="brand" href="{{ '/' | relative_url }}"><img src="{{ '/assets/icon.svg' | relative_url }}" alt="" width="22" height="22"><span>seL4 <span class="brand-kb">Knowledge Base</span></span></a>
+    <span class="bar-links">
+      <a href="{{ '/' | relative_url }}#search">Search</a>
+      <a href="{{ '/glossary/' | relative_url }}">Glossary</a>
+      <a href="https://github.com/{{ site.repository }}" class="wide-only">GitHub</a>
+    </span>
+  </nav>
+</header>
+<main id="main">
+{%- if page.home %}
+  <div class="hero">
+    <p class="hero-title">{{ site.title }}</p>
+    <p class="hero-tag">{{ site.description }}</p>
+  </div>
+{%- endif %}
+{%- if page.filter %}
+  <form class="filter" role="search" onsubmit="return false">
+    <label for="search">{{ page.filter }}</label>
+    <input id="search" type="search" placeholder="{{ page.filter }}…" autocomplete="off" spellcheck="false">
+    <p class="filter-count" aria-live="polite" hidden></p>
+  </form>
+{%- endif %}
+  <article class="page">
+{{ content }}
+  </article>
+</main>
+<footer class="foot">
+  <div class="foot-in">
+    <p>
+      <a href="{{ '/' | relative_url }}">Index</a> ·
+      <a href="{{ '/glossary/' | relative_url }}">Glossary</a> ·
+      <a href="https://github.com/{{ site.repository }}/blob/{{ site.branch }}/{{ page.path }}">This page on GitHub</a> ·
+      <a href="https://github.com/{{ site.repository }}/issues">Report an error</a>
+    </p>
+    <p>An unofficial reference, not affiliated with or endorsed by the seL4 Foundation. seL4 is a trademark of LF Projects, LLC. Pages are written with the help of Claude Code; each reference says whether it was checked against its source, and claims that were not are marked “(unchecked)”.</p>
+  </div>
+</footer>
+<script src="{{ '/assets/site.js' | relative_url }}" defer></script>
+</body>
+</html>
