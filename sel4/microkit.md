@@ -261,6 +261,7 @@ Microkit.
 - [QEMU](../concepts/qemu.md): QEMU emulates whole machines
 - [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
 - [libsel4 and the runtime](libsel4.md): libsel4 is the kernel's ABI written down as C
+- [Multiserver operating systems](multiserver-systems.md): static and dynamic multiserver systems compared
 
 ## References
 

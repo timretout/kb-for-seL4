@@ -225,6 +225,7 @@ bases are set (`inst`, `msr`).
 - [System calls and invocations](../sel4/syscalls-and-invocations.md): what `c_handle_syscall()` dispatches
 - [AArch64 exceptions](aarch64-exceptions.md) and [RISC-V paging and traps](riscv-paging-and-traps.md): the same step elsewhere
 - [Privilege levels](privilege-levels.md): the CPU modes that separate user code, kernel, hypervisor and firmware on x86
+- [Trapping foreign system calls](../sel4/foreign-syscalls.md): seL4 reads its call number from `rdx`, and does not keep `rsp` across `syscall`
 
 ## References
 

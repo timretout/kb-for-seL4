@@ -2,7 +2,7 @@
 
 > When a thread does something the kernel cannot complete (a bad capability, a page fault, an illegal instruction, on MCS an exhausted budget), the kernel turns it into an IPC message to the thread's fault endpoint, so paging, debugging and crash handling are all user-level servers.
 
-[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Notifications](notifications.md) · [Address spaces (VSpace)](vspace.md) →
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Notifications](notifications.md) · [Trapping foreign system calls](foreign-syscalls.md) →
 
 Read first: [IPC and endpoints](ipc.md), [Threads and TCBs](threads.md), [Exceptions and traps](../concepts/exceptions-and-traps.md).
 
@@ -246,6 +246,8 @@ The fault types and the user-side layouts are defined in
 - [Virtual memory](../concepts/virtual-memory.md): how an MMU translates the addresses programs use into physical ones through multi-level page tables, with...
 - [Kernel design and execution model](kernel-design.md): the rules every line of seL4 follows
 - [System calls and invocations](syscalls-and-invocations.md): seL4 has only about a dozen real system calls, all forms of sending to or receiving from a capability
+- [Trapping foreign system calls](foreign-syscalls.md): which foreign system calls reach the handler and which do not
+- [A Linux personality on seL4](linux-personality.md): an operating system interface built on `UnknownSyscall` and VM faults
 
 ## References
 

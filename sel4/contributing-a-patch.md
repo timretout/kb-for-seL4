@@ -2,7 +2,7 @@
 
 > The path of a change into upstream seL4: a pull request from a fork on GitHub, signed-off commits in a fixed message format, astyle-formatted C with SPDX headers, review by committers, and, for the kernel, a proof that still holds.
 
-[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [rust-sel4](rust-sel4.md) · [Upstream CI](ci.md) →
+[Index](../INDEX.md) › [Part 7: Contributing](../INDEX.md#part-7-contributing) · ← [A Linux personality on seL4](linux-personality.md) · [Upstream CI](ci.md) →
 
 Read first: [Source layout](source-layout.md), [Verification](verification.md).
 

@@ -2,7 +2,7 @@
 
 > A seL4 address space is a tree of page-table objects that user level retypes from untyped memory and links together with `Map` invocations, with frames at the leaves and an ASID naming the root; the kernel only checks and installs what it is asked to.
 
-[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Faults and fault handlers](faults.md) · [Interrupt delivery](irq-handling.md) →
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Model and API](../INDEX.md#model-and-api) · ← [Trapping foreign system calls](foreign-syscalls.md) · [Interrupt delivery](irq-handling.md) →
 
 Read first: [Capabilities](capabilities.md), [Untyped memory and retyping](untyped-memory.md), [x86-64 paging](../concepts/x86-paging.md) or [AArch64 paging](../concepts/aarch64-paging.md).
 

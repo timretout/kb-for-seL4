@@ -2,7 +2,7 @@
 
 > `seL4/rust-sel4` is the Rust support for seL4 user level: the `sel4` crate of typed bindings generated from the kernel's own interface files, runtimes for root tasks and Microkit protection domains, the capDL initialiser Microkit boots with, a kernel loader, and target specifications; the kernel itself stays in C.
 
-[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [CAmkES and capDL](camkes-capdl.md) · [Contributing a patch](contributing-a-patch.md) →
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [CAmkES and capDL](camkes-capdl.md) · [Multiserver operating systems](multiserver-systems.md) →
 
 Read first: [libsel4 and the runtime](libsel4.md), [Microkit](microkit.md).
 

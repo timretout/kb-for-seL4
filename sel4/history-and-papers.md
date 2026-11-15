@@ -259,6 +259,7 @@ The history is visible in the source.
 - [Kernel design and execution model](kernel-design.md): the design decisions in code
 - [Governance and RFCs](governance.md): the Foundation and the RFC process
 - [MCS kernel](mcs.md): the scheduling-context paper in practice
+- [Multiserver operating systems](multiserver-systems.md): the Hurd's attempt to move to L4, and Djawula
 
 ## References
 

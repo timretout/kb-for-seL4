@@ -180,6 +180,7 @@ group in order; each page there assumes the ones before it.
 - [Capabilities](capabilities.md): the next page for the API
 - [Kernel design and execution model](kernel-design.md): the next page for the internals
 - [The seL4 proofs](verification.md): exactly what is proved, and for which configurations
+- [Multiserver operating systems](multiserver-systems.md): how an operating system is built above the kernel
 
 ## References
 

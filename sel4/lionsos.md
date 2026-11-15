@@ -146,6 +146,7 @@ Not kernel code. Where a kernel or platform contributor meets these:
 - [CAmkES and capDL](camkes-capdl.md): the previous generation's component and VM framework
 - [Ecosystem and repositories](ecosystem.md): the wider map of projects
 - [Index](../INDEX.md): the reading order
+- [Multiserver operating systems](multiserver-systems.md): LionsOS beside the Hurd and Djawula
 
 ## References
 

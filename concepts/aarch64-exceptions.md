@@ -237,6 +237,7 @@ taken from the kernel itself: in a debug build it prints
 - [Faults and fault handlers](../sel4/faults.md): where the kernel sends
   a fault once it has decoded it
 - [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
+- [Trapping foreign system calls](../sel4/foreign-syscalls.md): seL4 reads its call number from `x7`, Linux from `x8`
 
 ## References
 

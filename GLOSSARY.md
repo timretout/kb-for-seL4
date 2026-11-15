@@ -116,6 +116,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **DeviceID**: How a GICv3 ITS identifies the device that wrote an MSI; for PCI, derived from the requester ID. See [GICv3 and the ITS](concepts/gicv3-its.md).
 - **distributor** (GICD): The shared part of a GIC that enables, prioritises and routes interrupts. See [GICv2](concepts/gicv2.md).
 - **divisor**: The programmable value dividing a UART's input clock to give the baud rate. See [UARTs: 16550 and PL011](concepts/uart.md).
+- **Djawula**: Trustworthy Systems' project for a provably secure, dynamic, general-purpose operating system on seL4. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **DLAB** (divisor latch access bit): Bit 7 of the 16550 line control register. See [UARTs: 16550 and PL011](concepts/uart.md).
 - **DMA** (direct memory access): A device reading or writing memory itself; without an IOMMU a driver using it must be trusted. See [IOMMUs: VT-d and SMMU](concepts/iommu.md).
 - **DMAR**: The ACPI table describing Intel VT-d IOMMUs, with DRHD and RMRR entries. See [IOMMUs: VT-d and SMMU](concepts/iommu.md).
@@ -166,6 +167,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **fault status code**: The low ISS bits of an abort's syndrome: translation, access flag or permission fault. See [AArch64 exceptions](concepts/aarch64-exceptions.md).
 - **FDT** (flattened device tree): The binary device tree format; another name for the DTB. See [Device trees](concepts/device-tree.md).
 - **feature bits**: The flags by which a virtio device and driver agree what they both support. See [virtio](concepts/virtio.md).
+- **foreign system call**: A system call instruction run by a program built for another operating system, which seL4 should report as a fault. See [Trapping foreign system calls](sel4/foreign-syscalls.md).
 - **frame**: A kernel object that is a page of memory, mapped at the leaves of a VSpace. See [Address spaces (VSpace)](sel4/vspace.md).
 - **free index**: An untyped's watermark, below which memory has been given out. See [Untyped memory and retyping](sel4/untyped-memory.md).
 - **free queue**: sDDF queue of descriptors for buffers that are empty and available, as opposed to the active queue. See [sDDF networking](sel4/sddf-net.md).
@@ -200,6 +202,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **GSI** (global system interrupt): A machine-wide number for an I/O APIC pin: the APIC's GSI base plus the pin. See [Local APIC and I/O APIC](concepts/apic.md).
 - **guard**: A bit pattern in a CNode capability that must match the CPtr's next bits before the radix bits are read. See [CSpaces and capability addressing](sel4/cspace.md).
 - **guest-physical address**: What a guest believes is a physical address; EPT translates it. See [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md).
+- **gVisor**: A user-space kernel in Go that implements a Linux-like interface for containers. See [A Linux personality on seL4](sel4/linux-personality.md).
 - **gVNIC**: Compute Engine's own paravirtual network card, with GQI and DQO descriptor formats. See [gVNIC](concepts/gvnic.md).
 
 ## H
@@ -212,6 +215,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **HS-mode** (hypervisor-extended supervisor): RISC-V's S-mode with the hypervisor extension, which adds VS and VU modes for guests. See [Privilege levels](concepts/privilege-levels.md).
 - **HSM** (Hart State Management): The SBI extension by which a RISC-V kernel or loader starts other harts. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md).
 - **HSR** (hyp syndrome register): Arm's older, AArch32 name for `ESR_EL2`, which seL4's API uses. See [Arm virtualisation (EL2)](concepts/arm-virtualisation.md).
+- **Hurd**: The GNU project's multiserver operating system, a set of servers on the Mach microkernel. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **HVC**: The Arm instruction that calls a hypervisor at EL2; one of the two SMCCC conduits. See [PSCI and SMCCC](concepts/psci-smccc.md).
 - **hypervisor CPUID leaves**: CPUID leaves from `0x40000000` in which a hypervisor identifies itself and may give timer rates. See [Hypervisor CPUID leaves](concepts/hypervisor-cpuid-leaves.md).
 
@@ -276,6 +280,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **libsel4**: The kernel's ABI written down as C: types, constants, system call wrappers and invocation stubs. See [libsel4 and the runtime](sel4/libsel4.md).
 - **libvmm**: Trustworthy Systems' library for writing virtual machine monitors on Microkit. See [LionsOS and libvmm](sel4/lionsos.md).
 - **linker script**: The file that decides where each section of an image is loaded and at which address it runs. See [ELF and linking](concepts/elf.md).
+- **Linuxulator**: FreeBSD's support for running unmodified Linux binaries. See [A Linux personality on seL4](sel4/linux-personality.md).
 - **LionsOS**: Trustworthy Systems' operating system kit assembled from Microkit protection domains and sDDF drivers. See [LionsOS and libvmm](sel4/lionsos.md).
 - **list register**: A register of the GIC's hypervisor interface through which a hypervisor presents a virtual interrupt to a guest. See [Arm virtualisation (EL2)](concepts/arm-virtualisation.md).
 - **LLQ** (low-latency queue): ENA push mode: the driver writes descriptors and the first packet bytes straight to the device. See [ENA](concepts/ena.md).
@@ -309,6 +314,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **MMIO** (memory-mapped I/O): Device registers reached as memory addresses, mapped uncached, rather than through I/O ports. See [I/O ports and MMIO](concepts/io-ports.md).
 - **MMU** (memory management unit): The hardware that translates virtual addresses to physical ones through page tables. See [Virtual memory](concepts/virtual-memory.md).
 - **monitor**: The Microkit component that is the fault handler of last resort and prints fault dumps. See [Microkit internals](sel4/microkit-internals.md).
+- **monolithic kernel**: A kernel that implements file systems, networking and drivers itself, in one privileged address space. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **`MPIDR`**: The Arm register identifying a core; PSCI `CPU_ON` takes its values, not indices. See [PSCI and SMCCC](concepts/psci-smccc.md).
 - **MR** (memory region): In Microkit, a range of memory declared in the system description and mapped into protection domains. See [Microkit](sel4/microkit.md).
 - **MR** (message register): One word of an IPC message, held in a CPU register or the IPC buffer. See [IPC and endpoints](sel4/ipc.md).
@@ -318,6 +324,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **`MSR` (Arm)**: The AArch64 instruction that writes a system register; `MRS` reads one. See [AArch64 basics](concepts/aarch64-basics.md).
 - **Multiboot**: The protocols (versions 1 and 2) by which GRUB hands seL4 its memory map, root task image and ACPI pointer. See [x86 boot: BIOS, GRUB and Multiboot](concepts/x86-boot.md).
 - **multikernel**: A one-kernel-per-core design being pursued because the SMP configuration is not verified. See [SMP](sel4/smp.md).
+- **multiserver operating system**: An operating system built from separate user-level servers above a microkernel. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **musllibc**: The old fork of the musl C library used by the classic user-level libraries. See [libsel4 and the runtime](sel4/libsel4.md).
 - **MXR** (make executable readable): RISC-V status bit letting loads succeed on execute-only pages. See [RISC-V paging and traps](concepts/riscv-paging-and-traps.md).
 
@@ -354,6 +361,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **PDPT** (page directory pointer table): The level 3 x86 page table, whose entries can map 1 GiB pages. See [x86-64 paging](concepts/x86-paging.md).
 - **PE/COFF**: The executable format UEFI loads. See [UEFI](concepts/uefi.md).
 - **period**: The interval over which a scheduling context's budget may be used. See [MCS kernel](sel4/mcs.md).
+- **personality (OS personality)**: A layer that presents one operating system's interface on another kernel. See [A Linux personality on seL4](sel4/linux-personality.md).
 - **phandle**: A number unique to a device tree node, by which other nodes refer to it. See [Device trees](concepts/device-tree.md).
 - **phase bit**: A bit in each completion entry that the device flips to mark new entries on a ring. See [ENA](concepts/ena.md), also [NVMe](concepts/nvme.md).
 - **physical memory window**: The Arm kernel's mapping of all RAM at a fixed offset; it bounds usable RAM. See [AArch64 paging](concepts/aarch64-paging.md).
@@ -403,6 +411,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **reply object**: On MCS, the kernel object that holds a caller's reply state and links donated scheduling contexts. See [IPC and endpoints](sel4/ipc.md), also [MCS kernel](sel4/mcs.md).
 - **requester ID**: The 16-bit ID a PCI device puts on its DMA and MSI writes, by which an IOMMU tells devices apart. See [PCI and PCI Express](concepts/pci.md).
 - **reset vector**: The address where an x86 processor begins executing firmware. See [x86 boot: BIOS, GRUB and Multiboot](concepts/x86-boot.md).
+- **resource container**: In Djawula, an object holding an amount of a resource from which tasks and connections are allocated. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **restart**: After a preempted or faulting operation, the thread is left ready to run its system call again from the top. See [Kernel design and execution model](sel4/kernel-design.md).
 - **retype**: `seL4_Untyped_Retype`: carving kernel objects out of an untyped. See [Untyped memory and retyping](sel4/untyped-memory.md).
 - **revoke**: Deleting every capability derived from a given one; on an untyped, the only way to get memory back. See [Capabilities](sel4/capabilities.md), also [Untyped memory and retyping](sel4/untyped-memory.md).
@@ -461,6 +470,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **spurious interrupt**: An interrupt number meaning "nothing pending": 1023 on a GIC. See [GICv2](concepts/gicv2.md).
 - **Sstc**: The RISC-V extension adding `stimecmp`, a timer compare register S-mode can write itself. See [RISC-V interrupts and timers](concepts/riscv-interrupts.md).
 - **stage 2**: The second address translation a hypervisor applies to a guest's physical addresses. See [AArch64 paging](concepts/aarch64-paging.md), also [Arm virtualisation (EL2)](concepts/arm-virtualisation.md).
+- **Starnix**: Fuchsia's user-space component that runs unmodified Linux binaries. See [A Linux personality on seL4](sel4/linux-personality.md).
 - **STARTUP**: The IPI giving an x86 application processor the real-mode address at which to start. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md).
 - **stream ID**: How an SMMU identifies a device; for PCI, derived from the requester ID. See [IOMMUs: VT-d and SMMU](concepts/iommu.md).
 - **StrictC**: The Isabelle C parser's name for the subset of C it accepts. See [The verified C subset](sel4/verified-c-subset.md).
@@ -491,6 +501,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **trampoline**: Low-memory code that takes a newly started x86 core from real mode up to long mode. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md).
 - **transitional device**: A virtio device that offers both the legacy and the modern interface. See [virtio](concepts/virtio.md).
 - **translation table**: Arm's name for a page table. See [AArch64 paging](concepts/aarch64-paging.md).
+- **translator**: A Hurd server attached to a node in the file system. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **trap**: An entry to the kernel; on RISC-V the single word for exceptions and interrupts alike. See [Exceptions, interrupts and traps](concepts/exceptions-and-traps.md), also [RISC-V paging and traps](concepts/riscv-paging-and-traps.md).
 - **Trustworthy Systems** (TS): The UNSW group behind seL4's research, sDDF and LionsOS. See [Governance and RFCs](sel4/governance.md).
 - **TSC** (Technical Steering Committee): The seL4 Foundation committee that sets process and grants the reviewer and committer roles. See [Governance and RFCs](sel4/governance.md).

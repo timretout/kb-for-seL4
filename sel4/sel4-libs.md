@@ -239,6 +239,8 @@ library is a CMake target (`sel4vka`, `platsupport`, ...) with
 - [PIT](../concepts/pit.md), [HPET](../concepts/hpet.md), [TSC](../concepts/tsc.md), [timer calibration](../concepts/timer-calibration.md): the hardware behind the pc99 ltimer
 - [UART](../concepts/uart.md): the serial device the pc99 driver expects
 - [Ecosystem and repositories](ecosystem.md): how the repositories fit together
+- [Multiserver operating systems](multiserver-systems.md): what a dynamic system needs beyond process creation
+- [A Linux personality on seL4](linux-personality.md): a server that creates processes for foreign programs
 
 ## References
 
