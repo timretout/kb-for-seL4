@@ -2,7 +2,7 @@
 
 > A Linux personality is a user-level server that makes unmodified Linux programs run on seL4 by answering their system calls, which arrive as faults; this page sketches the design, what the kernel already provides for it and what stands in the way, as a way to see where seL4 ends and an operating system begins.
 
-[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Multiserver operating systems](multiserver-systems.md) · [Contributing a patch](contributing-a-patch.md) →
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Multiserver operating systems](multiserver-systems.md) · [Neptune OS](neptune-os.md) →
 
 Read first: [Faults and fault handlers](faults.md), [Trapping foreign system calls](foreign-syscalls.md), [Multiserver operating systems](multiserver-systems.md).
 
@@ -181,6 +181,7 @@ What is missing:
 ## See also
 
 - [Trapping foreign system calls](foreign-syscalls.md): the kernel gap in detail
+- [Neptune OS](neptune-os.md): a Windows NT personality on seL4 that replaces the stub library and so needs no trapping
 - [Faults and fault handlers](faults.md): the mechanism the design rests on
 - [Multiserver operating systems](multiserver-systems.md): the Hurd, Djawula and where POSIX can live
 - [Virtualisation support](hypervisor.md): the other way to run Linux software, as a guest

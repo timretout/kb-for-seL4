@@ -165,6 +165,7 @@ define no servers or protocols.
 ## See also
 
 - [A Linux personality on seL4](linux-personality.md): the personality server arrangement in detail
+- [Neptune OS](neptune-os.md): a general-purpose system on seL4 with one central server and drivers as processes
 - [Trapping foreign system calls](foreign-syscalls.md): the kernel support it needs
 - [LionsOS and libvmm](lionsos.md): the static multiserver system on seL4
 - [seL4_libs and util_libs](sel4-libs.md): building dynamic systems by hand

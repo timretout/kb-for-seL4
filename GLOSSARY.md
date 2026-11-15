@@ -331,9 +331,12 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 ## N
 
 - **namespace**: A disk behind an NVMe controller, numbered from 1. See [NVMe](concepts/nvme.md).
+- **Native API (NT)**: The `Nt*` calls exported by `ntdll.dll`, the interface below Win32 that the NT Executive serves. See [Neptune OS](sel4/neptune-os.md).
+- **Neptune OS**: An independent project that runs a reimplemented NT Executive as the seL4 root task. See [Neptune OS](sel4/neptune-os.md).
 - **nested virtualisation**: Running a hypervisor inside a virtual machine, as seL4's hypervisor mode needs when the kernel itself runs in a virtual machine. See [x86 virtualisation (VT-x)](concepts/x86-virtualisation.md), also [Compute Engine machine types](concepts/gce-machine-types.md).
 - **Ninja**: The build tool CMake generates files for. See [Build system and configuration](sel4/build-system.md).
 - **Nitro**: The system EC2 runs on: a hypervisor plus cards that provide network and storage devices. See [Amazon EC2 and the Nitro system](concepts/ec2.md).
+- **NT Executive**: The part of Windows NT that implements objects, processes, I/O and memory management. See [Neptune OS](sel4/neptune-os.md).
 - **NMI** (non-maskable interrupt): An x86 interrupt that the interrupt flag does not mask. See [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md).
 - **notification**: A kernel object holding one word of pending signal bits; signalling never blocks. See [Notifications](sel4/notifications.md).
 - **NVMe**: The standard PCI storage controller interface, used by EC2 for every disk. See [NVMe](concepts/nvme.md).

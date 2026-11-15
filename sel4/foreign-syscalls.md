@@ -167,6 +167,7 @@ verification, because that code is below the proofs' machine interface.
 - [Faults and fault handlers](faults.md): the `UnknownSyscall` message and its reply
 - [System calls and invocations](syscalls-and-invocations.md): seL4's own calls and registers
 - [A Linux personality on seL4](linux-personality.md): the design this gap stands in the way of
+- [Neptune OS](neptune-os.md): a personality that avoids the gap by shipping its own `ntdll.dll`
 - [x86-64 exceptions and system calls](../concepts/x86-exceptions-syscalls.md): what `syscall` and `sysretq` do
 - [AArch64 exceptions](../concepts/aarch64-exceptions.md): `svc` and exception entry
 - [Proof impact of a change](proof-impact.md): why a fix here needs the verification team
