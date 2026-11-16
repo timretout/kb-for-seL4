@@ -268,8 +268,14 @@ designer must allocate and the driver must program into the device.
   status bit") but QEMU tolerates.
 - **Suppression flags are hints**: a driver must tolerate interrupts it
   asked not to get.
+- **The net header's length follows the negotiated features**: 12 bytes
+  with `VIRTIO_F_VERSION_1` or `MRG_RXBUF`, 10 without (the legacy
+  interface note in section 5.1.6; section number unchecked). A legacy device has no feature bits above 31, so it
+  can never take VERSION_1. A driver that serves both kinds of device
+  must pick the length after negotiation: a fixed 12-byte header shifts
+  every frame by two bytes on a legacy device, which drops them all.
 - **`len` in the used ring is what the device wrote**, not the request
-  size, and on the net receive path it includes the 12-byte header.
+  size, and on the net receive path it includes the net header.
 - **A legacy device dictates the queue size**; the driver must allocate
   whatever the device says (often 256 or more entries), contiguously.
 - **Without an IOMMU the device (hypervisor) can already see all guest
