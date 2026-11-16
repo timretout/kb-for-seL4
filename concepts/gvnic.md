@@ -223,6 +223,21 @@ Reference implementations: Linux
 - **Moving the BARs fails on N1**: after reprogramming them the device
   accepts the new values but does not answer at the new addresses,
   while a C4 does (observed, 2026). Use the firmware's placement.
+- **The card can drop its admin queue just after boot.** On a
+  `c4-standard-2` (observed 2026-11-16), a driver that started within
+  about a second of boot gave the card its admin queue, read
+  `adminq_pfn` back as written, and then found it 0 when the next
+  command timed out, with `adminq_event_counter` still 0. It struck at
+  the first, second or third command in three boots of four. The likely
+  cause is a reset begun before the guest's driver ran finishing late
+  (unchecked); the usual release step, write 0 to `adminq_pfn` and wait
+  for it to read 0, cannot see it, because the register already reads
+  0. Linux starts later and does not meet it. A driver that starts early
+  should check whether the queue address has gone to 0 when set-up
+  fails, and set up again from nothing, a bounded number of times.
+- **The firmware leaves memory decoding and bus mastering on**: the
+  command register read `0x17` on a `c4-standard-2` (observed
+  2026-11-16).
 - **Leaving the management vector masked** works, but link changes and
   device-requested resets then go unseen.
 - **It needs a flag on the image**: without `GVNIC` in the image's
