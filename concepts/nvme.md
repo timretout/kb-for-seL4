@@ -261,6 +261,24 @@ number, and MSI-X. On x86 the vector comes from
 - **Device order is not stable on EC2**; identify volumes by serial
   number.
 - **EBS latency is not failure**: see the timeout above.
+- **Match the class code, not the IDs.** Every cloud has its own vendor
+  and device ID: QEMU `1b36:0010`, EC2 `1d0f:8061` (`1d0f:0061` on
+  c5n.metal), Compute Engine `1ae0:001f` (seen 2026-11). The class code
+  `01/08/02` is the same everywhere. If more than one controller can be
+  present, a driver given one controller's BAR should also check that
+  the function it found decodes that BAR, or it may enable bus mastering
+  on one controller and drive another.
+- **Never touch `INTMS` or `INTMC` once MSI-X is on.** The base
+  specification (3.1.4.3, 3.1.4.4) says host software shall not access
+  them when configured for MSI-X, and that doing so is undefined. A
+  driver written for a pin, which masks there around its interrupt
+  handler, must skip those writes when it switches to MSI-X. One MSI-X
+  entry is enough for a driver with one I/O queue, since the admin CQ
+  always uses vector 0 and the I/O CQ may name vector 0 too.
+- **EC2 Nitro x86 (seen 2026-11 on a t3.micro).** The EBS controller is
+  at 00:04.0 with one memory BAR (16 KiB), so its MSI-X table is in BAR 0.
+  Its INTA reaches I/O APIC pin 11 through link `LNKD`, and the MADT
+  overrides IRQ 11 to level, active high.
 - **Attach and detach are hot-plug.** AWS describes attaching an EBS
   volume as a hot-plug event that presents a new NVMe device to the
   running instance; a static system simply must not have its volumes
