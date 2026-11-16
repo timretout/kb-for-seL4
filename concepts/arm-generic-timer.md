@@ -58,6 +58,27 @@ generally reads `CNTFRQ_EL0` itself.
   fail (sel4test's SCHED0021).
 - Linux's reported rate is rounded; read `CNTFRQ_EL0` for the exact
   value.
+- **A far-future compare value is not "never" on every hypervisor.** The
+  timer fires when `CVAL <= System Count`, so `CVAL = UINT64_MAX` should
+  never fire, and util_libs' generic ltimer writes it when it has no
+  timeout. On EC2 Graviton2 guests (t4g.small, 2026-11-10) the timer then
+  fired at once and kept firing, as it would if the comparison were
+  signed. Clearing `CTL.ENABLE` when idle and setting it with each new
+  `CVAL` worked there and on Graviton4 (c8g.medium, 2026-11-16). That is
+  what Linux's driver does: `set_next_event` sets `ENABLE` and clears
+  `IMASK`, and shutting down or stopping the clock event clears `ENABLE`.
+- **Absolute times overflow in the conversion.** Ticks from nanoseconds as
+  `ns * hz / 10^9` overflows 64 bits once `ns > 2^64 / hz`: 18.4 seconds
+  of uptime at 1 GHz, 151 seconds at 121.875 MHz. util_libs'
+  `freq_ns_and_hz_to_cycles` is written that way, and the generic ltimer
+  passes it absolute times, so on 1 GHz machines (Graviton3 and 4, Axion)
+  every timeout after the first 18 seconds came out in the past. Split
+  the value into whole seconds and remainder, or use 128-bit arithmetic.
+- **QEMU's rate can be changed.** QEMU's `cortex-a72` counter runs at
+  62.5 MHz; `-cpu cortex-a72,cntfrq=1000000000` gives 1 GHz with nothing
+  else changed (the `cntfrq` property of QEMU's Arm CPU objects, QEMU
+  10.0). `-cpu max` also runs at 1 GHz in QEMU 10 but changes much else:
+  sel4test built for Cortex-A72 hung under it whatever the timer code did.
 
 ## See also
 
@@ -86,3 +107,13 @@ generally reads `CNTFRQ_EL0` itself.
   `CONFIG_DEBUG_BUILD`. *Checked 2026-11-14.*
 - [seL4 `src/plat/qemu-arm-virt/config.cmake`](https://github.com/seL4/seL4/blob/master/src/plat/qemu-arm-virt/config.cmake):
   `TIMER_FREQUENCY 62500000`. *Checked 2026-11-14.*
+- The same Arm guide, section 4.4 "Configuring a timer", for the firing condition
+  `CVAL <= System Count` and `CTL.ENABLE`, `IMASK` and `ISTATUS`.
+  *Checked 2026-11-16, version 1.3, the same PDF.*
+- [Linux `drivers/clocksource/arm_arch_timer.c`](https://github.com/torvalds/linux/blob/master/drivers/clocksource/arm_arch_timer.c):
+  `set_next_event` and `arch_timer_shutdown`, used for
+  `set_state_shutdown` and `set_state_oneshot_stopped`. *Checked 2026-11-16.*
+- [util_libs `libplatsupport/src/arch/arm/generic_ltimer.c`](https://github.com/seL4/util_libs/blob/master/libplatsupport/src/arch/arm/generic_ltimer.c)
+  (`generic_timer_set_compare(UINT64_MAX)`) and
+  [`libutils/include/utils/frequency.h`](https://github.com/seL4/util_libs/blob/master/libutils/include/utils/frequency.h)
+  (`(ns * hz) / NS_IN_S`). *Checked 2026-11-16.*
