@@ -228,7 +228,7 @@ Reference implementations: Linux
   about a second of boot gave the card its admin queue, read
   `adminq_pfn` back as written, and then found it 0 when the next
   command timed out, with `adminq_event_counter` still 0. It struck at
-  the first, second or third command in three boots of four. The likely
+  the first, second or third command in four boots of six. The likely
   cause is a reset begun before the guest's driver ran finishing late
   (unchecked); the usual release step, write 0 to `adminq_pfn` and wait
   for it to read 0, cannot see it, because the register already reads
