@@ -12,7 +12,7 @@
 | Found through | CPUID leaf 1, ECX bit 31; the highest leaf is in EAX of `0x40000000` |
 | Key numbers | Leaf `0x40000010`: EAX is the TSC rate in kHz, EBX the local APIC timer's rate in kHz |
 | seL4 use | None upstream: seL4 measures instead (see [timer calibration](timer-calibration.md)) |
-| On the clouds | Every EC2 Nitro type tried offers `0x40000010`, with 1 000 000 kHz in EBX |
+| On the clouds | Every EC2 Nitro type tried offers `0x40000010`, with 1 000 000 kHz in EBX; Compute Engine's N1 does not |
 
 ## What it is
 
@@ -53,6 +53,9 @@ describe the host.
 
 - **Seen on:** every EC2 Nitro type tried offers `0x40000010` (TSC kHz in
   EAX, 1 000 000 kHz for the APIC timer in EBX).
+- **Not offered on Compute Engine's N1.** An `n1-standard-1` reports the
+  `KVMKVMKVM` signature with a maximum leaf of `0x40000001`, so a guest
+  there still has to measure both rates against the [PIT](pit.md).
 - Leaf `0x40000000`'s EAX is the *maximum* leaf; old KVM hosts set it to
   0, meaning "only `0x40000001`".
 - The signature tells you who claims to be the hypervisor, not which
