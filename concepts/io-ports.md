@@ -160,7 +160,16 @@ devices work the same way.
   directly takes a #GP, delivered as a user exception fault.
 - **`Issue` fails on overlap**, even partial. Two drivers that need
   neighbouring ports of one device (a UART's eight) should get one
-  range, or carefully disjoint ones.
+  range, or carefully disjoint ones. The kernel keeps one bitmap of
+  issued ports (`x86KSAllocatedIOPorts` in
+  `src/arch/x86/object/ioport.c`) and refuses with `seL4_RevokeFirst`.
+  So a task that issues itself a capability for all 65536 ports blocks
+  every later `Issue`, including the static ports a system description
+  gives other tasks, which are issued first and make its own `Issue`
+  fail instead. The ports become free again only when the last
+  capability to the range is deleted (`Arch_postCapDeletion` calls
+  `freeIOPortRange`); a task that wants "every port nobody else has"
+  must issue several smaller ranges around the ones in use.
 - **Clouds have few port devices.** A VM usually still has COM1 and
   PCI configuration ports, but the PIT, PIC or keyboard controller may
   be absent or only partly emulated, and reads of a missing port
