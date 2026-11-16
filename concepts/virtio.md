@@ -214,10 +214,12 @@ device-type core over a shared transport layer
 | blk | [`drivers/blk/virtio`](https://github.com/au-ts/sddf/tree/main/drivers/blk/virtio) (`block.c`) | `mmio/`, `pci/` |
 | console | [`drivers/serial/virtio`](https://github.com/au-ts/sddf/tree/main/drivers/serial/virtio) (`console.c`) | MMIO (`virtio,mmio` in its `config.json`) |
 
-They are **modern only**: `VIRTIO_VERSION` is 2, the net driver accepts
-exactly `VIRTIO_NET_F_MAC` and `VIRTIO_F_VERSION_1` and so uses split
-rings with no mergeable buffers, no offloads, no indirect descriptors and
-no event index. The PCI transport finds the common, notify, ISR and
+They are **modern only**: `VIRTIO_VERSION` is 2, and the net driver is
+meant to accept exactly `VIRTIO_NET_F_MAC` and `VIRTIO_F_VERSION_1` and
+so use split rings with no mergeable buffers, no offloads, no indirect
+descriptors and no event index. (As of November 2026 it passes those two
+bit *numbers* where masks are wanted, so it accepts neither: see
+Gotchas.) The PCI transport finds the common, notify, ISR and
 device structures through the capabilities above; it does not implement
 the legacy I/O-port interface. The drivers translate between the
 virtqueue and sDDF's own shared-memory queues (see
@@ -254,6 +256,16 @@ designer must allocate and the driver must program into the device.
   execution (the hypervisor): write the ring entry before `idx`, with a
   barrier between, and re-check for new used entries after re-enabling
   interrupts, or lose a wake-up.
+- **Feature constants are bit numbers, the feature registers take
+  masks.** `VIRTIO_F_VERSION_1` is 32: in the high word (select 1) its
+  mask is `1 << 0`. Passing the number writes the wrong bits. A device
+  that runs legacy semantics when VERSION_1 is not accepted (QEMU does)
+  then uses the 10-byte net header without `num_buffers`, so a driver
+  with a 10-byte header appears to work; accepting VERSION_1 properly
+  needs the 12-byte header. As of November 2026 sDDF's net driver has
+  this fault, and its status writes each replace the last instead of
+  adding a bit, which section 2.1.1 forbids ("MUST NOT clear a device
+  status bit") but QEMU tolerates.
 - **Suppression flags are hints**: a driver must tolerate interrupts it
   asked not to get.
 - **`len` in the used ring is what the device wrote**, not the request
@@ -298,7 +310,8 @@ designer must allocate and the driver must program into the device.
   capability types, magic, status and feature bit numbers.
   *Checked 2026-11-14.*
 - [sDDF `drivers/network/virtio/common/ethernet.c`](https://github.com/au-ts/sddf/blob/main/drivers/network/virtio/common/ethernet.c):
-  the features the net driver negotiates. *Checked 2026-11-14.*
+  the features the net driver negotiates, and its status writes.
+  *Checked 2026-11-16* against QEMU's `info virtio-status`.
 - [libvmm](https://github.com/au-ts/libvmm), `README.md` and
   [`src/virtio/`](https://github.com/au-ts/libvmm/tree/main/src/virtio)
   (`block.c`, `console.c`, `net.c`, `sound.c`, `mmio.c`, `pci.c`; the
