@@ -247,6 +247,11 @@ Microkit.
   whose proofs are not complete ([verification](verification.md)).
 - **The SDK and kernel are a matched pair.** `--override-kernel` only
   works with a kernel of the same version and configuration.
+- **A channel is two-way unless told otherwise.** Each `end` may
+  notify the other by default. `notify="false"` on an end leaves that
+  PD with no capability to signal the other, which makes the channel
+  one-way; a design that relies on one PD being unable to wake or
+  signal another needs it.
 
 ## See also
 
@@ -271,3 +276,4 @@ Microkit.
 - [`build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py): boards, configurations, kernel options. *Checked 2026-11-14.*
 - [`CHANGES.md`](https://github.com/seL4/microkit/blob/main/CHANGES.md): x86-64 in 2.1.0, IOMMU and polarity changes in 2.3.0. *Checked 2026-11-14.*
 - [Microkit tutorial](https://trustworthy.systems/projects/microkit/tutorial/welcome.html): a guided first system. *Checked 2026-11-14.*
+- [Microkit manual](https://github.com/seL4/microkit/blob/main/docs/manual.md), "System Description File", `channel`: the `notify` attribute of `end`, "defaults to true". *Checked 2026-11-20.*

@@ -251,6 +251,13 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
   physical addresses into a device can reach any memory unless
   Microkit's `io_address_space` ([IOMMU](../concepts/iommu.md)) confines
   the device.
+- **Device registers closer than a page are shared.** A mapping is
+  whole pages, so two devices whose registers lie in one 4 KiB page
+  cannot be given to two drivers separately: each driver gets the
+  other's registers too. QEMU's Arm `virt` machine places its
+  virtio-mmio transports 0x200 bytes apart from `0x0a000000`, eight to
+  a page, so drivers for slots 0 and 1 share a page while slots 0 and 8
+  do not.
 
 ## See also
 
@@ -280,3 +287,4 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
 - [Acacia](https://github.com/au-ts/microkit_acacia): the system-generation tooling; its README says it succeeds `sdf_gen`. *Checked 2026-11-14.*
 - [`drivers/timer/imx/timer.c`](https://github.com/au-ts/sddf/blob/main/drivers/timer/imx/timer.c): a timer driver, with its one timeout slot per client channel. *Checked 2026-11-14.*
 - [`serial/components/virt_rx.c`](https://github.com/au-ts/sddf/blob/main/serial/components/virt_rx.c) and [`acacia_sddf/serial.py`](https://github.com/au-ts/sddf/blob/main/acacia_sddf/serial.py): the input-switching state machine and its default characters. *Checked 2026-11-14.*
+- [QEMU `hw/arm/virt.c`](https://github.com/qemu/qemu/blob/master/hw/arm/virt.c), `base_memmap`: `VIRT_MMIO` at `0x0a000000`, each transport `0x200` bytes. *Checked 2026-11-20.*

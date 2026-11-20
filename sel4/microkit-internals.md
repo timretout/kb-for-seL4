@@ -279,6 +279,13 @@ libmicrokit.
   receive PPCs nor have child PDs.
 - **Slot numbers are an internal contract**, not an API, and may
   change between releases. Use the `microkit_*` functions.
+- **The monitor can reach every PD.** Its CSpace holds a TCB
+  capability for each PD (`BASE_PD_TCB_CAP`), used to read a faulting
+  PD's registers, in release builds as well as debug ones; the
+  specification written by `microkit --capdl-json` shows them. Its
+  loop receives a fault, prints and does not reply, but an argument
+  that two PDs are isolated from each other has to count the monitor
+  as trusted.
 
 ## See also
 
@@ -303,3 +310,4 @@ libmicrokit.
 - [`build_sdk.py`](https://github.com/seL4/microkit/blob/main/build_sdk.py): kernel options per board and configuration. *Checked 2026-11-14.*
 - [`sel4-capdl-initializer`](https://github.com/seL4/rust-sel4/tree/main/crates/sel4-capdl-initializer): the crate the initialiser wraps (its README). *Checked 2026-11-14.*
 - [`DEVELOPER.md`](https://github.com/seL4/microkit/blob/main/DEVELOPER.md), "Getting the Code", and [microkit-manifest `default.xml`](https://github.com/seL4/microkit-manifest/blob/main/default.xml): the supported and CI-tested seL4 revision. *Checked 2026-11-14.*
+- [`monitor/src/main.c`](https://github.com/seL4/microkit/blob/main/monitor/src/main.c): `BASE_PD_TCB_CAP`, `seL4_TCB_ReadRegisters` in the fault loop, no reply to a faulting PD. *Checked 2026-11-20.* That the capabilities are present in a release build was seen in the `--capdl-json` output of Microkit 2.4.0 for `qemu_virt_aarch64`, 2026-11-20.
