@@ -272,6 +272,7 @@ capabilities and I/O APIC or MSI interrupts set up through the SDF.
 - [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
 - [rust-sel4](rust-sel4.md): `seL4/rust-sel4` is the Rust support for seL4 user level
 - [seL4_libs and util_libs](sel4-libs.md): the classic C libraries for building dynamic systems on seL4
+- [Verifying user-level software](user-level-verification.md): Pancake drivers and the Spin models in context
 
 ## References
 

@@ -158,6 +158,7 @@ assumes:
 - [RISC-V basics](../concepts/riscv-basics.md): the RISC-V architecture as a kernel sees it
 - [Governance and RFCs](governance.md): who decides what goes into seL4
 - [Platform ports](platform-port.md): A platform is the kernel's build-time description of one board or machine family
+- [Verifying user-level software](user-level-verification.md): proofs for drivers, components and applications on top of the kernel
 
 ## References
 

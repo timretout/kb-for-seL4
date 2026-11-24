@@ -147,6 +147,7 @@ Not kernel code. Where a kernel or platform contributor meets these:
 - [Ecosystem and repositories](ecosystem.md): the wider map of projects
 - [Index](../INDEX.md): the reading order
 - [Multiserver operating systems](multiserver-systems.md): LionsOS beside the Hurd and Djawula
+- [Verifying user-level software](user-level-verification.md): Pancake components and what is verified
 
 ## References
 

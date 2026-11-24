@@ -298,6 +298,7 @@ libmicrokit.
 - [Index](../INDEX.md): the reading order
 - [Arm boot flow](../concepts/arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
 - [Build system and configuration](build-system.md): seL4 builds with CMake and Ninja
+- [Verifying user-level software](user-level-verification.md): the `libmicrokit` verification
 
 ## References
 

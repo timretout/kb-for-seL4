@@ -178,6 +178,7 @@ for the C parser.
 - [Generated code](generated-code.md): the bitfield generator and its proof output
 - [CI](ci.md): the workflows that run proofs and move the manifest
 - [CAmkES and capDL](camkes-capdl.md): capDL is a language that describes a complete system as kernel objects and the capabilities between them,...
+- [Verifying user-level software](user-level-verification.md): proofs of user-level code, and why only Isabelle holds the seL4 specification
 
 ## References
 

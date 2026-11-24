@@ -288,6 +288,7 @@ branch `main`):
 - [BootInfo and the root task](bootinfo-and-root-task.md): what `#[root_task]` receives
 - [sDDF](sddf.md): the driver framework Rust domains interoperate with
 - [Verified C subset](verified-c-subset.md): why the kernel stays in C
+- [Verifying user-level software](user-level-verification.md): Verus, Kani and Aeneas for Rust components
 
 ## References
 

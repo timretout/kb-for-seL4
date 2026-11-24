@@ -251,6 +251,7 @@ A CAmkES project is fetched with `repo` from `seL4/camkes-manifest`
 - [Hypervisor](hypervisor.md): the kernel side of the CAmkES VM
 - [l4v](l4v.md): where the capDL model and proofs live
 - [Ecosystem and repositories](ecosystem.md): all the repositories together
+- [Verifying user-level software](user-level-verification.md): the initialiser proof and what user level inherits
 
 ## References
 

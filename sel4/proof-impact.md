@@ -2,7 +2,7 @@
 
 > A procedure for deciding, before sending a kernel patch, whether it changes code the proofs cover: whether a verified configuration compiles it, whether it is boot or machine-interface code, and what to write in the pull request either way.
 
-[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [The verified C subset](verified-c-subset.md) · [libsel4 and the runtime](libsel4.md) →
+[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [The verified C subset](verified-c-subset.md) · [Verifying user-level software](user-level-verification.md) →
 
 Read first: [Verification](verification.md), [l4v](l4v.md), [Verified C subset](verified-c-subset.md).
 

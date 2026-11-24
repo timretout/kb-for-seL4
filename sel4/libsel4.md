@@ -2,7 +2,7 @@
 
 > libsel4 is the kernel's ABI written down as C (types, constants, system call wrappers and generated invocation stubs), shipped in the kernel repository under a BSD licence; `sel4runtime` and a C library sit on top of it, and Microkit and rust-sel4 consume the same definitions by other routes.
 
-[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Proof impact of a change](proof-impact.md) · [seL4_libs and util_libs](sel4-libs.md) →
+[Index](../INDEX.md) › [Part 6: User level](../INDEX.md#part-6-user-level) · ← [Verifying user-level software](user-level-verification.md) · [seL4_libs and util_libs](sel4-libs.md) →
 
 Read first: [System calls and invocations](syscalls-and-invocations.md), [Generated code](generated-code.md).
 

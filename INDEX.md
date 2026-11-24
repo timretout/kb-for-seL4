@@ -163,6 +163,7 @@ What is proved, about what, and what that means for anyone changing kernel code.
 - [l4v and Isabelle](sel4/l4v.md): `seL4/l4v` holds the Isabelle/HOL specifications and proofs of seL4; it reads the kernel's C as one preprocessed file per verified configuration, and a manifest repository records which kernel commit the proofs currently match.
 - [The verified C subset](sel4/verified-c-subset.md): Verified seL4 code must be written in the subset of C99 that the Isabelle C parser accepts (no unions, no `goto`, no fall-through, no address of a local, no side effects inside expressions), which explains much of the kernel's unusual C style.
 - [Proof impact of a change](sel4/proof-impact.md): A procedure for deciding, before sending a kernel patch, whether it changes code the proofs cover: whether a verified configuration compiles it, whether it is boot or machine-interface code, and what to write in the pull request either way.
+- [Verifying user-level software](sel4/user-level-verification.md): seL4's proofs stop at the kernel boundary, so drivers, Microkit components and applications need proofs of their own; the usual approach is to rely on the kernel's isolation proofs and verify only the few components that matter, with tools such as Pancake for drivers, Verus, Kani or Aeneas for Rust, and model checkers for the protocols between components.
 
 ## Part 6: User level
 

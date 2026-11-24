@@ -22,6 +22,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **ACQ** (admin completion queue): ENA ring holding one response per admin command, matched by command ID. See [ENA](concepts/ena.md).
 - **active queue**: sDDF queue of buffer descriptors that hold data to process, as opposed to the free queue. See [sDDF networking](sel4/sddf-net.md).
 - **admin queue**: The queue through which a driver manages an ENA, gVNIC or NVMe device, separate from its I/O queues. See [NVMe](concepts/nvme.md), also [ENA](concepts/ena.md).
+- **Aeneas**: Tool that translates safe Rust into pure functions in Lean or HOL4, to be proved there. See [Verifying user-level software](sel4/user-level-verification.md).
 - **AENQ** (asynchronous event notification queue): ENA queue of events the device raises on its own, such as keep-alives. See [ENA](concepts/ena.md).
 - **AIA** (Advanced Interrupt Architecture): RISC-V's newer alternative to the PLIC, made of APLIC and IMSIC. See [RISC-V interrupts and timers](concepts/riscv-interrupts.md).
 - **AMD-Vi**: AMD's IOMMU, described by the ACPI IVRS table; seL4 has no driver for it. See [IOMMUs: VT-d and SMMU](concepts/iommu.md).
@@ -35,6 +36,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **ASID pool**: Kernel object, made through ASIDControl, from which VSpace roots are assigned ASIDs. See [Address spaces (VSpace)](sel4/vspace.md).
 - **astyle**: The formatter upstream requires for kernel C code. See [Contributing a patch](sel4/contributing-a-patch.md).
 - **authority**: The second TCB capability passed when setting a priority; the new value must not exceed that thread's MCP. See [Threads and TCBs](sel4/threads.md).
+- **AutoCorres**: Isabelle tool that abstracts C read by the C parser into monadic functions easier to reason about; AutoCorres2 is its successor. See [Verifying user-level software](sel4/user-level-verification.md).
 - **availability zone**: One of the separate locations within an EC2 region. See [Amazon EC2 and the Nitro system](concepts/ec2.md).
 
 ## B
@@ -62,6 +64,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 ## C
 
 - **C Parser**: The Isabelle tool (StrictC) that translates the preprocessed kernel into a formal language; also a CI check. See [The verified C subset](sel4/verified-c-subset.md).
+- **CakeML**: A verified compiler for a dialect of ML, in HOL4; Pancake reuses its lower stages. See [Verifying user-level software](sel4/user-level-verification.md).
 - **CAmkES**: The older component framework, generating glue code and a capDL specification; new work mostly uses Microkit instead. See [CAmkES and capDL](sel4/camkes-capdl.md).
 - **canonical address**: An x86-64 address whose unused upper bits copy the top implemented bit; splits the space into low and high halves. See [x86-64 basics](concepts/x86-64-basics.md).
 - **cap fault**: Fault raised when a thread uses a capability address that cannot be looked up. See [Faults and fault handlers](sel4/faults.md).
@@ -79,6 +82,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **CLINT**: The RISC-V block that supplies timer and software interrupts, reaching an S-mode kernel through firmware. See [RISC-V interrupts and timers](concepts/riscv-interrupts.md).
 - **CMake**: The build system that turns `config.cmake` options into `CONFIG_*` macros and builds kernel and projects with Ninja. See [Build system and configuration](sel4/build-system.md).
 - **CNode**: A kernel object that is a table of capability slots; CNodes form a CSpace. See [CSpaces and capability addressing](sel4/cspace.md).
+- **Cogent**: Functional language whose compiler emitted C plus an Isabelle refinement proof; used for file systems. See [Verifying user-level software](sel4/user-level-verification.md).
 - **committer**: A role granted by the Technical Steering Committee; only committers can merge. See [Contributing a patch](sel4/contributing-a-patch.md), also [Governance and RFCs](sel4/governance.md).
 - **`compatible`**: The device tree property that names what a node is, on which drivers and seL4's `hardware.yml` match. See [Device trees](concepts/device-tree.md).
 - **compile matrix**: The CI job that compiles the kernel for a small set of configurations. See [Upstream CI](sel4/ci.md).
@@ -211,6 +215,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **hart**: RISC-V's word for a hardware thread, its unit of execution. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md), also [RISC-V basics](concepts/riscv-basics.md).
 - **Haskell prototype**: An executable model of the kernel in l4v, kept in sync with the C and source of the design specification. See [l4v and Isabelle](sel4/l4v.md).
 - **`HCR_EL2`**: The Arm register of trap controls with which a hypervisor configures EL2. See [Arm virtualisation (EL2)](concepts/arm-virtualisation.md).
+- **HOL4**: The interactive theorem prover in which CakeML and Pancake are verified. See [Verifying user-level software](sel4/user-level-verification.md).
 - **HPET** (High Precision Event Timer): A memory-mapped x86 timer with one main counter and several comparators, found through ACPI. See [HPET](concepts/hpet.md).
 - **HS-mode** (hypervisor-extended supervisor): RISC-V's S-mode with the hypervisor extension, which adds VS and VU modes for guests. See [Privilege levels](concepts/privilege-levels.md).
 - **HSM** (Hart State Management): The SBI extension by which a RISC-V kernel or loader starts other harts. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md).
@@ -261,6 +266,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 
 ## K
 
+- **Kani**: Bounded model checker for Rust, built on CBMC. See [Verifying user-level software](sel4/user-level-verification.md).
 - **keep-alive**: An AENQ event the ENA device sends about once a second. See [ENA](concepts/ena.md).
 - **kernel log buffer**: A large frame user level supplies for the kernel's tracing output. See [Debugging](sel4/debugging.md).
 - **kernel object**: One of the fixed set of types the kernel implements (TCB, endpoint, CNode, frame ...), created by retyping untyped memory. See [Kernel objects](sel4/kernel-objects.md).
@@ -275,6 +281,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **LAPIC timer**: The per-core x86 timer, a countdown at an unknown rate or an absolute TSC deadline. See [Local APIC timer and TSC deadline mode](concepts/lapic-timer.md).
 - **LBA format**: The NVMe namespace setting that gives the block size, 512 or 4096 bytes. See [NVMe](concepts/nvme.md).
 - **leaf**: The number in `eax` selecting what `cpuid` reports; some leaves take a subleaf in `ecx`. See [CPUID and MSRs](concepts/cpuid-and-msrs.md).
+- **Lean**: A theorem prover that is also a programming language; used as the prover for Rust via Aeneas. See [Verifying user-level software](sel4/user-level-verification.md).
 - **level-triggered**: An interrupt asserted for as long as the device holds its line. See [IRQ](concepts/irq.md).
 - **libmicrokit**: The library a Microkit protection domain is written against; it provides the event loop. See [Microkit](sel4/microkit.md).
 - **libsel4**: The kernel's ABI written down as C: types, constants, system call wrappers and invocation stubs. See [libsel4 and the runtime](sel4/libsel4.md).
@@ -350,6 +357,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 ## P
 
 - **packed virtqueue**: The newer virtqueue layout, an alternative to the split one. See [virtio](concepts/virtio.md).
+- **Pancake**: Small imperative language for verifiable drivers, with a compiler verified in HOL4 on top of CakeML. See [Verifying user-level software](sel4/user-level-verification.md).
 - **paravirtual device**: A device designed for a guest that knows it is virtualised, such as virtio. See [virtio](concepts/virtio.md).
 - **pass-through**: Giving a guest direct access to a real device; without an IOMMU it breaks isolation. See [Virtualisation support](sel4/hypervisor.md).
 - **passive protection domain**: A Microkit PD that gives up its scheduling context after `init` and then runs only on its callers'. See [Microkit](sel4/microkit.md).
@@ -467,6 +475,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **SPCR** (serial port console redirection): The ACPI table giving the console UART's type, address, interrupt and baud rate. See [UARTs: 16550 and PL011](concepts/uart.md).
 - **SPDX**: The licence header format every upstream file must carry. See [Contributing a patch](sel4/contributing-a-patch.md).
 - **SPI** (Shared Peripheral Interrupt): GIC interrupts 32 to 1019: ordinary device interrupts, routable to any core. See [GICv2](concepts/gicv2.md).
+- **Spin**: Model checker for concurrent protocols written in Promela; checks sDDF's signalling. See [Verifying user-level software](sel4/user-level-verification.md).
 - **spin table**: The older Arm way to start cores: secondaries poll a memory word for an address to jump to. See [Multiprocessor bring-up and IPIs](concepts/smp-bringup.md), also [PSCI and SMCCC](concepts/psci-smccc.md).
 - **split virtqueue**: The original virtqueue layout: descriptor table, available ring and used ring. See [virtio](concepts/virtio.md).
 - **sporadic server**: The real-time scheduling scheme behind MCS refills. See [MCS kernel](sel4/mcs.md).
@@ -531,7 +540,9 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **vector**: On x86, the number (0 to 255) by which the CPU indexes the IDT for an interrupt or exception. See [x86-64 exceptions and system calls](concepts/x86-exceptions-syscalls.md), also [IRQ](concepts/irq.md).
 - **vector table**: The AArch64 table of 16 exception entry points. See [AArch64 exceptions](concepts/aarch64-exceptions.md).
 - **verified configuration**: One of the few exact kernel configurations the proofs apply to. See [The seL4 proofs](sel4/verification.md).
+- **Verus**: Verifier for Rust code against specifications written in Rust syntax, using the Z3 SMT solver. See [Verifying user-level software](sel4/user-level-verification.md).
 - **VHE** (Virtualization Host Extensions): Armv8.1 feature letting an unmodified EL1 kernel run at EL2. See [Arm virtualisation (EL2)](concepts/arm-virtualisation.md).
+- **Viper**: SMT-based verification language from ETH Zürich; Pancake code is proved by translating it to Viper. See [Verifying user-level software](sel4/user-level-verification.md).
 - **virtio**: The standard family of paravirtual devices, with one queue mechanism and three transports. See [virtio](concepts/virtio.md).
 - **virtqueue**: The virtio mechanism carrying buffers from driver to device and back. See [virtio](concepts/virtio.md).
 - **virtualiser**: The sDDF component that shares one device among several clients. See [sDDF](sel4/sddf.md).
