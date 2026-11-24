@@ -264,6 +264,7 @@ refuses to map user frames at or above it.
 - [ELF and linking](elf.md): ELF is the file format of every kernel, loader and user program in an seL4 system
 - [IOMMUs: VT-d and SMMU](iommu.md): an IOMMU translates and restricts the memory addresses devices use for DMA, which is what keeps a...
 - [CSpaces and capability addressing](../sel4/cspace.md): A thread's CSpace is the tree of CNodes
+- [CHERI](cheri.md): protection per pointer inside an address space, on top of the page tables
 
 ## References
 

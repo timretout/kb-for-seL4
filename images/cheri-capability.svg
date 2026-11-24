@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 350" width="760" height="350" role="img">
+  <title>A CHERI capability and how derivation narrows it</title>
+  <desc>A 128-bit capability holds a 64-bit address and 64 bits of metadata, with a hidden tag bit beside it. Below, a root capability covers the whole address space and a capability derived from it covers one object with fewer permissions.</desc>
+  <style>
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
+    .hw, .data { stroke-width: 1.5; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 4; }
+    .accent { stroke: var(--accent); }
+    .accent-fill { fill: var(--accent); }
+  </style>
+  <rect width="760" height="350" style="fill: var(--bg)"/>
+
+  <text x="16" y="30" class="head">A capability: 128 bits, plus a hidden tag</text>
+  <rect x="16" y="44" width="110" height="52" rx="6" class="hw dash"/>
+  <text x="71" y="66" text-anchor="middle">tag</text>
+  <text x="71" y="84" text-anchor="middle" class="small dim">1 bit, out of band</text>
+  <rect x="140" y="44" width="300" height="52" rx="6" class="hw"/>
+  <text x="290" y="66" text-anchor="middle">metadata (upper 64 bits)</text>
+  <text x="290" y="84" text-anchor="middle" class="small dim">bounds, permissions, type, mode</text>
+  <rect x="440" y="44" width="304" height="52" rx="6" class="hw"/>
+  <text x="592" y="66" text-anchor="middle">address (lower 64 bits)</text>
+  <text x="592" y="84" text-anchor="middle" class="small dim">what integer code sees</text>
+
+  <text x="16" y="134" class="head">Two capabilities to one address space</text>
+  <text x="380" y="160" text-anchor="middle" class="small">root capability: the whole space, every permission</text>
+  <path d="M16,176 V168 H744 V176" class="line"/>
+  <rect x="16" y="198" width="728" height="36" rx="6" class="data"/>
+  <rect x="420" y="198" width="130" height="36" class="data" style="fill: var(--data-filled)"/>
+  <rect x="420" y="198" width="130" height="36" class="line accent"/>
+  <text x="485" y="221" text-anchor="middle" class="small">one object</text>
+  <text x="16" y="252" class="small dim">0</text>
+  <text x="744" y="252" text-anchor="end" class="small dim">2^64</text>
+  <path d="M420,242 V250 H550 V242" class="line accent"/>
+  <text x="485" y="272" text-anchor="middle" class="small">derived by the allocator: [base, top), fewer permissions</text>
+
+  <text x="380" y="308" text-anchor="middle">Deriving can shrink bounds and drop permissions, never grow them:</text>
+  <text x="380" y="328" text-anchor="middle">an attempt to widen gives a capability with its tag cleared.</text>
+</svg>

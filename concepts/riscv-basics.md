@@ -291,6 +291,7 @@ so code there may do things the verified subset of C forbids.
 - [The seL4 proofs](../sel4/verification.md): what "verified on RISC-V" covers
 - [FPU and SIMD state](fpu-state.md): the floating-point and vector registers are extra per-thread state, hundreds to thousands of bytes, that a...
 - [PSCI and SMCCC](psci-smccc.md): arm's standard way for a kernel to call firmware or a hypervisor
+- [CHERI](cheri.md): the draft `RV64Y` base and `Zyhybrid` extension that add capability pointers to RISC-V
 
 ## References
 

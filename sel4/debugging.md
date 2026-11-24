@@ -2,7 +2,7 @@
 
 > The tools for finding out why an seL4 system misbehaves: debug-build kernel output and error reasons, the debug system calls, the fault dump, GDB under QEMU, the hardware debug API, tracing, and how to read a first boot that fails.
 
-[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Platform ports](platform-port.md) · [The seL4 proofs](verification.md) →
+[Index](../INDEX.md) › [Part 4: The seL4 kernel](../INDEX.md#part-4-the-sel4-kernel) › [Inside the kernel](../INDEX.md#inside-the-kernel) · ← [Platform ports](platform-port.md) · [CHERI-seL4](cheri-sel4.md) →
 
 Read first: [Build system and configuration](build-system.md), [Faults and fault handlers](faults.md), [Kernel boot sequence](kernel-boot.md).
 

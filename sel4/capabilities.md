@@ -244,6 +244,8 @@ described in [CSpaces](cspace.md).
 - [IPC and endpoints](ipc.md): badges and capability transfer in messages
 - [Generated code](generated-code.md): the bitfield generator behind `cap_t`
 - [I/O ports and MMIO](../concepts/io-ports.md): x86's separate 16-bit address space for device registers, reached with the `in` and `out` instructions
+- [CHERI](../concepts/cheri.md): capabilities in hardware, as bounded pointers checked on every access, which complement seL4's
+- [CHERI-seL4](cheri-sel4.md): a fork in which seL4 capabilities guard the power to make CHERI capabilities
 
 ## References
 

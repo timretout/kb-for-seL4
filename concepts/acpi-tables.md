@@ -2,7 +2,7 @@
 
 > The tables PC (and Arm server) firmware leaves in memory to describe the machine: the RSDP points to the XSDT, which lists tables such as the MADT (interrupt controllers), HPET, MCFG (PCI) and DSDT.
 
-[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Firmware and platform description](../INDEX.md#firmware-and-platform-description) · ← [RISC-V interrupts and timers](riscv-interrupts.md) · [Device trees](device-tree.md) →
+[Index](../INDEX.md) › [Part 3: Platform and devices](../INDEX.md#part-3-platform-and-devices) › [Firmware and platform description](../INDEX.md#firmware-and-platform-description) · ← [CHERI (Capability Hardware Enhanced RISC Instructions)](cheri.md) · [Device trees](device-tree.md) →
 
 | At a glance | |
 |---|---|

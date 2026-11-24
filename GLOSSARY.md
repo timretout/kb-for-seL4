@@ -34,6 +34,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **Arm generic timer**: The architectural timer of every Armv8 core: a system counter and per-core comparators that raise PPIs. See [Arm generic timer](concepts/arm-generic-timer.md).
 - **ASID** (address space identifier): A tag on TLB entries naming an address space; in seL4 it also names a VSpace root. See [Virtual memory](concepts/virtual-memory.md), also [Address spaces (VSpace)](sel4/vspace.md).
 - **ASID pool**: Kernel object, made through ASIDControl, from which VSpace roots are assigned ASIDs. See [Address spaces (VSpace)](sel4/vspace.md).
+- **ASR permission** (Access System Registers): The CHERI permission that, held in `pcc`, allows privileged instructions and control register access. See [CHERI](concepts/cheri.md).
 - **astyle**: The formatter upstream requires for kernel C code. See [Contributing a patch](sel4/contributing-a-patch.md).
 - **authority**: The second TCB capability passed when setting a priority; the new value must not exceed that thread's MCP. See [Threads and TCBs](sel4/threads.md).
 - **AutoCorres**: Isabelle tool that abstracts C read by the C parser into monadic functions easier to reason about; AutoCorres2 is its successor. See [Verifying user-level software](sel4/user-level-verification.md).
@@ -69,6 +70,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **canonical address**: An x86-64 address whose unused upper bits copy the top implemented bit; splits the space into low and high halves. See [x86-64 basics](concepts/x86-64-basics.md).
 - **cap fault**: Fault raised when a thread uses a capability address that cannot be looked up. See [Faults and fault handlers](sel4/faults.md).
 - **capability**: An unforgeable, kernel-held token naming one kernel object plus the rights its holder has. See [Capabilities](sel4/capabilities.md).
+- **capability pointer mode**: The CHERI-RISC-V mode in which pointer operands are capabilities. See [CHERI](concepts/cheri.md).
 - **capability-only type**: A capability type with no object memory behind it, such as IRQControl or IOPort. See [Kernel objects](sel4/kernel-objects.md).
 - **capDL**: A language describing a whole system as kernel objects and capabilities, realised at boot by a loader or initialiser. See [CAmkES and capDL](sel4/camkes-capdl.md).
 - **capDL initialiser**: The root task (`sel4-capdl-initializer`, in Rust) that builds the system a capDL specification describes; Microkit boots with it. See [Microkit internals](sel4/microkit-internals.md), also [rust-sel4](sel4/rust-sel4.md).
@@ -76,6 +78,10 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **CDT** (capability derivation tree): The kernel's record of how capabilities were derived from one another, which makes revocation possible. See [Capabilities](sel4/capabilities.md).
 - **cells**: The 32-bit units device tree properties are counted in, sized by `#address-cells` and `#size-cells`. See [Device trees](concepts/device-tree.md).
 - **channel**: A Microkit link joining exactly two protection domains, used for notifications and protected procedure calls. See [Microkit](sel4/microkit.md).
+- **CHERI** (Capability Hardware Enhanced RISC Instructions): An instruction set extension that makes pointers bounded, unforgeable hardware capabilities with a hidden tag. See [CHERI](concepts/cheri.md).
+- **CHERI C**: The dialect of C in which every pointer is a CHERI capability; the language of purecap code. See [CHERI](concepts/cheri.md).
+- **CHERIoT**: A CHERI design for 32-bit RISC-V microcontrollers. See [CHERI](concepts/cheri.md).
+- **CHERI-seL4**: An experimental, unverified fork of seL4 that lets CHERI programs run in its protection domains. See [CHERI-seL4](sel4/cheri-sel4.md).
 - **child (protection domain)**: A PD nested in another in the system description; the parent holds its TCB capability and receives its faults. See [Microkit](sel4/microkit.md).
 - **claim/complete**: The PLIC register a handler reads to take an interrupt and writes to finish it. See [RISC-V interrupts and timers](concepts/riscv-interrupts.md).
 - **CLH lock** (Craig, Landin and Hagersten): The queue lock implementing the SMP kernel's big lock. See [SMP](sel4/smp.md).
@@ -111,6 +117,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **dataport**: A CAmkES interface kind: memory shared between components. See [CAmkES and capDL](sel4/camkes-capdl.md).
 - **DBG2**: ACPI table listing debug ports, in the same manner as the SPCR. See [UARTs: 16550 and PL011](concepts/uart.md).
 - **DCO** (Developer Certificate of Origin): What a `Signed-off-by` line asserts: the right to submit the change under the file's licence. See [Contributing a patch](sel4/contributing-a-patch.md).
+- **ddc** (default data capability): The CHERI register that bounds data accesses made with plain integer addresses. See [CHERI](concepts/cheri.md).
 - **decode**: The first half of handling an invocation, where all checks belong; invoke then performs it. See [System calls and invocations](sel4/syscalls-and-invocations.md).
 - **depth**: How many CPtr bits a CNode invocation resolves when naming a slot. See [CSpaces and capability addressing](sel4/cspace.md).
 - **descriptor (AArch64)**: An entry in an AArch64 translation table. See [AArch64 paging](concepts/aarch64-paging.md).
@@ -222,10 +229,12 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **HSR** (hyp syndrome register): Arm's older, AArch32 name for `ESR_EL2`, which seL4's API uses. See [Arm virtualisation (EL2)](concepts/arm-virtualisation.md).
 - **Hurd**: The GNU project's multiserver operating system, a set of servers on the Mach microkernel. See [Multiserver operating systems](sel4/multiserver-systems.md).
 - **HVC**: The Arm instruction that calls a hypervisor at EL2; one of the two SMCCC conduits. See [PSCI and SMCCC](concepts/psci-smccc.md).
+- **hybrid code** (CHERI): Code in which only pointers marked `__capability` are CHERI capabilities. See [CHERI](concepts/cheri.md).
 - **hypervisor CPUID leaves**: CPUID leaves from `0x40000000` in which a hypervisor identifies itself and may give timer rates. See [Hypervisor CPUID leaves](concepts/hypervisor-cpuid-leaves.md).
 
 ## I
 
+- **integral pointer mode**: The CHERI-RISC-V mode in which pointer operands are plain addresses checked against `ddc`. See [CHERI](concepts/cheri.md).
 - **I/O APIC** (IOAPIC): The x86 controller that routes device interrupt pins to vectors on chosen cores through its redirection table. See [Local APIC and I/O APIC](concepts/apic.md).
 - **I/O permission bitmap**: A bitmap in the TSS, one bit per port, saying which I/O ports user code may use. See [I/O ports and MMIO](concepts/io-ports.md).
 - **I/O port**: An address in x86's separate 16-bit space for device registers, reached with `in` and `out`. See [I/O ports and MMIO](concepts/io-ports.md).
@@ -322,6 +331,8 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **MMU** (memory management unit): The hardware that translates virtual addresses to physical ones through page tables. See [Virtual memory](concepts/virtual-memory.md).
 - **monitor**: The Microkit component that is the fault handler of last resort and prints fault dumps. See [Microkit internals](sel4/microkit-internals.md).
 - **monolithic kernel**: A kernel that implements file systems, networking and drivers itself, in one privileged address space. See [Multiserver operating systems](sel4/multiserver-systems.md).
+- **monotonicity** (CHERI): The rule that a derived capability can never have wider bounds or more permissions than its source. See [CHERI](concepts/cheri.md).
+- **Morello**: Arm's prototype CHERI-extended AArch64 processor, SoC and board. See [CHERI](concepts/cheri.md).
 - **`MPIDR`**: The Arm register identifying a core; PSCI `CPU_ON` takes its values, not indices. See [PSCI and SMCCC](concepts/psci-smccc.md).
 - **MR** (memory region): In Microkit, a range of memory declared in the system description and mapped into protection domains. See [Microkit](sel4/microkit.md).
 - **MR** (message register): One word of an IPC message, held in a CPU register or the IPC buffer. See [IPC and endpoints](sel4/ipc.md).
@@ -364,6 +375,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **passive server**: On MCS, a server with no scheduling context of its own that runs on its caller's when called. See [MCS kernel](sel4/mcs.md).
 - **PAT** (page attribute table): An x86 MSR of eight cache-mode slots chosen per page. See [x86-64 paging](concepts/x86-paging.md).
 - **`pc99`**: The single x86 platform of the seL4 kernel. See [Platform ports](sel4/platform-port.md).
+- **pcc** (program counter capability): The CHERI capability that bounds and authorises instruction fetch. See [CHERI](concepts/cheri.md).
 - **PCI**: The bus by which almost every device is found: functions with configuration spaces and BARs. See [PCI and PCI Express](concepts/pci.md).
 - **PCI Express**: The serial successor to PCI, keeping its software model: a root complex, switches and endpoints. See [PCI and PCI Express](concepts/pci.md).
 - **PCID** (process-context identifier): x86's tag on TLB entries, its equivalent of an ASID; often hidden in VMs. See [x86-64 paging](concepts/x86-paging.md).
@@ -392,12 +404,14 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **preprocess check**: The CI check showing whether a pull request changes the preprocessed C that the proofs read. See [Upstream CI](sel4/ci.md), also [Proof impact of a change](sel4/proof-impact.md).
 - **program header**: An ELF table entry describing a segment to load. See [ELF and linking](concepts/elf.md).
 - **protocol (UEFI)**: An interface, identified by GUID, through which UEFI devices and services are reached. See [UEFI](concepts/uefi.md).
+- **provenance** (CHERI): The rule that a valid capability can only be derived from another valid capability. See [CHERI](concepts/cheri.md).
 - **PRP** (physical region page): An NVMe data pointer: the physical address of a memory page. See [NVMe](concepts/nvme.md).
 - **`ps_io_ops`**: util_libs' interface behind which platform drivers reach device memory, ports and interrupts. See [seL4_libs and util_libs](sel4/sel4-libs.md).
 - **PSCI** (Power State Coordination Interface): Arm's standard firmware service for starting, stopping and resetting cores. See [PSCI and SMCCC](concepts/psci-smccc.md).
 - **PSTATE**: The AArch64 processor state, a set of fields reached separately rather than one flags register. See [AArch64 basics](concepts/aarch64-basics.md).
 - **PT** (page table): The level 1 x86 page table, mapping 4 KiB pages. See [x86-64 paging](concepts/x86-paging.md).
 - **`PT_LOAD`**: The program header type for a segment that must be loaded into memory. See [ELF and linking](concepts/elf.md).
+- **purecap** (pure-capability): Code compiled with every pointer as a CHERI capability. See [CHERI](concepts/cheri.md).
 
 ## Q
 
@@ -435,9 +449,12 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 - **RSDT**: The older, 32-bit form of the XSDT. See [ACPI tables](concepts/acpi-tables.md).
 - **runtime services**: The few UEFI calls (variables, time) that stay usable after the OS takes over. See [UEFI](concepts/uefi.md).
 - **rust-sel4**: Rust support for seL4 user level: bindings, runtimes, the capDL initialiser and a kernel loader. See [rust-sel4](sel4/rust-sel4.md).
+- **RV64Y**: The draft CHERI base for 64-bit RISC-V. See [CHERI](concepts/cheri.md).
 
 ## S
 
+- **sealed capability**: A CHERI capability that cannot be modified or dereferenced, only jumped to. See [CHERI](concepts/cheri.md).
+- **sentry** (sealed entry capability): A sealed CHERI capability that is unsealed when jumped to, giving a fixed entry point. See [CHERI](concepts/cheri.md).
 - **S-mode**: RISC-V's supervisor mode, in which seL4 runs. See [Privilege levels](concepts/privilege-levels.md), also [RISC-V basics](concepts/riscv-basics.md).
 - **`satp`**: The RISC-V CSR holding the root of the current page tables. See [RISC-V paging and traps](concepts/riscv-paging-and-traps.md).
 - **SBI** (Supervisor Binary Interface): The RISC-V firmware services an S-mode kernel reaches with `ecall`. See [RISC-V basics](concepts/riscv-basics.md).
@@ -499,6 +516,7 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 
 ## T
 
+- **tag** (CHERI): The hidden bit beside each capability register and 16-byte memory word that marks a valid capability. See [CHERI](concepts/cheri.md).
 - **TCB** (thread control block): The kernel object that is a thread: saved registers plus its capabilities and scheduling parameters. See [Threads and TCBs](sel4/threads.md).
 - **TCB** (trusted computing base): The other meaning: everything a system's security depends on. See [Virtualisation support](sel4/hypervisor.md).
 - **TCG** (tiny code generator): QEMU's default mode, translating guest instructions to host instructions; slow, and its time is not real time. See [QEMU](concepts/qemu.md).
@@ -581,3 +599,4 @@ Terms and abbreviations used in the knowledge base, each with a short definition
 ## Z
 
 - **zombie capability**: A capability type the kernel uses for an object part-way through deletion; visible in debug dumps. See [Capabilities](sel4/capabilities.md).
+- **Zyhybrid**: The CHERI-RISC-V extension that adds `ddc` and a mode bit so unmodified RISC-V code can run. See [CHERI](concepts/cheri.md).

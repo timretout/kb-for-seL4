@@ -65,6 +65,10 @@ Ideas every architecture shares, then x86-64, AArch64 and RISC-V in turn. seL4's
 - [RISC-V paging and traps](concepts/riscv-paging-and-traps.md): How an S-mode kernel on RISC-V translates addresses (Sv39 or Sv48 tables rooted at `satp`, one entry format at every level) and takes traps (one handler at `stvec`, cause in `scause`, return with `sret`); seL4's whole entry path is one assembly function, `trap_entry`, and one page table object type.
 - [RISC-V interrupts and timers](concepts/riscv-interrupts.md): How interrupts reach an S-mode kernel on RISC-V: three per-hart lines (software, timer, external) in `sip`/`sie`, fed by the CLINT through firmware and by the PLIC interrupt controller, with AIA as the newer alternative; seL4 drives the PLIC directly and gets its timer and IPIs through SBI calls.
 
+### Capability hardware
+
+- [CHERI (Capability Hardware Enhanced RISC Instructions)](concepts/cheri.md): CHERI extends an instruction set so that every pointer is a hardware capability (an address plus bounds, permissions and a hidden validity tag) that cannot be forged or enlarged, which gives C and C++ memory safety inside one address space; it exists as Arm's Morello prototype and as a draft standard RISC-V extension, and seL4 work meets it through an experimental CHERI-aware fork of the kernel.
+
 ## Part 3: Platform and devices
 
 The hardware around the CPU: how it is described to software, how devices interrupt, and how time is kept.
@@ -154,6 +158,7 @@ The kernel's model and API, in the order the concepts build on each other.
 - [Elfloader](sel4/elfloader.md): The small boot program from `seL4_tools` that Arm and RISC-V images start with: it carries the kernel and root task ELF files in a CPIO archive, loads them, builds first page tables, enables the MMU, starts the other cores and jumps to the kernel's `init_kernel` with the user image's location.
 - [Platform ports](sel4/platform-port.md): A platform is the kernel's build-time description of one board or machine family; porting on Arm and RISC-V means writing that description (device tree, overlay, `config.cmake`, drivers) across several repositories, while on x86 there is one platform, `pc99`, and a "port" means fixing its assumptions about the machine.
 - [Debugging](sel4/debugging.md): The tools for finding out why an seL4 system misbehaves: debug-build kernel output and error reasons, the debug system calls, the fault dump, GDB under QEMU, the hardware debug API, tracing, and how to read a first boot that fails.
+- [CHERI-seL4](sel4/cheri-sel4.md): CHERI-seL4 is an experimental, unverified fork of seL4 that saves and restores CHERI capability registers and builds user threads' initial CHERI capabilities through three new TCB invocations, so that memory-safe purecap programs and unmodified ones can run in separate protection domains on CHERI-RISC-V and Morello; a reduced form is proposed upstream and not accepted as of November 2026.
 
 ## Part 5: Verification
 
@@ -211,3 +216,4 @@ idea for that architecture; a page in the first column covers all three.
 | Device memory protection | [IOMMUs: VT-d and SMMU](concepts/iommu.md) | | | |
 | Serial console | [UARTs: 16550 and PL011](concepts/uart.md) | | | |
 | Floating point state | [FPU and SIMD state](concepts/fpu-state.md) | | | |
+| Memory-safe pointers | [CHERI](concepts/cheri.md), [CHERI-seL4](sel4/cheri-sel4.md) | | Morello in [CHERI](concepts/cheri.md) | CHERI-RISC-V in [CHERI](concepts/cheri.md) |

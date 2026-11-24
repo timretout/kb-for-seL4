@@ -2,7 +2,7 @@
 
 > How interrupts reach an S-mode kernel on RISC-V: three per-hart lines (software, timer, external) in `sip`/`sie`, fed by the CLINT through firmware and by the PLIC interrupt controller, with AIA as the newer alternative; seL4 drives the PLIC directly and gets its timer and IPIs through SBI calls.
 
-[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [RISC-V](../INDEX.md#risc-v) · ← [RISC-V paging and traps](riscv-paging-and-traps.md) · [ACPI tables](acpi-tables.md) →
+[Index](../INDEX.md) › [Part 2: Processor fundamentals](../INDEX.md#part-2-processor-fundamentals) › [RISC-V](../INDEX.md#risc-v) · ← [RISC-V paging and traps](riscv-paging-and-traps.md) · [CHERI (Capability Hardware Enhanced RISC Instructions)](cheri.md) →
 
 Read first: [RISC-V basics](riscv-basics.md), [RISC-V paging and traps](riscv-paging-and-traps.md), [IRQ](irq.md).
 

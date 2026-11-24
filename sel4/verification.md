@@ -2,7 +2,7 @@
 
 > seL4's proofs show, for a few exact kernel configurations, that the C code behaves as an abstract specification says and that the specification enforces integrity and confidentiality; boot code, assembly, hardware and every other configuration are assumed, not proved.
 
-[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [Debugging](debugging.md) · [l4v and Isabelle](l4v.md) →
+[Index](../INDEX.md) › [Part 5: Verification](../INDEX.md#part-5-verification) · ← [CHERI-seL4](cheri-sel4.md) · [l4v and Isabelle](l4v.md) →
 
 Read first: [Overview](overview.md), [Kernel design](kernel-design.md).
 

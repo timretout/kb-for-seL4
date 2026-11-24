@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" width="760" height="330" role="img">
+  <title>How CHERI-seL4 gives a thread a CHERI capability</title>
+  <desc>A builder component holding a TCB capability and a VSpace capability invokes CheriWriteRegister with integer arguments; the kernel derives a tagged capability from its root pcc and writes it into a register saved in the target thread's TCB. IPC buffers carry no tags.</desc>
+  <style>
+    svg { --bg: #ffffff; --fg: #1f2328; --dim: #57606a; --accent: #cf222e; --hw-fill: #ddebff; --hw-stroke: #3b6bb5; --fw-fill: #eee3fb; --fw-stroke: #7a52b3; --kernel-fill: #ffe8cc; --kernel-stroke: #b86e14; --user-fill: #dcf3e1; --user-stroke: #3d8a50; --data-fill: #f3f4f6; --data-stroke: #6e7781; --data-filled: #c8d1da; }
+    @media (prefers-color-scheme: dark) { svg { --bg: #0d1117; --fg: #e6edf3; --dim: #9198a1; --accent: #ff7b72; --hw-fill: #112d52; --hw-stroke: #58a6ff; --fw-fill: #2c1f4a; --fw-stroke: #b48aff; --kernel-fill: #3d2812; --kernel-stroke: #e3a250; --user-fill: #13301c; --user-stroke: #56c26e; --data-fill: #21262d; --data-stroke: #8b949e; --data-filled: #484f58; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; fill: var(--fg); }
+    .small { font-size: 12px; }
+    .head { font-weight: 600; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 13px; }
+    .dim { fill: var(--dim); }
+    .hw { fill: var(--hw-fill); stroke: var(--hw-stroke); }
+    .kernel { fill: var(--kernel-fill); stroke: var(--kernel-stroke); }
+    .user { fill: var(--user-fill); stroke: var(--user-stroke); }
+    .data { fill: var(--data-fill); stroke: var(--data-stroke); }
+    .hw, .kernel, .user, .data { stroke-width: 1.5; }
+    .line { stroke: var(--fg); stroke-width: 1.5; fill: none; }
+    .accent { stroke: var(--accent); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--fg)"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill: var(--accent)"/>
+    </marker>
+  </defs>
+  <rect width="760" height="330" style="fill: var(--bg)"/>
+
+  <rect x="16" y="24" width="220" height="200" rx="6" class="user"/>
+  <text x="126" y="48" text-anchor="middle" class="head">Builder</text>
+  <text x="126" y="66" text-anchor="middle" class="small dim">root task, or Microkit's set-up</text>
+  <rect x="36" y="80" width="180" height="30" rx="6" class="kernel"/>
+  <text x="126" y="100" text-anchor="middle" class="small">seL4 cap: target TCB</text>
+  <rect x="36" y="118" width="180" height="30" rx="6" class="kernel"/>
+  <text x="126" y="138" text-anchor="middle" class="small">seL4 cap: a VSpace</text>
+  <text x="126" y="174" text-anchor="middle" class="small">integer arguments:</text>
+  <text x="126" y="194" text-anchor="middle" class="mono">base addr size meta</text>
+
+  <path d="M236,124 H290" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="292" y="24" width="210" height="200" rx="6" class="kernel"/>
+  <text x="397" y="48" text-anchor="middle" class="head">seL4 kernel</text>
+  <text x="397" y="66" text-anchor="middle" class="small dim">decodes the TCB invocation</text>
+  <rect x="322" y="82" width="150" height="34" rx="6" class="hw"/>
+  <text x="397" y="104" text-anchor="middle" class="mono">root pcc</text>
+  <path d="M397,116 V140" class="line" marker-end="url(#arrow)"/>
+  <text x="397" y="160" text-anchor="middle" class="mono">cheri_sel4_build_cap</text>
+  <text x="397" y="180" text-anchor="middle" class="small">narrows bounds and</text>
+  <text x="397" y="196" text-anchor="middle" class="small">permissions, may seal</text>
+
+  <path d="M502,124 H556" class="line accent" marker-end="url(#arrow-accent)"/>
+
+  <rect x="558" y="24" width="186" height="200" rx="6" class="kernel"/>
+  <text x="651" y="48" text-anchor="middle" class="head">Target TCB</text>
+  <text x="651" y="66" text-anchor="middle" class="small dim">saved registers</text>
+  <rect x="578" y="82" width="146" height="30" rx="6" class="data" style="stroke: var(--accent)"/>
+  <text x="651" y="102" text-anchor="middle" class="mono">pcc (tagged)</text>
+  <rect x="578" y="120" width="146" height="30" rx="6" class="data"/>
+  <text x="651" y="140" text-anchor="middle" class="mono">csp</text>
+  <rect x="578" y="158" width="146" height="30" rx="6" class="data"/>
+  <text x="651" y="178" text-anchor="middle" class="mono">ddc</text>
+  <text x="651" y="210" text-anchor="middle" class="small dim">16 bytes each</text>
+
+  <rect x="16" y="248" width="728" height="62" rx="6" class="data"/>
+  <text x="380" y="274" text-anchor="middle" class="small">IPC messages and system call arguments carry integers only. The root task's</text>
+  <text x="380" y="294" text-anchor="middle" class="small">capability to its IPC buffer lacks the C permission, so tags stored there are dropped.</text>
+</svg>

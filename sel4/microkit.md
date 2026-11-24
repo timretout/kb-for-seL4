@@ -267,6 +267,7 @@ Microkit.
 - [Ecosystem and repositories](ecosystem.md): seL4 is some thirty repositories in two GitHub organisations
 - [libsel4 and the runtime](libsel4.md): libsel4 is the kernel's ABI written down as C
 - [Multiserver operating systems](multiserver-systems.md): static and dynamic multiserver systems compared
+- [CHERI-seL4](cheri-sel4.md): a CHERI fork of Microkit that runs purecap and unmodified protection domains side by side
 
 ## References
 

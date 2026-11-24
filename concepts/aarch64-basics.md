@@ -208,6 +208,7 @@ and headers under `include/arch/arm/arch/64/mode/`.
 - [RISC-V basics](riscv-basics.md): the same ground for RISC-V
 - [Arm boot flow](arm-boot.md): the chain from reset to a kernel on a 64-bit Arm machine
 - [x86-64 basics](x86-64-basics.md): the registers, operating modes, leftover segmentation
+- [CHERI](cheri.md): Arm's Morello prototype extends AArch64 with capability pointers
 
 ## References
 

@@ -220,6 +220,7 @@ it ([syscalls and invocations](syscalls-and-invocations.md)).
 - [CSpace](cspace.md) and [VSpace](vspace.md): the two roots
 - [Kernel objects](kernel-objects.md): the other object types
 - [FPU state](../concepts/fpu-state.md): why the TCB size depends on it
+- [CHERI-seL4](cheri-sel4.md): a fork that adds TCB invocations to write CHERI capabilities into a thread's registers
 
 ## References
 

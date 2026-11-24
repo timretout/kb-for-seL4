@@ -211,6 +211,7 @@ non-Isabelle tool.
 - [LionsOS](lionsos.md): the operating system that uses Pancake components
 - [rust-sel4](rust-sel4.md): Rust at seL4 user level
 - [IOMMUs: VT-d and SMMU](../concepts/iommu.md): why DMA undoes isolation
+- [CHERI](../concepts/cheri.md): hardware memory safety for C code inside a component, an alternative to proving it
 
 ## References
 
