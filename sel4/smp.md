@@ -87,11 +87,37 @@ and interrupts sent from one instance to another. The
 that raises a software-generated interrupt on a chosen core, is in
 upstream master as a building block for this; it comes from RFC-17,
 "seL4 multikernel IPI API", approved in June 2024 and since marked
-implemented. Tooling to boot and describe such a system was still
-work in progress when this page was written: Trustworthy Systems
-listed "Multikernel support (mostly abstracted by Microkit)" as work
-in progress in September 2025, and on 2026-11-14 neither Microkit's
-`main` branch nor the elfloader's `master` mentioned multikernels.
+implemented. Tooling to boot and describe such a system is not
+upstream: Trustworthy Systems listed "Multikernel support (mostly
+abstracted by Microkit)" as work in progress in September 2025, and
+on 2026-11-26 Microkit's `main` branch still did not mention
+multikernels.
+
+The working code is out of tree, in Trustworthy Systems' public
+`multikernel-manifest` repository on GitHub, which pins a fork of the
+kernel and a fork of Microkit. The kernel fork lets the loader place
+each instance's image, memory and untyped regions at run time; that
+boot-protocol part is offered for discussion upstream as a pre-RFC pull
+request (seL4/seL4#1745), not yet merged. In the Microkit fork a board
+has a multikernel variant (`qemu_virt_aarch64_multikernel`, with
+`KernelEnableMultikernelSupport` set), and a protection domain's `cpu`
+attribute picks the kernel instance it runs under. Because the
+instances share no kernel state, protected procedure calls and
+parent–child relations cannot cross cores; only notifications (carried
+by SGIs) and shared memory do. Its README calls the work experimental
+and not likely to be upstreamed soon. On 2026-11-26 the manifest's
+pinned commits sat on bases from late 2025, and the Microkit fork's
+initialiser needed Rust 1.90: current stable Rust rejected its JSON
+target specification. Built that way, its `multikernel` example booted
+two instances in QEMU's `virt` machine and exchanged notifications
+between cores.
+
+Others have worked on the idea. At the 2023 seL4 Summit, Kry10 asked
+whether virtual machines with a few virtual CPUs could be run
+efficiently on multikernel mechanisms, and Neutrality presented Atoll,
+a multikernel hypervisor, in 2024 and 2025; neither abstract points to
+published code. Proofcraft's 2024 Summit talk set out the roadmap to a
+verified static multikernel configuration, one kernel per core.
 
 ## In seL4
 
@@ -234,6 +260,22 @@ The remote calls, from the per-architecture `IpiRemoteCall_t`:
   each other by interrupt. *Checked 2026-11-14.*
 - [Heiser, "Trustworthy Systems R&D update", seL4 Summit 2025](https://sel4.systems/Summit/2025/slides/trustworthy-systems.pdf):
   multikernel support listed as work in progress. *Checked 2026-11-14.*
+- [Trustworthy Systems, `multikernel-manifest`](https://github.com/au-ts/multikernel-manifest):
+  README (the `cpu` attribute, no cross-core PPCs or children,
+  multikernel board variants, "unlikely" to be upstreamed soon) and
+  `.gitmodules` (the kernel and Microkit forks). *Checked 2026-11-26.*
+- [seL4/seL4#1745, "Pre-RFC: Multikernel Kernel Boot Code / Loader Changes"](https://github.com/seL4/seL4/pull/1745):
+  loader information and a run-time kernel physical address, open.
+  *Checked 2026-11-26.*
+- [seL4 Summit 2023 abstracts](https://sel4.systems/Summit/2023/abstracts2023.html):
+  Kry10's "More multiprocessing on seL4: Are efficient SMP virtual
+  machines possible on verifiable seL4 kernels?". *Checked 2026-11-26.*
+- [seL4 Summit 2024 abstracts](https://sel4.systems/Summit/2024/abstracts2024.html):
+  Proofcraft's "seL4 multikernel roadmap and concurrency verification"
+  and Neutrality's "The Neutrality Atoll Hypervisor and the seL4
+  Multikernel". *Checked 2026-11-26.*
+- [seL4 Summit 2025 abstracts](https://sel4.systems/Summit/2025/abstracts2025.html):
+  Neutrality's "seL4 on Big Iron". *Checked 2026-11-26.*
 - [LWN, "Paravirtualized ticket spinlocks"](https://lwn.net/Articles/556141/):
   why a strict-order spinlock collapses when virtual CPUs are
   descheduled. *Checked 2026-11-14.*
